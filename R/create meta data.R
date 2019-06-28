@@ -2,25 +2,39 @@
 ### CREATE TURFID AND RANDOMIZE ###
 ###################################
 
-library("tidyverse")
-library("writexl")
-
-pn <- . %>% print(n = Inf)
+source("R/Load packages.R")
 
 # make meta data
-set.seed(32)
 
-origSiteID <-  c("Joa", "Lia")
-blockID <-  c(1,2,3,4,5)
-plotID <- tibble(plotID = rep(1:16, 10))
+origSiteID <-  c("Lia", "Joa")
+destSiteID <-  c("Lia", "Joa", "Vik")
+origBlockID <-  c(1:10)
+destBlockID <-  c(1:10)
+origPlotID <- tibble(plotID = rep(1:160))
 warming <-  c("A", "W")
-Nlevel <- c("N1", "N2")
 grazing <-  c("C", "M", "I", "N")
+set.seed(32)
+nitrogen <- tibble(Nlevel = rep(rep(sample(1:10, 10), each = 8), 2))
 
-#nitrogen <- tibble(nitrogen = replicate(n = 4, sample(1:10, 10), simplify = FALSE) %>% unlist())
+meta <- crossing(origSiteID, origBlockID, warming, grazing) %>% 
+  bind_cols(nitrogen) %>% 
+  mutate(origSiteID = factor(origSiteID, levels = c("Lia", "Joa"))) %>% 
+  arrange(origSiteID)
 
+  
+ExperimentalDesign <- meta %>% 
+  mutate(fence = if_else(grazing == "N", "out", "in")) %>% 
+  group_by(origBlockID, origSiteID, Nlevel, fence) %>%
+  sample_frac() %>% 
+  ungroup() %>% 
+  select(-fence) %>% 
+  bind_cols(origPlotID)
+
+write_xlsx(ExperimentalDesign, path = "ExperimentalDesign.xlsx", col_names = TRUE)
+  
+  
+#Old code
 nitrogen <- tibble(nitrogen = rep(rep(sample(1:10, 10), each = 2), 2))
-
 meta <- crossing(origSiteID, blockID, warming, Nlevel) %>% 
   arrange(origSiteID, blockID, Nlevel) %>% 
   bind_cols(nitrogen) %>% 
@@ -33,7 +47,6 @@ meta <- crossing(origSiteID, blockID, warming, Nlevel) %>%
                                 origSiteID == "Joa" & warming == "W" ~ "Vik"))
 
 # randomize the grazing treatments and nitrogen level, within site, climate and block. Natural grazing plots are separate.
-
 ExperimentalDesign <- meta %>% 
   mutate(sorter = if_else(grazing == "N", "out", "in")) %>% 
   group_by(blockID, destSiteID, sorter) %>%
@@ -41,5 +54,3 @@ ExperimentalDesign <- meta %>%
   group_by(destSiteID, blockID, warming) %>%
   select(-sorter) %>% 
   bind_cols(plotID)
-
-write_xlsx(ExperimentalDesign, path = "ExperimentalDesign.xlsx", col_names = TRUE)
