@@ -10,27 +10,29 @@ origSiteID <-  c("Lia", "Joa")
 destSiteID <-  c("Lia", "Joa", "Vik")
 origBlockID <-  c(1:10)
 destBlockID <-  c(1:10)
-origPlotID <- tibble(plotID = rep(1:160))
+origPlotID <- tibble(origPlotID = rep(1:160))
 warming <-  c("A", "W")
 grazing <-  c("C", "M", "I", "N")
-set.seed(32)
-nitrogen <- tibble(Nlevel = rep(rep(sample(1:10, 10), each = 8), 2))
+#set.seed(2)
+#nitrogen <- tibble(Nlevel = rep(rep(sample(1:10, 10), each = 8), 2))
+nitrogen <- tibble(Nlevel = rep(rep(c(5,6,3,1,10,7,4,8,9,2), each = 8), 2))
 
 meta <- crossing(origSiteID, origBlockID, warming, grazing) %>% 
   bind_cols(nitrogen) %>% 
   mutate(origSiteID = factor(origSiteID, levels = c("Lia", "Joa"))) %>% 
   arrange(origSiteID)
 
-  
+set.seed(32)
 ExperimentalDesign <- meta %>% 
   mutate(fence = if_else(grazing == "N", "out", "in")) %>% 
-  group_by(origBlockID, origSiteID, Nlevel, fence) %>%
+  group_by(origSiteID, origBlockID, Nlevel, fence) %>%
   sample_frac() %>% 
   ungroup() %>% 
   select(-fence) %>% 
-  bind_cols(origPlotID)
+  bind_cols(origPlotID) %>% 
+  select(origSiteID, origBlockID, origPlotID, warming, grazing, Nlevel)
 
-write_xlsx(ExperimentalDesign, path = "ExperimentalDesign.xlsx", col_names = TRUE)
+#write_xlsx(ExperimentalDesign, path = "ExperimentalDesign.xlsx", col_names = TRUE)
   
   
 #Old code
