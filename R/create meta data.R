@@ -61,7 +61,7 @@ ExperimentalDesign <- left_join(
   ungroup() %>% 
   select(-fence)
 
-write_xlsx(ExperimentalDesign, path = "ExperimentalDesign_24-7-19.xlsx", col_names = TRUE)
+#write_xlsx(ExperimentalDesign, path = "ExperimentalDesign_24-7-19.xlsx", col_names = TRUE)
   
   
 #Old code
