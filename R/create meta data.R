@@ -5,7 +5,6 @@
 source("R/Load packages.R")
 
 # Create meta data
-
 # Lia and Joa
 origSiteID <-  c("Lia", "Joa")
 origBlockID <-  c(1:10)
@@ -63,5 +62,8 @@ ExperimentalDesign <- left_join(
          turfID = paste0(origPlotID, " ", warming, "N", Nlevel, grazing,  " ", destPlotID)) %>% 
   ungroup() %>% 
   select(-fence, -rownr)
+
+### !!! CHANGE PLOTID 23-103 TO 23 AMBIENT, AND 24 TO 24-103 WARMING!!!
+
 
 #write_xlsx(ExperimentalDesign, path = "ExperimentalDesign_24-7-19.xlsx", col_names = TRUE)
