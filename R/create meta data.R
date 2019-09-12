@@ -31,6 +31,7 @@ vik <- tibble(
 
 # randomize warming and grazing treatment
 set.seed(32) # seed is needed to replicate sample_frac
+#set.seed(33) # for Chinese experiment
 meta2 <- meta %>% 
   # create variable for grazing treatment inside or outside fence
   mutate(fence = if_else(grazing == "N", "out", "in")) %>% 
@@ -61,9 +62,17 @@ ExperimentalDesign <- left_join(
          destPlotID = ifelse(is.na(destPlotID), origPlotID, destPlotID),
          turfID = paste0(origPlotID, " ", warming, "N", Nlevel, grazing,  " ", destPlotID)) %>% 
   ungroup() %>% 
-  select(-fence, -rownr)
+  select(-fence, -rownr) %>% 
+  # CHANGE PLOTID 23-103 TO 23 AMBIENT, AND 24 TO 24-103 WARMING (wrong turf was transplanted!)
+  mutate(warming = ifelse(origSiteID == "Lia" & origPlotID == 23, "A", warming),
+         destPlotID = ifelse(origSiteID == "Lia" & origPlotID == 23, 23, destPlotID),
+         turfID = ifelse(origSiteID == "Lia" & origPlotID == 23, "23 AN5N 23", turfID),
+         destSiteID = ifelse(origSiteID == "Lia" & origPlotID == 23, "Lia", destSiteID),
+         
+         warming = ifelse(origSiteID == "Lia" & origPlotID == 24, "W", warming),
+         destPlotID = ifelse(origSiteID == "Lia" & origPlotID == 24, 103, destPlotID),
+         turfID = ifelse(origSiteID == "Lia" & origPlotID == 24, "24 WN5N 103", turfID),
+         destSiteID = ifelse(origSiteID == "Lia" & origPlotID == 24, "Joa", destSiteID))
 
-### !!! CHANGE PLOTID 23-103 TO 23 AMBIENT, AND 24 TO 24-103 WARMING!!!
-
-
+ExperimentalDesign %>% filter(origPlotID %in% c(23, 24)) %>% as.data.frame()
 #write_xlsx(ExperimentalDesign, path = "ExperimentalDesign_24-7-19.xlsx", col_names = TRUE)
