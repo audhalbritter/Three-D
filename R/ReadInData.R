@@ -96,7 +96,7 @@ community <- meta %>%
                           "Rubus idaes" = "Rubus idaeus",
                           "Snerote sp" = "Gentiana nivalis",
                           "Stellaria gramineae" = "Stellaria graminea",
-                          "Unknown euphrasia sp?" = "Euphrasia wettsteinii",
+                          "Unknown euphrasia sp?" = "Euphrasia sp1",
                           "Vaccinium myrtilis" = "Vaccinium myrtillus",
                           "Total Cover (%)" = "SumofCover")) %>% 
   
@@ -127,12 +127,20 @@ community <- meta %>%
 # Do I need to replace NA with 0 in subplots?
 # mutate_at(.vars = c("1":"25"), .funs = list(~ ifelse(is.na(.), 0, .)))
 
+
+# FIX!!! duplicates
+community %>% group_by(Date, origSiteID, origBlockID, origPlotID, turfID, Year, Species, Cover) %>% 
+  mutate(n = n()) %>% 
+  filter(n > 1)
+
+
+
 # Do checks
 community %>% distinct(Species) %>% arrange(Species) %>% pn
 community %>% filter(Species %in% c("Unknown shrub, maybe salix")) %>% as.data.frame()
 community %>% filter(is.na(Species)) %>% as.data.frame()
 
-
+  
 
 #### COMMUNITY META DATA ####
 # Extract estimate of cover
