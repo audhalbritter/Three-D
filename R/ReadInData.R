@@ -5,7 +5,7 @@
 source("R/Load packages.R")
 
 #### PLOT LEVEL META DATA ####
-plotMeta <- read_excel(path = "data/Three-D_PlotLevel_MetaData_2019.xlsx")
+plotMeta <- read_excel(path = "data/metaData/Three-D_PlotLevel_MetaData_2019.xlsx")
 
 #dd <- read_xlsx(path = file, sheet = 8, skip = 2, n_max = 61, col_types = "text")
 #dd %>% pn
