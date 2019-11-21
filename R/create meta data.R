@@ -52,7 +52,7 @@ meta2 <- meta %>%
 
 
 # Join meta2 to warmed plots
-ExperimentalDesign <- left_join(
+metaTurfID <- left_join(
   meta2 %>% filter(origPlotID < 161), # remove plots from vik
   # only warmed plots, remove unused rows
   meta2 %>% filter(warming == "W") %>% select(-grazing, -destSiteID, destPlotID = origPlotID), 
@@ -74,5 +74,5 @@ ExperimentalDesign <- left_join(
          turfID = ifelse(origSiteID == "Lia" & origPlotID == 24, "24 WN5N 103", turfID),
          destSiteID = ifelse(origSiteID == "Lia" & origPlotID == 24, "Joa", destSiteID))
 
-ExperimentalDesign %>% filter(origPlotID %in% c(23, 24)) %>% as.data.frame()
-#write_xlsx(ExperimentalDesign, path = "ExperimentalDesign_24-7-19.xlsx", col_names = TRUE)
+
+#write_xlsx(metaTurfID, path = "metaTurfID_24-7-19.xlsx", col_names = TRUE)

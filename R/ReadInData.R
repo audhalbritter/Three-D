@@ -3,15 +3,16 @@
 ###########################
 
 source("R/Load packages.R")
+source("R/create meta data.R")
 
 #### PLOT LEVEL META DATA ####
-plotMeta <- read_excel(path = "data/metaData/Three-D_PlotLevel_MetaData_2019.xlsx")
+plotMetaData <- read_excel(path = "data/metaData/Three-D_PlotLevel_MetaData_2019.xlsx")
 
 
-file <- "data/community/2019/Lia/THREE-D_CommunityData_Lia_1_2019.xlsx"
-dd <- read_xlsx(path = file, sheet = 7, skip = 2, n_max = 61, col_types = "text")
-dd %>% pn
-read_xlsx(path = file, sheet = 5, n_max = 1, col_types = "text")
+# file <- "data/community/2019/Lia/THREE-D_CommunityData_Lia_1_2019.xlsx"
+# dd <- read_xlsx(path = file, sheet = 7, skip = 2, n_max = 61, col_types = "text")
+# dd %>% pn
+# read_xlsx(path = file, sheet = 5, n_max = 1, col_types = "text")
 
 #### COMMUNITY DATA ####
 ### Read in files
@@ -34,7 +35,7 @@ comm <- map_df(set_names(files), function(file) {
          Cover = as.numeric(Cover))
 
 #Function to read in meta data
-meta <- map_df(set_names(files), function(file) {
+metaComm <- map_df(set_names(files), function(file) {
   file %>% 
     excel_sheets() %>% 
     set_names() %>% 
@@ -56,8 +57,11 @@ meta <- map_df(set_names(files), function(file) {
 
 # Join data and meta
 # Warning message: 1 failed to parse. Ok, because one date is NA
-community <- meta %>% 
+community <- metaComm %>% 
   right_join(comm, by = c("origSiteID", "origBlockID", "origPlotID")) %>%
+  select(-turfID) %>% 
+  left_join(metaTurfID, by = c("origSiteID", "origBlockID", "origPlotID")) %>% 
+  select(origSiteID:origPlotID, destSiteID:turfID, warming:Nlevel, Date, Year, Species:Cover, Recorder, Scribe, Remark, file) %>% 
   
   # Remove rows, without species, subplot and cover is zero
   filter_at(vars("Species", "1":"Cover"), any_vars(!is.na(.))) %>% 
@@ -128,18 +132,21 @@ community <- meta %>%
 # mutate_at(.vars = c("1":"25"), .funs = list(~ ifelse(is.na(.), 0, .)))
 
 
-# FIX!!! duplicates
-community %>% group_by(Date, origSiteID, origBlockID, origPlotID, turfID, Year, Species, Cover) %>% 
-  mutate(n = n()) %>% 
-  filter(n > 1)
-
-
 
 # Do checks
 community %>% distinct(Species) %>% arrange(Species) %>% pn
 community %>% filter(Species %in% c("Unknown shrub, maybe salix")) %>% as.data.frame()
 community %>% filter(is.na(Species)) %>% as.data.frame()
 
+community %>% 
+  filter(!Species %in% c("Moss layer", "Vascular plant layer", "SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop", "Unknown seedlings")) %>% 
+  gather(key = subplot, value = presence, "1":"25") %>% 
+  filter(!is.na(presence)) %>% 
+  group_by(origSiteID, origBlockID, origPlotID, Year, Species, Cover) %>% 
+  summarise(n = n()) %>% 
+  mutate(MaxCover = n * 4,
+         UpperLimit = MaxCover * 1.2,
+         LowerLimit = MaxCover * 0.8)
   
 
 #### COMMUNITY META DATA ####
