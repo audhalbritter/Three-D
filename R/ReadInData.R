@@ -32,8 +32,6 @@ comm <- map_df(set_names(files), function(file) {
   mutate(origBlockID = as.numeric(origBlockID),
          origPlotID = as.numeric(origPlotID),
          Cover = as.numeric(Cover))
-  # Replace NA in subplot with 0 !!! not sure if this is right, give 0 and NAs...
-  #mutate_at(.vars = c("1":"25"), .funs = list(~ ifelse(is.na(.), 0, .)))
 
 #Function to read in meta data
 meta <- map_df(set_names(files), function(file) {
@@ -126,6 +124,9 @@ community <- meta %>%
 
 # A tibble: 4,075 x 37
   
+# Do I need to replace NA with 0 in subplots?
+# mutate_at(.vars = c("1":"25"), .funs = list(~ ifelse(is.na(.), 0, .)))
+
 # Do checks
 community %>% distinct(Species) %>% arrange(Species) %>% pn
 community %>% filter(Species %in% c("Unknown shrub, maybe salix")) %>% as.data.frame()
@@ -137,15 +138,18 @@ community %>% filter(is.na(Species)) %>% as.data.frame()
 # Extract estimate of cover
 cover <- community %>% 
   select(Date:Species, Cover, Remark) %>% 
-  filter(!is.na(Cover)) %>% 
-  filter(!Species %in% c("Moss layer", "Vascular plant layer", "SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop"))
+  filter(!Species %in% c("Moss layer", "Vascular plant layer", "SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop", "Unknown seedlings"))
 
-# Cover of FG
-dd <- community %>% 
+
+
+# Cover from Functional Groups
+community %>% 
   filter(Species %in% c("SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop")) %>% 
-  # make numeric !!!
-  mutate_at(.vars = c("25"), .funs = as.numeric) %>% 
-  select(Date:Species, Cover, Remark)
+  mutate_at(.vars = c("1":"25"), .funs = list(~ ifelse(is.na(.), 0, .))) %>% 
+  # make rows numeric
+  mutate_at(.vars = c("1":"25"), .funs = as.numeric) %>% 
+  mutate(Mean = rowMeans(select(., "1":"15"), na.rm = TRUE))
+### Cannot convert row 21-25 to 0, and row 16-25 are not numeric!!!
 
 
 # subplot level data
