@@ -7,14 +7,17 @@ source("R/Load packages.R")
 #### PLOT LEVEL META DATA ####
 plotMeta <- read_excel(path = "data/metaData/Three-D_PlotLevel_MetaData_2019.xlsx")
 
-#dd <- read_xlsx(path = file, sheet = 8, skip = 2, n_max = 61, col_types = "text")
-#dd %>% pn
-#check date for plot 88!!!
+
+file <- "data/community/2019/Lia/THREE-D_CommunityData_Lia_1_2019.xlsx"
+dd <- read_xlsx(path = file, sheet = 7, skip = 2, n_max = 61, col_types = "text")
+dd %>% pn
 
 #### COMMUNITY DATA ####
 ### Read in files
-files <- dir(path = "data/community", pattern = "\\.xlsx$", full.names = TRUE)
-dat <- map_df(set_names(files), function(file) {
+files <- dir(path = "data/community", pattern = "\\.xlsx$", full.names = TRUE, recursive = TRUE)
+
+# Function to read in data
+comm <- map_df(set_names(files), function(file) {
   file %>% 
     excel_sheets() %>% 
     set_names() %>% 
@@ -31,7 +34,7 @@ dat <- map_df(set_names(files), function(file) {
   # Replace NA in subplot with 0 !!! not sure if this is right, give 0 and NAs...
   mutate_at(.vars = c("1":"25"), .funs = list(~ ifelse(is.na(.), 0, .)))
 
-# Read in meta data
+#Function to read in meta data
 meta <- map_df(set_names(files), function(file) {
   file %>% 
     excel_sheets() %>% 
@@ -55,8 +58,12 @@ meta <- map_df(set_names(files), function(file) {
 # Join data and meta
 # Warning message: 1 failed to parse. Ok, because one date is NA
 community <- meta %>% 
-  right_join(dat, by = c("origSiteID", "origBlockID", "origPlotID")) %>% 
+  right_join(comm, by = c("origSiteID", "origBlockID", "origPlotID")) %>% 
   filter(Species != "Height / depth (cm)") %>% 
+  # Remove rows if Species is 0 (empty lines (NA) are converted to 0) and Cover is NA
+  filter(!(Species == "0" & is.na(Cover))) %>% 
+  # Remove white space after Species name
+  
   # Fix wrong species names
   mutate(Species = recode(Species, 
                           "Bryophyes" = "Bryophytes", 
@@ -67,16 +74,46 @@ community <- meta %>%
                           "Cerastium cerasteoides" = "Cerastium cerastoides",
                           "Cerastium cerastoies" = "Cerastium cerastoides",
                           "Cerstium cerasteoides" = "Cerastium cerastoides",
+                          "Cerstium fontana" = "Cerastium fontanum",
                           "Equiseum arvense" = "Equisetum arvense",
+                          "Equiseum vaginatum" = "Equisetum variegatum",
+                          "Gentiana nivalus" = "Gentiana nivalis",
+                          "Gron or fjellkurle" = "Orchid sp",
+                          "Hieraceum sp." = "Hieraceum sp",
+                          "Lycopodium sp" = "Lycopodium annotinum ssp alpestre cf",
+                          "Lycopodium" = "Lycopodium annotinum ssp alpestre cf",
+                          "Omalothrca supina" = "Omalotheca supina",
+                          "Pyrola" = "Pyrola sp",
+                          "Ranunculus" = "Ranunculus",
                           "Rubus idaes" = "Rubus idaeus",
+                          "Snerote sp" = "Gentiana nivalis",
                           "Stellaria gramineae" = "Stellaria graminea",
+                          "Unknown euphrasia sp?" = "Euphrasia wettsteinii",
                           "Vaccinium myrtilis" = "Vaccinium myrtillus",
-                          "Total Cover (%)" = "SumofCover"))
-# need to check if cover is missing!!!
-# Agrostis sp 1???
-# cerastium alpinum cf should be cerastoides?
-community %>% distinct(Species) %>% arrange(Species) %>% pn
+                          "Total Cover (%)" = "SumofCover")) %>% 
+  mutate(Species = ifelse(Species == "Euphrasia sp." & origSiteID == "Lia" & year(Date) == 2019, "Euphrasia wettsteinii", "Euphrasia stricta")) %>% 
+  mutate(Remark = ifelse(Species == "Orchid sp" & origSiteID == "Lia" & year(Date) == 2019, "Fjellhvitkurle or Gronnkurle", Remark))
 
+# Do checks
+community %>% distinct(Species) %>% arrange(Species) %>% pn
+community %>% filter(Species %in% c("Unknown euphrasia sp?")) %>% as.data.frame()
+# 0
+# Agrostis sp1
+# cerastium alpinum cf
+# Poa alpigena and alpina?
+# Carex
+
+# 184 unknown graminoid                                        
+# 185 Unknown grass                                            
+# 186 unknown herb                                             
+# 187 Unknown herb                                             
+# 188 unknown poaceae
+# 190 Unknown shrub, maybe salix
+
+# remove species with no data, e.g. Kobresia
+# remove space after sp name
+
+#### COMMUNITY META DATA ####
 # Extract estimate of cover
 cover <- community %>% 
   select(Date:Species, Cover, Remark) %>% 
