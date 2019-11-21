@@ -11,6 +11,7 @@ plotMeta <- read_excel(path = "data/metaData/Three-D_PlotLevel_MetaData_2019.xls
 file <- "data/community/2019/Lia/THREE-D_CommunityData_Lia_1_2019.xlsx"
 dd <- read_xlsx(path = file, sheet = 7, skip = 2, n_max = 61, col_types = "text")
 dd %>% pn
+read_xlsx(path = file, sheet = 5, n_max = 1, col_types = "text")
 
 #### COMMUNITY DATA ####
 ### Read in files
@@ -30,9 +31,9 @@ comm <- map_df(set_names(files), function(file) {
   # Fix format
   mutate(origBlockID = as.numeric(origBlockID),
          origPlotID = as.numeric(origPlotID),
-         Cover = as.numeric(Cover)) %>% 
+         Cover = as.numeric(Cover))
   # Replace NA in subplot with 0 !!! not sure if this is right, give 0 and NAs...
-  mutate_at(.vars = c("1":"25"), .funs = list(~ ifelse(is.na(.), 0, .)))
+  #mutate_at(.vars = c("1":"25"), .funs = list(~ ifelse(is.na(.), 0, .)))
 
 #Function to read in meta data
 meta <- map_df(set_names(files), function(file) {
@@ -58,19 +59,27 @@ meta <- map_df(set_names(files), function(file) {
 # Join data and meta
 # Warning message: 1 failed to parse. Ok, because one date is NA
 community <- meta %>% 
-  right_join(comm, by = c("origSiteID", "origBlockID", "origPlotID")) %>% 
-  filter(Species != "Height / depth (cm)") %>% 
-  # Remove rows if Species is 0 (empty lines (NA) are converted to 0) and Cover is NA
-  filter(!(Species == "0" & is.na(Cover))) %>% 
-  # Remove white space after Species name
+  right_join(comm, by = c("origSiteID", "origBlockID", "origPlotID")) %>%
   
+  # Remove rows, without species, subplot and cover is zero
+  filter_at(vars("Species", "1":"Cover"), any_vars(!is.na(.))) %>% 
+
+  # Remove species NA, are all these rows: Ratio > 1.5 is wrong
+  filter(!is.na(Species)) %>% 
+  # FIX!!!
+  filter(Species != "Height / depth (cm)") %>% 
+  
+  # Remove white space after Species name
+  mutate(Species = str_trim(Species, side = "right")) %>% 
   # Fix wrong species names
   mutate(Species = recode(Species, 
-                          "Bryophyes" = "Bryophytes", 
+                          "Agrostis sp 1" = "Agrostis mertensii cf",
                           "Alchemilla sp." = "Alchemilla sp",
+                          "Bryophyes" = "Bryophytes", 
                           "Carex sp 1" = "Carex sp1",
                           "Carex sp 2" = "Carex sp2",
                           "Carex sp 3" = "Carex sp3",
+                          "cerastium alpinum cf" = "Cerastium cerastoides",
                           "Cerastium cerasteoides" = "Cerastium cerastoides",
                           "Cerastium cerastoies" = "Cerastium cerastoides",
                           "Cerstium cerasteoides" = "Cerastium cerastoides",
@@ -84,6 +93,7 @@ community <- meta %>%
                           "Lycopodium" = "Lycopodium annotinum ssp alpestre cf",
                           "Omalothrca supina" = "Omalotheca supina",
                           "Pyrola" = "Pyrola sp",
+                          "Poa alpigena" = "Poa pratensis ssp alpigena",
                           "Ranunculus" = "Ranunculus",
                           "Rubus idaes" = "Rubus idaeus",
                           "Snerote sp" = "Gentiana nivalis",
@@ -91,27 +101,37 @@ community <- meta %>%
                           "Unknown euphrasia sp?" = "Euphrasia wettsteinii",
                           "Vaccinium myrtilis" = "Vaccinium myrtillus",
                           "Total Cover (%)" = "SumofCover")) %>% 
-  mutate(Species = ifelse(Species == "Euphrasia sp." & origSiteID == "Lia" & year(Date) == 2019, "Euphrasia wettsteinii", "Euphrasia stricta")) %>% 
-  mutate(Remark = ifelse(Species == "Orchid sp" & origSiteID == "Lia" & year(Date) == 2019, "Fjellhvitkurle or Gronnkurle", Remark))
+  
+  # Fix special cases
+  mutate(Species = ifelse(Species == "Euphrasia sp." & origSiteID == "Lia" & year(Date) == 2019, "Euphrasia wettsteinii", Species),
+         Species = ifelse(Species == "Euphrasia sp." & origSiteID == "Joa" & year(Date) == 2019, "Euphrasia stricta", Species)) %>%
+  mutate(Remark = ifelse(Species == "Orchid sp" & origSiteID == "Lia" & year(Date) == 2019, "Fjellhvitkurle or Gronnkurle", Remark)) %>% 
+  
+  # Unknown species
+  mutate(Species = ifelse(Species == "Unknown grass" & origSiteID == "Lia" & origBlockID == 8 & year(Date) == 2019, "Unknown graminoid1", Species),
+         Species = ifelse(Species == "unknown graminoid" & origSiteID == "Lia" & origBlockID == 10 & year(Date) == 2019, "Unknown graminoid2", Species),
+         Species = ifelse(Species == "unknown graminoid" & origSiteID == "Lia" & origBlockID == 6 & year(Date) == 2019, "Unknown graminoid3", Species),
+         Species = ifelse(Species == "unknown poaceae" & origSiteID == "Lia" & origBlockID == 5 & year(Date) == 2019, "Unknown graminoid4", Species),
+         
+         Species = ifelse(Species == "unknown herb" & origSiteID == "Lia" & origBlockID == 1 & year(Date) == 2019, "Unknown herb1", Species),
+         Species = ifelse(Species == "unknown herb" & origSiteID == "Lia" & origBlockID == 3 & year(Date) == 2019, "Unknown herb2", Species),
+         Species = ifelse(Species == "unknown herb" & origSiteID == "Lia" & origBlockID == 5 & year(Date) == 2019, "Unknown herb3", Species),
+         Species = ifelse(Species == "unknown herb" & origSiteID == "Lia" & origBlockID == 9 & year(Date) == 2019, "Unknown herb4", Species),
+         Species = ifelse(Species == "Unknown herb" & origSiteID == "Lia" & origBlockID == 3 & year(Date) == 2019, "Unknown herb5", Species),
+         
+         Species = ifelse(Species == "Unknown shrub, maybe salix" & origSiteID == "Lia" & origBlockID == 1 & year(Date) == 2019, "Unknown shrub1", Species)) %>% 
+    
+    # Remove rows, with species, but where subplot and cover is zero
+    filter_at(vars("1":"Cover"), any_vars(!is.na(.)))
 
+# A tibble: 4,075 x 37
+  
 # Do checks
 community %>% distinct(Species) %>% arrange(Species) %>% pn
-community %>% filter(Species %in% c("Unknown euphrasia sp?")) %>% as.data.frame()
-# 0
-# Agrostis sp1
-# cerastium alpinum cf
-# Poa alpigena and alpina?
-# Carex
+community %>% filter(Species %in% c("Unknown shrub, maybe salix")) %>% as.data.frame()
+community %>% filter(is.na(Species)) %>% as.data.frame()
 
-# 184 unknown graminoid                                        
-# 185 Unknown grass                                            
-# 186 unknown herb                                             
-# 187 Unknown herb                                             
-# 188 unknown poaceae
-# 190 Unknown shrub, maybe salix
 
-# remove species with no data, e.g. Kobresia
-# remove space after sp name
 
 #### COMMUNITY META DATA ####
 # Extract estimate of cover
