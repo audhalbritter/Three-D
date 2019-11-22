@@ -5,14 +5,11 @@
 source("R/Load packages.R")
 source("R/create meta data.R")
 
-#### PLOT LEVEL META DATA ####
-plotMetaData <- read_excel(path = "data/metaData/Three-D_PlotLevel_MetaData_2019.xlsx")
-
-
-# file <- "data/community/2019/Lia/THREE-D_CommunityData_Lia_1_2019.xlsx"
-# dd <- read_xlsx(path = file, sheet = 7, skip = 2, n_max = 61, col_types = "text")
-# dd %>% pn
+file <- "data/community/2019/Lia/THREE-D_CommunityData_Lia_1_2019.xlsx"
+dd <- read_xlsx(path = file, sheet = 7, skip = 2, n_max = 61, col_types = "text")
+dd %>% pn
 # read_xlsx(path = file, sheet = 5, n_max = 1, col_types = "text")
+
 
 #### COMMUNITY DATA ####
 ### Read in files
@@ -123,13 +120,13 @@ community <- metaComm %>%
          
          Species = ifelse(Species == "Unknown shrub, maybe salix" & origSiteID == "Lia" & origBlockID == 1 & year(Date) == 2019, "Unknown shrub1", Species)) %>% 
     
-    # Remove rows, with species, but where subplot and cover is zero
-    filter_at(vars("1":"Cover"), any_vars(!is.na(.)))
+  # Remove rows, with species, but where subplot and cover is zero
+  filter_at(vars("1":"Cover"), any_vars(!is.na(.))) %>% 
+  #Replace all NA in subplots with 0
+  mutate_at(vars("1":"25"), ~replace_na(., 0)) 
 
 # A tibble: 4,075 x 37
-  
-# Do I need to replace NA with 0 in subplots?
-# mutate_at(.vars = c("1":"25"), .funs = list(~ ifelse(is.na(.), 0, .)))
+
 
 
 
@@ -138,6 +135,7 @@ community %>% distinct(Species) %>% arrange(Species) %>% pn
 community %>% filter(Species %in% c("Unknown shrub, maybe salix")) %>% as.data.frame()
 community %>% filter(is.na(Species)) %>% as.data.frame()
 
+# Check if Cover is larger than max possible cover
 community %>% 
   filter(!Species %in% c("Moss layer", "Vascular plant layer", "SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop", "Unknown seedlings")) %>% 
   gather(key = subplot, value = presence, "1":"25") %>% 
@@ -145,8 +143,8 @@ community %>%
   group_by(origSiteID, origBlockID, origPlotID, Year, Species, Cover) %>% 
   summarise(n = n()) %>% 
   mutate(MaxCover = n * 4,
-         UpperLimit = MaxCover * 1.2,
-         LowerLimit = MaxCover * 0.8)
+         UpperLimit = MaxCover * 1.2) %>% 
+  filter(MaxCover < Cover)
   
 
 #### COMMUNITY META DATA ####
@@ -155,15 +153,17 @@ cover <- community %>%
   select(Date:Species, Cover, Remark) %>% 
   filter(!Species %in% c("Moss layer", "Vascular plant layer", "SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop", "Unknown seedlings"))
 
+save(cover, file = "data/community/THREE-D_Cover_2019.Rdata")
+
 
 
 # Cover from Functional Groups
 community %>% 
-  filter(Species %in% c("SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop")) %>% 
-  mutate_at(.vars = c("1":"25"), .funs = list(~ ifelse(is.na(.), 0, .))) %>% 
+  filter(Species %in% c("SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop")) %>%
+  select("1":"25") %>% 
   # make rows numeric
   mutate_at(.vars = c("1":"25"), .funs = as.numeric) %>% 
-  mutate(Mean = rowMeans(select(., "1":"15"), na.rm = TRUE))
+  mutate(Mean = rowMeans(select(., "1":"25"), na.rm = TRUE))
 ### Cannot convert row 21-25 to 0, and row 16-25 are not numeric!!!
 
 
