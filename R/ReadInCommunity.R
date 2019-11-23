@@ -147,7 +147,7 @@ community %>%
   filter(MaxCover < Cover)
   
 
-#### COMMUNITY META DATA ####
+#### COVER ####
 # Extract estimate of cover
 cover <- community %>% 
   select(Date:Species, Cover, Remark) %>% 
@@ -156,16 +156,24 @@ cover <- community %>%
 save(cover, file = "data/community/THREE-D_Cover_2019.Rdata")
 
 
-
+#### COMMUNITY META DATA ####
 # Cover from Functional Groups
-community %>% 
+metaCommunity <- community %>% 
   filter(Species %in% c("SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop")) %>%
-  select("1":"25") %>% 
+  pivot_longer(cols = `1`:`25`, names_to = "subplot", values_to = "percentage") %>% 
   # make rows numeric
-  mutate_at(.vars = c("1":"25"), .funs = as.numeric) %>% 
-  mutate(Mean = rowMeans(select(., "1":"25"), na.rm = TRUE))
-### Cannot convert row 21-25 to 0, and row 16-25 are not numeric!!!
+  mutate(percentage = as.numeric(percentage)) %>% 
+  group_by(turfID, Cover, Species) %>% 
+  summarise(mean = mean(percentage)) %>% 
+  mutate(MeanCover = ifelse(Species %in% c("Vascular plants", "SumofCover"), Cover, mean)) %>% 
+  ungroup() %>% 
+  rename(FunctionalGroup = Species) %>% 
+  select(turfID, FunctionalGroup, MeanCover) %>% 
+  left_join(metaTurfID, by = "turfID")
 
+save(metaCommunity, file = "data/community/THREE-D_metaCommunity_2019.Rdata")
+
+LDA
 
 # subplot level data
 #subplotSpecies <- 
