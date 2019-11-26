@@ -70,6 +70,7 @@ community <- metaComm %>%
   
   # Remove white space after Species name
   mutate(Species = str_trim(Species, side = "right")) %>% 
+  mutate(Recorder = recode(Recorder, "silje" = "so")) %>% 
   # Fix wrong species names
   mutate(Species = recode(Species, 
                           "Agrostis sp 1" = "Agrostis mertensii cf",
@@ -101,6 +102,30 @@ community <- metaComm %>%
                           "Vaccinium myrtilis" = "Vaccinium myrtillus",
                           "Total Cover (%)" = "SumofCover")) %>% 
   
+  # Carex
+  mutate(Species = recode(Species,
+                          "Carex blueish" = "Carex blue",
+                          
+                          "Carex blue green" = "Carex bluegreen thin",
+                          "Carex blue green thin bigelowii like" = "Carex bluegreen thin",
+                          "Carex blue green v" = "Carex bluegreen thin",
+                          "Carex bluegreen thin" = "Carex bluegreen thin",
+                          "Carex thin bluegreen v short flowering stalk darkbrown fl" = "Carex bluegreen thin",
+                          "Carex v bluegreen" = "Carex bluegreen thin",
+                          
+                          "Carex cap wide" = "Carex capillaris wide",
+                          "Carex brei capillaris" = "Carex capillaris wide",
+                          "Carex wide capillaris" = "Carex capillaris wide",
+                          
+                          "Carex norwegica" = "Carex norvegica cf",
+                          "Carex norvegica" = "Carex norvegica cf",
+                          
+                          "Carex m yellowish thin" = "Carex m yellow thin",
+                          
+                          "Carex thin vaginatum like" = "Carex thin vaginata like"
+                          
+                          )) %>% 
+  
   # Fix special cases
   mutate(Species = ifelse(Species == "Euphrasia sp." & origSiteID == "Lia" & year(Date) == 2019, "Euphrasia wettsteinii", Species),
          Species = ifelse(Species == "Euphrasia sp." & origSiteID == "Joa" & year(Date) == 2019, "Euphrasia stricta", Species)) %>%
@@ -127,30 +152,12 @@ community <- metaComm %>%
 
 # A tibble: 4,075 x 37
 
-
-
-
-# Do checks
-community %>% distinct(Species) %>% arrange(Species) %>% pn
-community %>% filter(Species %in% c("Unknown shrub, maybe salix")) %>% as.data.frame()
-community %>% filter(is.na(Species)) %>% as.data.frame()
-
-# Check if Cover is larger than max possible cover
-community %>% 
-  filter(!Species %in% c("Moss layer", "Vascular plant layer", "SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop", "Unknown seedlings")) %>% 
-  gather(key = subplot, value = presence, "1":"25") %>% 
-  filter(!is.na(presence)) %>% 
-  group_by(origSiteID, origBlockID, origPlotID, Year, Species, Cover) %>% 
-  summarise(n = n()) %>% 
-  mutate(MaxCover = n * 4,
-         UpperLimit = MaxCover * 1.2) %>% 
-  filter(MaxCover < Cover)
   
 
 #### COVER ####
 # Extract estimate of cover
 cover <- community %>% 
-  select(Date:Species, Cover, Remark) %>% 
+  select(origSiteID:Species, Cover, Recorder, Remark, file) %>% 
   filter(!Species %in% c("Moss layer", "Vascular plant layer", "SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop", "Unknown seedlings"))
 
 save(cover, file = "data/community/THREE-D_Cover_2019.Rdata")
@@ -173,7 +180,6 @@ metaCommunity <- community %>%
 
 save(metaCommunity, file = "data/community/THREE-D_metaCommunity_2019.Rdata")
 
-LDA
 
 # subplot level data
 #subplotSpecies <- 
@@ -190,25 +196,3 @@ community %>%
          Juvenile = ifelse(Presence == "j"|"dj", 1, 0),
          Seedling = ifelse(Presence == "s"|"Unknown seedlings", 1, 0))
 
-
-
-library("vegan")
-library("ggvegan")
-
-## ordination
-cover_fat <- cover %>% 
-  select(-Date, -Year, -turfID, -Recorder, -Scribe, -file, -Remark) %>% 
-  spread(key = Species, value = Cover, fill = 0) %>% 
-  mutate(origBlockID = as.factor(origBlockID))
-
-cover_fat_spp <- cover_fat %>% select(-(origSiteID:origPlotID))
-
-set.seed(32)
-NMDS <- metaMDS(cover_fat_spp, noshare = TRUE, try = 30)#DNC
-
-fNMDS <- fortify(NMDS) %>% 
-  filter(Score == "sites") %>%
-  bind_cols(cover_fat %>% select(origSiteID:origPlotID))
-
-ggplot(fNMDS, aes(x = NMDS1, y = NMDS2, colour = origBlockID)) +
-  geom_point()
