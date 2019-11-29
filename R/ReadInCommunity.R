@@ -5,9 +5,9 @@
 source("R/Load packages.R")
 source("R/create meta data.R")
 
-file <- "data/community/2019/Lia/THREE-D_CommunityData_Lia_1_2019.xlsx"
-dd <- read_xlsx(path = file, sheet = 7, skip = 2, n_max = 61, col_types = "text")
-dd %>% pn
+# file <- "data/community/2019/Lia/THREE-D_CommunityData_Lia_1_2019.xlsx"
+# dd <- read_xlsx(path = file, sheet = 7, skip = 2, n_max = 61, col_types = "text")
+# dd %>% pn
 # read_xlsx(path = file, sheet = 5, n_max = 1, col_types = "text")
 
 
@@ -252,7 +252,7 @@ cover <- community %>%
   select(origSiteID:Species, Cover, Recorder, Remark, file) %>% 
   filter(!Species %in% c("Moss layer", "Vascular plant layer", "SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop", "Unknown seedlings"))
 
-save(cover, file = "data/community/THREE-D_Cover_2019.Rdata")
+write_csv(cover, path = "data/community/THREE-D_Cover_2019.csv", col_names = TRUE)
 
 
 #### COMMUNITY META DATA ####
@@ -270,21 +270,21 @@ metaCommunity <- community %>%
   select(turfID, FunctionalGroup, MeanCover) %>% 
   left_join(metaTurfID, by = "turfID")
 
-save(metaCommunity, file = "data/community/THREE-D_metaCommunity_2019.Rdata")
+write_csv(metaCommunity, path = "data/community/THREE-D_metaCommunity_2019.csv", col_names = TRUE)
 
 
 # subplot level data
-#subplotSpecies <- 
-community %>% 
+CommunitySubplot <- community %>% 
   filter(!Species %in% c("Moss layer", "Vascular plant layer", "SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop")) %>% 
-  select(-Cover) %>% 
-  gather(key = Subplot, value = Presence, -c(Date:Species, Remark)) %>% 
-  filter(Presence != 0) %>% ### remove 0 or NA?!!!
-  filter(Presence != "Ratio > 1.5 is wrong") %>% # not sure why this is here...
-  # rename
-  mutate(Presence = recode(Presence, "df" = "fd", "1j" = "j")) %>% 
-  mutate(Fertile = ifelse(Presence == "f"|"fd", 1, 0),
-         Dominant = ifelse(Presence == "d"|"fd"|"dj", 1, 0),
-         Juvenile = ifelse(Presence == "j"|"dj", 1, 0),
-         Seedling = ifelse(Presence == "s"|"Unknown seedlings", 1, 0))
+  select(-Scribe) %>% 
+  pivot_longer(cols = `1`:`25`, names_to = "Subplot", values_to = "Presence") %>%
+  # Unknown seedlings have sometimes counts, but not consistent. So make just presence.
+  mutate(Presence = ifelse(Species == "Unknown seedlings" & Presence != "0", "s", Presence),
+         Presence = recode(Presence, "df" = "fd", "1j" = "j")) %>% 
+  mutate(Fertile = ifelse(Presence %in% c("f", "fd"), 1, 0),
+         Dominant = ifelse(Presence %in% c("d", "fd", "dj"), 1, 0),
+         Juvenile = ifelse(Presence %in% c("j", "dj"), 1, 0),
+         Seedling = ifelse(Presence == "s", 1, 0)) %>% 
+  mutate(Presence = ifelse(Presence != "0", 1, 0))
 
+write_csv(CommunitySubplot, path = "data/community/THREE-D_CommunitySubplot_2019.csv", col_names = TRUE)
