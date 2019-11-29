@@ -102,27 +102,119 @@ community <- metaComm %>%
                           "Vaccinium myrtilis" = "Vaccinium myrtillus",
                           "Total Cover (%)" = "SumofCover")) %>% 
   
-  # Carex
+  # Carex hell
+  mutate(Species = ifelse(Species == "Carex sp3" & origSiteID == "Lia" & year(Date) == 2019 & Recorder == "so", "Carex small bigelowii", Species),
+         Species = ifelse(Species == "Carex sp3" & origSiteID == "Lia" & year(Date) == 2019 & Recorder == "aud", "Carex wide v shaped dark", Species),
+         Species = ifelse(Species == "Carex sp3" & origSiteID == "Joa" & year(Date) == 2019 & Recorder == "aud", "Carex vaginata", Species)) %>% 
   mutate(Species = recode(Species,
-                          "Carex blueish" = "Carex blue",
-                          
-                          "Carex blue green" = "Carex bluegreen thin",
-                          "Carex blue green thin bigelowii like" = "Carex bluegreen thin",
-                          "Carex blue green v" = "Carex bluegreen thin",
-                          "Carex bluegreen thin" = "Carex bluegreen thin",
-                          "Carex thin bluegreen v short flowering stalk darkbrown fl" = "Carex bluegreen thin",
-                          "Carex v bluegreen" = "Carex bluegreen thin",
-                          
                           "Carex cap wide" = "Carex capillaris wide",
                           "Carex brei capillaris" = "Carex capillaris wide",
                           "Carex wide capillaris" = "Carex capillaris wide",
                           
+                          # Carex atrata cf
+                          "Carex m dgreen yellow wide" = "Carex atrata cf",
+                          "Carex m wide green yellow" = "Carex atrata cf",
+                          "Carex m yellow dgreen wide" = "Carex atrata cf",
+                          "Carex m yellow dgreen wide" = "Carex atrata cf",
+                          "Carex wide darkgreen yellow" = "Carex atrata cf",
+                          "Carex wide m yellow dark green" = "Carex atrata cf",
+                          "Carex yellow dark green m wide" = "Carex atrata cf",
+                          "Carex atrata" = "Carex atrata cf",
+                          "Carex wide v dark green yellowish" = "Carex atrata cf",
+                          "Carex v dgreen wide" = "Carex atrata cf",
+                          "Carex v dgreen yellow" = "Carex atrata cf",
+                          "Carex v dgreen yellow wide" = "Carex atrata cf",
+                          "Carex v yellow d.green wide" = "Carex atrata cf",
+                          "Carex v dark yellow wide" = "Carex atrata cf",
+                          "Carex v green yellow wide" = "Carex atrata cf",
+                          
+                          # Carex small bigellowii
+                          "Carex sp1" = "Carex small bigelowii",
+                          "Carex small bigelowii v" = "Carex small bigelowii",
+                          
+                          # Carex saxatilis
+                          "Carex saxatile" = "Carex saxatilis cf",
+                          "Carex saxatile very small" = "Carex saxatilis cf",
+                          "Carex saxifraga" = "Carex saxatilis cf",
+                          "Carex light yellow m wide" = "Carex saxatilis cf",
+                          "Carex lightgreen m" = "Carex saxatilis cf",
+                          "Carex m lightgreen wide" = "Carex saxatilis cf",
+                          "Carex m lightgreen wide, ca 3 mm" = "Carex saxatilis cf",
+                          "Carex m yellow" = "Carex saxatilis cf",
+                          "Carex m yellow very wide" = "Carex saxatilis cf",
+                          "Carex m yellow wide" = "Carex saxatilis cf",
+                          "Carex wide yellow m shape" = "Carex saxatilis cf",
+                          "Carex v yellow wide" = "Carex saxatilis cf",
+                          "Carex yellow m" = "Carex saxatilis cf",
+                          "Carex yellow wide" = "Carex saxatilis cf",
+                          "Carex sp4" = "Carex saxatilis cf",
+                          "Carex m wide bigel flower but leafs are not" = "Carex saxatilis cf",
+                          "Carex m yellowish soft wide, bigel flower" = "Carex saxatilis cf",
+                          "Carex with fl from plot 67" = "Carex saxatilis cf",
+                          
+                          
+                          # Carex brunnescens cf
+                          "Carex sp2" = "Carex brunnescens cf",
+                          "Carex Carex sp2 dark m" = "Carex brunnescens cf",
+                          "Carex sp2 dark v thin" = "Carex brunnescens cf",
+                          "Carex sp2" = "Carex brunnescens cf",
+                          "Carex sp2 dark m" = "Carex brunnescens cf",
+                          "Carex sp2 dark v thin" = "Carex brunnescens cf",
+                          
+                          # Carex norvegica cf
                           "Carex norwegica" = "Carex norvegica cf",
                           "Carex norvegica" = "Carex norvegica cf",
+                          "Carex dark v thin" = "Carex norvegica cf",
+                          "Carex v dark thin" = "Carex norvegica cf",
+                          "Carex v darkgreen thin" = "Carex norvegica cf",
+                          "Carex v dgreen thin" = "Carex norvegica cf",
+                          "Carex v thin dgreen" = "Carex norvegica cf",
+                          "Carex v green" = "Carex norvegica cf",
+                          "Carex m dark thin" = "Carex norvegica cf",
+                          "Carex m green thin" = "Carex norvegica cf",
                           
-                          "Carex m yellowish thin" = "Carex m yellow thin",
+                          # Carex panicea cf
+                          "Carex blueish" = "Carex panicea cf",
+                          "Carex blue green" = "Carex panicea cf",
+                          "Carex blue green thin bigelowii like" = "Carex panicea cf",
+                          "Carex blue green v" = "Carex panicea cf",
+                          "Carex bluegreen thin" = "Carex panicea cf",
+                          "Carex thin bluegreen v short flowering stalk darkbrown fl" = "Carex panicea cf",
+                          "Carex v bluegreen" = "Carex panicea cf",
+                          "Carex v blue" = "Carex panicea cf",
+                          "Carex sp5" = "Carex panicea cf",
+                          "Carex m bluegreen wide" = "Carex panicea cf",
+                          "Carex v blueish wide" = "Carex panicea cf",
+                          "Carex blue" = "Carex panicea cf",
                           
-                          "Carex thin vaginatum like" = "Carex thin vaginata like"
+                          # Unknown stuff
+                          "Carex wide m" = "Carex wide",
+                          "Carex wide v" = "Carex wide",
+                          "Carex wide m dark" = "Carex wide",
+                          "Carex m dark green wide" = "Carex wide",
+                          "Carex m wide" = "Carex wide",
+                          "Carex wide v shaped dark" = "Carex wide",
+                          
+                          "Carex v thin" = "Carex thin",
+                          "Carex v thin leaf" = "Carex thin",
+                          "Carex thin" = "Carex thin",
+                          
+                          "Carex bigelowii light green" = "Carex light green",
+                          "Carex light green m rough thin leaves" = "Carex light green",
+                          "Carex m yellowish thin" = "Carex light green",
+                          "Carex m yellow thin" = "Carex light green",
+                          "Carex v lightgreen" = "Carex light green",
+                          "Carex thin light green pointy" = "Carex light green",
+                          "Carex thin vaginatum like" = "Carex light green",
+                          "Carex thin vaginata like" = "Carex light green",
+                          "Carex flava?" = "Carex light green",
+                          
+                          "Carex v dark green soft leaf bigelowii tip" = "Carex dark green",
+                          "Carex thin m darkgreen point all out" = "Carex dark green",
+                          
+                          "Carex vissen" = "Carex sp",
+                          "Carex sp beitet" = "Carex sp",
+                          "Carex nbr" = "Carex sp"
                           
                           )) %>% 
   
@@ -152,7 +244,7 @@ community <- metaComm %>%
 
 # A tibble: 4,075 x 37
 
-  
+
 
 #### COVER ####
 # Extract estimate of cover
