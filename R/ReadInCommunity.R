@@ -256,6 +256,16 @@ write_csv(cover, path = "data/community/THREE-D_Cover_2019.csv", col_names = TRU
 
 
 #### COMMUNITY META DATA ####
+# Height
+height <- community %>% 
+  filter(Species %in% c("Vascular plant layer", "Moss layer")) %>% 
+  select(-c(`5`:`25`)) %>% 
+  pivot_longer(cols = `1`:`4`, names_to = "number", values_to = "Height") %>% 
+  mutate(Height = as.numeric(Height)) %>% 
+  group_by(turfID, Year, Species) %>% 
+  summarise(MeanHeight = mean(Height, na.rm = TRUE)) %>% 
+  rename("Layer" = "Species")
+
 # Cover from Functional Groups
 metaCommunity <- community %>% 
   filter(Species %in% c("SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop")) %>%
@@ -268,7 +278,8 @@ metaCommunity <- community %>%
   ungroup() %>% 
   rename(FunctionalGroup = Species) %>% 
   select(turfID, FunctionalGroup, MeanCover) %>% 
-  left_join(metaTurfID, by = "turfID")
+  left_join(metaTurfID, by = "turfID") %>% 
+  left_join(height, by = "turfID")
 
 write_csv(metaCommunity, path = "data/community/THREE-D_metaCommunity_2019.csv", col_names = TRUE)
 
