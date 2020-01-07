@@ -33,15 +33,22 @@ ggplot(metaCommunity, aes(x = origSiteID, y = MeanCover)) +
 
 #### SUBPLOT DATA ####
 devtools::install_github("Between-the-Fjords/turfmapper")
-library("turfmpper")
+library("turfmapper")
 
 #set up subturf grid
-CommunitySubplot %>%
-  filter(turfID == "84 WN1M 161") %>%
+grid <- make_grid(ncol = 5)
+threed <- CommunitySubplot %>%
+  filter(Cover != 0) %>% 
+  filter(turfID == "20 AN5I 20") %>%
+  select(origSiteID, Year, origPlotID, Species, Cover, Subplot, Presence) %>% 
+  mutate(Subplot = as.numeric(Subplot))
+
+threed %>% 
   make_turf_plot(
-    year = Year, species = Species, cover = Presence, subturf = Subplot, 
-    title = glue::glue("Site {.$site}: plot {.$plot}"), 
-    grid_long = 1)
+    year = Year, species = Species, cover = Cover, subturf = Subplot, 
+    title = glue::glue("Site {.$origSiteID}: plot {.$origPlotID}"), 
+    grid_long = grid)
+
 
 
 #### REOCRDER BIAS ####
