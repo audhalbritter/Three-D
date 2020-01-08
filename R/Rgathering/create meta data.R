@@ -67,12 +67,13 @@ metaTurfID <- left_join(
   mutate(warming = ifelse(origSiteID == "Lia" & origPlotID == 23, "A", warming),
          destPlotID = ifelse(origSiteID == "Lia" & origPlotID == 23, 23, destPlotID),
          turfID = ifelse(origSiteID == "Lia" & origPlotID == 23, "23 AN5N 23", turfID),
-         destSiteID = ifelse(origSiteID == "Lia" & origPlotID == 23, "Lia", destSiteID),
          
          warming = ifelse(origSiteID == "Lia" & origPlotID == 24, "W", warming),
          destPlotID = ifelse(origSiteID == "Lia" & origPlotID == 24, 103, destPlotID),
-         turfID = ifelse(origSiteID == "Lia" & origPlotID == 24, "24 WN5N 103", turfID),
-         destSiteID = ifelse(origSiteID == "Lia" & origPlotID == 24, "Joa", destSiteID))
-
+         turfID = ifelse(origSiteID == "Lia" & origPlotID == 24, "24 WN5N 103", turfID)) %>% 
+  mutate(destSiteID = as.character(destSiteID)) %>% 
+  mutate(destSiteID = case_when(turfID == "23 AN5N 23" ~ "Lia",
+                                turfID == "24 WN5N 103" ~ "Joa",
+                                TRUE ~ destSiteID))
 
 #write_xlsx(metaTurfID, path = "metaTurfID_24-7-19.xlsx", col_names = TRUE)
