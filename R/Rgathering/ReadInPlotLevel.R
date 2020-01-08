@@ -1,6 +1,11 @@
 #### PLOT LEVEL META DATA ####
 plotMetaData <- read_excel(path = "data/metaData/Three-D_PlotLevel_MetaData_2019.xlsx")
 
+siteMetaData <- tibble(destSiteID = c("Vik", "Joa", "Lia"),
+                       Latitude = c(60.88030, 60.86183, 60.85994),
+                       Longitude = c(7.16980, 7.16800, 7.19504),
+                       Elevation = c(474, 920, 1290))
+
 
 #### SOIL SAMPLES
 soilSamples <- read_excel(path = "data/metaData/ThreeD_SoilSamples_2019.xlsx")
