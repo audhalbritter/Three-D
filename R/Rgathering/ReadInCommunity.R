@@ -3,7 +3,7 @@
 ###########################
 
 source("R/Load packages.R")
-source("R/create meta data.R")
+source("R/Rgathering/create meta data.R")
 
 # file <- "data/community/2019/Lia/THREE-D_CommunityData_Lia_1_2019.xlsx"
 # dd <- read_xlsx(path = file, sheet = 7, skip = 2, n_max = 61, col_types = "text")
