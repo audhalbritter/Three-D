@@ -278,8 +278,9 @@ metaCommunity <- community %>%
   ungroup() %>% 
   rename(FunctionalGroup = Species) %>% 
   select(turfID, FunctionalGroup, MeanCover) %>% 
-  left_join(metaTurfID, by = "turfID") %>% 
-  left_join(height, by = "turfID")
+  left_join(metaTurfID, by = "turfID") #%>% 
+  ### Should height be added??? !!!
+  #left_join(height, by = "turfID")
 
 write_csv(metaCommunity, path = "data/community/THREE-D_metaCommunity_2019.csv", col_names = TRUE)
 
