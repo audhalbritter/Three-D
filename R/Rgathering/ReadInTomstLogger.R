@@ -3,13 +3,14 @@
 ###########################
 
 source("R/Load packages.R")
-source("R/create meta data.R")
+source("R/Rgathering/ReadInPlotLevel.R")
+source("R/Rgathering/ReadInCommunity.R")
 
 
 #### CLIMATE DATA ####
 
 # Read in meta data
-meta <- read_excel(path = "data/metaData/Three-D_ClimateLogger_Meta_2019.xlsx", col_names = TRUE, col_types = c("text", "numeric", "text", "text", "date", "date", "text")) %>% 
+metaTomst <- read_excel(path = "data/metaData/Three-D_ClimateLogger_Meta_2019.xlsx", col_names = TRUE, col_types = c("text", "numeric", "numeric", "text", "date", "date", "text")) %>% 
   mutate(InitialDate = ymd(InitialDate),
          InitialDate_Time = ymd_hm(paste(InitialDate, paste(hour(InitialTime), minute(InitialTime), sep = ":"), sep = " ")))
 
@@ -30,7 +31,7 @@ temp <- map_df(set_names(files), function(file) {
   #mutate(SoilMoisture = a * RawSoilmoisture^2 + b * RawSoilmoisture + c) %>% 
   # get logger ID
   mutate(LoggerID = substr(File, nchar(File)-9, nchar(File)-6)) %>% 
-  left_join(meta, by = "LoggerID")
+  left_join(metaTomst, by = "LoggerID")
   
 
 # Fix data
@@ -41,13 +42,107 @@ temp <- temp %>%
   group_by(LoggerID) %>% 
   filter(Date_Time > InitialDate_Time)
 
-temp %>% filter(LoggerID == "5255") %>% select(InitialDate_Time)
 
+# Check data
 temp %>% 
   ggplot(aes(x = Date_Time, y = AirTemperature, colour = as.factor(LoggerID))) +
   geom_line() +
   facet_grid(BlockID ~ Site) +
   theme(legend.position="none")
   
+plotMetaData2 <- plotMetaData %>% 
+  select(origSiteID, origBlockID, origPlotID, Slope, Exposure)
 
 
+# Prepare data for soiltemperature lab
+# Data
+soiltempdata2 <- temp %>% 
+  select(LoggerID, Date_Time, SoilTemperature) %>%  # add soilmoisture once I have converted !!!
+  mutate(Year = year(Date_Time),
+         Month = month(Date_Time),
+         Day = day(Date_Time),
+         Time = format(Date_Time,"%H:%M:%S")) %>% 
+  rename("Plotcode" = "LoggerID", "Temperature" = "SoilTemperature") %>% 
+  select(Plotcode, Year:Time, Temperature, Date_Time) %>% 
+  left_join(metaTomst, by = c("Plotcode" = "LoggerID")) %>% 
+  # join with meta and select control plots
+  left_join(metaTurfID, by = c("destSiteID", "destBlockID", "destPlotID")) %>% 
+  # filter ambient and Nlevel 0
+  filter(warming == "A" & Nlevel %in% c(1, 2)) 
+
+# select columns
+soiltempdata <- soiltempdata2 %>% 
+  select(Plotcode:Temperature)
+
+# Extra data
+extraData <- height %>% 
+  filter(Year == 2019) %>% 
+  pivot_wider(names_from = Layer, values_from = MeanHeight) %>% 
+  rename("Moss_layer_depth" = `Moss layer`, "Vegetation_height" = `Vascular plant layer`) %>% 
+  left_join(metaCommunity %>% 
+              filter(FunctionalGroup == "SumofCover") %>% 
+              select(turfID, MeanCover) %>% 
+              rename("Total_vegetation_cover" = "MeanCover"), by = "turfID") %>% 
+  # add plotMetaData once slope and exposure have been measured at dest site !!!
+  #left_join(plotMetaData %>% 
+              #select(origSiteID, origBlockID, origPlotID, Slope, Exposure) %>% 
+              #left_join(metaTurfID, by = c("destSiteID", "destBlockID", "destPlotID")) %>% 
+              #filter(warming == "A"), by = "turfID") %>% 
+  select(turfID, Moss_layer_depth, Vegetation_height, Total_vegetation_cover)
+  
+
+
+
+# Meta data
+soiltempmeta <- soiltempdata2 %>% 
+  group_by(Plotcode, destSiteID, turfID) %>% 
+  mutate(minDate = min(Date_Time),
+         maxDate = max(Date_Time),
+         Start_date_year = year(minDate),
+         Start_date_month = month(minDate),
+         Start_date_day = day(minDate),
+         End_date_year = year(maxDate),
+         End_date_month = month(maxDate),
+         End_date_day = day(maxDate)) %>% 
+  distinct(Plotcode, Start_date_year, Start_date_month, Start_date_day, End_date_year, End_date_month, End_date_day) %>% 
+  # Coordinates
+  left_join(siteMetaData, by = "destSiteID") %>% 
+  mutate(#Longitude,
+         #Latitude,
+         EPSG = 5776,
+         GPS_accuracy = NA) %>% 
+  
+  # Logger
+  mutate(Sensor_used = "MAXIM/DALLAS Semiconductor DS7505U+",
+         Sensor_accuracy = 0.5,
+         Sensor_notes = "Tomst logger TMS-4",
+         Sensor_depth = -6) %>% 
+  
+  # Additional information
+  mutate(Temporal_resolution = 15,
+         UTC_Local = "Local",
+         Species_composition = "No",
+         Species_trait = "No",
+         Plot_size = 0.25,
+         Forest_canopy_cover = 0,
+         #Total_vegetation_cover = ,
+         #Moss_layer_depth = ,
+         Leaf_area_index = NA,
+         #Vegetation_height = ,
+         Habitat_type = 4.1,
+         Habitat_sub_type = NA,
+         #Elevation = ,
+         Slope = NA,
+         Aspect	= NA,
+         Disturbance_types = "grazing", 
+         Disturbance_estimates = "",
+         Soil_type = NA,
+         Soil_moisture = NA,
+         Data_open_access = "Yes",
+         Meta_data_open_access = "Yes") %>% 
+  left_join(extraData, by = c("turfID")) %>% 
+  select(Plotcode,	Latitude,	Longitude,	EPSG,	GPS_accuracy,	Sensor_used:Sensor_depth,	Start_date_year:End_date_day,	Temporal_resolution:Forest_canopy_cover,	Total_vegetation_cover,	Moss_layer_depth,	Leaf_area_index,	Vegetation_height,	Habitat_type,	Habitat_sub_type,	Elevation,	Slope,	Aspect,	Disturbance_types:Meta_data_open_access)
+
+
+sheets <- list("soil temp metadata" = soiltempmeta, "soil temp data" = soiltempdata) 
+writexl::write_xlsx(x = sheets, path = "SoilTemp_data submission_Halbritter_2020_01_13.xlsx", col_names = TRUE)
