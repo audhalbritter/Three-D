@@ -68,12 +68,13 @@ temp <- temp %>%
 
 # Check data
 temp %>% 
-  filter(Date_Time < "2019-08-20 22:00:00") %>% 
+  #filter(Date_Time < "2019-08-20 22:00:00") %>% 
   ggplot(aes(x = Date_Time, y = AirTemperature, colour = as.factor(LoggerID))) +
   geom_line() +
   facet_wrap(~ LoggerID) +
   theme(legend.position="none")
-  
+
+# Plot meta data
 plotMetaData2 <- plotMetaData %>% 
   select(origSiteID, origBlockID, origPlotID, Slope, Exposure)
 
@@ -94,7 +95,7 @@ soiltempdata2 <- temp %>%
   # filter ambient and Nlevel 0
   filter(warming == "A" & Nlevel %in% c(1, 2)) 
 
-# select columns
+# select columns for soiltemperature data
 soiltempdata <- soiltempdata2 %>% 
   select(Plotcode:Temperature)
 
@@ -112,7 +113,7 @@ extraData <- height %>%
               #select(origSiteID, origBlockID, origPlotID, Slope, Exposure) %>% 
               #left_join(metaTurfID, by = c("destSiteID", "destBlockID", "destPlotID")) %>% 
               #filter(warming == "A"), by = "turfID") %>% 
-  select(turfID, Moss_layer_depth, Vegetation_height, Total_vegetation_cover)
+  select(turfID, Year, Moss_layer_depth, Vegetation_height, Total_vegetation_cover)
   
 
 
@@ -120,6 +121,7 @@ extraData <- height %>%
 # Meta data
 soiltempmeta <- soiltempdata2 %>% 
   group_by(Plotcode, destSiteID, turfID) %>% 
+  ### THIS NEEDS FIXING ONCE THERE IS MORE THAN 1 YEAR OF DATA!!!
   mutate(minDate = min(Date_Time),
          maxDate = max(Date_Time),
          Start_date_year = year(minDate),
@@ -165,8 +167,11 @@ soiltempmeta <- soiltempdata2 %>%
          Data_open_access = "Yes",
          Meta_data_open_access = "Yes") %>% 
   left_join(extraData, by = c("turfID")) %>% 
-  select(Plotcode,	Latitude,	Longitude,	EPSG,	GPS_accuracy,	Sensor_used:Sensor_depth,	Start_date_year:End_date_day,	Temporal_resolution:Forest_canopy_cover,	Total_vegetation_cover,	Moss_layer_depth,	Leaf_area_index,	Vegetation_height,	Habitat_type,	Habitat_sub_type,	Elevation,	Slope,	Aspect,	Disturbance_types:Meta_data_open_access)
+  select(Plotcode,	Latitude,	Longitude,	EPSG,	GPS_accuracy,	Sensor_used:Sensor_depth,	Start_date_year:End_date_day,	Temporal_resolution:Forest_canopy_cover,	Total_vegetation_cover,	Moss_layer_depth,	Leaf_area_index,	Vegetation_height,	Habitat_type,	Habitat_sub_type,	Elevation,	Slope,	Aspect,	Disturbance_types:Meta_data_open_access) %>% 
+  ungroup() %>% 
+  select(-destSiteID, -turfID)
 
 
 sheets <- list("soil temp metadata" = soiltempmeta, "soil temp data" = soiltempdata) 
 writexl::write_xlsx(x = sheets, path = "SoilTemp_data submission_Halbritter_2020_01_13.xlsx", col_names = TRUE)
+
