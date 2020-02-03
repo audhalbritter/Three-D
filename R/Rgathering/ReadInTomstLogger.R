@@ -10,7 +10,7 @@ source("R/Rgathering/ReadInCommunity.R")
 #### CLIMATE DATA ####
 
 # Read in meta data
-metaTomst <- read_excel(path = "data/metaData/Three-D_ClimateLogger_Meta_2019.xlsx", col_names = TRUE, col_types = c("text", "numeric", "numeric", "text", "date", "date", "text")) %>% 
+metaTomst <- read_excel(path = "data/metaData/Three-D_ClimateLogger_Meta_2019.xlsx", col_names = TRUE, col_types = c("text", "numeric", "numeric", "text", "date", "date", "date", "text")) %>% 
   mutate(InitialDate = ymd(InitialDate),
          InitialDate_Time = ymd_hm(paste(InitialDate, paste(hour(InitialTime), minute(InitialTime), sep = ":"), sep = " ")))
 
@@ -32,7 +32,30 @@ temp <- map_df(set_names(files), function(file) {
   # get logger ID
   mutate(LoggerID = substr(File, nchar(File)-9, nchar(File)-6)) %>% 
   left_join(metaTomst, by = "LoggerID")
-  
+
+
+# Select Ievas data
+TomstLogger_Ieva_2019 <- temp %>% 
+  filter(LoggerID %in% c("5226", "5221", "5227", "5263", "5267", "5222", "5223", "5272", "5224", "5228", "5266", "5261")) %>%
+  # Mark IEVAs data
+  mutate(Treatment = case_when(LoggerID %in% c("5226", "5221", "5227", "5263", "5267") ~ "cage",
+                               LoggerID %in% c("5222", "5223", "5224", "5228", "5266", "5272", "5261") ~ "no-cage")) %>% 
+  mutate(Site = case_when(LoggerID == "5226" ~ "Inb",
+                          LoggerID == "5221" ~ "Joa",
+                          LoggerID == "5227" ~ "Lia",
+                          LoggerID == "5263" ~ "Hog",
+                          LoggerID == "5267" ~ "Vik",
+                          LoggerID == "5222" ~ "Lia",
+                          LoggerID == "5223" ~ "Joa",
+                          LoggerID == "5272" ~ "Joa",
+                          LoggerID == "5224" ~ "Lia",
+                          LoggerID == "5228" ~ "Lia",
+                          LoggerID == "5266" ~ "Joa",
+                          LoggerID == "5261" ~ "Vik")) %>% 
+  filter(Date_Time > earlyStart) %>% 
+  select(-destSiteID, -destBlockID, -destPlotID)
+#write_csv(TomstLogger_Ieva_2019, path = "data/iButton Ieva 2019/TomstLogger_Ieva_2019.csv", col_names = TRUE)
+
 
 # Fix data
 temp <- temp %>% 
@@ -45,9 +68,10 @@ temp <- temp %>%
 
 # Check data
 temp %>% 
+  filter(Date_Time < "2019-08-20 22:00:00") %>% 
   ggplot(aes(x = Date_Time, y = AirTemperature, colour = as.factor(LoggerID))) +
   geom_line() +
-  facet_grid(BlockID ~ Site) +
+  facet_wrap(~ LoggerID) +
   theme(legend.position="none")
   
 plotMetaData2 <- plotMetaData %>% 
