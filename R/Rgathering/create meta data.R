@@ -108,7 +108,7 @@ low <- tibble(
   origSiteID = factor("Low", levels = c("Top", "Middle", "Low")),
   origBlockID = rep(1:10, each = 4),
   origPlotID = 161:200,
-  #destSiteID = factor(NA, levels = c("Top", "Middle", "Low")),
+  destSiteID = factor(NA, levels = c("Top", "Middle", "Low")),
   Nlevel = rep(c(4,1,2,3,6,5,10,9,7,8), each = 4),
   warming = "W",
   grazing = rep(c("notN", "notN", "notN", "N"), 10),
@@ -116,7 +116,6 @@ low <- tibble(
 
 # randomize warming and grazing treatment
 set.seed(33) # seed is needed to replicate sample_frac
-set.seed(seed = 33, sample.kind = "Rounding")
 meta2 <- meta %>% 
   # create variable for grazing treatment inside or outside fence
   mutate(fence = if_else(grazing == "N", "out", "in")) %>% 
@@ -129,8 +128,8 @@ meta2 <- meta %>%
   mutate(destSiteID = case_when(
     origSiteID == "Top" & warming == "A" ~ "Top",
     origSiteID == "Middle" & warming == "W" ~ "Low",
-    TRUE ~ "Midlle")) %>%
-  #mutate(destSiteID = factor(destSiteID, levels = c("Top", "Middle", "Low"))) %>%
+    TRUE ~ "Middle")) %>% 
+  mutate(destSiteID = factor(destSiteID, levels = c("Top", "Middle", "Low"))) %>%
   bind_rows(low) %>% # add low
   group_by(origSiteID, origBlockID, warming, fence) %>% 
   mutate(rownr = row_number())
