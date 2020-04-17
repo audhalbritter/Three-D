@@ -47,6 +47,9 @@ AlreadyDone <- readxl::read_excel(path = "data/LiteratureSurvey/2019-10-31/LitSe
 # Merge by TI and AB
 LitSearch_Decision <- LitSearch2 %>% 
   left_join(AlreadyDone, by = c("TI", "AB")) %>% 
-  select(Nr, UniqueID, TI, Include_ymn, Remark, AB) %>% 
-  rename("Nr_old" = "Nr")
-writexl::write_xlsx(LitSearch_Decision, path = "data/LiteratureSurvey/LitSearch_Decision.xlsx")
+  rename("Nr_old" = "Nr") %>% 
+  # randomize order
+  mutate(Nr = sample(1:4847, 4847, replace=FALSE)) %>% 
+  arrange(Nr) %>% 
+  select(Nr, Nr_old, UniqueID, TI, Include_ymn, Remark, AB)
+#writexl::write_xlsx(LitSearch_Decision, path = "data/LiteratureSurvey/LitSearch_Decision.xlsx")
