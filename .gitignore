@@ -42,6 +42,7 @@ vignettes/*.pdf
 *.dat
 *.RData.Tmp1
 *.rds
+*.bib
 
 #rasters & shapefiles
 *.bil
