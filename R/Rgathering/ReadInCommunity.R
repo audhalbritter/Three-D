@@ -250,7 +250,7 @@ cover <- community %>%
   select(origSiteID:Species, Cover, Recorder, Remark, file) %>% 
   filter(!Species %in% c("Moss layer", "Vascular plant layer", "SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop", "Unknown seedlings")) %>% 
   # remove duplicates
-  group_by(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID, warming, grazing, Nlevel, Date, Year, Species, Recorder, Remark, file) %>% 
+  group_by(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID, warming, grazing, Nlevel, Date, Year, Species) %>% 
   summarise(Cover = sum(Cover))
 
 write_csv(cover, path = "data/community/THREE-D_Cover_2019.csv", col_names = TRUE)
