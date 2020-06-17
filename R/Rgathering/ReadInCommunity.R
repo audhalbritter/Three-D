@@ -4,6 +4,7 @@
 
 source("R/Load packages.R")
 source("R/Rgathering/create meta data.R")
+source("R/Rgathering/Download_Raw_Data.R")
 
 # file <- "data/community/2019/Lia/THREE-D_CommunityData_Lia_1_2019.xlsx"
 # dd <- read_xlsx(path = file, sheet = 7, skip = 2, n_max = 61, col_types = "text")
@@ -257,7 +258,7 @@ cover <- community %>%
 write_csv(cover, path = "data/community/THREE-D_Cover_2019.csv", col_names = TRUE)
 
 
-#### COMMUNITY META DATA ####
+#### COMMUNITY STRUCTURE DATA ####
 # Height
 height <- community %>% 
   filter(Species %in% c("Vascular plant layer", "Moss layer")) %>% 
@@ -269,7 +270,7 @@ height <- community %>%
   rename("Layer" = "Species")
 
 # Cover from Functional Groups
-metaCommunity <- community %>% 
+CommunityStructure <- community %>% 
   filter(Species %in% c("SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop")) %>%
   pivot_longer(cols = `1`:`25`, names_to = "subplot", values_to = "percentage") %>% 
   # make rows numeric
@@ -284,7 +285,7 @@ metaCommunity <- community %>%
   ### Should height be added??? !!!
   #left_join(height, by = "turfID")
 
-write_csv(metaCommunity, path = "data/community/THREE-D_metaCommunity_2019.csv", col_names = TRUE)
+write_csv(CommunityStructure, path = "data/community/THREE-D_CommunityStructure_2019.csv", col_names = TRUE)
 
 
 
