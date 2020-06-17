@@ -89,6 +89,7 @@ community <- metaComm %>%
                           "Gentiana nivalus" = "Gentiana nivalis",
                           "Gron or fjellkurle" = "Orchid sp",
                           "Hieraceum sp." = "Hieraceum sp",
+                          "Hyperzia selago" = "Huperzia selago",
                           "Lycopodium sp" = "Lycopodium annotinum ssp alpestre cf",
                           "Lycopodium" = "Lycopodium annotinum ssp alpestre cf",
                           "Omalothrca supina" = "Omalotheca supina",
