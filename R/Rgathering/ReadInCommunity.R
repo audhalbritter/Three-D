@@ -73,7 +73,7 @@ community <- metaComm %>%
   mutate(Recorder = recode(Recorder, "silje" = "so")) %>% 
   # Fix wrong species names
   mutate(Species = recode(Species, 
-                          "Agrostis sp 1" = "Agrostis mertensii cf",
+                          "Agrostis sp 1" = "Agrostis mertensii",
                           "Alchemilla sp." = "Alchemilla sp",
                           "Bryophyes" = "Bryophytes", 
                           "Carex sp 1" = "Carex sp1",
@@ -83,9 +83,9 @@ community <- metaComm %>%
                           "Cerastium cerasteoides" = "Cerastium cerastoides",
                           "Cerastium cerastoies" = "Cerastium cerastoides",
                           "Cerstium cerasteoides" = "Cerastium cerastoides",
-                          "Cerstium fontana" = "Cerastium fontanum",
+                          "Cerastium fontana" = "Cerastium fontanum",
                           "Equiseum arvense" = "Equisetum arvense",
-                          "Equiseum vaginatum" = "Equisetum variegatum",
+                          "Equisetum vaginatum" = "Equisetum variegatum",
                           "Gentiana nivalus" = "Gentiana nivalis",
                           "Gron or fjellkurle" = "Orchid sp",
                           "Hieraceum sp." = "Hieraceum sp",
