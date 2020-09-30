@@ -1,102 +1,73 @@
-library(plyr)
+# library(plyr) #why do I need it? maybe I don't
 library(tidyverse)
-library(fuzzyjoin)
+source("https://raw.githubusercontent.com/jogaudard/common/master/fun-fluxes.R")
+library(lubridate, warn.conflicts = FALSE)
+library(broom)
 
 measurement <- 120 #the length of the measurement taken on the field in seconds
 startcrop <- 0 #how much to crop at the beginning of the measurement in seconds
 endcrop <- 0 #how much to crop at the end of the measurement in seconds
 
-location <- "/home/jga051/Documents/01_PhD/05_data/01_summer2020" #location of datafiles
+location <- "/home/jga051/Documents/01_PhD/05_data/01_summer2020/rawData" #location of datafiles
 #import all squirrel files and select date/time and CO2_calc columns, merge them, name it fluxes
 fluxes <-
-  list.files(path = location , pattern = "*CO2*", full.names = T) %>% 
-  map_df(~read_csv(., na = c("#N/A"), col_types = "ctcnnnn")) %>%
-  rename(., CO2_calc = "CO2_calc (ppm)", CO2b = "CO2 (ppm)") %>% 
-  mutate(Date = strptime(as.character(.$Date), "%d.%m.%Y"), CO2 = coalesce(CO2_calc, CO2b)) %>% #the name of the column for CO2 changed because I modified the logger settings between two campaigns
-  mutate(Date = as.POSIXct(paste(Date, Time))) %>% 
-  select(.,Date,CO2)
-  # with(., as.POSIXct(paste(Date, Time)))
-print("fluxes df created")
+  dir_ls(location, regexp = "*CO2*") %>% 
+  map_dfr(read_csv,  na = c("#N/A", "Over")) %>% 
+  rename(CO2 = "CO2 (ppm)") %>%  #rename the column to get something more practical without space
+  mutate(
+    Date = dmy(Date), #convert date in POSIXct
+    Datetime = as_datetime(paste(Date, Time))  #paste date and time in one column
+    ) %>%
+  select(Datetime,CO2)
+
 #import date/time and PAR columns from PAR file
 PAR <-
   list.files(path = location, pattern = "*PAR*", full.names = T) %>% 
-  #colnames <- c("a", "Date", "Time", "PAR")
-  map_df(~read_table2(., "", na = c("NA"), col_names = paste0("V",seq_len(12)))) %>% #, n_max = 100 c("a", "Date", "Time", "PAR", "b", "c", "d", "e") , skip = 20
-  rename(., Date = V2, Time = V3, PAR = V4) %>% 
-  mutate(PAR = as.numeric(as.character(.$PAR)), Date = as.POSIXct(paste(Date, Time))) %>% 
-  select(.,Date, PAR)
-print("PAR df created")
+  map_df(~read_table2(., "", na = c("NA"), col_names = paste0("V",seq_len(12)))) %>% #need that because logger is adding columns with useless information
+  rename(Date = V2, Time = V3, PAR = V4) %>% 
+  mutate(
+    PAR = as.numeric(as.character(.$PAR)), #removing any text from the PAR column (again, the logger...)
+    Datetime = paste(Date, Time),
+    Datetime = ymd_hms(Datetime)
+    ) %>% 
+  select(Datetime, PAR)
+
 #import date/time and value column from iButton file
-temp_air <-
-  list.files(path = location , pattern = "*temp*", full.names = T) %>% 
-  map_df(~read.table(text = gsub(",", "\t", readLines(.)), col.names = c("Date", "Time", "unit", "Temp_value", "Temp_dec"), skip = 20)) %>%  #(., delim = ",", col_names = T, col_types = cols(.default = "c"), skip = 18)) %>%
-  mutate(Temperature = Temp_value + Temp_dec/1000, Date = strptime(as.character(.$Date), "%d.%m.%y")) %>%  #, Time = strptime(as.character(.$Time), "hh:mm:ss"
-  mutate(Date = as.POSIXct(paste(Date, Time))) %>%
-  select(.,Date, Temperature)
-print("temp_air df created")
-  
+
+temp_air <-dir_ls(location, regexp = "*temp*") %>% 
+  map_dfr(read_csv,  na = c("#N/A"), skip = 20, col_names = c("Datetime", "Unit", "Temp_value", "Temp_dec"), col_types = "ccnn") %>%
+  mutate(Temp_dec = replace_na(Temp_dec,0),
+    Temp_air = Temp_value + Temp_dec/1000, #because stupid iButtons use comma as delimiter AND as decimal point
+    Datetime = dmy_hms(Datetime)
+    ) %>% 
+  select(Datetime, Temp_air)
+
+
 #join the df
-combined <- join_all(list(fluxes, PAR, temp_air), by='Date', type='left') #%>% 
-  # fill(PAR, .direction = "up") %>% #temperature and PAR are being filled up because the logger is taking the average on the last 10 and 15 seconds
-  # fill(Temperature, .direction = "up") filling is taking a lot of memory when doing the fuzzy join, and I am not sure it makes sense since afterwards I will anyway use the average for the flux calculation
-print("combined df created")
+
+
+combined <- fluxes %>% 
+  left_join(PAR, by = "Datetime") %>% 
+  left_join(temp_air, by = "Datetime")
+
 #import the record file
 #next part is specific for Three-D
 
-three_d <- read_csv("/home/jga051/Documents/01_PhD/05_data/01_summer2020/3drecord.csv") %>% 
-  mutate(Start = as.POSIXct(paste(date, starting_time), format="%Y-%m-%d %H:%M:%S") - startcrop, End = Start + measurement - endcrop)
+three_d <- read_csv("/home/jga051/Documents/01_PhD/05_data/01_summer2020/Three-D_field-record_2020.csv", na = c(""), col_types = "ccntDnc") %>% 
+  mutate(
+    Start = as_datetime(paste(Date, Starting_time)), #converting the date as posixct, pasting date and starting time together
+    # Datetime = Start, #useful for left_join
+    End = Start + measurement - endcrop, #creating column End and cropping the end of the measurement
+    Start = Start + startcrop #cropping the start
+  ) %>%  
+  select(Plot_ID,Type,Replicate,Starting_time,Date,Campaign,Remarks,Start,End)
+  
+#matching fluxes
 
-#extract from fluxes the data that are between "starting_time" and +2mn, associate Turf_ID, type, replicate and campaign to each CO2_calc
-#https://community.rstudio.com/t/tidy-way-to-range-join-tables-on-an-interval-of-dates/7881/2
-fluxes_threed <- fuzzy_left_join(
-  combined, three_d,
-  by = c(
-    "Date" = "Start",
-    "Date" = "End"
-  ),
-  match_fun = list(`>=`, `<=`)
-) %>% 
-  drop_na(Start) %>% 
-  mutate(ID = group_indices(., date, Turf_ID, type, replicate)) %>% 
-  select(.,Date, CO2, PAR, Temperature, Turf_ID, type, replicate, campaign, ID, remark, date)
-print("fluxes_threed created")
 
-#need to do similar thing for INCLINE
-incline <- read_csv("/home/jga051/Documents/01_PhD/05_data/01_summer2020/InclineRecord.csv") %>% 
-  mutate(date = strptime(as.character(.$date), "%d/%m/%Y")) %>% 
-  mutate(Start = as.POSIXct(paste(date, starting_time), format="%Y-%m-%d %H:%M:%S") - startcrop, End = Start + measurement - endcrop)
-#extract from fluxes the data that are between "starting_time" and +2mn, associate plot_ID, treatment, type, replicate and campaign to each CO2 flux
-#https://community.rstudio.com/t/tidy-way-to-range-join-tables-on-an-interval-of-dates/7881/2
-fluxes_incline <- fuzzy_left_join(
-  combined, incline,
-  by = c(
-    "Date" = "Start",
-    "Date" = "End"
-  ),
-  match_fun = list(`>=`, `<=`)
-) %>% 
-  drop_na(Start) %>% 
-  mutate(ID = group_indices(., campaign, plot_ID, type, replicate)) %>% 
-  select(.,Date, CO2, PAR, Temperature, plot_ID, treatment, type, replicate, campaign, remark, ID, date)
-print("fluxes_incline created")
-
-#need to do similar thing for the light response curves
-lightresponse <- read_csv("/home/jga051/Documents/01_PhD/05_data/01_summer2020/light-responseRecord.csv") %>% 
-  mutate(date = strptime(as.character(.$date), "%d/%m/%Y")) %>% 
-  mutate(Start = as.POSIXct(paste(date, starting_time), format="%Y-%m-%d %H:%M:%S") - startcrop, End = Start + measurement - endcrop)
-#extract from fluxes the data that are between "starting_time" and +2mn, associate Turf_ID and replicate to each CO2 flux
-#https://community.rstudio.com/t/tidy-way-to-range-join-tables-on-an-interval-of-dates/7881/2
-fluxes_lightresponse <- fuzzy_left_join(
-  combined, lightresponse,
-  by = c(
-    "Date" = "Start",
-    "Date" = "End"
-  ),
-  match_fun = list(`>=`, `<=`)
-) %>% 
-  drop_na(Start) %>% 
-  select(.,Date, CO2, PAR, Temperature, Turf_ID, replicate)
-print("fluxes_lightresponse created")
+co2_flux_threed <- match.flux(combined,three_d) %>% 
+  flux.calc() %>% 
+  write_csv("Three-D_c-flux_2020.csv")
 
 
 #graph CO2 fluxes to visually check the data
