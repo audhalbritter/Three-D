@@ -14,7 +14,50 @@ source("R/Rgathering/Download_Raw_Data.R")
 
 #### COMMUNITY DATA ####
 ### Read in files
-files <- dir(path = "data/community", pattern = "\\.xlsx$", full.names = TRUE, recursive = TRUE)
+files <- dir(path = "data/community/", pattern = "\\.xlsx$", full.names = TRUE, recursive = TRUE)
+
+#Function to read in meta data
+metaComm <- map_df(set_names(files), function(file) {
+  file %>% 
+    excel_sheets() %>% 
+    set_names() %>% 
+    discard(. == "CHECK") %>% 
+    map_df(~ read_xlsx(path = file, sheet = .x, n_max = 1, col_types = c("text", rep("text", 29))), .id = "sheet_name")
+}, .id = "file") %>% 
+  select(sheet_name, Date, origSiteID, origBlockID, origPlotID, turfID, destSiteID, destBlockID, destPlotID, Recorder, Scribe) %>% 
+  # fix wrong dates
+  mutate(Date = case_when(Date == "44025" ~ "13.7.2020",
+                          Date == "44046" ~ "3.8.2020",
+                          Date == "44047" ~ "5.8.2020",
+                          Date == "44048" ~ "5.8.2020",
+                          Date == "44049" ~ "6.8.2020",
+                          TRUE ~ as.character(Date))) %>% 
+  # make date
+  mutate(Date = dmy(Date),
+         Year = year(Date),
+         origBlockID = as.numeric(origBlockID),
+         destBlockID = as.numeric(destBlockID),
+         origPlotID = as.numeric(origPlotID),
+         destPlotID = as.numeric(destPlotID),
+         turfID = gsub("_", " ", turfID)) %>% 
+  
+  # Fix mistake in PlotID
+  mutate(origPlotID = ifelse(Date == "2019-07-02" & origPlotID == 83 & Recorder == "silje", 84, origPlotID)) %>% 
+  
+  # join for 2019 data
+  left_join(metaTurfID %>% select(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID), by = c("origSiteID", "origBlockID", "origPlotID")) %>% 
+  mutate(destSiteID = coalesce(destSiteID.x, destSiteID.y),
+         destBlockID = coalesce(destBlockID.x, destBlockID.y),
+         destPlotID = coalesce(destPlotID.x, destPlotID.y),
+         turfID = coalesce(turfID.x, turfID.y)) %>% 
+  select(- c(destSiteID.x, destSiteID.y, destBlockID.x, destBlockID.y, destPlotID.x, destPlotID.y, turfID.x, turfID.y)) %>% 
+  # join for 2020 data
+  left_join(metaTurfID, by = c("destSiteID", "destBlockID", "destPlotID", "turfID")) %>% 
+  mutate(origSiteID = coalesce(origSiteID.x, origSiteID.y),
+         origBlockID = coalesce(origBlockID.x, origBlockID.y),
+         origPlotID = coalesce(origPlotID.x, origPlotID.y)) %>% 
+  select(- c(origSiteID.x, origSiteID.y, origBlockID.x, origBlockID.y, origPlotID.x, origPlotID.y))
+
 
 # Function to read in data
 comm <- map_df(set_names(files), function(file) {
@@ -25,57 +68,30 @@ comm <- map_df(set_names(files), function(file) {
     map_df(~ read_xlsx(path = file, sheet = .x, skip = 2, n_max = 61, col_types = "text"), .id = "sheet_name")
 }, .id = "file") %>% 
   select(file:Remark) %>% 
-  rename("Cover" = `%`) %>% 
-  separate(col = sheet_name, into = c("origSiteID", "origBlockID", "origPlotID")) %>% 
-  # Fix format
-  mutate(origBlockID = as.numeric(origBlockID),
-         origPlotID = as.numeric(origPlotID),
-         Cover = as.numeric(Cover))
-
-#Function to read in meta data
-metaComm <- map_df(set_names(files), function(file) {
-  file %>% 
-    excel_sheets() %>% 
-    set_names() %>% 
-    discard(. == "CHECK") %>% 
-    map_df(~ read_xlsx(path = file, sheet = .x, n_max = 1, col_types = "text"), .id = "sheet_name")
-}, .id = "file") %>% 
-  select(Date, origSiteID, origBlockID, origPlotID, turfID, Recorder, Scribe, sheet_name) %>% 
-  separate(col = sheet_name, into = c("origSiteID2", "origBlockID2", "origPlotID2")) %>% 
-  # Fix format
-  mutate(Date = dmy(Date),
-         Year = year(Date),
-         origBlockID = as.numeric(origBlockID),
-         origPlotID = as.numeric(origPlotID)) %>% 
-  # Fix mistakes
-  mutate(origPlotID = ifelse(Date == "2019-07-02" & origPlotID == 83 & Recorder == "silje", 84, origPlotID)) %>% 
-#Date = ifelse(is.na(Date) & origBlockID == 1, "2019-07-02", Date)
-  select(-origSiteID2, -origBlockID2, -origPlotID2)
+  rename("Cover" = `%`)
 
 
 # Join data and meta
-# Warning message: 1 failed to parse. Ok, because one date is NA
 community <- metaComm %>% 
-  right_join(comm, by = c("origSiteID", "origBlockID", "origPlotID")) %>%
-  select(-turfID) %>% 
-  left_join(metaTurfID, by = c("origSiteID", "origBlockID", "origPlotID")) %>% 
+  left_join(comm, by = "sheet_name") %>% 
   select(origSiteID:origPlotID, destSiteID:turfID, warming:Nlevel, Date, Year, Species:Cover, Recorder, Scribe, Remark, file) %>% 
   
   # Remove rows, without species, subplot and cover is zero
   filter_at(vars("Species", "1":"Cover"), any_vars(!is.na(.))) %>% 
 
-  # Remove species NA, are all these rows: Ratio > 1.5 is wrong
+  # Remove species NA, are all rows where Ratio > 1.5 is wrong
   filter(!is.na(Species)) %>% 
-  # FIX!!!
   filter(Species != "Height / depth (cm)") %>% 
   
   # Remove white space after Species name
   mutate(Species = str_trim(Species, side = "right")) %>% 
-  mutate(Recorder = recode(Recorder, "silje" = "so")) %>% 
+  mutate(Recorder = recode(Recorder, "so" = "silje", "vv" = "vigdis", "lhv" = "linn")) %>% 
+  
   # Fix wrong species names
   mutate(Species = recode(Species, 
                           "Agrostis sp 1" = "Agrostis mertensii",
                           "Alchemilla sp." = "Alchemilla sp",
+                          "Anntenaria alpina" = "Antennaria alpina",
                           "Bryophyes" = "Bryophytes", 
                           "Carex sp 1" = "Carex sp1",
                           "Carex sp 2" = "Carex sp2",
@@ -237,22 +253,24 @@ community <- metaComm %>%
          Species = ifelse(Species == "unknown herb" & origSiteID == "Lia" & origBlockID == 9 & year(Date) == 2019, "Unknown herb4", Species),
          Species = ifelse(Species == "Unknown herb" & origSiteID == "Lia" & origBlockID == 3 & year(Date) == 2019, "Unknown herb5", Species),
          
+         Remark = ifelse(Species == "Unknown shrub, maybe salix" & origSiteID == "Lia" & origBlockID == 1 & year(Date) == 2019, "Maybe salix", Remark),
          Species = ifelse(Species == "Unknown shrub, maybe salix" & origSiteID == "Lia" & origBlockID == 1 & year(Date) == 2019, "Unknown shrub1", Species)) %>% 
-    
+
   # Remove rows, with species, but where subplot and cover is zero
   filter_at(vars("1":"Cover"), any_vars(!is.na(.))) %>% 
   #Replace all NA in subplots with 0
-  mutate_at(vars("1":"25"), ~replace_na(., 0))
+  mutate_at(vars("1":"25"), ~replace_na(., 0)) %>% 
+  mutate(Cover = as.numeric(Cover))
 
 
 
 #### COVER ####
 # Extract estimate of cover
 cover <- community %>% 
-  select(origSiteID:Species, Cover, Recorder, Remark, file) %>% 
+  select(origSiteID:Species, Cover:file) %>% 
   filter(!Species %in% c("Moss layer", "Vascular plant layer", "SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop", "Unknown seedlings")) %>% 
-  # remove duplicates
-  group_by(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID, warming, grazing, Nlevel, Date, Year, Species) %>% 
+  # summarize cover from species that have been merged
+  group_by(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID, warming, grazing, Nlevel, Date, Year, Species, Recorder, file) %>% 
   summarise(Cover = sum(Cover))
 
 write_csv(cover, path = "data/community/THREE-D_Cover_2019.csv", col_names = TRUE)
@@ -271,17 +289,18 @@ height <- community %>%
 
 # Cover from Functional Groups
 CommunityStructure <- community %>% 
-  filter(Species %in% c("SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop")) %>%
-  pivot_longer(cols = `1`:`25`, names_to = "subplot", values_to = "percentage") %>% 
+  filter(Species %in% c("SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop")) %>% 
+  mutate(`24` = if_else(`24` == "Ratio > 1.5 is wrong", "0", `24`)) %>% 
+  pivot_longer(cols = `1`:`25`, names_to = "Subplot", values_to = "Percentage") %>% 
+  
   # make rows numeric
-  mutate(percentage = as.numeric(percentage)) %>% 
-  group_by(turfID, Cover, Species) %>% 
-  summarise(mean = mean(percentage)) %>% 
+  mutate(Percentage = as.numeric(Percentage)) %>% 
+  group_by(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID, warming, grazing, Nlevel, Date, Year, Species, Cover) %>% 
+  summarise(mean = mean(Percentage)) %>% 
   mutate(MeanCover = ifelse(Species %in% c("Vascular plants", "SumofCover"), Cover, mean)) %>% 
   ungroup() %>% 
   rename(FunctionalGroup = Species) %>% 
-  select(turfID, FunctionalGroup, MeanCover) %>% 
-  left_join(metaTurfID, by = "turfID") #%>% 
+  select(-mean, -Cover)
   ### Should height be added??? !!!
   #left_join(height, by = "turfID")
 
@@ -293,21 +312,28 @@ write_csv(CommunityStructure, path = "data/community/THREE-D_CommunityStructure_
 CommunitySubplot <- community %>% 
   filter(!Species %in% c("Moss layer", "Vascular plant layer", "SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop")) %>% 
   select(-Scribe) %>%
-  pivot_longer(cols = `1`:`25`, names_to = "Subplot", values_to = "Presence") %>%
+  pivot_longer(cols = `1`:`25`, names_to = "Subplot", values_to = "Presence") %>% 
   # Unknown seedlings have sometimes counts, but not consistent. So make just presence.
   mutate(Presence = ifelse(Species == "Unknown seedlings" & Presence != "0", "s", Presence),
          Presence = recode(Presence, "df" = "fd", "1j" = "j")) %>% 
-  mutate(Fertile = ifelse(Presence %in% c("f", "fd"), 1, 0),
+  mutate(Fertile = ifelse(Presence %in% c("F", "f", "fd"), 1, 0),
          Dominant = ifelse(Presence %in% c("d", "fd", "dj"), 1, 0),
          Juvenile = ifelse(Presence %in% c("j", "dj"), 1, 0),
          Seedling = ifelse(Presence == "s", 1, 0)) %>% 
-  mutate(Presence = ifelse(Presence != "0", 1, 0))
+  mutate(Presence = ifelse(Presence == "1", 1, 0)) %>% distinct(Presence)
+
+
+### NEED TO CHECK R. reptanse at LIA possible
+
+### NEED CHECKING IN DATA SHEET
+filter(Presence %in% c("1?", "cf", "3")) %>% as.data.frame()
+#probably make 1, but remark uncertain.
 
 # NEED TO FIX DUPLICATE FROM PLANTS THAT HAVE BEEN MERGED, NEED TO MERGE SUBPLOT DATA
 community %>% 
   filter(!Species %in% c("Moss layer", "Vascular plant layer", "SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop")) %>% 
   select(-Scribe) %>% 
-  group_by(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID, warming, grazing, Nlevel, Date, Year, Species, Recorder, Remark, file) %>% 
+  group_by(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID, warming, grazing, Nlevel, Date, Year, Species, Recorder, Remark, file) %>%
   mutate(n = n()) %>% filter(n > 1) %>% as.data.frame()
 
 write_csv(CommunitySubplot, path = "data/community/THREE-D_CommunitySubplot_2019.csv", col_names = TRUE)
