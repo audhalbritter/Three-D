@@ -32,23 +32,48 @@ ggplot(metaCommunity, aes(x = origSiteID, y = MeanCover)) +
   
 
 #### SUBPLOT DATA ####
-devtools::install_github("Between-the-Fjords/turfmapper")
+#devtools::install_github("Between-the-Fjords/turfmapper")
 library("turfmapper")
 
 #set up subturf grid
 grid <- make_grid(ncol = 5)
-threed <- CommunitySubplot %>%
-  filter(Cover != 0) %>% 
-  filter(turfID == "20 AN5I 20") %>%
-  select(origSiteID, Year, origPlotID, Species, Cover, Subplot, Presence) %>% 
-  mutate(Subplot = as.numeric(Subplot))
 
-threed %>% 
-  make_turf_plot(
-    year = Year, species = Species, cover = Cover, subturf = Subplot, 
-    title = glue::glue("Site {.$origSiteID}: plot {.$origPlotID}"), 
-    grid_long = grid)
+CommunitySubplot %>% 
+  mutate(Subplot = as.numeric(Subplot)) %>% 
+  filter(Presence == 1,
+         grazing == "C",
+         Nlevel %in% c(1, 2, 3)) %>% 
+  nest(data = c(turfID)) %>% 
+  map_df()
+  make_turf_plot(year = Year, 
+                 species = Species, 
+                 cover = Cover, 
+                 subturf = Subplot,
+                 title = glue::glue("Site {.$destSiteID}: plot {.$destPlotID}: recorder  {.$Recorder}"),
+                 grid_long = grid)
 
+  
+  
+  
+CommunitySubplot %>% 
+    mutate(Subplot = as.numeric(Subplot),
+           Year_Recorder = paste(Year, Recorder, sep = "")) %>% 
+    filter(Presence == 1,
+           grazing == "C",
+           Nlevel %in% c(1, 2, 3)) %>% 
+    arrange(destSiteID, destPlotID) %>% 
+    group_by(destSiteID, destPlotID) %>% 
+    nest() %>% 
+    {map2(
+      .x = .$data, 
+      .y = glue::glue("Site {.$destSiteID}: plot {.$destPlotID}"),
+      .f = ~make_turf_plot(
+        data = .x, year = Year_Recorder, species = Species, 
+        cover = Cover, subturf = Subplot, 
+        title = glue::glue(.y), 
+        grid_long = grid)
+    )} %>% 
+    walk(print)
 
 
 #### REOCRDER BIAS ####
