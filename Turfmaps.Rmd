@@ -1,0 +1,41 @@
+---
+title: "Check traits"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library("tidyverse")
+library("turfmapper")
+
+CommunitySubplot <- read_csv(file = "data/community/THREE-D_CommunitySubplot_2020.csv")
+```
+
+## Check turfs
+
+```{r many_plots, eval = TRUE, fig.height=11, fig.width = 5, warning=FALSE}
+
+#set up subturf grid
+grid <- make_grid(ncol = 5)
+
+x <- CommunitySubplot %>% 
+  mutate(Subplot = as.numeric(Subplot),
+         Year_Recorder = paste(Year, Recorder, sep = "_")) %>% 
+  filter(Presence == 1,
+         grazing == "C",
+         Nlevel %in% c(1, 2, 3)) %>% 
+  arrange(destSiteID, destPlotID) %>% 
+  group_by(destSiteID, destPlotID) %>% 
+  nest() %>% 
+    {map2(
+      .x = .$data, 
+      .y = glue::glue("Site {.$destSiteID}: plot {.$destPlotID}"),
+      .f = ~make_turf_plot(
+      data = .x, year = Year_Recorder, species = Species, 
+      cover = Cover, subturf = Subplot, 
+      title = glue::glue(.y), 
+      grid_long = grid)
+    )} %>% 
+  walk(print)
+
+```
