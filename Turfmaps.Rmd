@@ -22,14 +22,13 @@ x <- CommunitySubplot %>%
   mutate(Subplot = as.numeric(Subplot),
          Year_Recorder = paste(Year, Recorder, sep = "_")) %>% 
   filter(Presence == 1,
-         grazing == "C",
          Nlevel %in% c(1, 2, 3)) %>% 
-  arrange(destSiteID, destPlotID) %>% 
-  group_by(destSiteID, destPlotID) %>% 
+  arrange(destSiteID, destPlotID, turfID) %>% 
+  group_by(destSiteID, destPlotID, turfID) %>% 
   nest() %>% 
     {map2(
       .x = .$data, 
-      .y = glue::glue("Site {.$destSiteID}: plot {.$destPlotID}"),
+      .y = glue::glue("Site {.$destSiteID}: plot {.$destPlotID}: turf {.$turfID}"),
       .f = ~make_turf_plot(
       data = .x, year = Year_Recorder, species = Species, 
       cover = Cover, subturf = Subplot, 
