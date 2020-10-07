@@ -17,13 +17,16 @@ source("R/Rgathering/Download_Raw_Data.R")
 files <- dir(path = "data/community/", pattern = "\\.xlsx$", full.names = TRUE, recursive = TRUE)
 
 #Function to read in meta data
-metaComm <- map_df(set_names(files), function(file) {
+metaComm_raw <- map_df(set_names(files), function(file) {
   file %>% 
     excel_sheets() %>% 
     set_names() %>% 
     discard(. == "CHECK") %>% 
     map_df(~ read_xlsx(path = file, sheet = .x, n_max = 1, col_types = c("text", rep("text", 29))), .id = "sheet_name")
-}, .id = "file") %>% 
+}, .id = "file")
+
+# need to break the workflow here, otherwise tedious to find problems
+metaComm <- metaComm_raw %>% 
   select(sheet_name, Date, origSiteID, origBlockID, origPlotID, turfID, destSiteID, destBlockID, destPlotID, Recorder, Scribe) %>% 
   # fix wrong dates
   mutate(Date = case_when(Date == "44025" ~ "13.7.2020",
@@ -69,7 +72,6 @@ comm <- map_df(set_names(files), function(file) {
 }, .id = "file") %>% 
   select(file:Remark) %>% 
   rename("Cover" = `%`)
-
 
 # Join data and meta
 community <- metaComm %>% 
@@ -320,7 +322,7 @@ CommunitySubplot <- community %>%
          Dominant = ifelse(Presence %in% c("d", "fd", "dj"), 1, 0),
          Juvenile = ifelse(Presence %in% c("j", "dj"), 1, 0),
          Seedling = ifelse(Presence == "s", 1, 0)) %>% 
-  mutate(Presence = ifelse(Presence == "1", 1, 0)) %>% distinct(Presence)
+  mutate(Presence = ifelse(Presence == "1", 1, 0))
 
 
 ### NEED TO CHECK R. reptanse at LIA possible
@@ -336,4 +338,4 @@ community %>%
   group_by(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID, warming, grazing, Nlevel, Date, Year, Species, Recorder, Remark, file) %>%
   mutate(n = n()) %>% filter(n > 1) %>% as.data.frame()
 
-write_csv(CommunitySubplot, path = "data/community/THREE-D_CommunitySubplot_2019.csv", col_names = TRUE)
+write_csv(CommunitySubplot, path = "data/community/THREE-D_CommunitySubplot_2020.csv", col_names = TRUE)
