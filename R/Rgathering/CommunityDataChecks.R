@@ -39,34 +39,16 @@ library("turfmapper")
 grid <- make_grid(ncol = 5)
 
 CommunitySubplot %>% 
-  mutate(Subplot = as.numeric(Subplot)) %>% 
-  filter(Presence == 1,
-         grazing == "C",
-         Nlevel %in% c(1, 2, 3)) %>% 
-  nest(data = c(turfID)) %>% 
-  map_df()
-  make_turf_plot(year = Year, 
-                 species = Species, 
-                 cover = Cover, 
-                 subturf = Subplot,
-                 title = glue::glue("Site {.$destSiteID}: plot {.$destPlotID}: recorder  {.$Recorder}"),
-                 grid_long = grid)
-
-  
-  
-  
-CommunitySubplot %>% 
     mutate(Subplot = as.numeric(Subplot),
            Year_Recorder = paste(Year, Recorder, sep = "")) %>% 
     filter(Presence == 1,
-           grazing == "C",
-           Nlevel %in% c(1, 2, 3)) %>% 
-    arrange(destSiteID, destPlotID) %>% 
-    group_by(destSiteID, destPlotID) %>% 
+           Nlevel %in% c(1, 2, 3)) %>% filter(turfID %in% c("5 WN1I 86", "84 WN1M 161", "87 WN1N 164", "155 WN2M 198")) %>% distinct(Year, turfID, Nlevel)
+  arrange(destSiteID, destPlotID, turfID) %>% 
+  group_by(destSiteID, destPlotID, turfID) %>% 
     nest() %>% 
     {map2(
       .x = .$data, 
-      .y = glue::glue("Site {.$destSiteID}: plot {.$destPlotID}"),
+      .y = glue::glue("Site {.$destSiteID}: plot {.$destPlotID}: turf {.$turfID}"),
       .f = ~make_turf_plot(
         data = .x, year = Year_Recorder, species = Species, 
         cover = Cover, subturf = Subplot, 
@@ -77,9 +59,34 @@ CommunitySubplot %>%
 
 
 #### REOCRDER BIAS ####
-ggplot(cover, aes(x = Recorder, y = Cover, fill = Recorder)) +
+
+# Graminoids
+cover %>% 
+  filter(Species %in% c("Agrostis capillaris", "Anthoxantum odoratum", "Avenella flexuosa", "Festuca rubra", "Phleum alpinum", "Poa alpina", "Poa pratensis"),
+         Nlevel %in% c(1, 2, 3)) %>% 
+  mutate(Year_temp = paste(Year, warming, sep = "_")) %>% 
+  ggplot(aes(x = Recorder, y = Cover, fill = warming)) +
   geom_boxplot() +
-  facet_wrap(~ origSiteID)
+  facet_grid(Species ~ destSiteID, scales = "free_y")
+
+# Forbs
+cover %>% 
+  filter(Species %in% c("Achillea millefolium", "Bistorta vivipara", "Leontodon autumnalis", "Rumex acetosa", "Thalictrum alpinum", "Taraxacum sp."),
+         Nlevel %in% c(1, 2, 3)) %>% 
+  ggplot(aes(x = Recorder, y = Cover, fill = warming)) +
+  geom_boxplot() +
+  facet_grid(Species ~ destSiteID)
+
+
+# species richness
+cover %>% 
+  ungroup() %>% 
+  group_by(turfID) %>% 
+  mutate(Richness = n()) %>% 
+  ggplot(aes(x = Recorder, y = Richness, fill = warming)) +
+  geom_boxplot() +
+  facet_grid( ~ origSiteID)
+
 
 
 # LDA
@@ -119,6 +126,9 @@ fNMDS <- fortify(NMDS) %>%
 
 ggplot(fNMDS, aes(x = NMDS1, y = NMDS2, colour = Recorder)) +
   geom_point()
+
+
+
 
 
 
