@@ -1,14 +1,34 @@
-# library(plyr) #why do I need it? maybe I don't
+# This script is to clean raw data from various loggers into one datafile with calculated fluxes
 library(tidyverse)
 source("https://raw.githubusercontent.com/jogaudard/common/master/fun-fluxes.R")
 library(lubridate, warn.conflicts = FALSE)
 library(broom)
+library(fs)
+library("dataDownloader")
 
 measurement <- 120 #the length of the measurement taken on the field in seconds
 startcrop <- 0 #how much to crop at the beginning of the measurement in seconds
 endcrop <- 0 #how much to crop at the end of the measurement in seconds
 
-location <- "/home/jga051/Documents/01_PhD/05_data/01_summer2020/rawData" #location of datafiles
+#download and unzip files from OSF
+get_file(node = "pk4bg",
+         file = "Three-D_cflux_2020.zip",
+         path = "data/C-Flux/summer_2020",
+         remote_path = "RawData/C-Flux")
+
+get_file(node = "pk4bg",
+         file = "Three-D_field-record_2020.csv",
+         path = "data/C-Flux/summer_2020",
+         remote_path = "RawData/C-Flux")
+
+# Unzip files
+zipFile <- "data/C-Flux/summer_2020/Three-D_cflux_2020.zip"
+if(file.exists(zipFile)){
+  outDir <- "data/C-Flux/summer_2020"
+  unzip(zipFile, exdir = outDir)
+}
+
+location <- "data/C-Flux/summer_2020/rawData" #location of datafiles
 #import all squirrel files and select date/time and CO2_calc columns, merge them, name it fluxes
 fluxes <-
   dir_ls(location, regexp = "*CO2*") %>% 
@@ -53,7 +73,7 @@ combined <- fluxes %>%
 #import the record file
 #next part is specific for Three-D
 
-three_d <- read_csv("/home/jga051/Documents/01_PhD/05_data/01_summer2020/Three-D_field-record_2020.csv", na = c(""), col_types = "ccntDnc") %>% 
+three_d <- read_csv("data/C-Flux/summer_2020/Three-D_field-record_2020.csv", na = c(""), col_types = "ccntDnc") %>% 
   mutate(
     Start = as_datetime(paste(Date, Starting_time)), #converting the date as posixct, pasting date and starting time together
     # Datetime = Start, #useful for left_join
