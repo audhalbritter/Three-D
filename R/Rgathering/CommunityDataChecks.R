@@ -3,7 +3,7 @@
 #############################
 
 source("R/Load packages.R")
-source("R/create meta data.R")
+source("R/Rgathering/create meta data.R")
 source("R/ReadInCommunity.R")
 
 
@@ -67,7 +67,8 @@ cover %>%
   mutate(Year_temp = paste(Year, warming, sep = "_")) %>% 
   ggplot(aes(x = Recorder, y = Cover, fill = warming)) +
   geom_boxplot() +
-  facet_grid(Species ~ destSiteID, scales = "free_y")
+  facet_grid(Species ~ destSiteID, scales = "free_y") +
+  theme_bw()
 
 # Forbs
 cover %>% 
@@ -75,17 +76,19 @@ cover %>%
          Nlevel %in% c(1, 2, 3)) %>% 
   ggplot(aes(x = Recorder, y = Cover, fill = warming)) +
   geom_boxplot() +
-  facet_grid(Species ~ destSiteID)
+  facet_grid(Species ~ destSiteID) +
+  theme_bw()
 
 
 # species richness
 cover %>% 
   ungroup() %>% 
-  group_by(turfID) %>% 
-  mutate(Richness = n()) %>% 
+  group_by(turfID, Recorder, warming, origSiteID) %>% 
+  summarise(Richness = mean(n())) %>% 
   ggplot(aes(x = Recorder, y = Richness, fill = warming)) +
-  geom_boxplot() +
-  facet_grid( ~ origSiteID)
+  geom_point() +
+  facet_grid( ~ origSiteID) +
+  theme_bw()
 
 
 
