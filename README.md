@@ -5,10 +5,10 @@ p.caption {
 }
 </style>
 
-This is the git repository for the paper: Halbritter et al. (not written
-yet). THREE-D - Integrated assessment to aid mitigation of negative
-impacts by THREE global change Drivers on alpine biodiversity and
-ecosystem function.
+This is the git repository for the data paper: Halbritter et al. (not
+written yet). THREE-D - Integrated assessment to aid mitigation of
+negative impacts by THREE global change Drivers on alpine biodiversity
+and ecosystem function.
 
 # INTRODUCTION
 
