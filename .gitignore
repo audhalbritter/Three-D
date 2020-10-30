@@ -56,11 +56,11 @@ vignettes/*.pdf
 *.pdf
 *.jpeg
 .my.cnf
-<<<<<<< HEAD
-=======
 .tex
 *.md
->>>>>>> 76cfa7e60f63fa88bb9a18ded892ccee0f0ab546
-
+!Pics/ExperimentalDesign.jpg
+!Pics/ProposalFigure_small.jpg
+!Pics/Subblots.jpg
+!ReadMe.md
 
 *.DS_Store
