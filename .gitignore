@@ -58,6 +58,9 @@ vignettes/*.pdf
 .my.cnf
 .tex
 *.md
-
+!Pics/ExperimentalDesign.jpg
+!Pics/ProposalFigure_small.jpg
+!Pics/Subblots.jpg
+!ReadMe.md
 
 *.DS_Store
