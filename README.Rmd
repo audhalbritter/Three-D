@@ -66,6 +66,7 @@ The sites correspond to the alpine, sub-alpine and boreal biogeographic zones in
 
 
 
+
 ```{r exp_design, echo=FALSE, fig.cap= "A) Experimental design at sites with low productivity (range centre) and high productivity (warm edge). The treatments are warming (red), nitrogen deposition (green), warming and nitrogen deposition (orange), and control (grey). These treatments are crossed with two clipping levels (intermediate and intensive) and natural grazing outside the grazing exclosure (stippled line). B) Example of a plot divided into data collection (species composition, carbon flux measures) and destructive harvesting (soil samples, litter bags, biomass harvesting) areas."}
 knitr::include_graphics('Pics/ExperimentalDesign.jpg')
 ```
