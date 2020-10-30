@@ -205,7 +205,26 @@ The biomass from the clipping treatments will be treated in the same way.
 The biomass clipped in several rounds will be summed per plot for each growing season.
 
 
-**Ecosystem fluxes** to be added
+**Ecosystem fluxes**
+
+Carbon fluxes are measured with a closed loop chamber system connected to an infrared gaz analyser (INGRA; Li-840A, Li-cor).
+The plexiglas chamber (25x25x40 cm) is connected to the INGRA with plastic tubes (inlet and outlet, 3m long and 4mm diameter each).
+A filter prevents water droplets and small particules from entering the INGRA and an air pump ensures a flow or 1L/mn.
+The chamber is equiped with a fan to mix the air, a thermocouple (Pt1000, Delta-T) to measure air temperature and a PAR sensor.
+Airtightness is ensured by laying a heavy chain on the "skirt" of the chamber.
+The CO2 concentration was measured every seconds and logged in a datalogger (Squirrel 2010).
+The chamber was put on the plot during two minutes for each measurements and then aired during one minute.
+Since the logger was logging continuesly, it was necessary to keep track at what time each measurements started.
+
+Net ecosystem exchange (NEE) and ecosystem respiration (ER) were measured on the field while gross ecosystem production (GEP) is calculated as GEP = NEE - ER.
+NEE is measured with a transparent chamber.
+ER is measured with a dark chamber, in our case the transparent chamber was covered with a thick dark tarp.
+
+<!-- matching the data -->
+<!-- calculating fluxes -->
+<!-- cleaning -->
+<!-- light response curves -->
+
 
 
 
