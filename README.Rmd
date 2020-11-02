@@ -224,21 +224,29 @@ It attributes the concentration of CO~2~ measured every seconds to the correct m
 A linear regression is fitted to every measurements and the slope is used to calculated the flux.
 
 
-$$
- \text{flux}=\text{slope}\times \frac{P\times V}{R\times T\times A}
-$$
+<!-- $$ -->
+<!--  \text{flux}=\text{slope}\times \frac{P\times V}{R\times T\times A} -->
+<!-- $$ -->
 
-
+<img src="https://render.githubusercontent.com/render/math?math=flux=slope\times \frac{P\times V}{R\times T\times A}">
 
 Where:
 
-- flux: the flux of CO~2~ at the surface of the plot ($mmol/m^2/h$)
-- slope: slope of linear regression fitting the CO~2~ concentration versus time ($ppm^{-1}$)
-- $P$: pressure, assumed 1 atm
-- $V$: volume of the chamber and tubing ($L$)
-- $R$: gas constant ($0.082057\ L*atm*K^{-1}*mol^{-1}$)
-- $T$: chamber air temperature ($K$)
-- $A$: area of chamber frame base ($m^2$)
+- flux: the flux of CO~2~ at the surface of the plot (mmol/m^2^/h)
+- slope: slope of linear regression fitting the CO~2~ concentration versus time (ppm^-1^)
+- P: pressure, assumed 1 atm
+- V: volume of the chamber and tubing (L)
+- R: gas constant (0.082057 L\*atm\*K^-1^\*mol^-1^)
+- T: chamber air temperature (K)
+- A: area of chamber frame base (m^2^)
+
+<!-- - flux: the flux of CO~2~ at the surface of the plot ($mmol/m^2/h$) -->
+<!-- - slope: slope of linear regression fitting the CO~2~ concentration versus time ($ppm^{-1}$) -->
+<!-- - $P$: pressure, assumed 1 atm -->
+<!-- - $V$: volume of the chamber and tubing ($L$) -->
+<!-- - $R$: gas constant ($0.082057\ L*atm*K^{-1}*mol^{-1}$) -->
+<!-- - $T$: chamber air temperature ($K$) -->
+<!-- - $A$: area of chamber frame base ($m^2$) -->
 
 The function `flux.calc` calculates the flux with default values for Three-D setup.
 
