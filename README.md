@@ -1,8 +1,4 @@
 
-------------------------------------------------------------------------
-
-output: github\_document fig\_caption: yes header-includes: - ---
-
 <style>
 p.caption {
   font-size: 0.8em;
