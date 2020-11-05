@@ -88,7 +88,10 @@ three_d <- read_csv("data/C-Flux/summer_2020/Three-D_field-record_2020.csv", na 
 co2_threed <- match.flux(combined,three_d)
 
 flux_threed <- flux.calc(co2_threed) %>% 
-  write_csv("Three-D_c-flux_2020.csv")
+  rename(
+    Turf_ID = Plot_ID
+  ) %>% 
+  write_csv("data/C-Flux/summer_2020/Three-D_c-flux_2020.csv")
 
 
 #graph CO2 fluxes to visually check the data
