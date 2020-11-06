@@ -79,9 +79,17 @@ The biomass from the clipping treatments will be treated in the same way. The bi
 
 Net ecosystem exchange (NEE) and ecosystem respiration (ER) were measured on the field while gross ecosystem production (GEP) is calculated as GEP = NEE - ER. Carbon fluxes are measured with a closed loop chamber system connected to an infrared gaz analyser (INGRA; Li-840A, Li-cor). The plexiglas chamber (25x25x40 cm) is connected to the INGRA with plastic tubes (inlet and outlet, 3m long and 4mm diameter each). A filter prevents water droplets and small particules from entering the INGRA and an air pump ensures a flow of 1L/mn. The chamber is equiped with a fan to mix the air, a thermocouple (Pt1000, Delta-T) to measure air temperature and a PAR sensor. In 2020 the air temperature was measured with an iButton. Airtightness is ensured by laying a heavy chain on the "skirt" of the chamber (a piece of tarp taped to the lower part of the chamber). NEE is measured with a transparent chamber. ER is measured with a dark chamber, in our case the transparent chamber was covered with a thick dark tarp. The CO<sub>2</sub> concentration was measured every seconds and logged in a datalogger (Squirrel 2010). The chamber was put on the plot during two minutes for each measurements and then aired during one minute. Since the logger was logging continuesly, it was necessary to keep track at what time each measurements started (it is necessary to precisely synchronise the looger clock with the watch used on the field and to regularly check it). The function `match.flux()` is matching the time in the logger file with the plot being measured at that time (using the time recorded on the field). It attributes the concentration of CO<sub>2</sub> measured every seconds to the correct measurement. A linear regression is fitted to every measurements and the slope is used to calculated the flux.
 
+<!-- This is the code to keep in case we want to extract a pdf -->
 <!-- $$ -->
 <!--  \text{flux}=\text{slope}\times \frac{P\times V}{R\times T\times A} -->
 <!-- $$ -->
+<!-- - flux: the flux of CO~2~ at the surface of the plot ($mmol/m^2/h$) -->
+<!-- - slope: slope of linear regression fitting the CO~2~ concentration versus time ($ppm^{-1}$) -->
+<!-- - $P$: pressure, assumed 1 atm -->
+<!-- - $V$: volume of the chamber and tubing ($L$) -->
+<!-- - $R$: gas constant ($0.082057\ L*atm*K^{-1}*mol^{-1}$) -->
+<!-- - $T$: chamber air temperature ($K$) -->
+<!-- - $A$: area of chamber frame base ($m^2$) -->
 <img src="https://render.githubusercontent.com/render/math?math=flux=slope\times \frac{P\times V}{R\times T\times A}">
 
 Where:
@@ -94,17 +102,256 @@ Where:
 -   T: chamber air temperature (K)
 -   A: area of chamber frame base (m<sup>2</sup>)
 
-<!-- - flux: the flux of CO~2~ at the surface of the plot ($mmol/m^2/h$) -->
-<!-- - slope: slope of linear regression fitting the CO~2~ concentration versus time ($ppm^{-1}$) -->
-<!-- - $P$: pressure, assumed 1 atm -->
-<!-- - $V$: volume of the chamber and tubing ($L$) -->
-<!-- - $R$: gas constant ($0.082057\ L*atm*K^{-1}*mol^{-1}$) -->
-<!-- - $T$: chamber air temperature ($K$) -->
-<!-- - $A$: area of chamber frame base ($m^2$) -->
 The function `flux.calc` calculates the flux with default values for Three-D setup.
 
-Cleaning and light response curves will be added later (what about pictures?) <!-- cleaning --> <!-- light response curves -->
+<!-- Fluxes with a non significant slope (>0.05) were removed. -->
+<!-- cleaning -->
+<!-- data description -->
+<!-- Make a new table in an R script and call it here. Use the col names from the flux data set and take exemple on the China data paper (https://www.nature.com/articles/s41597-020-0529-0/tables/4?proof=t) -->
+<!-- # ```{r, include=FALSE, code=xfun::read_utf8("description.R")} -->
+<!-- # ``` -->
+``` r
+knitr::kable(variables, format="html")
+```
 
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+Variable name
+</th>
+<th style="text-align:left;">
+Variable type
+</th>
+<th style="text-align:left;">
+Variable range or levels
+</th>
+<th style="text-align:left;">
+How measured
+</th>
+<th style="text-align:left;">
+Units/formats/treatment level coding
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Datetime
+</td>
+<td style="text-align:left;">
+date and time
+</td>
+<td style="text-align:left;">
+2020-06-26 12:59:00 - 2020-08-20 16:50:00
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+AC CET
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ID
+</td>
+<td style="text-align:left;">
+factor
+</td>
+<td style="text-align:left;">
+\[flux ID\]
+</td>
+<td style="text-align:left;">
+defined
+</td>
+<td style="text-align:left;">
+1 - 288
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Turf\_ID
+</td>
+<td style="text-align:left;">
+factor
+</td>
+<td style="text-align:left;">
+\[origin plotID\]x\[treatment\]x\[destination plotID\]
+</td>
+<td style="text-align:left;">
+defined
+</td>
+<td style="text-align:left;">
+??
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Type
+</td>
+<td style="text-align:left;">
+factor
+</td>
+<td style="text-align:left;">
+\[type\]
+</td>
+<td style="text-align:left;">
+defined
+</td>
+<td style="text-align:left;">
+ER, NEE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Replicate
+</td>
+<td style="text-align:left;">
+factor
+</td>
+<td style="text-align:left;">
+\[replicate\]
+</td>
+<td style="text-align:left;">
+defined
+</td>
+<td style="text-align:left;">
+1, 2, 3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Remarks
+</td>
+<td style="text-align:left;">
+text
+</td>
+<td style="text-align:left;">
+Field observations
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Date
+</td>
+<td style="text-align:left;">
+date
+</td>
+<td style="text-align:left;">
+2020-06-26 - 2020-08-20
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+AC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PARavg
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+-0.0106973801652893 - 1915.61983471074
+</td>
+<td style="text-align:left;">
+PAR sensor inside the chamber
+</td>
+<td style="text-align:left;">
+micromol s⁻¹ m⁻²
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Temp\_airavg
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+281.39905785124 - 310.736454545455
+</td>
+<td style="text-align:left;">
+Thermocouple inside the chamber
+</td>
+<td style="text-align:left;">
+Kelvin
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+r.squared
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+4.61699641394944e-05 - 0.99977808630378
+</td>
+<td style="text-align:left;">
+calculated with linear model
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p.value
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+2.89238419463405e-219 - 0.941035574429795
+</td>
+<td style="text-align:left;">
+calculated with linear model
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+flux
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+-22.6298013973675 - 109.418687877727
+</td>
+<td style="text-align:left;">
+calculated from concentration vs time
+</td>
+<td style="text-align:left;">
+mmol m⁻² h⁻¹
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Campaign
+</td>
+<td style="text-align:left;">
+factor
+</td>
+<td style="text-align:left;">
+1 - 4
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+1, 2, 3, 4
+</td>
+</tr>
+</tbody>
+</table>
+<!-- light response curves -->
 **CN stocks, pH, soil organic matter** Collecting soil samples: In sommer 2019, two soil samples were collected from each blocks, but outside the plots. The soil samples of 5 cm diameter and 4 cm deep were taken. One sample was taken from the upper organic layer, and another one from the lower part of the soil.
 
 The soil samples were stored in the fridge (4°C) until further use.

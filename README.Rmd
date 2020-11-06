@@ -223,10 +223,18 @@ The function `match.flux()` is matching the time in the logger file with the plo
 It attributes the concentration of CO~2~ measured every seconds to the correct measurement.
 A linear regression is fitted to every measurements and the slope is used to calculated the flux.
 
-
+<!-- This is the code to keep in case we want to extract a pdf -->
 <!-- $$ -->
 <!--  \text{flux}=\text{slope}\times \frac{P\times V}{R\times T\times A} -->
 <!-- $$ -->
+
+<!-- - flux: the flux of CO~2~ at the surface of the plot ($mmol/m^2/h$) -->
+<!-- - slope: slope of linear regression fitting the CO~2~ concentration versus time ($ppm^{-1}$) -->
+<!-- - $P$: pressure, assumed 1 atm -->
+<!-- - $V$: volume of the chamber and tubing ($L$) -->
+<!-- - $R$: gas constant ($0.082057\ L*atm*K^{-1}*mol^{-1}$) -->
+<!-- - $T$: chamber air temperature ($K$) -->
+<!-- - $A$: area of chamber frame base ($m^2$) -->
 
 <img src="https://render.githubusercontent.com/render/math?math=flux=slope\times \frac{P\times V}{R\times T\times A}">
 
@@ -240,18 +248,25 @@ Where:
 - T: chamber air temperature (K)
 - A: area of chamber frame base (m^2^)
 
-<!-- - flux: the flux of CO~2~ at the surface of the plot ($mmol/m^2/h$) -->
-<!-- - slope: slope of linear regression fitting the CO~2~ concentration versus time ($ppm^{-1}$) -->
-<!-- - $P$: pressure, assumed 1 atm -->
-<!-- - $V$: volume of the chamber and tubing ($L$) -->
-<!-- - $R$: gas constant ($0.082057\ L*atm*K^{-1}*mol^{-1}$) -->
-<!-- - $T$: chamber air temperature ($K$) -->
-<!-- - $A$: area of chamber frame base ($m^2$) -->
+
 
 The function `flux.calc` calculates the flux with default values for Three-D setup.
 
-Cleaning and light response curves will be added later (what about pictures?)
+<!-- Fluxes with a non significant slope (>0.05) were removed. -->
+
 <!-- cleaning -->
+<!-- data description -->
+<!-- Make a new table in an R script and call it here. Use the col names from the flux data set and take exemple on the China data paper (https://www.nature.com/articles/s41597-020-0529-0/tables/4?proof=t) -->
+ ```{r, include=FALSE}
+ # source("R/C-Flux/description.R", local = knitr::knit_global())
+ sys.source("description.R", envir = knitr::knit_global())
+ ```
+<!-- # ```{r, include=FALSE, code=xfun::read_utf8("description.R")} -->
+<!-- # ``` -->
+```{r}
+knitr::kable(variables, format="html")
+```
+
 <!-- light response curves -->
 
 
