@@ -111,7 +111,7 @@ variables <- tibble(flux.colnames, "Variable type" = c(
   # Date
   "AC",
   # PARavg
-  "micromol s^{-1} m^{-2}",
+  "micromol s⁻¹ m⁻²",
   # Temp_airavg
   "Kelvin",
   # r.squared
@@ -119,10 +119,11 @@ variables <- tibble(flux.colnames, "Variable type" = c(
   # p.value
   " ",
   # flux
-  "mmol m^{-2} h^{-1}",
+  "mmol m⁻² h⁻¹",
   # Campaign
   paste(levels(as.factor(flux$Campaign)), collapse = ", ")
 )
 ) %>% 
   rename("Variable name" = flux.colnames)
+
 			
