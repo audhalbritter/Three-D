@@ -131,7 +131,7 @@ variables.cflux <- tibble(flux.colnames, "Variable type" = c(
   # ID
   paste(range(flux$ID), collapse = " - "),
   # Turf_ID
-  "??", #I am not sure what it is
+  "Ex.: 158 WN2C 199", #I am not sure what it is
   # Type
   paste(levels(as.factor(flux$Type)), collapse = ", "),
   # Replicate
