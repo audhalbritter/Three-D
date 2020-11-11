@@ -1,6 +1,23 @@
 library(tidyverse)
 library("dataDownloader")
 
+
+# Plant species composition -----------------------------------------------
+
+
+
+# Measure Reflectance with Greenseeker ------------------------------------
+
+
+
+# Aboveground biomass -----------------------------------------------------
+
+
+
+# CN stocks, pH, soil organic matter --------------------------------------
+
+
+# Ecosystem fluxes --------------------------------------------------------
 get_file(node = "pk4bg",
          file = "Three-D_c-flux_2020.csv",
          path = "data/C-Flux/summer_2020",
@@ -11,33 +28,46 @@ flux <- read_csv("Three-D_c-flux_2020.csv")
 flux.colnames <- flux %>% 
   colnames()
 
-variables <- tibble(flux.colnames, "Variable type" = c(
+variables.cflux <- tibble(flux.colnames, "Variable type" = c(
   # Datetime
-  "date and time",
+  # "date and time",
+  paste(class(flux$Datetime), collapse = " "),
   # ID
-  "factor",
+  # "factor",
+  class(flux$ID),
   # Turf_ID
-  "factor",
+  class(flux$Turf_ID),
+  # "factor",
   # Type
-  "factor",
+  class(flux$Type),
+  # "factor",
   # Replicate
-  "factor",
+  class(flux$Replicate),
+  # "factor",
   # Remarks
-  "text",
+  class(flux$Remarks),
+  # "text",
   # Date
-  "date",
+  class(flux$Date),
+  # "date",
   # PARavg
-  "numeric",
+  class(flux$PARavg),
+  # "numeric",
   # Temp_airavg
-  "numeric",
+  class(flux$Temp_airavg),
+  # "numeric",
   # r.squared
-  "numeric",
+  class(flux$r.squared),
+  # "numeric",
   # p.value
-  "numeric",
+  class(flux$p.value),
+  # "numeric",
   # flux
-  "numeric",
+  class(flux$flux),
+  # "numeric",
   # Campaign
-  "factor"
+  class(flux$Campaign)
+  # "factor"
 ),
 "Variable range or levels" = c(
   # Datetime
@@ -126,4 +156,19 @@ variables <- tibble(flux.colnames, "Variable type" = c(
 ) %>% 
   rename("Variable name" = flux.colnames)
 
-			
+
+# Soil pH measurement -----------------------------------------------------
+
+
+
+# Soil organic matter -----------------------------------------------------
+
+
+
+# Climate data ------------------------------------------------------------
+
+
+
+
+
+#### 		
