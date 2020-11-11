@@ -28,6 +28,10 @@ library("patchwork")
 
 theme_set(theme_bw(base_size = 12))
 
+# {r, include=FALSE}
+# source("R/C-Flux/description.R", local = knitr::knit_global())
+sys.source("data_dictionnary.R", envir = knitr::knit_global())
+
 
 ```
 
@@ -218,7 +222,7 @@ NEE is measured with a transparent chamber.
 ER is measured with a dark chamber, in our case the transparent chamber was covered with a thick dark tarp.
 The CO~2~ concentration was measured every seconds and logged in a datalogger (Squirrel 2010).
 The chamber was put on the plot during two minutes for each measurements and then aired during one minute.
-Since the logger was logging continuesly, it was necessary to keep track at what time each measurements started (it is necessary to precisely synchronise the looger clock with the watch used on the field and to regularly check it).
+Since the logger was logging continuesly, the start and end time of each measurement was noted (it is necessary to precisely synchronise the logger clock with the watch used on the field and to regularly check it).
 The function `match.flux()` is matching the time in the logger file with the plot being measured at that time (using the time recorded on the field).
 It attributes the concentration of CO~2~ measured every seconds to the correct measurement.
 A linear regression is fitted to every measurements and the slope is used to calculated the flux.
@@ -257,14 +261,11 @@ The function `flux.calc` calculates the flux with default values for Three-D set
 <!-- cleaning -->
 <!-- data description -->
 <!-- Make a new table in an R script and call it here. Use the col names from the flux data set and take exemple on the China data paper (https://www.nature.com/articles/s41597-020-0529-0/tables/4?proof=t) -->
- ```{r, include=FALSE}
- # source("R/C-Flux/description.R", local = knitr::knit_global())
- sys.source("description.R", envir = knitr::knit_global())
- ```
+
 <!-- # ```{r, include=FALSE, code=xfun::read_utf8("description.R")} -->
 <!-- # ``` -->
 ```{r}
-knitr::kable(variables, format="html")
+knitr::kable(variables.cflux, format="html")
 ```
 
 <!-- light response curves -->
