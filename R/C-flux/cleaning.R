@@ -1,10 +1,9 @@
 # This script is to clean raw data from various loggers into one datafile with calculated fluxes
-library(tidyverse)
-source("https://raw.githubusercontent.com/jogaudard/common/master/fun-fluxes.R")
-library(lubridate, warn.conflicts = FALSE)
-library(broom)
 library(fs)
-library("dataDownloader")
+
+source("R/Load packages.R")
+source("https://raw.githubusercontent.com/jogaudard/common/master/fun-fluxes.R")
+
 
 measurement <- 120 #the length of the measurement taken on the field in seconds
 startcrop <- 0 #how much to crop at the beginning of the measurement in seconds
