@@ -1,5 +1,5 @@
-library(tidyverse)
-library("dataDownloader")
+# library(tidyverse)
+# library("dataDownloader")
 
 
 # Plant species composition -----------------------------------------------
@@ -23,7 +23,7 @@ get_file(node = "pk4bg",
          path = "data/C-Flux/summer_2020",
          remote_path = "C-Flux")
 
-flux <- read_csv("Three-D_c-flux_2020.csv")
+flux <- read_csv("data/C-Flux/summer_2020/Three-D_c-flux_2020.csv")
 
 flux.colnames <- flux %>% 
   colnames()
