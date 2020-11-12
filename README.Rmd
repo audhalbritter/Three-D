@@ -264,7 +264,7 @@ The function `flux.calc` calculates the flux with default values for Three-D set
 
 <!-- # ```{r, include=FALSE, code=xfun::read_utf8("description.R")} -->
 <!-- # ``` -->
-```{r}
+```{r cflux-data-dic, echo=FALSE}
 knitr::kable(variables.cflux, format="html")
 ```
 

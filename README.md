@@ -110,10 +110,6 @@ The function `flux.calc` calculates the flux with default values for Three-D set
 <!-- Make a new table in an R script and call it here. Use the col names from the flux data set and take exemple on the China data paper (https://www.nature.com/articles/s41597-020-0529-0/tables/4?proof=t) -->
 <!-- # ```{r, include=FALSE, code=xfun::read_utf8("description.R")} -->
 <!-- # ``` -->
-``` r
-knitr::kable(variables.cflux, format="html")
-```
-
 <table>
 <thead>
 <tr>
