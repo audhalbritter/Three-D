@@ -77,7 +77,7 @@ The biomass from the clipping treatments will be treated in the same way. The bi
 
 **Ecosystem fluxes**
 
-Net ecosystem exchange (NEE) and ecosystem respiration (ER) were measured on the field while gross ecosystem production (GEP) is calculated as GEP = NEE - ER. Carbon fluxes are measured with a closed loop chamber system connected to an infrared gaz analyser (INGRA; Li-840A, Li-cor). The plexiglas chamber (25x25x40 cm) is connected to the INGRA with plastic tubes (inlet and outlet, 3m long and 4mm diameter each). A filter prevents water droplets and small particules from entering the INGRA and an air pump ensures a flow of 1L/mn. The chamber is equiped with a fan to mix the air, a thermocouple (Pt1000, Delta-T) to measure air temperature and a PAR sensor. In 2020 the air temperature was measured with an iButton. Airtightness is ensured by laying a heavy chain on the "skirt" of the chamber (a piece of tarp taped to the lower part of the chamber). NEE is measured with a transparent chamber. ER is measured with a dark chamber, in our case the transparent chamber was covered with a thick dark tarp. The CO<sub>2</sub> concentration was measured every seconds and logged in a datalogger (Squirrel 2010). The chamber was put on the plot during two minutes for each measurements and then aired during one minute. Since the logger was logging continuesly, it was necessary to keep track at what time each measurements started (it is necessary to precisely synchronise the looger clock with the watch used on the field and to regularly check it). The function `match.flux()` is matching the time in the logger file with the plot being measured at that time (using the time recorded on the field). It attributes the concentration of CO<sub>2</sub> measured every seconds to the correct measurement. A linear regression is fitted to every measurements and the slope is used to calculated the flux.
+Net ecosystem exchange (NEE) and ecosystem respiration (ER) were measured on the field while gross ecosystem production (GEP) is calculated as GEP = NEE - ER. Carbon fluxes are measured with a closed loop chamber system connected to an infrared gaz analyser (INGRA; Li-840A, Li-cor). The plexiglas chamber (25x25x40 cm) is connected to the INGRA with plastic tubes (inlet and outlet, 3m long and 4mm diameter each). A filter prevents water droplets and small particules from entering the INGRA and an air pump ensures a flow of 1L/mn. The chamber is equiped with a fan to mix the air, a thermocouple (Pt1000, Delta-T) to measure air temperature and a PAR sensor. In 2020 the air temperature was measured with an iButton. Airtightness is ensured by laying a heavy chain on the "skirt" of the chamber (a piece of tarp taped to the lower part of the chamber). NEE is measured with a transparent chamber. ER is measured with a dark chamber, in our case the transparent chamber was covered with a thick dark tarp. The CO<sub>2</sub> concentration was measured every seconds and logged in a datalogger (Squirrel 2010). The chamber was put on the plot during two minutes for each measurements and then aired during one minute. Since the logger was logging continuesly, the start and end time of each measurement was noted (it is necessary to precisely synchronise the logger clock with the watch used on the field and to regularly check it). The function `match.flux()` is matching the time in the logger file with the plot being measured at that time (using the time recorded on the field). It attributes the concentration of CO<sub>2</sub> measured every seconds to the correct measurement. A linear regression is fitted to every measurements and the slope is used to calculated the flux.
 
 <!-- This is the code to keep in case we want to extract a pdf -->
 <!-- $$ -->
@@ -111,7 +111,7 @@ The function `flux.calc` calculates the flux with default values for Three-D set
 <!-- # ```{r, include=FALSE, code=xfun::read_utf8("description.R")} -->
 <!-- # ``` -->
 ``` r
-knitr::kable(variables, format="html")
+knitr::kable(variables.cflux, format="html")
 ```
 
 <table>
@@ -140,7 +140,7 @@ Units/formats/treatment level coding
 Datetime
 </td>
 <td style="text-align:left;">
-date and time
+POSIXct POSIXt
 </td>
 <td style="text-align:left;">
 2020-06-26 12:59:00 - 2020-08-20 16:50:00
@@ -156,7 +156,7 @@ AC CET
 ID
 </td>
 <td style="text-align:left;">
-factor
+numeric
 </td>
 <td style="text-align:left;">
 \[flux ID\]
@@ -173,7 +173,7 @@ defined
 Turf\_ID
 </td>
 <td style="text-align:left;">
-factor
+character
 </td>
 <td style="text-align:left;">
 \[origin plotID\]x\[treatment\]x\[destination plotID\]
@@ -182,7 +182,7 @@ factor
 defined
 </td>
 <td style="text-align:left;">
-??
+Ex.: 158 WN2C 199
 </td>
 </tr>
 <tr>
@@ -190,7 +190,7 @@ defined
 Type
 </td>
 <td style="text-align:left;">
-factor
+character
 </td>
 <td style="text-align:left;">
 \[type\]
@@ -207,7 +207,7 @@ ER, NEE
 Replicate
 </td>
 <td style="text-align:left;">
-factor
+numeric
 </td>
 <td style="text-align:left;">
 \[replicate\]
@@ -224,7 +224,7 @@ defined
 Remarks
 </td>
 <td style="text-align:left;">
-text
+character
 </td>
 <td style="text-align:left;">
 Field observations
@@ -239,7 +239,7 @@ Field observations
 Date
 </td>
 <td style="text-align:left;">
-date
+Date
 </td>
 <td style="text-align:left;">
 2020-06-26 - 2020-08-20
@@ -338,7 +338,7 @@ mmol m⁻² h⁻¹
 Campaign
 </td>
 <td style="text-align:left;">
-factor
+numeric
 </td>
 <td style="text-align:left;">
 1 - 4
