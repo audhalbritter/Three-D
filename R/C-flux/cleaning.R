@@ -80,6 +80,7 @@ three_d <- read_csv("data/C-Flux/summer_2020/Three-D_field-record_2020.csv", na 
     End = Start + measurement - endcrop, #creating column End and cropping the end of the measurement
     Start = Start + startcrop #cropping the start
   ) %>%  
+  rename(Plot_ID = Turf_ID) %>% 
   select(Plot_ID,Type,Replicate,Starting_time,Date,Campaign,Remarks,Start,End)
   
 #matching fluxes
