@@ -28,6 +28,7 @@ flux <- read_csv("data/C-Flux/summer_2020/Three-D_c-flux_2020.csv")
 flux.colnames <- flux %>% 
   colnames()
 
+
 variables.cflux <- tibble(flux.colnames, "Variable type" = c(
   # Datetime
   # "date and time",
