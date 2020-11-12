@@ -56,7 +56,7 @@ vignettes/*.pdf
 *.pdf
 *.jpeg
 .my.cnf
-.tex
+!.tex
 *.md
 !Pics/ExperimentalDesign.jpg
 !Pics/ProposalFigure_small.jpg
