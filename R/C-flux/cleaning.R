@@ -91,7 +91,7 @@ co2_threed <- match.flux(combined,three_d)
 
 flux_threed <- flux.calc(co2_threed) %>% 
   rename(
-    turf_ID = plot_ID
+    turfID = plot_ID
   ) %>% 
   write_csv("data/C-Flux/summer_2020/Three-D_c-flux_2020.csv")
 
