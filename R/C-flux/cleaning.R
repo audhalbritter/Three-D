@@ -1,6 +1,7 @@
 # This script is to clean raw data from various loggers into one datafile with calculated fluxes
 library(tidyverse)
-source("https://raw.githubusercontent.com/jogaudard/common/master/fun-fluxes.R")
+source("https://raw.githubusercontent.com/jogaudard/common/datadoc/fun-fluxes.R")
+# source("https://raw.githubusercontent.com/jogaudard/common/master/fun-fluxes.R")
 library(lubridate, warn.conflicts = FALSE)
 library(broom)
 library(fs)
@@ -35,52 +36,53 @@ fluxes <-
   map_dfr(read_csv,  na = c("#N/A", "Over")) %>% 
   rename(CO2 = "CO2 (ppm)") %>%  #rename the column to get something more practical without space
   mutate(
-    Date = dmy(Date), #convert date in POSIXct
-    Datetime = as_datetime(paste(Date, Time))  #paste date and time in one column
+    date = dmy(Date), #convert date in POSIXct
+    datetime = as_datetime(paste(date, Time))  #paste date and time in one column
     ) %>%
-  select(Datetime,CO2)
+  select(datetime,CO2)
 
 #import date/time and PAR columns from PAR file
 PAR <-
   list.files(path = location, pattern = "*PAR*", full.names = T) %>% 
   map_df(~read_table2(., "", na = c("NA"), col_names = paste0("V",seq_len(12)))) %>% #need that because logger is adding columns with useless information
-  rename(Date = V2, Time = V3, PAR = V4) %>% 
+  rename(date = V2, time = V3, PAR = V4) %>% 
   mutate(
     PAR = as.numeric(as.character(.$PAR)), #removing any text from the PAR column (again, the logger...)
-    Datetime = paste(Date, Time),
-    Datetime = ymd_hms(Datetime)
+    datetime = paste(date, time),
+    datetime = ymd_hms(datetime)
     ) %>% 
-  select(Datetime, PAR)
+  select(datetime, PAR)
 
 #import date/time and value column from iButton file
 
 temp_air <-dir_ls(location, regexp = "*temp*") %>% 
-  map_dfr(read_csv,  na = c("#N/A"), skip = 20, col_names = c("Datetime", "Unit", "Temp_value", "Temp_dec"), col_types = "ccnn") %>%
-  mutate(Temp_dec = replace_na(Temp_dec,0),
-    Temp_air = Temp_value + Temp_dec/1000, #because stupid iButtons use comma as delimiter AND as decimal point
-    Datetime = dmy_hms(Datetime)
+  map_dfr(read_csv,  na = c("#N/A"), skip = 20, col_names = c("datetime", "unit", "temp_value", "temp_dec"), col_types = "ccnn") %>%
+  mutate(temp_dec = replace_na(temp_dec,0),
+    temp_air = temp_value + temp_dec/1000, #because stupid iButtons use comma as delimiter AND as decimal point
+    datetime = dmy_hms(datetime)
     ) %>% 
-  select(Datetime, Temp_air)
+  select(datetime, temp_air)
 
 
 #join the df
 
 
 combined <- fluxes %>% 
-  left_join(PAR, by = "Datetime") %>% 
-  left_join(temp_air, by = "Datetime")
+  left_join(PAR, by = "datetime") %>% 
+  left_join(temp_air, by = "datetime")
 
 #import the record file
 #next part is specific for Three-D
 
 three_d <- read_csv("data/C-Flux/summer_2020/Three-D_field-record_2020.csv", na = c(""), col_types = "ccntDnc") %>% 
   mutate(
-    Start = as_datetime(paste(Date, Starting_time)), #converting the date as posixct, pasting date and starting time together
+    start = as_datetime(paste(date, starting_time)), #converting the date as posixct, pasting date and starting time together
     # Datetime = Start, #useful for left_join
-    End = Start + measurement - endcrop, #creating column End and cropping the end of the measurement
-    Start = Start + startcrop #cropping the start
+    end = start + measurement - endcrop, #creating column End and cropping the end of the measurement
+    start = start + startcrop, #cropping the start
+    plot_ID = turf_ID #we use plot_ID in the functions, but really in Three-D we work with turfs because of the transplant
   ) %>%  
-  select(Plot_ID,Type,Replicate,Starting_time,Date,Campaign,Remarks,Start,End)
+  select(plot_ID,type,replicate,starting_time,date,campaign,remarks,start,end)
   
 #matching fluxes
 
@@ -89,7 +91,7 @@ co2_threed <- match.flux(combined,three_d)
 
 flux_threed <- flux.calc(co2_threed) %>% 
   rename(
-    Turf_ID = Plot_ID
+    turf_ID = plot_ID
   ) %>% 
   write_csv("data/C-Flux/summer_2020/Three-D_c-flux_2020.csv")
 
@@ -98,11 +100,11 @@ flux_threed <- flux.calc(co2_threed) %>%
 
 #graph for three-d
 
-ggplot(co2_threed, aes(x=Datetime, y=CO2)) + 
+ggplot(co2_threed, aes(x=datetime, y=CO2)) + 
   # geom_point(size=0.005) +
   geom_line(size = 0.1, aes(group = ID)) +
   # coord_fixed(ratio = 10) +
   scale_x_datetime(date_breaks = "30 min") +
-  facet_wrap(vars(Date), ncol = 1, scales = "free") +
+  facet_wrap(vars(date), ncol = 1, scales = "free") +
   # geom_line(size=0.05)
   ggsave("threed.png", height = 40, width = 100, units = "cm")
