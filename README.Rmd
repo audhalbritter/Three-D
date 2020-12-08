@@ -30,7 +30,7 @@ theme_set(theme_bw(base_size = 12))
 
 # {r, include=FALSE}
 # source("R/C-Flux/description.R", local = knitr::knit_global())
-sys.source("data_dictionnary.R", envir = knitr::knit_global())
+# sys.source("data_dictionnary.R", envir = knitr::knit_global())
 
 
 ```
@@ -265,17 +265,24 @@ The function `flux.calc` calculates the flux with default values for Three-D set
 <!-- # ```{r, include=FALSE, code=xfun::read_utf8("description.R")} -->
 <!-- # ``` -->
 ```{r cflux-data-dic, echo=FALSE}
-knitr::kable(variables.cflux, format="html")
+# knitr::kable(variables.cflux, format="html")
 ```
 
 <!-- light response curves -->
 
 <!-- data cleaning -->
-Only a central time window of 60 seconds is kept, meaning that the first and last 30 seconds of the flux are discarded.
-It is mostly at the beginning and the end of the measurement that the chamber is being disturbed by the manipulation.
-Fluxes with a p-value <= 0.05 and R squared >= 0.7 are kept.
-But this is discarding fluxes close to 0, which tend to have a lot of variation (noise).
-For that reason, fluxes with non significant p-value and R squared <= 0.2 are also kept.
+<!-- The first 30 seconds of each measurements were removed because that is when the chamber is being manipulated, affecting the measurement quality. -->
+<!-- Then the time window for each flux has been adjusted if necessary. -->
+<!-- The end of the flux is cut out if it is reaching a plateau (because a linear regression is used for the calculations). -->
+<!-- In case a clear peak is appearing in the middle of the flux, it was removed as well. -->
+<!-- Because of moisture in the tubes, some bubble of CO~2~ can get stuck and be released at once. -->
+<!-- This is appearing as a peak in CO~2~ concentration. -->
+
+<!-- Only a central time window of 60 seconds is kept, meaning that the first and last 30 seconds of the flux are discarded. -->
+<!-- It is mostly at the beginning and the end of the measurement that the chamber is being disturbed by the manipulation. -->
+<!-- Fluxes with a p-value <= 0.05 and R squared >= 0.7 are kept. -->
+<!-- But this is discarding fluxes close to 0, which tend to have a lot of variation (noise). -->
+<!-- For that reason, fluxes with non significant p-value and R squared <= 0.2 are also kept. -->
 
 
 **CN stocks, pH, soil organic matter** Collecting soil samples: In sommer 2019, two soil samples were collected from each blocks, but outside the plots.
