@@ -35,7 +35,7 @@ theme_set(theme_bw(base_size = 12))
 
 ```
 
-```{r child = "fun/snow.Rmd"}
+```{r child = "fun/snow.Rmd", echo=FALSE}
 ```
 
 This is the git repository for the data paper:
