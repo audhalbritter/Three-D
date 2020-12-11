@@ -5,6 +5,94 @@ p.caption {
 }
 </style>
 
+<div class="snowflakes" data-aria-hidden="true">
+
+<div class="snowflake">
+
+❅
+
+</div>
+
+<div class="snowflake">
+
+❅
+
+</div>
+
+<div class="snowflake">
+
+❆
+
+</div>
+
+<div class="snowflake">
+
+❄
+
+</div>
+
+<div class="snowflake">
+
+❅
+
+</div>
+
+<div class="snowflake">
+
+❆
+
+</div>
+
+<div class="snowflake">
+
+❄
+
+</div>
+
+<div class="snowflake">
+
+❅
+
+</div>
+
+<div class="snowflake">
+
+❆
+
+</div>
+
+<div class="snowflake">
+
+❄
+
+</div>
+
+</div>
+
+<style type="text/css">
+/* customizable snowflake styling */
+.snowflake {
+  color: lightblue;
+  font-size: 5em;
+  font-family: Arial;
+  text-shadow: 0 0 1px #000;
+}
+@-webkit-keyframes snowflakes-fall{0%{top:-10%}100%{top:100%}}@-webkit-keyframes snowflakes-shake{0%{-webkit-transform:translateX(0px);transform:translateX(0px)}50%{-webkit-transform:translateX(80px);transform:translateX(80px)}100%{-webkit-transform:translateX(0px);transform:translateX(0px)}}@keyframes snowflakes-fall{0%{top:-10%}100%{top:100%}}@keyframes snowflakes-shake{0%{transform:translateX(0px)}50%{transform:translateX(80px)}100%{transform:translateX(0px)}}.snowflake{position:fixed;top:-10%;z-index:9999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;cursor:default;-webkit-animation-name:snowflakes-fall,snowflakes-shake;-webkit-animation-duration:10s,3s;-webkit-animation-timing-function:linear,ease-in-out;-webkit-animation-iteration-count:infinite,infinite;-webkit-animation-play-state:running,running;animation-name:snowflakes-fall,snowflakes-shake;animation-duration:10s,3s;animation-timing-function:linear,ease-in-out;animation-iteration-count:infinite,infinite;animation-play-state:running,running}.snowflake:nth-of-type(0){left:1%;-webkit-animation-delay:0s,0s;animation-delay:0s,0s}.snowflake:nth-of-type(1){left:10%;-webkit-animation-delay:1s,1s;animation-delay:1s,1s}.snowflake:nth-of-type(2){left:20%;-webkit-animation-delay:6s,.5s;animation-delay:6s,.5s}.snowflake:nth-of-type(3){left:30%;-webkit-animation-delay:4s,2s;animation-delay:4s,2s}.snowflake:nth-of-type(4){left:40%;-webkit-animation-delay:2s,2s;animation-delay:2s,2s}.snowflake:nth-of-type(5){left:50%;-webkit-animation-delay:8s,3s;animation-delay:8s,3s}.snowflake:nth-of-type(6){left:60%;-webkit-animation-delay:6s,2s;animation-delay:6s,2s}.snowflake:nth-of-type(7){left:70%;-webkit-animation-delay:2.5s,1s;animation-delay:2.5s,1s}.snowflake:nth-of-type(8){left:80%;-webkit-animation-delay:1s,0s;animation-delay:1s,0s}.snowflake:nth-of-type(9){left:90%;-webkit-animation-delay:3s,1.5s;animation-delay:3s,1.5s}
+/* Demo Purpose Only*/
+.demo {
+  font-family: 'Raleway', sans-serif;
+    color:#fff;
+    display: block;
+    margin: 0 auto;
+    padding: 15px 0;
+    text-align: center;
+}
+.demo a{
+  font-family: 'Raleway', sans-serif;
+color: #000;        
+}
+</style>
+
 This is the git repository for the data paper: Halbritter et al. (not
 written yet). THREE-D - Integrated assessment to aid mitigation of
 negative impacts by THREE global change Drivers on alpine biodiversity
@@ -393,487 +481,6 @@ Three-D setup.
 <!-- # ```{r, include=FALSE, code=xfun::read_utf8("description.R")} -->
 
 <!-- # ``` -->
-<<<<<<< HEAD
-
-``` r
-knitr::kable(variables.cflux, format="html")
-```
-
-=======
->>>>>>> 440744b61fb588d0c0ab58c65c9efea103f62771
-<table>
-
-<thead>
-
-<tr>
-
-<th style="text-align:left;">
-
-Variable name
-
-</th>
-
-<th style="text-align:left;">
-
-Variable type
-
-</th>
-
-<th style="text-align:left;">
-
-Variable range or levels
-
-</th>
-
-<th style="text-align:left;">
-
-How measured
-
-</th>
-
-<th style="text-align:left;">
-
-Units/formats/treatment level coding
-
-</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-<tr>
-
-<td style="text-align:left;">
-
-Datetime
-
-</td>
-
-<td style="text-align:left;">
-
-POSIXct POSIXt
-
-</td>
-
-<td style="text-align:left;">
-
-2020-06-26 12:59:00 - 2020-08-20 16:50:00
-
-</td>
-
-<td style="text-align:left;">
-
-</td>
-
-<td style="text-align:left;">
-
-AC CET
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-ID
-
-</td>
-
-<td style="text-align:left;">
-
-numeric
-
-</td>
-
-<td style="text-align:left;">
-
-\[flux ID\]
-
-</td>
-
-<td style="text-align:left;">
-
-defined
-
-</td>
-
-<td style="text-align:left;">
-
-1 - 288
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-Turf\_ID
-
-</td>
-
-<td style="text-align:left;">
-
-character
-
-</td>
-
-<td style="text-align:left;">
-
-\[origin plotID\]x\[treatment\]x\[destination plotID\]
-
-</td>
-
-<td style="text-align:left;">
-
-defined
-
-</td>
-
-<td style="text-align:left;">
-
-Ex.: 158 WN2C 199
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-Type
-
-</td>
-
-<td style="text-align:left;">
-
-character
-
-</td>
-
-<td style="text-align:left;">
-
-\[type\]
-
-</td>
-
-<td style="text-align:left;">
-
-defined
-
-</td>
-
-<td style="text-align:left;">
-
-ER, NEE
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-Replicate
-
-</td>
-
-<td style="text-align:left;">
-
-numeric
-
-</td>
-
-<td style="text-align:left;">
-
-\[replicate\]
-
-</td>
-
-<td style="text-align:left;">
-
-defined
-
-</td>
-
-<td style="text-align:left;">
-
-1, 2, 3
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-Remarks
-
-</td>
-
-<td style="text-align:left;">
-
-character
-
-</td>
-
-<td style="text-align:left;">
-
-Field observations
-
-</td>
-
-<td style="text-align:left;">
-
-</td>
-
-<td style="text-align:left;">
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-Date
-
-</td>
-
-<td style="text-align:left;">
-
-Date
-
-</td>
-
-<td style="text-align:left;">
-
-2020-06-26 - 2020-08-20
-
-</td>
-
-<td style="text-align:left;">
-
-</td>
-
-<td style="text-align:left;">
-
-AC
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-PARavg
-
-</td>
-
-<td style="text-align:left;">
-
-numeric
-
-</td>
-
-<td style="text-align:left;">
-
-\-0.0106973801652893 - 1915.61983471074
-
-</td>
-
-<td style="text-align:left;">
-
-PAR sensor inside the chamber
-
-</td>
-
-<td style="text-align:left;">
-
-micromol s⁻¹ m⁻²
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-Temp\_airavg
-
-</td>
-
-<td style="text-align:left;">
-
-numeric
-
-</td>
-
-<td style="text-align:left;">
-
-281.39905785124 - 310.736454545455
-
-</td>
-
-<td style="text-align:left;">
-
-Thermocouple inside the chamber
-
-</td>
-
-<td style="text-align:left;">
-
-Kelvin
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-r.squared
-
-</td>
-
-<td style="text-align:left;">
-
-numeric
-
-</td>
-
-<td style="text-align:left;">
-
-4.61699641394944e-05 - 0.99977808630378
-
-</td>
-
-<td style="text-align:left;">
-
-calculated with linear model
-
-</td>
-
-<td style="text-align:left;">
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-p.value
-
-</td>
-
-<td style="text-align:left;">
-
-numeric
-
-</td>
-
-<td style="text-align:left;">
-
-2.89238419463405e-219 - 0.941035574429795
-
-</td>
-
-<td style="text-align:left;">
-
-calculated with linear model
-
-</td>
-
-<td style="text-align:left;">
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-flux
-
-</td>
-
-<td style="text-align:left;">
-
-numeric
-
-</td>
-
-<td style="text-align:left;">
-
-\-22.6298013973675 - 109.418687877727
-
-</td>
-
-<td style="text-align:left;">
-
-calculated from concentration vs time
-
-</td>
-
-<td style="text-align:left;">
-
-mmol m⁻² h⁻¹
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-Campaign
-
-</td>
-
-<td style="text-align:left;">
-
-numeric
-
-</td>
-
-<td style="text-align:left;">
-
-1 - 4
-
-</td>
-
-<td style="text-align:left;">
-
-</td>
-
-<td style="text-align:left;">
-
-1, 2, 3, 4
-
-</td>
-
-</tr>
-
-</tbody>
-
-</table>
 
 <!-- light response curves -->
 

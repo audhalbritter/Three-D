@@ -30,7 +30,7 @@ theme_set(theme_bw(base_size = 12))
 
 # {r, include=FALSE}
 # source("R/C-Flux/description.R", local = knitr::knit_global())
-sys.source("data_dictionnary.R", envir = knitr::knit_global())
+#sys.source("data_dictionnary.R", envir = knitr::knit_global())
 
 
 ```
@@ -268,7 +268,7 @@ The function `flux.calc` calculates the flux with default values for Three-D set
 <!-- # ```{r, include=FALSE, code=xfun::read_utf8("description.R")} -->
 <!-- # ``` -->
 ```{r cflux-data-dic, echo=FALSE}
-knitr::kable(variables.cflux, format="html")
+#knitr::kable(variables.cflux, format="html")
 ```
 
 <!-- light response curves -->
