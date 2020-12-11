@@ -393,11 +393,14 @@ Three-D setup.
 <!-- # ```{r, include=FALSE, code=xfun::read_utf8("description.R")} -->
 
 <!-- # ``` -->
+<<<<<<< HEAD
 
 ``` r
 knitr::kable(variables.cflux, format="html")
 ```
 
+=======
+>>>>>>> 440744b61fb588d0c0ab58c65c9efea103f62771
 <table>
 
 <thead>
