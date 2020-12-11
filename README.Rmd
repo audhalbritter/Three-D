@@ -35,7 +35,10 @@ theme_set(theme_bw(base_size = 12))
 
 ```
 
+# Marry Christams 🎄
+
 ```{r child = "fun/snow.Rmd", echo=FALSE}
+## chumk that adds snowflakes
 ```
 
 This is the git repository for the data paper:
