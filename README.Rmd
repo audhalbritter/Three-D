@@ -3,11 +3,7 @@ output: github_document
 fig_caption: yes
 ---
 
-<style>
-p.caption {
-  font-size: 0.8em;
-}
-</style>
+
 
 ````{r InitialSettings, out.width='100%', include = FALSE}
 knitr::opts_chunk$set(

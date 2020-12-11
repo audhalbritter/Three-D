@@ -1,10 +1,4 @@
 
-<style>
-p.caption {
-  font-size: 0.8em;
-}
-</style>
-
 # Marry Christams 🎄
 
 <div class="snowflakes" data-aria-hidden="true">
