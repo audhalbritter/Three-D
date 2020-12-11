@@ -35,6 +35,9 @@ sys.source("data_dictionnary.R", envir = knitr::knit_global())
 
 ```
 
+```{r child = "fun/snow.Rmd"}
+```
+
 This is the git repository for the data paper:
 Halbritter et al. (not written yet). THREE-D - Integrated assessment to aid mitigation of negative impacts by THREE global change Drivers on alpine biodiversity and ecosystem function.
 
