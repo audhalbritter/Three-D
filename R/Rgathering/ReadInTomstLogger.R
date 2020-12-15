@@ -4,15 +4,27 @@
 
 source("R/Load packages.R")
 # only needed for soiltemp template
-source("R/Rgathering/ReadInPlotLevel.R")
+# source("R/Rgathering/ReadInPlotLevel.R")
 
 
 #### CLIMATE DATA ####
 
 # Read in meta data
-metaTomst <- read_excel(path = "data/metaData/Three-D_ClimateLogger_Meta_2019.xlsx", col_names = TRUE, col_types = c("text", "numeric", "numeric", "text", "date", "date", "date", "text", "date", "date", "text", "date", "text", "date", "text", "date", "text", "date", "text")) %>% 
-  mutate(InitialDate = ymd(InitialDate),
-         InitialDate_Time = ymd_hm(paste(InitialDate, paste(hour(InitialTime), minute(InitialTime), sep = ":"), sep = " ")))
+metaTomst <- read_csv2("data/metaData/Logger_info.csv", col_names = TRUE, na = c(""), col_types = "fcffffncnc") %>% 
+  mutate(
+    Date_logger_in = dmy(Date_logger_in),
+    Date_logger2_in = dmy(Date_logger2_in)
+  )
+
+
+metaTomst <- pivot_longer(metaTomst, cols = c("Tomst-logger","Tomst_logger_2"), names_to = "tomst", values_to = "loggerID") %>% #putting all the loggerID in one column and creating a new column specifying if it is logger 1 or 2
+  mutate( #creating column date in and date out for selection of time window
+    date_in = case_when(tomst == "Tomst-logger" ~ Date_logger_in, 
+                        tomst == "Tomst_logger_2" ~ Date_logger2_in),
+    date_out = case_when(tomst == "Tomst-logger" ~ Date_logger2_in) #date ou of logger 1 is date in of logger 2, I guess it makes sense
+  ) %>% 
+  select(!c(Date_logger_in, Date_logger2_in, tomst))
+
 
 
 ### Read in files
@@ -41,13 +53,14 @@ TomstLogger_2019_2020 <- temp %>%
   #mutate(SoilMoisture = a * RawSoilmoisture^2 + b * RawSoilmoisture + c) %>% 
   # get logger ID -> not needed anymore, have whole filename now!!!
   mutate(LoggerID = substr(File, nchar(File)-13, nchar(File)-6)) %>% 
-  left_join(metaTomst, by = "LoggerID") %>% 
+  left_join(metaTomst, by = c("LoggerID"="loggerID")) %>% 
   
   # Data curation
   
   # Remove data before initial date time
   group_by(LoggerID) %>% 
-  filter(Date_Time > InitialDate_Time) %>% 
+  filter(Date_Time > date_in
+         & Date_time >= date_out) %>% #see how it goes with the NAs in Date_out
   
   # fix wrong values
   mutate(AirTemperature = case_when(LoggerID %in% c("94195252", "94195220") & AirTemperature < -40 ~ NA_real_,
