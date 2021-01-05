@@ -1,4 +1,3 @@
-
 This is the git repository for the THREE-D project and the associate
 data paper: Halbritter et al. (not written yet). THREE-D - Integrated
 assessment to aid mitigation of negative impacts by THREE global change
