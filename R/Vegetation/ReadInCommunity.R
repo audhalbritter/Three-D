@@ -275,7 +275,7 @@ cover <- community %>%
   group_by(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID, warming, grazing, Nlevel, Date, Year, Species, Recorder, file) %>% 
   summarise(Cover = sum(Cover))
 
-write_csv(cover, path = "data/community/THREE-D_Cover_2019.csv", col_names = TRUE)
+write_csv(cover, path = "data_cleaned/community/THREE-D_Cover_2019_2020.csv", col_names = TRUE)
 
 
 #### COMMUNITY STRUCTURE DATA ####
@@ -288,6 +288,9 @@ height <- community %>%
   group_by(turfID, Year, Species) %>% 
   summarise(MeanHeight = mean(Height, na.rm = TRUE)) %>% 
   rename("Layer" = "Species")
+
+write_csv(height, path = "data_cleaned/community/THREE-D_Height_2019_2020.csv", col_names = TRUE)
+
 
 # Cover from Functional Groups
 CommunityStructure <- community %>% 
@@ -306,7 +309,7 @@ CommunityStructure <- community %>%
   ### Should height be added??? !!!
   #left_join(height, by = "turfID")
 
-write_csv(CommunityStructure, path = "data/community/THREE-D_CommunityStructure_2019.csv", col_names = TRUE)
+write_csv(CommunityStructure, path = "data_cleaned/community/THREE-D_CommunityStructure_2019_2020.csv", col_names = TRUE)
 
 
 
@@ -338,4 +341,4 @@ community %>%
   group_by(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID, warming, grazing, Nlevel, Date, Year, Species, Recorder, Remark, file) %>%
   mutate(n = n()) %>% filter(n > 1) %>% as.data.frame()
 
-write_csv(CommunitySubplot, path = "data/community/THREE-D_CommunitySubplot_2020.csv", col_names = TRUE)
+write_csv(CommunitySubplot, path = "data_cleaned/community/THREE-D_CommunitySubplot_2019_2020.csv", col_names = TRUE)

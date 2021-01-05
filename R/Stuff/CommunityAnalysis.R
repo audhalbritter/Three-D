@@ -1,5 +1,8 @@
+library("tidyverse")
 library("vegan")
+library("ggvegan")
 
+cover <- read_csv(file = "data/community/THREE-D_Cover_2019.csv")
 cover_wide <- cover %>%
   ungroup() %>% 
   pivot_wider(names_from = Species, values_from = Cover, values_fill = list(Cover = 0)) 
@@ -17,6 +20,15 @@ fNMDS <- fortify(NMDS) %>%
   filter(Score == "sites") %>%
   bind_cols(cover_wide %>% select(origSiteID:Year))
 
+
+ggplot(fNMDS, aes(x = NMDS1, y = NMDS2, shape = origSiteID, colour = origSiteID)) +
+  geom_point() +
+  coord_equal() +
+  scale_colour_manual(values = treat_colours, limits = levels(cover_fat$TTtreat), labels=c("Control", "Local transplant", "Transplant", "OTC")) +
+  scale_fill_manual(values = treat_colours, limits = levels(cover_fat$TTtreat), labels=c("Control", "Local transplant", "Transplant", "OTC")) +
+  scale_shape_manual(values = c(24, 22, 23, 25), limits = levels(cover_fat$originSiteID), labels=c("High alpine", "Alpine", "Middle", "Low")) +
+  guides(shape = guide_legend(override.aes = list(fill = "black"))) +
+  labs(colour = "Treatment", fill = "Treatment", shape = "Site", size = "Year") 
 
 
 ## Calculate responses

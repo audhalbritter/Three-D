@@ -76,9 +76,9 @@ dd <- TomstLogger_2019_2020
 
 dd %>% 
   #filter(destSiteID == "Lia") %>% 
-  filter(LoggerID %in% c("94200493", "94200499")) %>% 
+  filter(LoggerID %in% c("94195252", "94195230")) %>% 
   #filter(SoilTemperature < 20) %>% 
-  filter(Date_Time < "2020-07-05 08:00:00") %>% 
+  #filter(Date_Time < "2020-07-05 08:00:00") %>% 
   ggplot(aes(x = Date_Time, y = SoilTemperature, colour = as.factor(LoggerID))) +
   geom_line() +
   geom_vline(xintercept = ymd_hms("2020-06-25 12:00:00")) +
