@@ -1,5 +1,20 @@
 #### NDVI DATA ####
+
+source("R/Load packages.R")
 source("R/Rgathering/create meta data.R")
+source("R/Vegetation/ReadInBiomass.R")
+
+# Download raw data from OSF
+get_file(node = "pk4bg",
+         file = "THREE-D_NDVI_2020_aud.csv",
+         path = "data/reflectance",
+         remote_path = "RawData/Vegetation")
+
+get_file(node = "pk4bg",
+         file = "THREE-D_NDVI_2020_joseph.csv",
+         path = "data/reflectance",
+         remote_path = "RawData/Vegetation")
+
 
 # Read in ndvi data
 ndvi.raw1 <- read_csv(file = "data/ndvi/THREE-D_NDVI_2020_joseph.csv") %>% 
@@ -9,21 +24,31 @@ ndvi.raw1 <- read_csv(file = "data/ndvi/THREE-D_NDVI_2020_joseph.csv") %>%
 
 ndvi <- read_csv(file = "data/ndvi/THREE-D_NDVI_2020_aud.csv") %>% 
   select(origSiteID:timing) %>% 
-  mutate(date = dmy(date)) %>% 
+  mutate(date = dmy(date),
+         year = year(date)) %>% 
   bind_rows(ndvi.raw1) %>% 
   # fix wrong data (comma forgotten)
   mutate(ndvi = if_else(ndvi > 1, ndvi/100, ndvi)) %>% 
-  filter(!is.na(ndvi))
+  # remove empty rows
+  filter(!is.na(ndvi)) %>% 
+  # convert campaign nr to timing
+  mutate(timing = case_when(origSiteID %in% c("Joa", "Lia") & campaign == 2 ~ "After 1. cut",
+                            origSiteID == "Lia" & campaign == 3 ~ "After 1. cut",
+                            origSiteID == "Vik" & campaign == 2 ~ "After 2. cut",
+                            origSiteID %in% c("Joa", "Vik") & campaign == 3 ~ "After 2. cut",
+                            campaign == 4 ~ "After 3. cut",
+                            TRUE ~ timing))
+  
 
-### NEEED TO MERGE WITH CUTTING DATE FROM BIOMASS TO SORT INTO BEFORE/AFTER CLIPPING !!!
+# save clean data file
+write_csv(ndvi, path = "data_cleaned/Vegetation/THREE-D_Reflectance_2020.csv")
 
-
-ndvi %>% filter(is.na(date))
-ndvi %>% filter(destSiteID == "Lia") %>% distinct(date, timing, destSiteID)
 
 # Check data
 ndvi %>% 
-  filter(campaign == 3) %>% 
+  filter(timing == c("After 3. cut")) %>% 
   ggplot(aes(x = factor(Nlevel), y = ndvi, fill = warming)) +
   geom_boxplot() +
   facet_grid( ~ origSiteID)
+
+
