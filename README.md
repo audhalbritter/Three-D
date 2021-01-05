@@ -1,98 +1,8 @@
 
-# Marry Christams 🎄
-
-<div class="snowflakes" data-aria-hidden="true">
-
-<div class="snowflake">
-
-❅
-
-</div>
-
-<div class="snowflake">
-
-❅
-
-</div>
-
-<div class="snowflake">
-
-❆
-
-</div>
-
-<div class="snowflake">
-
-❄
-
-</div>
-
-<div class="snowflake">
-
-❅
-
-</div>
-
-<div class="snowflake">
-
-❆
-
-</div>
-
-<div class="snowflake">
-
-❄
-
-</div>
-
-<div class="snowflake">
-
-❅
-
-</div>
-
-<div class="snowflake">
-
-❆
-
-</div>
-
-<div class="snowflake">
-
-❄
-
-</div>
-
-</div>
-
-<style type="text/css">
-/* customizable snowflake styling */
-.snowflake {
-  color: lightblue;
-  font-size: 5em;
-  font-family: Arial;
-  text-shadow: 0 0 1px #000;
-}
-@-webkit-keyframes snowflakes-fall{0%{top:-10%}100%{top:100%}}@-webkit-keyframes snowflakes-shake{0%{-webkit-transform:translateX(0px);transform:translateX(0px)}50%{-webkit-transform:translateX(80px);transform:translateX(80px)}100%{-webkit-transform:translateX(0px);transform:translateX(0px)}}@keyframes snowflakes-fall{0%{top:-10%}100%{top:100%}}@keyframes snowflakes-shake{0%{transform:translateX(0px)}50%{transform:translateX(80px)}100%{transform:translateX(0px)}}.snowflake{position:fixed;top:-10%;z-index:9999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;cursor:default;-webkit-animation-name:snowflakes-fall,snowflakes-shake;-webkit-animation-duration:10s,3s;-webkit-animation-timing-function:linear,ease-in-out;-webkit-animation-iteration-count:infinite,infinite;-webkit-animation-play-state:running,running;animation-name:snowflakes-fall,snowflakes-shake;animation-duration:10s,3s;animation-timing-function:linear,ease-in-out;animation-iteration-count:infinite,infinite;animation-play-state:running,running}.snowflake:nth-of-type(0){left:1%;-webkit-animation-delay:0s,0s;animation-delay:0s,0s}.snowflake:nth-of-type(1){left:10%;-webkit-animation-delay:1s,1s;animation-delay:1s,1s}.snowflake:nth-of-type(2){left:20%;-webkit-animation-delay:6s,.5s;animation-delay:6s,.5s}.snowflake:nth-of-type(3){left:30%;-webkit-animation-delay:4s,2s;animation-delay:4s,2s}.snowflake:nth-of-type(4){left:40%;-webkit-animation-delay:2s,2s;animation-delay:2s,2s}.snowflake:nth-of-type(5){left:50%;-webkit-animation-delay:8s,3s;animation-delay:8s,3s}.snowflake:nth-of-type(6){left:60%;-webkit-animation-delay:6s,2s;animation-delay:6s,2s}.snowflake:nth-of-type(7){left:70%;-webkit-animation-delay:2.5s,1s;animation-delay:2.5s,1s}.snowflake:nth-of-type(8){left:80%;-webkit-animation-delay:1s,0s;animation-delay:1s,0s}.snowflake:nth-of-type(9){left:90%;-webkit-animation-delay:3s,1.5s;animation-delay:3s,1.5s}
-/* Demo Purpose Only*/
-.demo {
-  font-family: 'Raleway', sans-serif;
-    color:#fff;
-    display: block;
-    margin: 0 auto;
-    padding: 15px 0;
-    text-align: center;
-}
-.demo a{
-  font-family: 'Raleway', sans-serif;
-color: #000;        
-}
-</style>
-
-This is the git repository for the data paper: Halbritter et al. (not
-written yet). THREE-D - Integrated assessment to aid mitigation of
-negative impacts by THREE global change Drivers on alpine biodiversity
-and ecosystem function.
+This is the git repository for the THREE-D project and the associate
+data paper: Halbritter et al. (not written yet). THREE-D - Integrated
+assessment to aid mitigation of negative impacts by THREE global change
+Drivers on alpine biodiversity and ecosystem function.
 
 # INTRODUCTION
 
@@ -114,62 +24,66 @@ is itself a major ecological stressor vs. acting as an effective tool
 for reducing the ecological strains caused by climate warming and/or
 nitrogen deposition. To assess effects of three global change drivers
 and their impacts on ecosystem using a single framework, represents a
-significant advancement beyond the state-of-the-art. THREE-D is also
-innovative in that it goes beyond studying impacts of global change by
-exploring the potential of grazing as a management tool.
+significant advancement beyond the state-of-the-art.
 
 <div class="figure">
 
-<img src="Pics/ProposalFigure_small.jpg" alt="Pathways of warmer climate, nitrogen deposition and grazing via productiviy and biomass on biodiverstiy and ecosystem function." width="2694" />
+<img src="Pics/ProposalFigure_small.jpg" alt="Figure 1. Pathways of warmer climate, nitrogen deposition and grazing via productiviy and biomass on biodiverstiy and ecosystem function." width="2694" />
 
 <p class="caption">
 
-Pathways of warmer climate, nitrogen deposition and grazing via
-productiviy and biomass on biodiverstiy and ecosystem function.
+Figure 1. Pathways of warmer climate, nitrogen deposition and grazing
+via productiviy and biomass on biodiverstiy and ecosystem function.
 
 </p>
 
 </div>
 
-The specific research questions are: 1) How does grazing interact with
-climate warming and/or nitrogen deposition and affect biodiversity and
-ecosystem functioning in an alpine ecosystem? 2) When and at what level
-does grazing mitigate the effects of these two global change drivers on
-biodiversity and ecosystem functioning?
+The specific research questions of the THREE-D project are:
+
+1)  How does grazing interact with climate warming and/or nitrogen
+    deposition and affect biodiversity and ecosystem functioning in an
+    alpine ecosystem?
+
+2)  When and at what level does grazing mitigate the effects of these
+    two global change drivers on biodiversity and ecosystem functioning?
 
 ## METHODS
 
 ### Research site
 
-The study is conducted in three semi-natural grassland sites. The sites
-are location on calcareous soil in Norway, and on mountain grey-brown
-soil in China (He, Liao, & Zhang, 2005). The sites were chosen to fit
-within an elevational gradient with three temperature levels that differ
-in c. 400 m elevation, a temperature difference of approximately 2°C in
-summer temperature @ref(fig:proposal\_figure). The sites correspond to
-the alpine, sub-alpine and boreal biogeographic zones in Norway and
-subalpine to alpine grasslands in China. Other factors such as grazing
-regime and history, bedrock, vegetation type and structure, slope and
-exposure were kept as constant as possible among the selected sites
-within each country.
+The study is conducted in three semi-natural grassland sites in western
+Norway and the eastern edge of the Himalaya in Gongga Mountain, Sichuan
+in China. The sites are location on calcareous soil in Norway, and on
+mountain grey-brown soil in China. The sites were chosen to fit within
+an elevational gradient with three temperature levels that differ in
+c. 400 m elevation, a temperature difference of approximately 2°C in
+summer temperature (Figure 1). The sites correspond to the alpine,
+sub-alpine and boreal biogeographic zones in Norway and subalpine to
+alpine grasslands in China. Other factors such as grazing regime and
+history, bedrock, vegetation type and structure, slope and exposure were
+kept as constant as possible among the selected sites within each
+country.
 
 <div class="figure">
 
-<img src="Pics/ExperimentalDesign.jpg" alt="A) Experimental design at sites with low productivity (range centre) and high productivity (warm edge). The treatments are warming (red), nitrogen deposition (green), warming and nitrogen deposition (orange), and control (grey). These treatments are crossed with two clipping levels (intermediate and intensive) and natural grazing outside the grazing exclosure (stippled line). B) Example of a plot divided into data collection (species composition, carbon flux measures) and destructive harvesting (soil samples, litter bags, biomass harvesting) areas." width="2062" />
+<img src="Pics/ExperimentalDesign.jpg" alt="Figure 2: A) Experimental design at sites with low productivity (range centre) and high productivity (warm edge). The treatments are warming (red), nitrogen deposition (green), warming and nitrogen deposition (orange), and control (grey). These treatments are crossed with two clipping levels (intermediate and intensive) and natural grazing outside the grazing exclosure (stippled line). B) Example of a plot divided into data collection (species composition, carbon flux measures) and destructive harvesting (soil samples, litter bags, biomass harvesting) areas." width="2062" />
 
 <p class="caption">
 
-1)  Experimental design at sites with low productivity (range centre)
-    and high productivity (warm edge). The treatments are warming (red),
-    nitrogen deposition (green), warming and nitrogen deposition
-    (orange), and control (grey). These treatments are crossed with two
-    clipping levels (intermediate and intensive) and natural grazing
-    outside the grazing exclosure (stippled line). B) Example of a plot
-    divided into data collection (species composition, carbon flux
-    measures) and destructive harvesting (soil samples, litter bags,
-    biomass harvesting) areas.
-    </p>
-    </div>
+Figure 2: A) Experimental design at sites with low productivity (range
+centre) and high productivity (warm edge). The treatments are warming
+(red), nitrogen deposition (green), warming and nitrogen deposition
+(orange), and control (grey). These treatments are crossed with two
+clipping levels (intermediate and intensive) and natural grazing outside
+the grazing exclosure (stippled line). B) Example of a plot divided into
+data collection (species composition, carbon flux measures) and
+destructive harvesting (soil samples, litter bags, biomass harvesting)
+areas.
+
+</p>
+
+</div>
 
 We chose species rich grasslands, that were large enough to contain 80
 50 x 50 cm plots and relatively flat to avoid contamination between the
@@ -200,41 +114,40 @@ plot per block for the natural grazing treatment were chosen outside the
 fence. These plots were \< 10m from the adjacent block to have the same
 vegetation, but not too close to be affected by the fence. Each plot was
 divided into non-destructive (25 x 25 cm; inner area) and destructive
-(outer area of the 50 x 50 cm plot) sampling areas. Plant community
-composition, carbon fluxes (GPP, Reco), and biomass harvest was
-conducted in a non-destructive subplot The rest of the plot was used for
-destructive soil sampling (soil samples), nutrients (PRS probes), and
-litter decomposition and provided an opportunity for add-on projects
-during the THREE-D project (e.g. trait measurements). Each plot was
-given a unique originPlotID starting at the upper left corner in block 1
-and the high site. The numbering was continued to 160. After
-transplanting each turf also received a unique destinationPlotID (a
-number from 1-200; see below). A realized site map with the actual
-location of each plot and block in all the sites was drawn and pictures
-of each site, block and plot was taken. The fence was set up.
+(area between the 25 x 25 cm and 50 x 50 cm plot) sampling areas. Plant
+community composition, carbon fluxes (GPP, Reco), and biomass harvest
+was conducted in a non-destructive subplot. The rest of the plot was
+used for destructive soil sampling (soil samples), nutrients (PRS
+probes), root ingrowth cores and litter decomposition and provided an
+opportunity for add-on projects during the THREE-D project (e.g. trait
+measurements). Each plot was given a unique originPlotID starting at the
+upper left corner in block 1 and the high site. The numbering was
+continued to 160. After transplanting, each turf also received a unique
+destinationPlotID (a number from 1-200; see below). A realized site map
+with the actual location of each plot and block in all the sites was
+drawn and pictures of each site, block and plot was taken. The fence was
+set up in autumn 2019 in China and in spring 2020 in Norway before the
+grazing animals arrived at the sites.
 
 The randomization of the treatments was done in two steps. First, the 10
 nitrogen levels were assigned randomly per block (i.e. block 1 received
 the same nitrogen level in each site). We chose to randomize the
 nitrogen treatment at the block level to avoid contamination between the
-plots within the blocks. For sites with a slope \> X° (name all the
-sites, where corrections were done), some of the nitrogen levels were
-switched to avoid contamination across the blocks. If a block had a
-nitrogen treatment that was \> 2 levels higher than the block downslope
-from the block, the nitrogen treatments were switched. This procedure
-was repeated until no nitrogen contamination was possible from upslope
-blocks. Second, the warming and grazing treatments were randomized
-within block. The six plots within each block (inside the fence) were
-randomly assigned a warming and grazing treatment. The two plots per
-block located outside the fence, were randomly assigned a warming
-treatment. Each block contained 8 plots with one nitrogen level, ambient
-and warmed plots, combined with all 4 grazing levels. The total number
-of plots was 160.
+plots within the blocks. If a block had a nitrogen treatment that was \>
+2 levels higher than the block downslope from the block, the nitrogen
+treatments were switched. This procedure was repeated until no nitrogen
+contamination was possible from upslope blocks. Second, the warming and
+grazing treatments were randomized within block. The six plots within
+each block (inside the fence) were randomly assigned a warming and
+grazing treatment. The two plots per block located outside the fence,
+were randomly assigned a warming treatment. Each block contained eight
+plots with one nitrogen level, ambient and warmed plots, combined with
+all four grazing levels. The total number of plots was 160.
 
 ### Experimental treatments
 
-All the treatments were applied to the whole 50 x 50 cm plot
-@ref(fig:exp\_design).
+All the treatments were applied to the whole 50 x 50 cm plot (Figure
+2B).
 
 **Warming treatment** The warming treatment was conducted at the end of
 the growing season in 2019, by transplanting entire plant communities to
@@ -267,36 +180,54 @@ was added to the gap or around the edges to achieve this.
 
 **Nitrogen addition** In each plot we added slow dissolving fertilizer
 as pellets (YaraBela OPTI-NS 27-0-0 (4S)). We used oxidised nitrogen (NO
-and N2O) formed mainly by combustion processes, which are the main
-sources of atmospheric nitrogen deposition in remote regions (i.e., away
-from intensive agriculture and other sources or reduced nitrogen). The
-fertilizer was added once at the start and once in the middle of the
+and N<sub>2</sub>O) formed mainly by combustion processes, which are the
+main sources of atmospheric nitrogen deposition in remote regions (i.e.,
+away from intensive agriculture and other sources or reduced nitrogen).
+The fertilizer was added once at the start and once in the middle of the
 growing season from 2020 - 2021 (or 2022). Each block reveived one of
-the seven nitrogen levels: 0, 0.5, 1, 5, 10, 50, 100, 150 kg N ha−1
-yr−1. Three of the blocks received 0 kg N ha−1 yr−1. The natural
-nitrogen deposition differs in Norway (1.5-3.5 kg N -ha -y) and China
-(2-4 kg N -ha -y). The critical load for changing species composition in
-these alpine grasslands is approximately 5-10 and 15 kg N ha−1 yr−1 in
-Norway and China, respectively. We therefore wanted to have a range of
-nitrogen levels that were below and well above this critical load.
-Although the natural annual deposition differs between Norway and China,
-the N addition was kept the same in both countries.
+the seven nitrogen levels: 0, 0.5, 1, 5, 10, 50, 100, 150 kg N
+ha<sup>−1</sup> yr<sup>−1</sup>. Three of the blocks received 0 kg N
+ha<sup>−1</sup> yr<sup>−1</sup> to act as a proper control.
 
-In 2020, the whole nitrogen treatment was applied at Vikesland at once
-(accident).
+The natural nitrogen deposition differs in Norway (1.5-3.5 kg N
+ha<sup>−1</sup> yr<sup>−1</sup>) and China (2-4 kg N ha<sup>−1</sup>
+yr<sup>−1</sup>). The critical load for changing species composition in
+these alpine grasslands is approximately 5-10 and 15 kg N
+ha<sup>−1</sup> yr<sup>−1</sup> in Norway and China, respectively. We
+therefore wanted to have a range of nitrogen levels that were below and
+well above this critical load. Although the natural annual deposition
+differs between Norway and China, the Nitrogen addition was kept the
+same in both countries.
+
+In 2020, the nitrogen treatment was only applied once at Vikesland due
+to an accident.
 
 **Grazing treatment** The warming and nitrogen treatments were crossed
 with four grazing treatments. Grazing was simulated by clipping the
-vegetation manually with scissors. The four treatments are: natural
-grazing (N; outside the fence), medium level of grazing (M; 2x clipp),
-intensive level of grazing (I; 4x clipp), and untreated control plots
-(C). The intermediate clipping level reflects the natural grazing level
-outside the exclosure and should control for differences between grazing
-and clipping (i.e. clipping is not selective and will not add faeces and
-urine). The clipping treatment was conducted in 2020 - 2021 (2022). The
-medium and intensive plots were clipped 2 or 4 times during the growing
-season. For both treatments, the vegetation was clipped 2-3 cm above the
-ground.
+vegetation manually with scissors 2-3 cm above the ground. The four
+grazing treatments were natural grazing (N; outside the fence), medium
+level of grazing (M; 2x clipp), intensive level of grazing (I; 4x
+clipp), and untreated control plots (C). The intermediate clipping level
+reflects the natural grazing level outside the exclosure and should
+control for differences between grazing and clipping (i.e. clipping is
+not selective and will not add faeces and urine). The medium and
+intensive plots were clipped 2 or 4 times during the growing season. The
+clipping treatment was conducted in 2020 - 2021 (2022).
+
+The realized cutting in 2020 is shown in the table below. In 2020, the
+intensive grazing level at the higest site in Norway (Liahovden) only
+received 3 cuts, because the growing season was short due to snow and a
+cold spring. The vegetation did not grow very much at the end of the
+season and an additional cut would not have removed anymore biomass. The
+intensive grazed plots received 4 cuts (1-4), except Lia (1-3), and the
+intermediate grazed plots received 2 cuts (1, 4), except Lia (1, 3).
+
+| Cut | Year | Vikesland      | Joasete        | Liahovden      |
+| :-- | :--- | :------------- | :------------- | :------------- |
+| 1   | 2020 | 3 June         | 3 July         | 15 July        |
+| 2   | 2020 | 23 June        | 16 July        | 11 August      |
+| 3   | 2020 | 13 August      | 12 August      | 7-11 September |
+| 4   | 2020 | 7-11 September | 7-11 September | NA             |
 
 **Field site maintenance** To simulate the natural grazing regime at
 each site, and to avoid accumulation of biomass, all biomass within the
@@ -304,53 +235,128 @@ fence was removed at the end of each field season. Note that the biomass
 removal, is not the same as the grazing treatment (see above) and
 biomass harvesting (see below). The grazing treatment is applied to each
 plot (50 x 50 cm) in early and peak season, while the biomass harvesting
-occurs at the end of the field season (25 x 25cm plot). The site
+occurs at the end of the last field season (25 x 25cm plot). The site
 maintenance has to be done after biomass harvesting.
 
 Climate data was downloaded at start and the end of each field season.
 
 ### Data management
 
-  - ``` 
-     How to mark samples (project, year, date, responsible person, site, block, turfID)
-    ```
+#### Location of data and supporting information
 
-  - ``` 
-     All collected data is checked for errors and unrealistic values.
-    ```
+Project meta-information, data set overview and metadata for each
+dataset are in this readme file you are now reading, available on
+GitHub: <https://github.com/audhalbritter/Three-D>
 
-  - ``` 
-     Plot all the data to check for errors and outliers
-    ```
+The Norwegian data from the project is stored and available on OSF:
+<https://osf.io/pk4bg/>
 
-  - turf maps for community data
+All R code for the analyses from the Norwegian project is on GitHub:
+<https://github.com/audhalbritter/Three-D>
+
+Links to information, data, popular science and publications are on the
+THREE-D webpage: <http://www.audhalbritter.com/three-d/> and
+<https://betweenthefjords.w.uib.no/three-d/>
+
+#### Naming conventions used for the data
+
+| Data or file   | Description of naming convention                                                                                                                                                                                                                                 |
+| :------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Data files     | Project\_Experiment\_Dataset\_Year.extension                                                                                                                                                                                                                     |
+| Readme files   | Project\_Experiment\_Dataset\_Year\_Readme.extension                                                                                                                                                                                                             |
+| Taxa           | Vascular plant taxon names follow for Norway Lid & Lid(Lid J & Lid, 2010) and for China e-flora of China? The species names are abbreviated with 3 + 3 first letters of genus + species names. A list of all taxa and abbreviations are in the THREE-D database. |
+| Country        | Norway or China                                                                                                                                                                                                                                                  |
+| Project        | THREE-D                                                                                                                                                                                                                                                          |
+| Experiment     | Grazing exclosure                                                                                                                                                                                                                                                |
+| Datasets       | Project\_Experiment\_Dataset\_Year, THREE-D\_plant\_community\_2019, THREE-D\_carbon\_flux\_2021                                                                                                                                                                 |
+| EN\_predictor  | Environmental data are generally used for more than one experiment, and are therefore coded as \[EN\]                                                                                                                                                            |
+| Treatment      | Warming: Ambient (A), Warm (W)                                                                                                                                                                                                                                   |
+| Nitrogen level | 1-10, where N1 is 0 kg ha<sup>-1</sup> y<sup>-1</sup> and N10 is 150 kg ha<sup>-1</sup> y<sup>-1</sup>                                                                                                                                                           |
+| Grazing        | Medium grazing (M), intensive grazing (I), natural grazing (N), control/no grazing (C)                                                                                                                                                                           |
+| origSiteID     | Name of the origin site; Norway: Joasete (Joa), Liahovden (Lia); China: Ridge, Middle, Low                                                                                                                                                                       |
+| destSiteID     | Name of the destination site; Norway: Vikesland (Vik), Joasete (Joa), Liahovden (Lia); China: Ridge, Middle, Low                                                                                                                                                 |
+| origBlockID    | 1-10                                                                                                                                                                                                                                                             |
+| destBlockID    | 1-10 (is always the same as origin block ID, because turfs are transplanted within block).                                                                                                                                                                       |
+| origPlotID     | 1-160 (plots only in high and middle site)                                                                                                                                                                                                                       |
+| destPlotID     | 1-200 (plots all 3 sites)                                                                                                                                                                                                                                        |
+| turfID         | originPlotID-3 treatments (warming, nitrogen level, and grazing)-destPlotID e.g. 1-A5C-1 or 2-W5M-125                                                                                                                                                            |
+| Responses      | response, e.g. cover, biomass, Reco, etc.                                                                                                                                                                                                                        |
+
+#### Data handling and curation
+
+All collected data was checked for errors and unrealistic values using
+vizualization. Errors were fixed or deleted if there was a valid reason.
+
+The community data was checked using turf maps that show change in
+species cover over time (see below).
 
 ### Data collection and measurements
 
+The following data was collected and is available in the mentioned files
+on OSF:
+
+| Variable                         | Time        | Level     | Data file |
+| :------------------------------- | :---------- | :-------- | :-------- |
+| Response variables               |             |           |           |
+| Species cover                    | 2019 - 2020 | Plot      | xxx       |
+| Plant functional group cover     | 2019 - 2020 | Plot      | xxx       |
+| Ecosystem fluxes                 | 2020        | Plot      | xxx       |
+| Soil respiration                 | 2021?       | Plot/Site | xxx       |
+| Vegetation                       |             |           |           |
+| Vegetation height                | 2019 - 2020 | Plot      | xxx       |
+| Aboveground biomass              | 2019 - 2020 | Plot      | xxx       |
+| Plant productivity               | ???         | Plot      | xxx       |
+| Reflectance                      | 2020        | Plot      | xxx       |
+| Soil                             |             |           |           |
+| Soil depth                       | 2019        | Plot      | xxx       |
+| Soil texture                     | 2019        | Site      | xxx       |
+| Bulk density                     | 2019        | Plot      | xxx       |
+| Soil pH                          | 2019        | Site      | xxx       |
+| Soil organic matter              | 2019        | Block     | xxx       |
+| Soil C and N stocks              | 2019 - 2020 | Site      | xxx       |
+| Soil nutrients                   | ???         | Site      | xxx       |
+| Decomposition                    | ???         | Plot      | xxx       |
+| Carbon uptake (root growth)      | ???         | Plot      | xxx       |
+| Climate                          |             |           |           |
+| Air, ground and soil temperature | 2019 - 2020 | Plot      | xxx       |
+| Soil moisture                    | 2019 - 2020 | Plot      | xxx       |
+| Site                             |             |           |           |
+| Elevation                        | 2019        | Site      | xxx       |
+| Coordinates, slope and aspect    | 2019        | Plot      | xxx       |
+
+**Meta data** Elevation was assessed using a GPS at the site level,
+while slope, exposure and soil depth (using metal pole at each corner)
+was recorded for each plot.
+
 **Plant species composition** Plant species composition was recorded
-annually at peak growing season, between 2019 and 2021. Each 25 x 25 cm
-plots was divided into 25 subplots. The recording started in the upper
-left corner, and went row by row, from left to the right. In each
-subplot and for each species we recorded presence as sterile (1),
-dominant (D; covered more than 50% of the sub-plot), fertile (F; bud,
-flower, seeds), juvenile (J; not yet adult), or a seedling (S;
-cotyledons still attached; S). The highest level was recorded, i.e. if
-there was a seedling and an adult, the adult was recorded. So, the
-number of juveniles and seedlings were only consistently recorded if
-these were the only individuals present in the subplot of that species.
-We also noted the presence of seedlings in each subplot, but they were
-not identified to species. In addition, we recorded the percentage cover
-of vascular plants (only total), bryophytes, lichen, litter, bare ground
-and bare rock in each subplot.
+annually at peak growing season, in 2019 and 2021. In 2020, not all the
+plots were surveyed due to fieldwork restrictions related to the corona
+pandemic. Each 25 x 25 cm plots was divided into 25 subplots (Figure 3).
+The recording started in the upper left corner, and went row by row,
+from left to the right. In each subplot and for each species we recorded
+presence as sterile (1), dominant (D; covered more than 50% of the
+sub-plot), fertile (F; bud, flower, seeds), juvenile (J; not yet adult),
+or a seedling (S; cotyledons still attached; S). For each species, the
+highest level was recorded, i.e. if there was a seedling and an adult,
+the adult was recorded. So, the number of juveniles and seedlings were
+only consistently recorded if these were the only individuals present in
+the subplot of that species. We also noted the presence of seedlings in
+each subplot, but they were not identified to species. In addition, we
+recorded the percentage cover of vascular plants (only total),
+bryophytes, lichen, litter, bare ground and bare rock in each subplot.
+
+In 2020, species composition was recorded fully only for the control and
+warmed plots receiving no nitrogen (block 1, 4, and 10). For the rest of
+the plots, only percentage cover by functional group was recorded.
 
 <div class="figure">
 
-<img src="Pics/Subblots.jpg" alt="Plot and sub-plot design. Orange plots indicate the subplot for the vegetation height measurements." width="504" />
+<img src="Pics/Subblots.jpg" alt="Figure 3: Plot and sub-plot design. Orange plots indicate the subplot for the vegetation height measurements." width="504" />
 
 <p class="caption">
 
-Plot and sub-plot design. Orange plots indicate the subplot for the
-vegetation height measurements.
+Figure 3: Plot and sub-plot design. Orange plots indicate the subplot
+for the vegetation height measurements.
 
 </p>
 
@@ -358,12 +364,10 @@ vegetation height measurements.
 
 In each 25 x 25 cm plot, the total percentage cover of each vascular
 plant species was estimated visually. At 4 points in the grid (orange
-subplots in @ref(fig:subplots)), average vegetation height and moss
-layer depth was measured using a ruler. For each turf, date, originSite,
+subplots in Figure 3), average vegetation height and moss layer depth
+was measured using a ruler. For each turf, date, originSite,
 originBlockID, originPlotID, weather, scribe and recorder and remarks
-were noted down. Elevation, slope, exposure and soil depth (using metal
-pole at each corner) was recorded for each plot, including the plots at
-the low site. We took a picture from each plot.
+were noted down. A picture was taken from each plot.
 
 For the Norwegian data, the nomenclature follows Lid & Lid(2010). Each
 species of vascular plant was classified by functional type (graminoid,
@@ -375,57 +379,72 @@ to South Boreal are classified as “alpine”, whereas all other species
 (i.e., species that span the gradient from Nemoral to Alpine zones) are
 classified as “generalist”. Write something about China…
 
-*Problematic species* add text here
+*Data handling:* After each field season the data was checked vizually
+by plotting the cover of each species per plot over time. This allowed
+to compare change in species composition over time and check for errors.
+Obvious errors in species identification was corrected after comparing
+these plots. Problematic species are: - Taraxacum and Leontodon - all
+Carex species - Antennaria alpina and dioica - Festuca ovina and rubra
+and maybe Avenella flexuosa
 
-**Measure Reflectance with Greenseeker** Measure reflectance (greeness)
-several times during the season in each plot from 2020-2022. The
-greenseeker measures in an elliptical shape, and the light source and
-receiver should be located in the middle of the plot. The green seeker
-is placed 60 cm above the plot and parallel to the ground, using a
-ruler. Two measurements are done per plot perpendicular to each other to
-account for the elliptical shape.
+**Reflectance** Reflectance (greeness) was measured several times during
+the season in each plot from 2020-2021 (2022). The greenseeker measures
+in an elliptical shape, and the light source and receiver should be
+located in the middle of the plot. The green seeker is placed 60 cm
+above the plot and parallel to the ground, using a ruler. Two
+measurements are done per plot perpendicular to each other to account
+for the elliptical shape.
 
-The data was checked for unrealistic values. Values, where the comma was
-forgotten, were divided by 100.
+*Data handling:* The data was visually checked for unrealistic values,
+which were corrected or removed if there was a valid reason (e.g. shade
+or snow on the plot). Unrealistic values, where the comma was forgotten,
+were divided by 100.
 
-**Aboveground biomass** Biomass will be harvested at the end of the
-growing season in 2021 from all plots, cut 2cm above the ground. The
-biomass will be stored in the freezer until sorted into functional
-groups: grasses, sedges, forbs, legumes, shrubs, bryophytes, lichens and
-litter. The biomass will be dried at 65°C for 72 hours and then weighed.
+**Aboveground biomass** There are two types of biomass measurements.
 
-The biomass from the clipping treatments will be treated in the same
-way. The biomass clipped in several rounds will be summed per plot for
-each growing season.
+*Grazing treatment:* biomass was clipped and harvested as a grazing
+treatment in the plots that received intermediate or intensive grazing.
+The biomass was clipped 2cm above the ground in several round during
+each growing season (2020-2021, 2022?). The biomass was stored in the
+freezer until sorted into functional groups: grasses, sedges, forbs,
+legumes, shrubs, bryophytes, lichens and litter. The biomass was then
+dried at 65°C for 72 hours and weighed.
 
-**Ecosystem fluxes**
+*Biomass harvest:* Biomass will was harvested at the end of the growing
+season in 2021 from all plots. The vegetation was cut 2cm above the
+ground and stored in the freezer until sorted into functional groups:
+grasses, sedges, forbs, legumes, shrubs, bryophytes, lichens and litter.
+The biomass was then dried at 65°C for 72 hours and weighed.
 
-Net ecosystem exchange (NEE) and ecosystem respiration (ER) were
-measured on the field while gross ecosystem production (GEP) is
-calculated as GEP = NEE - ER. Carbon fluxes are measured with a closed
-loop chamber system connected to an infrared gaz analyser (INGRA;
-Li-840A, Li-cor). The plexiglas chamber (25x25x40 cm) is connected to
-the INGRA with plastic tubes (inlet and outlet, 3m long and 4mm diameter
-each). A filter prevents water droplets and small particules from
-entering the INGRA and an air pump ensures a flow of 1L/mn. The chamber
-is equiped with a fan to mix the air, a thermocouple (Pt1000, Delta-T)
-to measure air temperature and a PAR sensor. In 2020 the air temperature
-was measured with an iButton. Airtightness is ensured by laying a heavy
-chain on the “skirt” of the chamber (a piece of tarp taped to the lower
-part of the chamber). NEE is measured with a transparent chamber. ER is
-measured with a dark chamber, in our case the transparent chamber was
-covered with a thick dark tarp. The CO<sub>2</sub> concentration was
-measured every seconds and logged in a datalogger (Squirrel 2010). The
-chamber was put on the plot during two minutes for each measurements and
-then aired during one minute. Since the logger was logging continuesly,
-the start and end time of each measurement was noted (it is necessary to
-precisely synchronise the logger clock with the watch used on the field
-and to regularly check it). The function `match.flux()` is matching the
-time in the logger file with the plot being measured at that time (using
-the time recorded on the field). It attributes the concentration of
-CO<sub>2</sub> measured every seconds to the correct measurement. A
-linear regression is fitted to every measurements and the slope is used
-to calculated the flux.
+*Data handling:* The data was visually checked for unrealistic values,
+which were corrected or removed if there was a valid reason.
+
+**Ecosystem fluxes** Net ecosystem exchange (NEE) and ecosystem
+respiration (ER) were measured on the field while gross ecosystem
+production (GEP) is calculated as GEP = NEE - ER. Carbon fluxes are
+measured with a closed loop chamber system connected to an infrared gaz
+analyser (INGRA; Li-840A, Li-cor). The plexiglas chamber (25x25x40 cm)
+is connected to the INGRA with plastic tubes (inlet and outlet, 3m long
+and 4mm diameter each). A filter prevents water droplets and small
+particules from entering the INGRA and an air pump ensures a flow of
+1L/mn. The chamber is equiped with a fan to mix the air, a thermocouple
+(Pt1000, Delta-T) to measure air temperature and a PAR sensor. In 2020
+the air temperature was measured with an iButton. Airtightness is
+ensured by laying a heavy chain on the “skirt” of the chamber (a piece
+of tarp taped to the lower part of the chamber). NEE is measured with a
+transparent chamber. ER is measured with a dark chamber, in our case the
+transparent chamber was covered with a thick dark tarp. The
+CO<sub>2</sub> concentration was measured every seconds and logged in a
+datalogger (Squirrel 2010). The chamber was put on the plot during two
+minutes for each measurements and then aired during one minute. Since
+the logger was logging continuesly, the start and end time of each
+measurement was noted (it is necessary to precisely synchronise the
+logger clock with the watch used on the field and to regularly check
+it). The function `match.flux()` is matching the time in the logger file
+with the plot being measured at that time (using the time recorded on
+the field). It attributes the concentration of CO<sub>2</sub> measured
+every seconds to the correct measurement. A linear regression is fitted
+to every measurements and the slope is used to calculated the flux.
 
 <!-- This is the code to keep in case we want to extract a pdf -->
 
@@ -480,68 +499,57 @@ Three-D setup.
 
 <!-- light response curves -->
 
-**CN stocks, pH, soil organic matter** Collecting soil samples: In
-sommer 2019, two soil samples were collected from each blocks, but
-outside the plots. The soil samples of 5 cm diameter and 4 cm deep were
-taken. One sample was taken from the upper organic layer, and another
-one from the lower part of the soil.
+**Soil sampling for CN stocks, pH, soil organic matter and soil
+texture** In summer 2019, two soil samples were collected from each
+blocks, but outside the plots. The soil samples of 5 cm diameter and 4 -
+8 cm deep were taken. One sample was taken from the upper organic layer,
+and another one from the lower part of the soil. In 2020, 5 soil samples
+per site were taken using the same method for CN stocks. The soil
+samples were stored in the fridge (4°C) until further use.
 
-The soil samples were stored in the fridge (4°C) until further use.
+The soils samples were dried at 60°C for 24h and sieved with a 2mm
+sieve. Each soil sample was weighed before and after drying to measure
+the water stored in each sample. Stones and larger roots were sorted and
+weighed.
 
-One soils sample was dried to measure pH, soil organic matter and CN
-stocks. The soil was dried at 60°C for 24h and sieved with a 2mm sieve.
-Stones and larger roots were removed.
+**Soil pH** The pH was measured in a soil water solution. The soil:water
+ratio depends on the amount of organic matter in the soil with a ratio
+of soil to water of 1:2.5 to 1:5 by weight for mineral soil. The method
+described here is based upon that employed by the Soil Survey of England
+and Wales (Avery & Bascomb, 1974) and by the Countryside Survey (Emmett
+et al., 2010).
 
-One soil sample was kept in the fridge to measure bulk density and water
-holding capacity.
+The pH meter was calibrated in a buffer solutions of pH 4, 7 and 9 and
+was regularly checked again after some samples.
 
-**Soil pH measurement** The pH was measured in a soil water solution.
-The soil:water ratio depends on the amount of organic matter in the soil
-with a ratio of soil to water of 1:2.5 to 1:5 by weight for mineral
-soil. The method described here is based upon that employed by the Soil
-Survey of England and Wales (Avery & Bascomb, 1974) and by the
-Countryside Survey (Emmett et al., 2010).
-
-Calibration: Calibrate the pH meter in buffer solutions. Check pH 4, 7
-and 9 buffer calibrations regularly within a sample batch, every 10
-samples. If either buffer calibration is more than 0.02 of a pH unit
-from the correct value, repeat the calibration.
-
-Weigh 10 g of fresh field-moist soil into a 50 ml plastic pH beaker. Add
-50 ml of deionised water and stir the suspension thoroughly. Allow it to
-stand for 30 minutes, stirring occasionally. Measure soil pH
-electrometrically using the calibrated pH meter.
+10 g of fresh field-moist soil was weighed into a 50 ml plastic pH
+beaker. 50 ml of deionised water was added and the suspension was
+stirred thoroughly. After 30 minutes of waiting and occasionally
+stirring, the soil pH was measured electrometrically using the
+calibrated pH meter.
 
 **Soil organic matter** (Hidden Cost protocol) To measure soil organic
 matter (SOM), we used the method described by Ball(1964). 10 g of fresh
 soil was weight into a cup. The soil was then dried for 16h at 105°C.
-The soil was weighed. Then the sample was placed in a furnace overnight
-at 375 °C. The soil was weighed again. SOM is defined as the difference
-in the weight between the dried and burned soil.
+The soil was weighed again. Then the sample was placed in a furnace for
+6h at 550 °C. The soil was weighed again. The sample was burned a second
+time at 950°C for 1h and weight recorded after cooling period in the
+desiccator
 
-  - soil depth measured every 5m along the Gentry-plot lines and take a
-    picture
-  - soil cores were taken at 3 locations per transect line (10, 30 and
-    50m)
-  - Soil cores were separated into different layers and litter in
-    different bags (zip-loc)
-  - Soil samples were kept in zip-lock-bags in the fridge at 4°C degrees
-    until further processing
-  - Soil samples were transferred to aluminum trays dried at 105°C for
-    24h
-  - Dry weight of the entire sample was recorded
-  - The dried sample is transferred to a porcelain mortar and carefully
-    crushed so you can pick out bigger stones, roots and maybe mosses
-    (stones and mosses are kept marked as “other”). Roots for the entire
-    sample are weighed separately and collected in a bag marked “roots”
-  - A subsample (or if the sample is very small, the whole sample) was
-    used to determine organic matter content using Loss On Ignition
-    method. The subsample was transferred to porcelain beaker and
-    weighed and then burned at 550°C for 6h
-  - The weight after burning was recorded after the samples had cooled
-    down in the desiccator for at least half an hour.
-  - The sample was burned a second time at 950°C for 1h and weight
-    recorded after cooling period in the desiccator
+SOM is defined as the difference in the weight between the dried and
+burned soil.
+
+The weight loss when the samples are dried at 105 °C (wet weight - dry
+weight) represents of the amount of pore-water held within the sample.
+The percentage of water should be expressed as a proportion of the wet
+weight. The weight loss between 105 and 550°C as a percentage of the
+total original dry sample weight is the % organic material. The weight
+loss between 550 and 950°C is representative of the amount of
+CO<sub>2</sub> released from the sample.
+
+**Bulk density**
+
+**Soil Texture**
 
 **Climate data** Temperature was measured continuously (every 15 min) at
 three heights (15 cm, at ground level, and 5 cm below ground) and soil
