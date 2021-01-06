@@ -1,6 +1,6 @@
-############################
-### READ IN BIOMASS DATA ###
-############################
+#######################################################
+ ### READ IN BIOMASS DATA FROM GRAZING TREATEMENTS ###
+#######################################################
 
 source("R/Load packages.R")
 source("R/Rgathering/create meta data.R")
