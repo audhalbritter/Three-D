@@ -2,7 +2,6 @@
 
 source("R/Load packages.R")
 source("R/Rgathering/create meta data.R")
-source("R/Vegetation/ReadInBiomass.R")
 
 # Download raw data from OSF
 get_file(node = "pk4bg",
