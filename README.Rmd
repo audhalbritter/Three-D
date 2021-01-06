@@ -453,8 +453,13 @@ The climate loggers were put on the plots between July and September 2019.
 In total there are 72 climate loggers.
 The Three-D_ClimateLogger_meta_2019.xlsx file has information when which logger was put out.
 
-**Gridded climate data**
-Temp, prec etc at site level from met.no....
+**Gridded climate data** Gridded data are daily climate values for three sites from 2009 - 2019 provided by met.no (from Ole Einar Tveito, 16.12.2019)
+The climate variables are:
+ - Mean daily temperature (°C, Temperature)  
+ - Relative air moisture (%, RelAirMoisture)  
+ - Mean wind (meter / second, Wind)  
+ - Mean cloud cover (in 8 parts, no dimension, CloudCover)  
+ - Precipitation (mm, Precipitation)
 
 
 ### Data dictionary
