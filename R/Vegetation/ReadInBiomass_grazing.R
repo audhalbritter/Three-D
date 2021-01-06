@@ -5,6 +5,13 @@
 source("R/Load packages.R")
 source("R/Rgathering/create meta data.R")
 
+# Download raw data from OSF
+get_file(node = "pk4bg",
+         file = "THREE_D_Biomass_Grazing_2020.xlsx",
+         path = "data/biomass",
+         remote_path = "RawData/Vegetation")
+
+
 biomass_raw <- read_excel(path = "data/biomass/THREE_D_Biomass_Grazing_2020.xlsx", col_types = c("text", "numeric", "numeric", "text", "text", "numeric", "text", "numeric", "date", rep("numeric", 6), "text", rep("numeric", 4))) %>% 
   pivot_longer(cols = c(Graminoids_g:Litter_g, Lichen_g:Fungi_g), names_to = "fun_group", values_to = "value") %>% 
   filter(grazing %in% c("M", "I"),
