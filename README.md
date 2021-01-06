@@ -1,3 +1,4 @@
+
 This is the git repository for the THREE-D project and the associate
 data paper: Halbritter et al. (not written yet). THREE-D - Integrated
 assessment to aid mitigation of negative impacts by THREE global change
@@ -83,6 +84,15 @@ areas.
 </p>
 
 </div>
+
+| destSiteID | Latitude\_N | Longitude\_E | Elevation\_m\_asl | layer  |   pH | pH\_se | bulk\_density\_g\_cm | bulk\_density\_se | soil\_organic\_matter | soil\_organic\_matter\_se |
+| :--------- | ----------: | -----------: | ----------------: | :----- | ---: | -----: | -------------------: | ----------------: | --------------------: | ------------------------: |
+| Vik        |       60.88 |         7.17 |               469 | Top    | 4.24 |     NA |                 0.47 |                NA |                  0.34 |                        NA |
+| Vik        |       60.88 |         7.17 |               469 | Bottom | 4.24 |     NA |                 0.48 |                NA |                  0.12 |                        NA |
+| Joa        |       60.86 |         7.17 |               920 | Top    | 4.50 |     NA |                 0.72 |                NA |                  0.19 |                        NA |
+| Joa        |       60.86 |         7.17 |               920 | Bottom | 4.50 |     NA |                 0.92 |                NA |                  0.11 |                        NA |
+| Lia        |       60.86 |         7.20 |              1290 | Top    | 5.16 |     NA |                 0.31 |                NA |                  0.62 |                        NA |
+| Lia        |       60.86 |         7.20 |              1290 | Bottom | 5.16 |     NA |                 0.39 |                NA |                  0.33 |                        NA |
 
 We chose species rich grasslands, that were large enough to contain 80
 50 x 50 cm plots and relatively flat to avoid contamination between the
@@ -218,15 +228,20 @@ intensive grazing level at the higest site in Norway (Liahovden) only
 received 3 cuts, because the growing season was short due to snow and a
 cold spring. The vegetation did not grow very much at the end of the
 season and an additional cut would not have removed anymore biomass. The
-intensive grazed plots received 4 cuts (1-4), except Lia (1-3), and the
-intermediate grazed plots received 2 cuts (1, 4), except Lia (1, 3).
+intensive grazed plots received 4 cuts (1-4), except Lia (1,2,4), and
+the intermediate grazed plots received 2 cuts (1,4). Cut 3 for Lia does
+not exist in 2020.
 
-| Cut | Year | Vikesland      | Joasete        | Liahovden      |
-| :-- | :--- | :------------- | :------------- | :------------- |
-| 1   | 2020 | 3 June         | 3 July         | 15 July        |
-| 2   | 2020 | 23 June        | 16 July        | 11 August      |
-| 3   | 2020 | 13 August      | 12 August      | 7-11 September |
-| 4   | 2020 | 7-11 September | 7-11 September | NA             |
+| Cut | Year | Vikesland        | Joasete       | Liahovden    |
+| :-- | :--- | :--------------- | :------------ | :----------- |
+| 1   | 2020 | 3 June           | 3-4 July      | 15 July      |
+| 2   | 2020 | 24 June          | 17 July       | 11 August    |
+| 3   | 2020 | 12-13 August     | 10-12 August  | NA           |
+| 4   | 2020 | 6,7,11 September | 8-9 September | 10 September |
+| 1   | 2021 | .. June          | .. July       | .. July      |
+| 2   | 2021 | .. July          | .. July       | .. August    |
+| 3   | 2021 | .. August        | .. August     | .. August    |
+| 4   | 2021 | .. September     | .. September  | .. September |
 
 **Field site maintenance** To simulate the natural grazing regime at
 each site, and to avoid accumulation of biomass, all biomass within the
@@ -319,6 +334,7 @@ on OSF:
 | Climate                          |             |           |           |
 | Air, ground and soil temperature | 2019 - 2020 | Plot      | xxx       |
 | Soil moisture                    | 2019 - 2020 | Plot      | xxx       |
+| Gridded climate                  | …           | Site      | xxx       |
 | Site                             |             |           |           |
 | Elevation                        | 2019        | Site      | xxx       |
 | Coordinates, slope and aspect    | 2019        | Plot      | xxx       |
@@ -562,5 +578,6 @@ and September 2019. In total there are 72 climate loggers. The
 Three-D\_ClimateLogger\_meta\_2019.xlsx file has information when which
 logger was put out.
 
-Precipitation data was extracted from nearby climate stations or
-interpolated from met.no data or similar.
+**Gridded climate data** Temp, prec etc at site level from met.no….
+
+### Data dictionary

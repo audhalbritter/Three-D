@@ -24,6 +24,8 @@ library("patchwork")
 
 theme_set(theme_bw(base_size = 12))
 
+# Data
+source("R/Soil/ReadInSoilData.R")
 # {r, include=FALSE}
 # source("R/C-Flux/description.R", local = knitr::knit_global())
 #sys.source("data_dictionnary.R", envir = knitr::knit_global())
@@ -67,11 +69,16 @@ The sites were chosen to fit within an elevational gradient with three temperatu
 The sites correspond to the alpine, sub-alpine and boreal biogeographic zones in Norway and subalpine to alpine grasslands in China. Other factors such as grazing regime and history, bedrock, vegetation type and structure, slope and exposure were kept as constant as possible among the selected sites within each country.
 
 
-
-
 ```{r exp_design, echo=FALSE, fig.cap= "Figure 2: A) Experimental design at sites with low productivity (range centre) and high productivity (warm edge). The treatments are warming (red), nitrogen deposition (green), warming and nitrogen deposition (orange), and control (grey). These treatments are crossed with two clipping levels (intermediate and intensive) and natural grazing outside the grazing exclosure (stippled line). B) Example of a plot divided into data collection (species composition, carbon flux measures) and destructive harvesting (soil samples, litter bags, biomass harvesting) areas."}
 knitr::include_graphics('Pics/ExperimentalDesign.jpg')
 ```
+
+
+
+```{r site-table, echo=FALSE}
+knitr::kable(siteMetaData, digits = 2)
+```
+
 
 
 We chose species rich grasslands, that were large enough to contain 80 50 x 50 cm plots and relatively flat to avoid contamination between the different nitrogen treatments and for convenience when measuring carbon fluxes.
@@ -152,15 +159,20 @@ The clipping treatment was conducted in 2020 - 2021 (2022).
 The realized cutting in 2020 is shown in the table below.
 In 2020, the intensive grazing level at the higest site in Norway (Liahovden) only received 3 cuts, because the growing season was short due to snow and a cold spring.
 The vegetation did not grow very much at the end of the season and an additional cut would not have removed anymore biomass.
-The intensive grazed plots received 4 cuts (1-4), except Lia (1-3), and the intermediate grazed plots received 2 cuts (1, 4), except Lia (1, 3).
+The intensive grazed plots received 4 cuts (1-4), except Lia (1,2,4), and the intermediate grazed plots received 2 cuts (1,4).
+Cut 3 for Lia does not exist in 2020.
 
 
 | Cut  | Year | Vikesland  | Joasete  | Liahovden  |
 |:---|:---|:---|:---|:---|
-| 1  | 2020  | 3 June  | 3 July  | 15 July  |
-| 2  | 2020  | 23 June  | 16 July  | 11 August  |
-| 3  | 2020  | 13 August  | 12 August  | 7-11 September  |
-| 4  | 2020  | 7-11 September  | 7-11 September  | NA  |
+| 1  | 2020  | 3 June  | 3-4 July  | 15 July  |
+| 2  | 2020  | 24 June  | 17 July  | 11 August  |
+| 3  | 2020  | 12-13 August  | 10-12 August  | NA |
+| 4  | 2020  | 6,7,11 September  | 8-9 September  | 10 September  |
+| 1  | 2021  | .. June  | .. July  | .. July  |
+| 2  | 2021  | .. July  | .. July  | .. August  |
+| 3  | 2021  | .. August  | .. August  | .. August |
+| 4  | 2021  | .. September  | .. September  | .. September  |
 
 
 **Field site maintenance** To simulate the natural grazing regime at each site, and to avoid accumulation of biomass, all biomass within the fence was removed at the end of each field season.
@@ -248,6 +260,7 @@ The following data was collected and is available in the mentioned files on OSF:
 | Climate |  |  |  |
 | Air, ground and soil temperature  | 2019 - 2020  | Plot  | xxx  |
 | Soil moisture  | 2019 - 2020  | Plot  | xxx  |
+| Gridded climate  | ...  | Site  | xxx  |
 | Site |  |  |  |
 | Elevation | 2019  | Site  | xxx  |
 | Coordinates, slope and aspect  | 2019  | Plot  | xxx  |
@@ -440,7 +453,8 @@ The climate loggers were put on the plots between July and September 2019.
 In total there are 72 climate loggers.
 The Three-D_ClimateLogger_meta_2019.xlsx file has information when which logger was put out.
 
-Precipitation data was extracted from nearby climate stations or interpolated from met.no data or similar.
+**Gridded climate data**
+Temp, prec etc at site level from met.no....
 
 
 ### Data dictionary
