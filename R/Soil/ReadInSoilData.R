@@ -58,10 +58,10 @@ soil <- soilSamples_raw %>%
 write_csv(plotMetaData, path = "data_cleaned/soil/THREE-D_Soil_2019-2020.csv")
   
 # check data
-# soil %>% #filter(soil_organic_matter < 0) %>% as.data.frame()
-#   ggplot(aes(x = destSiteID, y = carbon_content, colour = layer)) +
-#   geom_boxplot() +
-#   facet_wrap( ~ destSiteID)
+soil %>% #filter(soil_organic_matter < 0) %>% as.data.frame()
+  ggplot(aes(x = destSiteID, y = soil_organic_matter, colour = layer)) +
+  geom_boxplot() +
+  facet_wrap( ~ destSiteID)
   
 
 # bulk density by layer and destSiteID
