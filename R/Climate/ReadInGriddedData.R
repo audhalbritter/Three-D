@@ -46,7 +46,12 @@ climate <- gridclimate %>%
          CloudCover = as.numeric(CloudCover), 
          Precipitation = as.numeric(Precipitation)) %>% 
   rename(destSiteID = Site, year = Year, month = Month, day = Day, temperature = Temperature, rel_air_moisture = RelAirMoisture,  wind = Wind, cloud_cover = CloudCover, precipitation = Precipitation, date = Date) %>% 
-  pivot_longer(cols = temperature:precipitation, names_to = "logger", values_to = "value")
+  pivot_longer(cols = temperature:precipitation, names_to = "variable", values_to = "value") %>% 
+  mutate(unit = case_when(variable == "temperature" ~ "°C",
+                          variable == "rel_air_moisture" ~ "percentage",
+                          variable == "wind" ~ "meter per seconds",
+                          variable == "cloud_cover" ~ "in 8 parts",
+                          variable == "precipitation" ~ "mm"))
 
 write_csv(climate, path = "data_cleaned/climate/THREE_D_Gridded_DailyClimate_2009-2019.csv")
 
