@@ -59,10 +59,10 @@ soil <- soilSamples_raw %>%
 write_csv(soil, path = "data_cleaned/soil/THREE-D_Soil_2019-2020.csv")
   
 # check data
-soil %>% #filter(soil_organic_matter < 0) %>% as.data.frame()
-  ggplot(aes(x = destSiteID, y = soil_organic_matter, colour = layer)) +
-  geom_boxplot() +
-  facet_wrap( ~ destSiteID)
+# soil %>% #filter(soil_organic_matter < 0) %>% as.data.frame()
+#   ggplot(aes(x = destSiteID, y = soil_organic_matter, colour = layer)) +
+#   geom_boxplot() +
+#   facet_wrap( ~ destSiteID)
   
 
 # bulk density by layer and destSiteID
@@ -93,16 +93,16 @@ pH <- soil %>%
 
 #### SITE LEVEL META DATA ####
 siteMetaData <- tibble(destSiteID = c("Vik", "Vik", "Joa", "Joa", "Lia", "Lia"),
-                       Latitude_N = c(60.88019, 60.88019, 60.86183, 60.86183, 60.85994, 60.85994),
-                       Longitude_E = c(7.16990, 7.16990, 7.16800, 7.16800, 7.19504, 7.19504),
-                       Elevation_m_asl = c(469, 469, 920, 920, 1290, 1290),
+                       latitude_N = c(60.88019, 60.88019, 60.86183, 60.86183, 60.85994, 60.85994),
+                       longitude_E = c(7.16990, 7.16990, 7.16800, 7.16800, 7.19504, 7.19504),
+                       elevation_m_asl = c(469, 469, 920, 920, 1290, 1290),
                        layer = c(rep(c("Top", "Bottom"), 3))) %>% 
   left_join(pH, by = "destSiteID") %>% 
   left_join(BD, by = c("destSiteID", "layer")) %>% 
   left_join(SOM, by = c("destSiteID", "layer")) %>% 
   select(-carbon_content, -carbon_content_se)
 
-
+write_csv(siteMetaData, "data_cleaned/THREE-D_metaSite.csv")
 
 # check data
 # dd %>% 
