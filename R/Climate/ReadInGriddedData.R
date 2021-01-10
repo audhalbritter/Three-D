@@ -10,10 +10,10 @@
 source("R/Load packages.R")
 
 # Download raw data from OSF
-get_file(node = "pk4bg",
-         file = "THREE-D_Gridded_Climate_Data_2009-2019.zip",
-         path = "data/climate",
-         remote_path = "RawData/Climate")
+# get_file(node = "pk4bg",
+#          file = "THREE-D_Gridded_Climate_Data_2009-2019.zip",
+#          path = "data/climate",
+#          remote_path = "RawData/Climate")
 
 
 # FUNCTIONS
@@ -60,11 +60,11 @@ write_csv(climate, path = "data_cleaned/climate/THREE_D_Gridded_DailyClimate_200
 monthlyClimate <- climate %>%
   select(-year, -month, -day) %>% 
   mutate(dateMonth = dmy(paste0("15-",format(date, "%b.%Y")))) %>%
-  group_by(dateMonth, logger, destSiteID) %>%
+  group_by(dateMonth, variable, destSiteID) %>%
   summarise(n = n(), 
             value = mean(value), 
             sum = sum(value)) %>% 
-  mutate(value = ifelse(logger == "pPrecipitation", sum, value)) %>% 
+  mutate(value = ifelse(variable == "pPrecipitation", sum, value)) %>% 
   select(-n, -sum)
 
-write_csv(climate, path = "data_cleaned/climate/THREE_D_Gridded_MonthlyClimate_2009-2019.csv")
+write_csv(monthlyClimate, path = "data_cleaned/climate/THREE_D_Gridded_MonthlyClimate_2009-2019.csv")
