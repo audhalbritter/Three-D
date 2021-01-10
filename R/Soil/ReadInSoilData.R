@@ -25,9 +25,10 @@ plotMetaData <- read_csv(file = "data/soil/Three-D_PlotLevel_MetaData_2019.csv")
   # calculate mean soil depth
   mutate(soil_depth_cm = (soil_depth1 + soil_depth2 + soil_depth3 + soil_depth4) / 4,
          soil_depth_cm = if_else(origPlotID == 106, 36.1, soil_depth_cm),
-         year = 2019)
+         year = 2019) %>% 
+  select(-soil_depth1, -soil_depth2, -soil_depth3, -soil_depth4)
 
-write_csv(plotMetaData, path = "data_cleaned/soil/THREE-D_PlotLevel_Meta_2019.csv")
+write_csv(plotMetaData, path = "data_cleaned/soil/THREE-D_PlotLevel_Depth_2019.csv")
 
 
 #### SOIL SAMPLES
@@ -52,14 +53,14 @@ soil <- soilSamples_raw %>%
          weight_550_g = dry_weight_550_plus_vial_g - vial_weight_g,
          weight_950_g = dry_weight_950_plus_vial_g - vial_weight_g,
          soil_organic_matter = (dry_weight_105_g - weight_550_g) / dry_weight_105_g,
-         carbon_content = (weight_550_g - weight_950_g) / dry_weight_105_g)
+         carbon_content = (weight_550_g - weight_950_g) / dry_weight_105_g) %>% 
+  select(date, year, destSiteID, destBlockID, layer, wet_weight_soil_g:pH, bulk_density_g_cm, pore_water_content, soil_organic_matter, carbon_content)
 
-
-write_csv(plotMetaData, path = "data_cleaned/soil/THREE-D_Soil_2019-2020.csv")
+write_csv(soil, path = "data_cleaned/soil/THREE-D_Soil_2019-2020.csv")
   
 # check data
 # soil %>% #filter(soil_organic_matter < 0) %>% as.data.frame()
-#   ggplot(aes(x = destSiteID, y = carbon_content, colour = layer)) +
+#   ggplot(aes(x = destSiteID, y = soil_organic_matter, colour = layer)) +
 #   geom_boxplot() +
 #   facet_wrap( ~ destSiteID)
   
@@ -92,16 +93,16 @@ pH <- soil %>%
 
 #### SITE LEVEL META DATA ####
 siteMetaData <- tibble(destSiteID = c("Vik", "Vik", "Joa", "Joa", "Lia", "Lia"),
-                       Latitude_N = c(60.88019, 60.88019, 60.86183, 60.86183, 60.85994, 60.85994),
-                       Longitude_E = c(7.16990, 7.16990, 7.16800, 7.16800, 7.19504, 7.19504),
-                       Elevation_m_asl = c(469, 469, 920, 920, 1290, 1290),
+                       latitude_N = c(60.88019, 60.88019, 60.86183, 60.86183, 60.85994, 60.85994),
+                       longitude_E = c(7.16990, 7.16990, 7.16800, 7.16800, 7.19504, 7.19504),
+                       elevation_m_asl = c(469, 469, 920, 920, 1290, 1290),
                        layer = c(rep(c("Top", "Bottom"), 3))) %>% 
   left_join(pH, by = "destSiteID") %>% 
   left_join(BD, by = c("destSiteID", "layer")) %>% 
   left_join(SOM, by = c("destSiteID", "layer")) %>% 
   select(-carbon_content, -carbon_content_se)
 
-
+write_csv(siteMetaData, "data_cleaned/THREE-D_metaSite.csv")
 
 # check data
 # dd %>% 

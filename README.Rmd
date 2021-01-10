@@ -26,9 +26,8 @@ theme_set(theme_bw(base_size = 12))
 
 # Data
 source("R/Soil/ReadInSoilData.R")
-# {r, include=FALSE}
-# source("R/C-Flux/description.R", local = knitr::knit_global())
-#sys.source("data_dictionnary.R", envir = knitr::knit_global())
+source("R/Rgathering/DownloadCleanData.R")
+source("R/Rgathering/Data_dic.R")
 
 
 ```
@@ -238,32 +237,33 @@ The following data was collected and is available in the mentioned files on OSF:
 | Variable  | Time  | Level | Data file  |
 |:---|:---|:---|:---|
 | Response variables |  |  |  |
-| Species cover  | 2019 - 2020  | Plot  | xxx  |
-| Plant functional group cover  | 2019 - 2020  | Plot  | xxx  |
-| Ecosystem fluxes  | 2020  | Plot  | xxx  |
-| Soil respiration  | 2021?  | Plot/Site  | xxx  |
+| Species cover  | 2019 - 2020  | Plot  | THREE-D_Cover_2019_2020.csv  |
+| Species presence  | 2019 - 2020  | Subplot  | THREE-D_CommunitySubplot_2019_2020.csv  |
+| Plant functional group cover  | 2019 - 2020  | Plot  | THREE-D_CommunityStructure_2019_2020.csv  |
+| Ecosystem fluxes  | 2020  | Plot  | Three-D_c-flux_2020.csv  |
+| Soil respiration  | 2021?  | Plot/Site  | Three-D_c-flux_2020.csv  |
 | Vegetation |  |  |  |
-| Vegetation height  | 2019 - 2020  | Plot  | xxx  |
+| Vegetation height  | 2019 - 2020  | Plot  | THREE-D_CommunityStructure_2019_2020.csv  |
 | Aboveground biomass  | 2019 - 2020  | Plot  | xxx  |
 | Plant productivity  | ???  | Plot  | xxx  |
-| Reflectance  | 2020  | Plot  | xxx  |
+| Reflectance  | 2020  | Plot  | THREE-D_Reflectance_2020.csv  |
 | Soil |  |  |  |
-| Soil depth  | 2019  | Plot  | xxx  |
-| Soil texture  | 2019  | Site  | xxx  |
-| Bulk density  | 2019  | Plot  | xxx  |
-| Soil pH  | 2019  | Site  | xxx  |
-| Soil organic matter  | 2019  | Block  | xxx  |
+| Soil depth  | 2019  | Plot  | THREE-D_PlotLevel_Depth_2019.csv  |
+| Soil texture  | 2019  | Site  | THREE-D_Soil_2019-2020.csv  |
+| Bulk density  | 2019  | Plot  | THREE-D_Soil_2019-2020.csv  |
+| Soil pH  | 2019  | Site  | THREE-D_Soil_2019-2020.csv  |
+| Soil organic matter  | 2019  | Block  | THREE-D_Soil_2019-2020.csv  |
 | Soil C and N stocks  | 2019 - 2020  | Site  | xxx  |
 | Soil nutrients  | ???  | Site  | xxx  |
 | Decomposition | ???  | Plot  | xxx  |
 | Carbon uptake (root growth) | ???  | Plot  | xxx  |
 | Climate |  |  |  |
-| Air, ground and soil temperature  | 2019 - 2020  | Plot  | xxx  |
-| Soil moisture  | 2019 - 2020  | Plot  | xxx  |
-| Gridded climate  | ...  | Site  | xxx  |
+| Air, ground and soil temperature  | 2019 - 2020  | Plot  | THREE-D_TomstLogger_2019_2020.csv  |
+| Soil moisture  | 2019 - 2020  | Plot  | THREE-D_TomstLogger_2019_2020.csv  |
+| Gridded climate  | 2009 - 2019  | Site  | THREE_D_Gridded_DailyClimate_2009-2019.csv  |
 | Site |  |  |  |
 | Elevation | 2019  | Site  | xxx  |
-| Coordinates, slope and aspect  | 2019  | Plot  | xxx  |
+| Coordinates, slope and aspect  | 2019  | Plot  | THREE-D_PlotLevel_Depth_2019.csv  |
 
 
 
@@ -453,11 +453,68 @@ The climate loggers were put on the plots between July and September 2019.
 In total there are 72 climate loggers.
 The Three-D_ClimateLogger_meta_2019.xlsx file has information when which logger was put out.
 
-**Gridded climate data**
-Temp, prec etc at site level from met.no....
+**Gridded climate data** Gridded data are daily climate values for three sites from 2009 - 2019 from The Norwegian Meteorological Institute (from Ole Einar Tveito, 16.12.2019).
+The climate variables are:
+ - Mean daily temperature (°C, Temperature)  
+ - Relative air moisture (%, RelAirMoisture)  
+ - Mean wind (meter / second, Wind)  
+ - Mean cloud cover (in 8 parts, no dimension, CloudCover)  
+ - Precipitation (mm, Precipitation)
 
 
 ### Data dictionary
 
+#### Plant community cover
+```{r coverdic, echo=FALSE}
+knitr::kable(cover_dic)
+```
 
+#### Plant community precence
+```{r subplotdic, echo=FALSE}
+knitr::kable(subplot_dic)
+```
 
+#### Plant community structure
+```{r structuredic, echo=FALSE}
+knitr::kable(structure_dic)
+```
+
+#### Biomass
+# ```{r biomassdic, echo=FALSE}
+# knitr::kable(biomass_dic)
+# ```
+
+#### Reflectance
+```{r reflectancedic, echo=FALSE}
+knitr::kable(reflectance_dic)
+```
+
+#### Soil depth, slope and exposure
+```{r soildepthdic, echo=FALSE}
+knitr::kable(depth_dic)
+```
+
+#### Soil texture, pH, bulk density, SOM
+```{r soildic, echo=FALSE}
+knitr::kable(soil_dic)
+```
+
+#### Site
+```{r sitedic, echo=FALSE}
+knitr::kable(site_dic)
+```
+
+#### C-flux
+```{r cfluxdic, echo=FALSE}
+knitr::kable(cflux_dic)
+```
+
+#### Temperature and soil moisture
+# ```{r tempdic, echo=FALSE}
+# knitr::kable(climate_tomst_dic)
+# ```
+
+#### Climate
+```{r climatedic, echo=FALSE}
+knitr::kable(climate_gridded_dic)
+```
