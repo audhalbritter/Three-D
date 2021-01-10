@@ -25,9 +25,10 @@ plotMetaData <- read_csv(file = "data/soil/Three-D_PlotLevel_MetaData_2019.csv")
   # calculate mean soil depth
   mutate(soil_depth_cm = (soil_depth1 + soil_depth2 + soil_depth3 + soil_depth4) / 4,
          soil_depth_cm = if_else(origPlotID == 106, 36.1, soil_depth_cm),
-         year = 2019)
+         year = 2019) %>% 
+  select(-soil_depth1, -soil_depth2, -soil_depth3, -soil_depth4)
 
-write_csv(plotMetaData, path = "data_cleaned/soil/THREE-D_PlotLevel_Meta_2019.csv")
+write_csv(plotMetaData, path = "data_cleaned/soil/THREE-D_PlotLevel_Depth_2019.csv")
 
 
 #### SOIL SAMPLES
@@ -52,10 +53,10 @@ soil <- soilSamples_raw %>%
          weight_550_g = dry_weight_550_plus_vial_g - vial_weight_g,
          weight_950_g = dry_weight_950_plus_vial_g - vial_weight_g,
          soil_organic_matter = (dry_weight_105_g - weight_550_g) / dry_weight_105_g,
-         carbon_content = (weight_550_g - weight_950_g) / dry_weight_105_g)
+         carbon_content = (weight_550_g - weight_950_g) / dry_weight_105_g) %>% 
+  select(date, year, destSiteID, destBlockID, layer, wet_weight_soil_g:pH, bulk_density_g_cm, pore_water_content, soil_organic_matter, carbon_content)
 
-
-write_csv(plotMetaData, path = "data_cleaned/soil/THREE-D_Soil_2019-2020.csv")
+write_csv(soil, path = "data_cleaned/soil/THREE-D_Soil_2019-2020.csv")
   
 # check data
 soil %>% #filter(soil_organic_matter < 0) %>% as.data.frame()
