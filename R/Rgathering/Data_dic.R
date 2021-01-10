@@ -10,7 +10,7 @@ attribute_table <- read_csv(file = "data_cleaned/Three-D_data_dic.csv")
 ### COMMUNITY - turf
 
 # read in data
-cover <- read_csv("data_cleaned/community/THREE-D_Cover_2019_2020.csv")
+cover <- read_csv("data_cleaned/vegetation/THREE-D_Cover_2019_2020.csv")
 
 range_cover <- cover %>% 
   summarise(
@@ -32,7 +32,7 @@ cover_dic <- map_df(cover %>% as_tibble, class) %>%
 ### COMMUNITY - subplot
 
 # read in data
-community_subplot <- read_csv("data_cleaned/community/THREE-D_CommunitySubplot_2019_2020.csv")
+community_subplot <- read_csv("data_cleaned/vegetation/THREE-D_CommunitySubplot_2019_2020.csv")
 
 range_comm_subplot <- community_subplot %>% 
   summarise(
@@ -55,7 +55,7 @@ subplot_dic <- map_df(community_subplot %>% as_tibble, class) %>%
 ### COMMUNITY STRUCTURE
 
 # read in data
-community_structure <- read_csv("data_cleaned/community/THREE-D_CommunityStructure_2019_2020.csv")
+community_structure <- read_csv("data_cleaned/vegetation/THREE-D_CommunityStructure_2019_2020.csv")
 
 range_structure <- community_structure %>% 
   summarise(
