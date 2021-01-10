@@ -75,29 +75,6 @@ structure_dic <- map_df(community_structure %>% as_tibble, class) %>%
 
 
 #***********************************************************************************************
-### HEIGHT
-
-# read in data
-height <- read_csv("data_cleaned/community/THREE-D_Height_2019_2020.csv")
-
-range_height <- height %>% 
-  summarise(
-    across(where(is.character), ~ paste(min(.), max(.), sep = " - ")),
-    across(where(is.numeric), ~paste(min(.), max(.), sep = " - "))
-  ) %>% 
-  pivot_longer(cols = everything(), names_to = "Variable name", values_to = "Variable range or levels")
-
-
-height_dic <- map_df(height %>% as_tibble, class) %>% 
-  pivot_longer(cols = everything(), names_to = "Variable name", values_to = "Variable type") %>% 
-  mutate(`Variable type` = case_when(`Variable type` == "character" ~ "categorical",
-                                     `Variable type` %in% c("integer", "numeric") ~ "numeric")) %>% 
-  left_join(range_height, by = "Variable name") %>% 
-  left_join(attribute_table, by = c("Variable name" = "attribute"))
-
-
-
-#***********************************************************************************************
 ### BIOMASS
 
 # read in data
@@ -183,6 +160,29 @@ soil_dic <- map_df(soil %>% as_tibble, class) %>%
                                      `Variable type` %in% c("integer", "numeric") ~ "numeric")) %>% 
   left_join(range_soil, by = "Variable name") %>% 
   left_join(attribute_table, by = c("Variable name" = "attribute"))
+
+
+#***********************************************************************************************
+### SITE
+
+# read in data
+site <- read_csv("data_cleaned/THREE-D_metaSite.csv")
+
+range_site <- site %>% 
+  summarise(
+    across(where(is.character), ~ paste(min(.), max(.), sep = " - ")),
+    across(where(is.numeric), ~paste(min(.), max(.), sep = " - "))
+  ) %>% 
+  pivot_longer(cols = everything(), names_to = "Variable name", values_to = "Variable range or levels")
+
+
+site_dic <- map_df(site %>% as_tibble, class) %>% 
+  pivot_longer(cols = everything(), names_to = "Variable name", values_to = "Variable type") %>% 
+  mutate(`Variable type` = case_when(`Variable type` == "character" ~ "categorical",
+                                     `Variable type` %in% c("integer", "numeric") ~ "numeric")) %>% 
+  left_join(range_site, by = "Variable name") %>% 
+  left_join(attribute_table, by = c("Variable name" = "attribute"))
+
 
 
 #***********************************************************************************************
