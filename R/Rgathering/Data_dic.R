@@ -60,6 +60,7 @@ community_subplot <- read_csv("data_cleaned/vegetation/THREE-D_CommunitySubplot_
 range_comm_subplot <- community_subplot %>% 
   summarise(
     across(where(is.character), ~ paste(min(.), max(.), sep = " - ")),
+    across(where(is.Date), ~ paste(min(.), max(.), sep = " - ")),
     across(where(is.numeric), ~paste(min(.), max(.), sep = " - "))
   ) %>% 
   pivot_longer(cols = everything(), names_to = "Variable name", values_to = "Variable range or levels")
@@ -68,6 +69,7 @@ range_comm_subplot <- community_subplot %>%
 subplot_dic <- map_df(community_subplot %>% as_tibble, class) %>% 
   pivot_longer(cols = everything(), names_to = "Variable name", values_to = "Variable type") %>% 
   mutate(`Variable type` = case_when(`Variable type` == "character" ~ "categorical",
+                                     !`Variable type` %in% c("integer", "numeric", "character") ~ "date",
                                      `Variable type` %in% c("integer", "numeric") ~ "numeric")) %>% 
   left_join(range_comm_subplot, by = "Variable name") %>% 
   left_join(attribute_table, by = c("Variable name" = "attribute"))
@@ -83,6 +85,7 @@ community_structure <- read_csv("data_cleaned/vegetation/THREE-D_CommunityStruct
 range_structure <- community_structure %>% 
   summarise(
     across(where(is.character), ~ paste(min(.), max(.), sep = " - ")),
+    across(where(is.Date), ~ paste(min(.), max(.), sep = " - ")),
     across(where(is.numeric), ~paste(min(.), max(.), sep = " - "))
   ) %>% 
   pivot_longer(cols = everything(), names_to = "Variable name", values_to = "Variable range or levels")
@@ -91,6 +94,7 @@ range_structure <- community_structure %>%
 structure_dic <- map_df(community_structure %>% as_tibble, class) %>% 
   pivot_longer(cols = everything(), names_to = "Variable name", values_to = "Variable type") %>% 
   mutate(`Variable type` = case_when(`Variable type` == "character" ~ "categorical",
+                                     !`Variable type` %in% c("integer", "numeric", "character") ~ "date",
                                      `Variable type` %in% c("integer", "numeric") ~ "numeric")) %>% 
   left_join(range_structure, by = "Variable name") %>% 
   left_join(attribute_table, by = c("Variable name" = "attribute"))
@@ -101,22 +105,24 @@ structure_dic <- map_df(community_structure %>% as_tibble, class) %>%
 ### BIOMASS
 
 # read in data
-# biomass <- read_csv("data_cleaned/vegetation/THREE-D_Biomass_2020.csv")
-# 
-# range_biomass <- biomass %>% 
-#   summarise(
-#     across(where(is.character), ~ paste(min(.), max(.), sep = " - ")),
-#     across(where(is.numeric), ~paste(min(.), max(.), sep = " - "))
-#   ) %>% 
-#   pivot_longer(cols = everything(), names_to = "Variable name", values_to = "Variable range or levels")
-# 
-# 
-# biomass_dic <- map_df(biomass %>% as_tibble, class) %>% 
-#   pivot_longer(cols = everything(), names_to = "Variable name", values_to = "Variable type") %>% 
-#   mutate(`Variable type` = case_when(`Variable type` == "character" ~ "categorical",
-#                                      `Variable type` %in% c("integer", "numeric") ~ "numeric")) %>% 
-#   left_join(range_biomass, by = "Variable name") %>% 
-#   left_join(attribute_table, by = c("Variable name" = "attribute"))
+biomass <- read_csv("data_cleaned/vegetation/THREE-D_Biomass_2020.csv")
+
+range_biomass <- biomass %>%
+  summarise(
+    across(where(is.character), ~ paste(min(.), max(.), sep = " - ")),
+    across(where(is.Date), ~ paste(min(.), max(.), sep = " - ")),
+    across(where(is.numeric), ~paste(min(.), max(.), sep = " - "))
+  ) %>%
+  pivot_longer(cols = everything(), names_to = "Variable name", values_to = "Variable range or levels")
+
+
+biomass_dic <- map_df(biomass %>% as_tibble, class) %>%
+  pivot_longer(cols = everything(), names_to = "Variable name", values_to = "Variable type") %>%
+  mutate(`Variable type` = case_when(`Variable type` == "character" ~ "categorical",
+                                     !`Variable type` %in% c("integer", "numeric", "character") ~ "date",
+                                     `Variable type` %in% c("integer", "numeric") ~ "numeric")) %>%
+  left_join(range_biomass, by = "Variable name") %>%
+  left_join(attribute_table, by = c("Variable name" = "attribute"))
 
 
 #***********************************************************************************************
@@ -128,6 +134,7 @@ reflectance <- read_csv("data_cleaned/vegetation/THREE-D_Reflectance_2020.csv")
 range_reflectance <- reflectance %>% 
   summarise(
     across(where(is.character), ~ paste(min(.), max(.), sep = " - ")),
+    across(where(is.Date), ~ paste(min(.), max(.), sep = " - ")),
     across(where(is.numeric), ~paste(min(.), max(.), sep = " - "))
   ) %>% 
   pivot_longer(cols = everything(), names_to = "Variable name", values_to = "Variable range or levels")
@@ -136,6 +143,7 @@ range_reflectance <- reflectance %>%
 reflectance_dic <- map_df(reflectance %>% as_tibble, class) %>% 
   pivot_longer(cols = everything(), names_to = "Variable name", values_to = "Variable type") %>% 
   mutate(`Variable type` = case_when(`Variable type` == "character" ~ "categorical",
+                                     !`Variable type` %in% c("integer", "numeric", "character") ~ "date",
                                      `Variable type` %in% c("integer", "numeric") ~ "numeric")) %>% 
   left_join(range_reflectance, by = "Variable name") %>% 
   left_join(attribute_table, by = c("Variable name" = "attribute"))
@@ -150,6 +158,7 @@ depth <- read_csv("data_cleaned/soil/THREE-D_PlotLevel_Depth_2019.csv")
 range_depth <- depth %>% 
   summarise(
     across(where(is.character), ~ paste(min(.), max(.), sep = " - ")),
+    across(where(is.Date), ~ paste(min(.), max(.), sep = " - ")),
     across(where(is.numeric), ~paste(min(.), max(.), sep = " - "))
   ) %>% 
   pivot_longer(cols = everything(), names_to = "Variable name", values_to = "Variable range or levels")
@@ -158,6 +167,7 @@ range_depth <- depth %>%
 depth_dic <- map_df(depth %>% as_tibble, class) %>% 
   pivot_longer(cols = everything(), names_to = "Variable name", values_to = "Variable type") %>% 
   mutate(`Variable type` = case_when(`Variable type` == "character" ~ "categorical",
+                                     !`Variable type` %in% c("integer", "numeric", "character") ~ "date",
                                      `Variable type` %in% c("integer", "numeric") ~ "numeric")) %>% 
   left_join(range_depth, by = "Variable name") %>% 
   left_join(attribute_table, by = c("Variable name" = "attribute"))
@@ -167,19 +177,21 @@ depth_dic <- map_df(depth %>% as_tibble, class) %>%
 ### SOIL
 
 # read in data
-soil <- read_csv("data_cleaned/soil/THREE-D_Soil_2019-2020.csv")
+soil <- read_csv("data_cleaned/soil/THREE-D_Soil_2019-2020.csv") %>% 
+  mutate(date = as.Date(date))
 
 range_soil <- soil %>% 
   summarise(
     across(where(is.character), ~ paste(min(.), max(.), sep = " - ")),
-    across(where(is.numeric), ~paste(min(.), max(.), sep = " - "))
-  ) %>% 
+    across(where(is.Date), ~ paste(min(.), max(.), sep = " - ")),
+    across(where(is.numeric), ~paste(min(.), max(.), sep = " - "))) %>% 
   pivot_longer(cols = everything(), names_to = "Variable name", values_to = "Variable range or levels")
 
 
 soil_dic <- map_df(soil %>% as_tibble, class) %>% 
   pivot_longer(cols = everything(), names_to = "Variable name", values_to = "Variable type") %>% 
   mutate(`Variable type` = case_when(`Variable type` == "character" ~ "categorical",
+                                     !`Variable type` %in% c("integer", "numeric", "character") ~ "date",
                                      `Variable type` %in% c("integer", "numeric") ~ "numeric")) %>% 
   left_join(range_soil, by = "Variable name") %>% 
   left_join(attribute_table, by = c("Variable name" = "attribute"))
@@ -195,6 +207,7 @@ cflux <- read_csv("data_cleaned/c-flux/Three-D_c-flux_2020.csv")
 range_cflux <- cflux %>% 
   summarise(
     across(where(is.character), ~ paste(min(.), max(.), sep = " - ")),
+    across(where(is.Date), ~ paste(min(.), max(.), sep = " - ")),
     across(where(is.numeric), ~paste(min(.), max(.), sep = " - "))
   ) %>% 
   pivot_longer(cols = everything(), names_to = "Variable name", values_to = "Variable range or levels")
@@ -203,6 +216,7 @@ range_cflux <- cflux %>%
 cflux_dic <- map_df(cflux %>% as_tibble, class) %>% 
   pivot_longer(cols = everything(), names_to = "Variable name", values_to = "Variable type") %>% 
   mutate(`Variable type` = case_when(`Variable type` == "character" ~ "categorical",
+                                     !`Variable type` %in% c("integer", "numeric", "character") ~ "date",
                                      `Variable type` %in% c("integer", "numeric") ~ "numeric")) %>% 
   left_join(range_cflux, by = "Variable name") %>% 
   left_join(attribute_table, by = c("Variable name" = "attribute"))
@@ -239,6 +253,7 @@ climate_gridded <- read_csv("data_cleaned/climate/THREE_D_Gridded_DailyClimate_2
 range_climate_gridded <- climate_gridded %>% 
   summarise(
     across(where(is.character), ~ paste(min(.), max(.), sep = " - ")),
+    across(where(is.Date), ~ paste(min(.), max(.), sep = " - ")),
     across(where(is.numeric), ~paste(min(.), max(.), sep = " - "))
   ) %>% 
   pivot_longer(cols = everything(), names_to = "Variable name", values_to = "Variable range or levels")
@@ -247,6 +262,8 @@ range_climate_gridded <- climate_gridded %>%
 climate_gridded_dic <- map_df(climate_gridded %>% as_tibble, class) %>% 
   pivot_longer(cols = everything(), names_to = "Variable name", values_to = "Variable type") %>% 
   mutate(`Variable type` = case_when(`Variable type` == "character" ~ "categorical",
+                                     !`Variable type` %in% c("integer", "numeric", "character") ~ "date",
                                      `Variable type` %in% c("integer", "numeric") ~ "numeric")) %>% 
   left_join(range_climate_gridded, by = "Variable name") %>% 
   left_join(attribute_table, by = c("Variable name" = "attribute"))
+
