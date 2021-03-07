@@ -7,6 +7,29 @@ source("R/Load packages.R")
 attribute_table <- read_csv(file = "data_cleaned/Three-D_data_dic.csv")
 
 #***********************************************************************************************
+### SITE
+
+# read in data
+site <- read_csv("data_cleaned/soil/THREE-D_metaSite.csv")
+
+range_site <- site %>% 
+  summarise(
+    across(where(is.character), ~ paste(min(., na.rm = TRUE), max(., na.rm = TRUE), sep = " - ")),
+    across(where(is.numeric), ~paste(min(., na.rm = TRUE), max(., na.rm = TRUE), sep = " - "))
+  ) %>% 
+  pivot_longer(cols = everything(), names_to = "Variable name", values_to = "Variable range or levels")
+
+
+site_dic <- map_df(site %>% as_tibble, class) %>% 
+  pivot_longer(cols = everything(), names_to = "Variable name", values_to = "Variable type") %>% 
+  mutate(`Variable type` = case_when(`Variable type` == "character" ~ "categorical",
+                                     `Variable type` %in% c("integer", "numeric") ~ "numeric")) %>% 
+  left_join(range_site, by = "Variable name") %>% 
+  left_join(attribute_table, by = c("Variable name" = "attribute"))
+
+
+
+#***********************************************************************************************
 ### COMMUNITY - turf
 
 # read in data
@@ -159,28 +182,6 @@ soil_dic <- map_df(soil %>% as_tibble, class) %>%
   mutate(`Variable type` = case_when(`Variable type` == "character" ~ "categorical",
                                      `Variable type` %in% c("integer", "numeric") ~ "numeric")) %>% 
   left_join(range_soil, by = "Variable name") %>% 
-  left_join(attribute_table, by = c("Variable name" = "attribute"))
-
-
-#***********************************************************************************************
-### SITE
-
-# read in data
-site <- read_csv("data_cleaned/THREE-D_metaSite.csv")
-
-range_site <- site %>% 
-  summarise(
-    across(where(is.character), ~ paste(min(.), max(.), sep = " - ")),
-    across(where(is.numeric), ~paste(min(.), max(.), sep = " - "))
-  ) %>% 
-  pivot_longer(cols = everything(), names_to = "Variable name", values_to = "Variable range or levels")
-
-
-site_dic <- map_df(site %>% as_tibble, class) %>% 
-  pivot_longer(cols = everything(), names_to = "Variable name", values_to = "Variable type") %>% 
-  mutate(`Variable type` = case_when(`Variable type` == "character" ~ "categorical",
-                                     `Variable type` %in% c("integer", "numeric") ~ "numeric")) %>% 
-  left_join(range_site, by = "Variable name") %>% 
   left_join(attribute_table, by = c("Variable name" = "attribute"))
 
 
