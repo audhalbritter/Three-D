@@ -26,7 +26,7 @@ theme_set(theme_bw(base_size = 12))
 
 # Data
 source("R/Soil/ReadInSoilData.R")
-source("R/Rgathering/DownloadCleanData.R")
+#source("R/Rgathering/DownloadCleanData.R")
 source("R/Rgathering/Data_dic.R")
 
 
@@ -75,7 +75,7 @@ knitr::include_graphics('Pics/ExperimentalDesign.jpg')
 
 
 ```{r site-table, echo=FALSE}
-knitr::kable(siteMetaData, digits = 2)
+knitr::kable(siteMetaData_pretty, caption = "Table 1: Site level information including site name, coordinates, elevaiton, bulk density (g/cm), soil organic matter (SOM), carbon content, carbon and nitrogen stocks and pH.")
 ```
 
 
@@ -236,38 +236,38 @@ The following data was collected and is available in the mentioned files on OSF:
 
 | Variable  | Time  | Level | Data file  |
 |:---|:---|:---|:---|
-| Response variables |  |  |  |
+| **Site** |  |  |  |
+| Elevation | 2019  | Site  | THREE-D_metaSite.csv  |
+| Coordinates, slope and aspect  | 2019  | Plot  | THREE-D_metaSite.csv  |
+| **Response variables** |  |  |  |
 | Species cover  | 2019 - 2020  | Plot  | THREE-D_Cover_2019_2020.csv  |
 | Species presence  | 2019 - 2020  | Subplot  | THREE-D_CommunitySubplot_2019_2020.csv  |
 | Plant functional group cover  | 2019 - 2020  | Plot  | THREE-D_CommunityStructure_2019_2020.csv  |
 | Ecosystem fluxes  | 2020  | Plot  | Three-D_c-flux_2020.csv  |
 | Soil respiration  | 2021?  | Plot/Site  | Three-D_c-flux_2020.csv  |
-| Vegetation |  |  |  |
-| Vegetation height  | 2019 - 2020  | Plot  | THREE-D_CommunityStructure_2019_2020.csv  |
-| Aboveground biomass  | 2019 - 2020  | Plot  | xxx  |
+| **Vegetation** |  |  |  |
+| Vegetation height  | 2019 - 2020  | Plot  | THREE-D_Height_2019_2020.csv  |
+| Aboveground biomass  | 2019 - 2020  | Plot  | THREE-D_Biomass_2020.csv  |
 | Plant productivity  | ???  | Plot  | xxx  |
 | Reflectance  | 2020  | Plot  | THREE-D_Reflectance_2020.csv  |
-| Soil |  |  |  |
+| **Soil** |  |  |  |
 | Soil depth  | 2019  | Plot  | THREE-D_PlotLevel_Depth_2019.csv  |
 | Soil texture  | 2019  | Site  | THREE-D_Soil_2019-2020.csv  |
 | Bulk density  | 2019  | Plot  | THREE-D_Soil_2019-2020.csv  |
 | Soil pH  | 2019  | Site  | THREE-D_Soil_2019-2020.csv  |
 | Soil organic matter  | 2019  | Block  | THREE-D_Soil_2019-2020.csv  |
-| Soil C and N stocks  | 2019 - 2020  | Site  | xxx  |
+| Soil C and N stocks  | 2019 - 2020  | Site  | THREE-D_Soil_2019-2020.csv  |
 | Soil nutrients  | ???  | Site  | xxx  |
 | Decomposition | ???  | Plot  | xxx  |
 | Carbon uptake (root growth) | ???  | Plot  | xxx  |
-| Climate |  |  |  |
+| **Climate** |  |  |  |
 | Air, ground and soil temperature  | 2019 - 2020  | Plot  | THREE-D_TomstLogger_2019_2020.csv  |
 | Soil moisture  | 2019 - 2020  | Plot  | THREE-D_TomstLogger_2019_2020.csv  |
 | Gridded climate  | 2009 - 2019  | Site  | THREE_D_Gridded_DailyClimate_2009-2019.csv  |
-| Site |  |  |  |
-| Elevation | 2019  | Site  | xxx  |
-| Coordinates, slope and aspect  | 2019  | Plot  | THREE-D_PlotLevel_Depth_2019.csv  |
 
 
 
-**Meta data**
+**Site/plot level meta data**
 Elevation was assessed using a GPS at the site level, while slope, exposure and soil depth (using metal pole at each corner) was recorded for each plot.
 
 
@@ -464,12 +464,17 @@ The climate variables are:
 
 ### Data dictionary
 
+#### Site
+```{r sitedic, echo=FALSE}
+knitr::kable(site_dic)
+```
+
 #### Plant community cover
 ```{r coverdic, echo=FALSE}
 knitr::kable(cover_dic)
 ```
 
-#### Plant community precence
+#### Plant community presence
 ```{r subplotdic, echo=FALSE}
 knitr::kable(subplot_dic)
 ```
@@ -480,9 +485,9 @@ knitr::kable(structure_dic)
 ```
 
 #### Biomass
-# ```{r biomassdic, echo=FALSE}
-# knitr::kable(biomass_dic)
-# ```
+```{r biomassdic, echo=FALSE}
+ knitr::kable(biomass_dic)
+```
 
 #### Reflectance
 ```{r reflectancedic, echo=FALSE}
@@ -497,11 +502,6 @@ knitr::kable(depth_dic)
 #### Soil texture, pH, bulk density, SOM
 ```{r soildic, echo=FALSE}
 knitr::kable(soil_dic)
-```
-
-#### Site
-```{r sitedic, echo=FALSE}
-knitr::kable(site_dic)
 ```
 
 #### C-flux
