@@ -3,25 +3,25 @@
 source("R/Load packages.R")
 source("R/Rgathering/create meta data.R")
 
-# Download raw data from OSF
-get_file(node = "pk4bg",
-         file = "THREE-D_NDVI_2020_aud.csv",
-         path = "data/reflectance",
-         remote_path = "RawData/Vegetation")
-
-get_file(node = "pk4bg",
-         file = "THREE-D_NDVI_2020_joseph.csv",
-         path = "data/reflectance",
-         remote_path = "RawData/Vegetation")
+# Run this code if you need to download raw data from OSF
+# get_file(node = "pk4bg",
+#          file = "THREE-D_NDVI_2020_aud.csv",
+#          path = "data/reflectance",
+#          remote_path = "RawData/Vegetation")
+# 
+# get_file(node = "pk4bg",
+#          file = "THREE-D_NDVI_2020_joseph.csv",
+#          path = "data/reflectance",
+#          remote_path = "RawData/Vegetation")
 
 
 # Read in ndvi data
-ndvi.raw1 <- read_csv(file = "data/ndvi/THREE-D_NDVI_2020_joseph.csv") %>% 
+ndvi.raw1 <- read_csv(file = "data/reflectance/THREE-D_NDVI_2020_joseph.csv") %>% 
   left_join(metaTurfID, by = c("destSiteID", "destBlockID", "turfID")) %>% 
   rename(measurement = nr) %>% 
   mutate(date = dmy(date))
 
-ndvi <- read_csv(file = "data/ndvi/THREE-D_NDVI_2020_aud.csv") %>% 
+ndvi <- read_csv(file = "data/reflectance/THREE-D_NDVI_2020_aud.csv") %>% 
   select(origSiteID:timing) %>% 
   mutate(date = dmy(date),
          year = year(date)) %>% 
