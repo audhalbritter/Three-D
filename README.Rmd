@@ -86,6 +86,33 @@ The sites should also be relatively easy to access, because of transplanting lar
 Finally, we wanted other environmental factors to be as similar as possible among the sites, within each of the countries (i.e. grazing regime and history, bedrock, vegetation type and structure, slope and exposure).
 
 
+```{r site-figure, echo=FALSE, fig.cap="Soil characteristics for all three sites at the top and bottom soil layer."}
+soil <- read_delim(file = "data_cleaned/soil/THREE-D_Soil_2019-2020.csv", delim = ",")
+meta <- read_csv(file ="data_cleaned/soil/THREE-D_PlotLevel_Depth_2019.csv")
+
+soil %>% 
+  left_join(meta %>% 
+              mutate(destBlockID = as.character(destBlockID)) %>% 
+              group_by(destSiteID, destBlockID, year) %>% 
+              summarise(soil_depth_cm = mean(soil_depth_cm)), 
+            by = c("destSiteID", "destBlockID", "year")) %>%
+  pivot_longer(cols = c(pH, bulk_density_g_cm, soil_organic_matter, soil_depth_cm, C_percent, N_percent), 
+               names_to = "variable", values_to = "value") %>% 
+  mutate(variable = factor(variable, levels = c("soil_depth_cm", "bulk_density_g_cm", "pH", "soil_organic_matter", "C_percent", "N_percent")),
+         Site = recode(destSiteID, Lia = "High alpine", Joa = "Alpine", Vik = "Lowland"),
+         Site = factor(Site, levels = c("High alpine", "Alpine", "Lowland")),
+         layer = factor(layer, levels = c("Top", "Bottom")),
+         value = if_else(variable == "soil_depth_cm" & layer == "Bottom", NA_real_, value)) %>% 
+  filter(!is.na(value)) %>% 
+  ggplot(aes(x = Site, y = value, fill = layer)) +
+  geom_boxplot() +
+  scale_fill_manual(name = "", values = c("rosybrown1", "rosybrown")) +
+  labs(x = "", y = "") +
+  facet_wrap(~ variable, scales = "free_y") +
+  theme_minimal() +
+  theme(legend.position = "top")
+```
+
 
 
 ### Experimental design

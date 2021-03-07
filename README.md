@@ -109,6 +109,9 @@ other environmental factors to be as similar as possible among the
 sites, within each of the countries (i.e. grazing regime and history,
 bedrock, vegetation type and structure, slope and exposure).
 
+![Soil characteristics for all three sites at the top and bottom soil
+layer.](README_files/figure-gfm/site-figure-1.png)
+
 ### Experimental design
 
 In each site, a large enough area for 40 – 80 plots was chosen. Ten
