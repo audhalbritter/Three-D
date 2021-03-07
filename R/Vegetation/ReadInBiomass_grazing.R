@@ -5,11 +5,11 @@
 source("R/Load packages.R")
 source("R/Rgathering/create meta data.R")
 
-# Download raw data from OSF
-get_file(node = "pk4bg",
-         file = "THREE_D_Biomass_Grazing_2020_March_2021.xlsx",
-         path = "data/biomass",
-         remote_path = "RawData/Vegetation")
+# Run this code if you need to download raw data from OSF
+# get_file(node = "pk4bg",
+#          file = "THREE_D_Biomass_Grazing_2020_March_2021.xlsx",
+#          path = "data/biomass",
+#          remote_path = "RawData/Vegetation")
 
 
 biomass <- read_excel(path = "data/biomass/THREE_D_Biomass_Grazing_2020_March_2021.xlsx", 
