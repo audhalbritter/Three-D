@@ -4,12 +4,32 @@
 
 source("R/Load packages.R")
 source("R/Rgathering/create meta data.R")
-#source("R/Rgathering/Download_Raw_Data.R")
 
-# file <- "data/community/2019/Lia/THREE-D_CommunityData_Lia_1_2019.xlsx"
-# dd <- read_xlsx(path = file, sheet = 7, skip = 2, n_max = 61, col_types = "text")
-# dd %>% pn
-# read_xlsx(path = file, sheet = 5, n_max = 1, col_types = "text")
+#Download community data from OSF
+# run the code from L12-L33 if you need to download the data from OSF
+
+# get_file(node = "pk4bg",
+#          file = "Three-D_Community_Joa_2019.zip",
+#          path = "data/community/2019/Joa",
+#          remote_path = "RawData/Community")
+# 
+# get_file(node = "pk4bg",
+#          file = "Three-D_Community_Lia_2019.zip",
+#          path = "data/community/2019/Lia",
+#          remote_path = "RawData/Community")
+# 
+# # Unzip files
+# zipFile <- "data/community/2019/Joa/Three-D_Community_Joa_2019.zip"
+# if(!file.exists(zipFile)){
+#   outDir <- "data/community/2019/Joa"
+#   unzip(zipFile, exdir = outDir)
+# }
+# 
+# zipFile <- "data/community/2019/Lia/Three-D_Community_Lia_2019.zip"
+# if(!file.exists(zipFile)){
+#   outDir <- "data/community/2019/Lia"
+#   unzip(zipFile, exdir = outDir)
+# }
 
 
 #### COMMUNITY DATA ####
@@ -18,10 +38,12 @@ files <- dir(path = "data/community/", pattern = "\\.xlsx$", full.names = TRUE, 
 
 #Function to read in meta data
 metaComm_raw <- map_df(set_names(files), function(file) {
+  print(file)
   file %>% 
     excel_sheets() %>% 
     set_names() %>% 
-    discard(. == "CHECK") %>% 
+    # exclude sheet to check data and taxonomy file
+    discard(. %in% c("CHECK", "taxonomy")) %>% 
     map_df(~ read_xlsx(path = file, sheet = .x, n_max = 1, col_types = c("text", rep("text", 29))), .id = "sheet_name")
 }, .id = "file")
 
@@ -71,11 +93,13 @@ comm <- map_df(set_names(files), function(file) {
     map_df(~ read_xlsx(path = file, sheet = .x, skip = 2, n_max = 61, col_types = "text"), .id = "sheet_name")
 }, .id = "file") %>% 
   select(file:Remark) %>% 
-  rename("Cover" = `%`)
+  rename("Cover" = `%`) %>% 
+  mutate(Year = as.numeric(stri_extract_last_regex(file, "\\d{4}")))
+
 
 # Join data and meta
 community <- metaComm %>% 
-  left_join(comm, by = "sheet_name") %>% 
+  left_join(comm, by = c("sheet_name", "Year")) %>% 
   select(origSiteID:origPlotID, destSiteID:turfID, warming:Nlevel, Date, Year, Species:Cover, Recorder, Scribe, Remark, file) %>% 
   
   # Remove rows, without species, subplot and cover is zero
@@ -116,10 +140,12 @@ community <- metaComm %>%
                           "Poa alpigena" = "Poa pratensis ssp alpigena",
                           "Ranunculus" = "Ranunculus",
                           "Rubus idaes" = "Rubus idaeus",
+                          "Sagina saginoides" = "Sagina saginella",
                           "Snerote sp" = "Gentiana nivalis",
                           "Stellaria gramineae" = "Stellaria graminea",
                           "Unknown euphrasia sp?" = "Euphrasia sp1",
                           "Vaccinium myrtilis" = "Vaccinium myrtillus",
+                          "Viola biflora" = "Veronica biflora",
                           "Total Cover (%)" = "SumofCover")) %>% 
   
   # Carex hell
@@ -284,11 +310,13 @@ write_csv(cover, path = "data_cleaned/vegetation/THREE-D_Cover_2019_2020.csv", c
 height <- community %>% 
   filter(species %in% c("Vascular plant layer", "Moss layer")) %>% 
   select(-c(`5`:`25`)) %>% 
-  pivot_longer(cols = `1`:`4`, names_to = "number", values_to = "height") %>% 
+  pivot_longer(cols = `1`:`4`, names_to = "subplot", values_to = "height") %>% 
   mutate(height = as.numeric(height)) %>% 
   group_by(turfID, year, species) %>% 
   summarise(height = mean(height, na.rm = TRUE)) %>% 
   rename("vegetation_layer" = "species")
+
+write_csv(height, path = "data_cleaned/vegetation/THREE-D_Height_2019_2020.csv", col_names = TRUE)
 
 
 # Cover from Functional Groups and Height
@@ -299,13 +327,17 @@ CommunityStructure <- community %>%
   
   # make rows numeric
   mutate(percentage = as.numeric(percentage)) %>% 
+  # calculate mean cover per turf
   group_by(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID, warming, grazing, Nlevel, date, year, species, cover) %>% 
   summarise(mean = mean(percentage)) %>% 
-  mutate(cover = ifelse(species %in% c("Vascular plants", "SumofCover"), cover, mean)) %>% 
+  # fix whole plot vs. subplot cover estimate
+  # 2019 whole plot for sum of cover and vascular plant cover
+  # 2020 only sum of cover
+  mutate(cover = case_when(year == 2019 & !species %in% c("Vascular plants", "SumofCover") ~ mean,
+                           year == 2020 & !species %in% c("SumofCover") ~ mean)) %>% 
   ungroup() %>% 
   rename(functional_group = species) %>% 
-  select(-mean) %>% 
-  left_join(height, by = "turfID")
+  select(-mean)
 
 write_csv(CommunityStructure, path = "data_cleaned/vegetation/THREE-D_CommunityStructure_2019_2020.csv", col_names = TRUE)
 
@@ -314,6 +346,10 @@ write_csv(CommunityStructure, path = "data_cleaned/vegetation/THREE-D_CommunityS
 CommunitySubplot <- community %>% 
   filter(!species %in% c("Moss layer", "Vascular plant layer", "SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop")) %>% 
   select(-scribe) %>%
+  
+  # Need to fix merging of species!!!
+  
+  # make long table
   pivot_longer(cols = `1`:`25`, names_to = "subplot", values_to = "presence") %>% 
   # Unknown seedlings have sometimes counts, but not consistent. So make just presence.
   mutate(presence = ifelse(species == "Unknown seedlings" & presence != "0", "s", presence),
@@ -321,21 +357,17 @@ CommunitySubplot <- community %>%
   mutate(fertile = ifelse(presence %in% c("F", "f", "fd"), 1, 0),
          dominant = ifelse(presence %in% c("d", "fd", "dj"), 1, 0),
          juvenile = ifelse(presence %in% c("j", "dj"), 1, 0),
-         seedling = ifelse(presence == "s", 1, 0)) %>% 
-  mutate(presence = ifelse(presence == "1", 1, 0))
+         seedling = ifelse(presence %in% c("s", "3"), 1, 0)) %>% 
+  mutate(remark = if_else(presence %in% c("1?", "cf"), "species id uncertain", remark),
+         remark = if_else(presence %in% c("3"), "probably 3 leontodon seedlings", remark),
+         presence = if_else(presence %in% c("1", "1?", "cf", "3"), 1, 0))
 
-
-### NEED TO CHECK R. reptanse at LIA possible
-
-### NEED CHECKING IN DATA SHEET
-filter(Presence %in% c("1?", "cf", "3")) %>% as.data.frame()
-#probably make 1, but remark uncertain.
 
 # NEED TO FIX DUPLICATE FROM PLANTS THAT HAVE BEEN MERGED, NEED TO MERGE SUBPLOT DATA
 community %>% 
-  filter(!Species %in% c("Moss layer", "Vascular plant layer", "SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop")) %>% 
-  select(-Scribe) %>% 
-  group_by(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID, warming, grazing, Nlevel, Date, Year, Species, Recorder, Remark, file) %>%
+  filter(!species %in% c("Moss layer", "Vascular plant layer", "SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop")) %>% 
+  select(-scribe) %>% 
+  group_by(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID, warming, grazing, Nlevel, date, year, species, file) %>%
   mutate(n = n()) %>% filter(n > 1) %>% as.data.frame()
 
 write_csv(CommunitySubplot, path = "data_cleaned/vegetation/THREE-D_CommunitySubplot_2019_2020.csv", col_names = TRUE)
