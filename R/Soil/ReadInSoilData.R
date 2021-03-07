@@ -16,6 +16,11 @@ source("R/Rgathering/create meta data.R")
 #          path = "data/soil",
 #          remote_path = "RawData/Soil")
 
+# get_file(node = "pk4bg",
+#          file = "TThreeD_2019_2020_CN_resultater.xlsx",
+#          path = "data/soil",
+#          remote_path = "RawData/Soil")
+
 
 #### PLOT LEVEL META DATA ####
 plotMetaData <- read_csv(file = "data/soil/Three-D_PlotLevel_MetaData_2019.csv") %>% 
@@ -75,7 +80,7 @@ soil <- soilSamples_raw %>%
             by = c("destSiteID", "destBlockID", "layer", "year")) %>% 
   select(date, year, destSiteID, destBlockID, layer, wet_weight_soil_g:pH, bulk_density_g_cm, pore_water_content, soil_organic_matter, carbon_content, C_percent, N_percent)
 
-write_csv(soil, path = "data_cleaned/soil/THREE-D_Soil_2019-2020.csv")
+#write_csv(soil, path = "data_cleaned/soil/THREE-D_Soil_2019-2020.csv")
   
 # check data
 # soil %>% #filter(soil_organic_matter < 0) %>% as.data.frame()
@@ -111,7 +116,18 @@ siteMetaData <- tibble(destSiteID = c("Vik", "Vik", "Joa", "Joa", "Lia", "Lia"),
                        layer = c(rep(c("Top", "Bottom"), 3))) %>% 
   left_join(soil_site, by = c("destSiteID", "layer"))
 
-write_csv(siteMetaData, "data_cleaned/soil/THREE-D_metaSite.csv")
+#write_csv(siteMetaData, "data_cleaned/soil/THREE-D_metaSite.csv")
+
+siteMetaData_pretty <- siteMetaData %>% 
+  mutate("Bulk density" = paste(round(bulk_density_g_cm, 2), "±", round(bulk_density_se, 2)),
+         SOM = paste(round(soil_organic_matter, 2), "±", round(soil_organic_matter_se, 2)),
+         "Carbon content" = paste(round(carbon_content, 2), "±", round(carbon_content_se, 2)),
+         "C%" = paste(round(C_percent, 2), "±", round(C_percent_se, 2)),
+         "N%" = paste(round(N_percent, 2), "±", round(N_percent_se, 2)),
+         pH = paste(round(pH, 2), "±", round(pH_se, 2))) %>% 
+  select(Site = destSiteID, Latitude = latitude_N, Longitude = longitude_E, Layer = layer, `Bulk density`:`N%`, pH)
+
+
 
 # check data
 # dd %>% 
