@@ -4,6 +4,7 @@
 
 source("R/Load packages.R")
 source("R/Rgathering/create meta data.R")
+source("R/Vegetation/subplot_problems.R")
 
 #Download community data from OSF
 # run the code from L12-L33 if you need to download the data from OSF
@@ -289,20 +290,31 @@ community <- metaComm %>%
   #Replace all NA in subplots with 0
   mutate_at(vars("1":"25"), ~replace_na(., 0)) %>% 
   mutate(Cover = as.numeric(Cover)) %>% 
-  rename(date = Date, year = Year, species = Species, cover = Cover, recorder = Recorder, scribe = Scribe, remark = Remark)
+  
+  rename(date = Date, year = Year, species = Species, cover = Cover, recorder = Recorder, scribe = Scribe, remark = Remark) %>% 
+  
+  # # check for subplot level data
+  community %>% 
+  # summarize cover from species that have been merged
+  group_by(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID, warming, grazing, Nlevel, year, species) %>%
+  mutate(n = n()) %>% filter(n > 1) %>% View()
+  
+  # remove duplicate species that differ in cover. Duplcated because species name was changed (11 cases with very low cover (1-6), no need in changing cover estimate).
+  anti_join(duplicate_problem, by = c("year", "turfID", "species", "cover")) %>% 
+  group_by(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID, warming, grazing, Nlevel, year, species, cover, recorder, scribe, remark, file) %>% 
+  # remove 2 rows with same cover
+  slice(1)
 
 
-
+  
 #### COVER ####
 # Extract estimate of cover
 cover <- community %>% 
   select(origSiteID:species, cover:file) %>% 
-  filter(!species %in% c("Moss layer", "Vascular plant layer", "SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop", "Unknown seedlings")) %>% 
-  # summarize cover from species that have been merged
-  group_by(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID, warming, grazing, Nlevel, date, year, species, recorder, file) %>% 
-  summarise(cover = sum(cover))
+  filter(!species %in% c("Moss layer", "Vascular plant layer", "SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop", "Unknown seedlings"))
 
 write_csv(cover, path = "data_cleaned/vegetation/THREE-D_Cover_2019_2020.csv", col_names = TRUE)
+
 
 
 #### COMMUNITY STRUCTURE DATA ####
@@ -342,15 +354,23 @@ CommunityStructure <- community %>%
 write_csv(CommunityStructure, path = "data_cleaned/vegetation/THREE-D_CommunityStructure_2019_2020.csv", col_names = TRUE)
 
 
+
+community %>% 
+  # summarize cover from species that have been merged
+  group_by(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID, warming, grazing, Nlevel, year, species) %>% 
+  mutate(n = n()) %>% filter(n > 1) %>% View()
+
+
 # subplot level data
 CommunitySubplot <- community %>% 
   filter(!species %in% c("Moss layer", "Vascular plant layer", "SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop")) %>% 
   select(-scribe) %>%
   
-  # Need to fix merging of species!!!
-  
   # make long table
-  pivot_longer(cols = `1`:`25`, names_to = "subplot", values_to = "presence") %>% 
+  pivot_longer(cols = `1`:`25`, names_to = "subplot", values_to = "presence") %>%
+  # remove non-presence in subplot
+  filter(presence == "1") %>% 
+  
   # Unknown seedlings have sometimes counts, but not consistent. So make just presence.
   mutate(presence = ifelse(species == "Unknown seedlings" & presence != "0", "s", presence),
          presence = recode(presence, "df" = "fd", "1j" = "j")) %>% 
@@ -360,14 +380,9 @@ CommunitySubplot <- community %>%
          seedling = ifelse(presence %in% c("s", "3"), 1, 0)) %>% 
   mutate(remark = if_else(presence %in% c("1?", "cf"), "species id uncertain", remark),
          remark = if_else(presence %in% c("3"), "probably 3 leontodon seedlings", remark),
-         presence = if_else(presence %in% c("1", "1?", "cf", "3"), 1, 0))
+         presence = if_else(presence %in% c("1", "1?", "cf", "3"), 1, 0)) %>% 
+  pivot_longer(cols = c(cover, presence:seedling), names_to = "variable", values_to = "value") %>% 
+  select(year, date, origSiteID:Nlevel, subplot, species, variable, value, remark, recorder) %>% 
+  bind_rows(subplot_missing)
 
-
-# NEED TO FIX DUPLICATE FROM PLANTS THAT HAVE BEEN MERGED, NEED TO MERGE SUBPLOT DATA
-community %>% 
-  filter(!species %in% c("Moss layer", "Vascular plant layer", "SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop")) %>% 
-  select(-scribe) %>% 
-  group_by(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID, warming, grazing, Nlevel, date, year, species, file) %>%
-  mutate(n = n()) %>% filter(n > 1) %>% as.data.frame()
-
-write_csv(CommunitySubplot, path = "data_cleaned/vegetation/THREE-D_CommunitySubplot_2019_2020.csv", col_names = TRUE)
+write_csv(CommunitySubplot, file = "data_cleaned/vegetation/THREE-D_CommunitySubplot_2019_2020.csv", col_names = TRUE)

@@ -3,12 +3,28 @@
 ###########################
 
 source("R/Load packages.R")
+# special packages
+library(tibbletime)
+
 
 # Download raw data from OSF
 # get_file(node = "pk4bg",
 #          file = "THREE-D_Climate_Tomst_2019_2020.zip",
 #          path = "data/climate",
 #          remote_path = "RawData/Climate")
+
+
+# Custom function to return mean, sd, 95% conf interval
+# rolling_functions <- function(x, na.rm = TRUE) {
+#   
+#   m  <- mean(x, na.rm = na.rm)
+#   s  <- sd(x, na.rm = na.rm)
+#   hi <- m + 2*s
+#   lo <- m - 2*s
+#   
+#   ret <- c(mean = m, stdev = s, hi.95 = hi, lo.95 = lo) 
+#   return(ret)
+# }
 
 
 #### CLIMATE DATA ####
@@ -35,32 +51,62 @@ temp_raw <- map_df(set_names(files), function(file) {
 }, .id = "file")
 
 
-# These are 3 unknown loggers. Temp pattern does not fit with rest of the data. And short time period
+# These are 3 unknown loggers. Temp pattern does not fit with rest of the data. And short time perioddd
 # "94201711", "94201712", "94201713"
 
 temp_raw1 <- temp_raw %>% 
   # rename column names
   rename("ID" = "X1", "date_time" = "X2", "time_zone" = "X3", "soil_temperature" = "X4", "ground_temperature" = "X5", "air_temperature" = "X6", "raw_soilmoisture" = "X7", "shake" = "X8", "error_flag" = "X9") %>% 
   mutate(date_time = ymd_hm(date_time)) %>% 
-  mutate(loggerID = substr(file, nchar(file)-13, nchar(file)-6)) %>% 
+  mutate(loggerID = substr(file, nchar(file)-13, nchar(file)-6)) %>%
+  
+  # join meta data on loggers
   left_join(metaTomst, by = "loggerID") %>% 
   select(-c(`Download_24_09-19`:Remark_23_09_20)) %>% 
-  pivot_longer(cols = soil_temperature:raw_soilmoisture, names_to = "variable", values_to = "value") %>% 
-  
-  # Soil moisture calibration !!!!
-  #mutate(value = a * RawSoilmoisture^2 + b * RawSoilmoisture + c) %>% 
-
-  # Data curation
 
   # Remove data before initial date time
-  group_by(loggerID, variable) %>% 
   filter(date_time > InitialDate_Time,
          is.na(EndDate_Time) |
          date_time < EndDate_Time)
 
- 
+# calculate rolling mean and sd to remove outliers
+# functions to perform
+rollli_functions <- function(x) {
+  data.frame(  
+    rolled_summary_type = c("roll_mean", "roll_sd"),
+    rolled_summary_value  = c(mean(x), sd(x))
+  )
+}
+# window for half a day
+rolling_summary <- rollify(~ rollli_functions(.x), window = 48, unlist = FALSE)
+
+temp_raw1_rollo <- temp_raw1 %>% 
+  mutate(rollo_soil = rolling_summary(soil_temperature),
+         rollo_ground = rolling_summary(soil_temperature),
+         rollo_air = rolling_summary(soil_temperature)) 
+#saveRDS(temp_raw1_rollo, "temp_raw1_rollo.RDS")
+
+temp_raw1_rollo_unnest <- temp_raw1_rollo %>% 
+  unnest(cols = c(rollo_soil))
+
+filter(!is.na(rolled_summary_type)) %>% 
+  pivot_wider(names_from = rolled_summary_type, values_from = rolled_summary_value)
+
+
+
+
+
+  # make long table
+  pivot_longer(cols = soil_temperature:air_temperature, names_to = "variable", values_to = "value")
   
-    # fix wrong values
+    # Curate data (outliers, logger failure etc)
+    # usually a rolling sd
+
+dd %>% 
+  # fix values with stdev > 2
+  mutate(value = if_else(variable == "soiltemperature" & loggerID %in% c("94195224", "94195230", "94195246", "94195250", "94195256", "94200493", "94200495", "942004939", "94195206", "94195220", "94195251", "94195257") & stdev > 2), NA_real_, value,
+         # Problems at Vikesland stdev > 3
+         value = if_else(variable == "soiltemperature" & loggerID %in% c("94195235", "94195264", "94195263") & stdev > 3), NA_real_, value)
   
 dd <- temp_raw1 %>%
   # remove period with wrong values for this logger
@@ -70,33 +116,24 @@ dd <- temp_raw1 %>%
   mutate(value = if_else(loggerID %in% c("94195209", "94195252", "94195208") & variable %in% c("soil_temperature", "ground_temperature", "air_temperature") & error_flag > 0, NA_real_, value)) %>% 
   # only soil temp needs to be removed
   mutate(value = if_else(loggerID == "94195236" & variable == "soil_temperature" & error_flag > 0, NA_real_, value)) 
+
   
-  # remove when temp diff is too large
-  
+
+# Soil moisture calibration !!!!
+#mutate(value = a * RawSoilmoisture^2 + b * RawSoilmoisture + c) %>% 
 
 
 # Save clean file
 #write_csv(x = TomstLogger_2019_2020, path = "data_cleaned/climate/THREE-D_TomstLogger_2019_2020.csv")
 
 
-# Checking data
-# problem with ending:
-# "94195230", "94195256", "94195230"
 
-# other problems
-# L: "94195224", "94195230", "94195246", "94195250", "94195256", "94200493", "94200495", "942004939"
-# V: "94195235", "94195264", "94195263"
-# J: "94195206", "94195220", "94195251", "94195257"
-  
+
+# Checking data
 dd %>% 
   filter(variable == "soil_temperature") %>% 
-  #filter(destSiteID == "Joa") %>% 
-  filter(loggerID %in% c("94195206", "94195220", "94195251", "94195257")) %>% 
-  # calculate temperature difference between each step to remove obvious spikes
-  mutate(lag_diff = value - lag(value)) %>% 
-  #filter(abs(lag_diff) < 2) %>% 
-  # group_by(day(date_time)) %>% 
-  # mutate(sd = sd(value)) %>% 
+  filter(destSiteID == "Vik") %>% 
+  #filter(loggerID %in% c("94195206", "94195220", "94195251", "94195257")) %>% 
   #filter(date_time > "2020-07-01 08:00:00") %>% 
   ggplot(aes(x = date_time, y = value)) +
   geom_line() +
@@ -104,20 +141,11 @@ dd %>%
   facet_wrap(~ loggerID) +
   theme(legend.position="none")
 
-library("zoo")
-library("tidyquant")
 
-# Custom function to return mean, sd, 95% conf interval
-rolling_functions <- function(x, na.rm = TRUE) {
-  
-  m  <- mean(x, na.rm = na.rm)
-  s  <- sd(x, na.rm = na.rm)
-  hi <- m + 2*s
-  lo <- m - 2*s
-  
-  ret <- c(mean = m, stdev = s, hi.95 = hi, lo.95 = lo) 
-  return(ret)
-}
+
+
+
+
 
 
 # Roll apply using custom stat function
@@ -138,21 +166,11 @@ dd2 %>% filter(!is.na(sd)) %>%
   group_by(loggerID, variable) %>% 
   summarise(min(stdev), max(stdev))
 dd2 %>%
-  filter(stdev < 2) %>% 
-  ggplot(aes(x = date_time)) +
-  # Data
-  geom_line(aes(y = value), color = "grey40", alpha = 0.5) +
-  geom_ribbon(aes(ymin = lo.95, ymax = hi.95), alpha = 0.4) +
-  geom_point(aes(y = mean), linetype = 3, size = 0.1, alpha = 0.5) +
-  # Aesthetics
-  scale_color_tq(theme = "light") +
-  g
-  theme_tq() +
-  theme(legend.position="none")
-  
-dd2 %>% 
-  ggplot(aes(x = date_time, y = stdev)) +
-  geom_line(color = "grey40", alpha = 0.5)
+  filter(loggerID %in% c("94195235", "94195264", "94195263")) %>% 
+  #filter(date_time > "2020-06-15 08:00:00") %>% 
+  ggplot(aes(x = date_time, y = value, colour = stdev > 3)) +
+  geom_line() +
+  facet_wrap(~ loggerID)
 
 
 

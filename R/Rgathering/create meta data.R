@@ -79,7 +79,7 @@ metaTurfID <- left_join(
                                 turfID == "24 WN5N 103" ~ "Joa",
                                 TRUE ~ destSiteID))
 
-#write_xlsx(metaTurfID, path = "metaTurfID_24-7-19.xlsx", col_names = TRUE)
+#write_xlsx(metaTurfID, path = "metaTurfID.xlsx", col_names = TRUE)
 
 
 
