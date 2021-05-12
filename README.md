@@ -524,16 +524,21 @@ Three-D setup.
 
 **Soil sampling for CN stocks, pH, soil organic matter and soil
 texture** In summer 2019, two soil samples were collected from each
-blocks, but outside the plots. The soil samples of 5 cm diameter and 4 -
-8 cm deep were taken. One sample was taken from the upper organic layer,
-and another one from the lower part of the soil. In 2020, 5 soil samples
-per site were taken using the same method for CN stocks. The soil
-samples were stored in the fridge (4°C) until further use.
+block, but outside the plots to avoid destructive sampling. The soil
+samples were 5 cm in diameter and 4 - 8 cm deep. The whole soil depth
+was sampled, and each soil sample contained one sample from the upper
+organic layer, and if possible another sample from the lower mineral
+part of the soil. In 2020, 5 soil samples per site (in between the
+blocks) were taken using the same method for CN stocks. The soil samples
+were stored in the fridge (4°C) until further use.
 
-The soils samples were dried at 60°C for 24h and sieved with a 2mm
-sieve. Each soil sample was weighed before and after drying to measure
-the water stored in each sample. Stones and larger roots were sorted and
-weighed.
+The soils samples were dried at 60°C for 24h and sieved with a 2mm sieve
+to remove stones and roots. Each soil sample was weighed before and
+after drying to measure the water stored in each sample. Stones and
+larger roots were also weighed.
+
+These soil samples were used to measure soil pH, soil organic matter,
+bulk density, C and N content and soil structure.
 
 **Soil pH** The pH was measured in a soil water solution. The soil:water
 ratio depends on the amount of organic matter in the soil with a ratio
@@ -542,8 +547,8 @@ described here is based upon that employed by the Soil Survey of England
 and Wales (Avery & Bascomb, 1974) and by the Countryside Survey (Emmett
 et al., 2010).
 
-The pH meter was calibrated in a buffer solutions of pH 4, 7 and 9 and
-was regularly checked again after some samples.
+The pH meter was calibrated in a buffer solutions of pH 4, 7 and 9 every
+10th samples.
 
 10 g of fresh field-moist soil was weighed into a 50 ml plastic pH
 beaker. 50 ml of deionised water was added and the suspension was
@@ -553,14 +558,14 @@ calibrated pH meter.
 
 **Soil organic matter** (Hidden Cost protocol) To measure soil organic
 matter (SOM), we used the method described by Ball(1964). 10 g of fresh
-soil was weight into a cup. The soil was then dried for 16h at 105°C.
-The soil was weighed again. Then the sample was placed in a furnace for
-6h at 550 °C. The soil was weighed again. The sample was burned a second
-time at 950°C for 1h and weight recorded after cooling period in the
-desiccator
+soil was weighed into a cup. The soil was then dried for 16h at 105°C
+and weighed. Then the sample was placed in a furnace for 6h at 550 °C
+and weighed. The sample was burned a second time at 950°C for 1h and
+weight. Each weight was recorded and all the weighing was done after a
+cooling period in the desiccator.
 
 SOM is defined as the difference in the weight between the dried and
-burned soil.
+burned soil (at 550°C).
 
 The weight loss when the samples are dried at 105 °C (wet weight - dry
 weight) represents of the amount of pore-water held within the sample.
@@ -571,6 +576,26 @@ loss between 550 and 950°C is representative of the amount of
 CO<sub>2</sub> released from the sample.
 
 **Bulk density**
+
+Bulk density is a measure of the amount of soil per unit volume of oven
+dried soil and gives information on the physical status of the soil.
+
+Soil cores with known volume, that have been sieved (see above) were
+used. The stones and roots (\> 2mm) were removed and weighed separately.
+The soil samples are dried at 65°C and then weighed.
+
+Dry bulk density was calculated using the following equation:
+
+Bulk density (g/cm) = (dry weight core (g) - stone weight (g)) / (core
+volume (cm3) - stone volume (cm3))
+
+stone density (\~2.65 g cm–³) = stone mass (g) / stone volume (cm3)
+
+**C and N content** The C and N content was measured from dried and well
+mixed subsample of each soil sample, excluding large roots and stones
+(excluding particles \> 2mm). The measurement was done at NMBU in Ås.
+Measurements of soil C and N were done by dry combustion (Matejovic,
+1997; Senesi & Senesi, 2016).
 
 **Soil Texture**
 
@@ -628,8 +653,8 @@ temperature (°C, Temperature)
 | origBlockID   | numeric       | 1 - 10                                                                                                                                                       | 1-10                  | Unique origin block ID as number 1 to 10                                                                    | defined       |
 | origPlotID    | numeric       | 1 - 160                                                                                                                                                      | 1                     | Unique numeric origin plot ID for geographic location of the turf                                           | defined       |
 | destSiteID    | categorical   | Joa - Vik                                                                                                                                                    | Vikesland             | Unique site ID of destination site                                                                          | defined       |
-| destPlotID    | numeric       | 2 - 200                                                                                                                                                      | 81                    | Unique destination block ID as number 1 to 10                                                               | defined       |
 | destBlockID   | numeric       | 1 - 10                                                                                                                                                       | 1-10                  | Unique numeric destination plot ID for geographic location of the turf                                      | defined       |
+| destPlotID    | numeric       | 2 - 200                                                                                                                                                      | 81                    | Unique destination block ID as number 1 to 10                                                               | defined       |
 | turfID        | categorical   | 1 WN1M 84 - 99 WN5C 170                                                                                                                                      | 81 AN1C 81            | Unique ID of vegetation turf as originplotID, warming, nitrogen and grazing treatment and destinationplotID | defined       |
 | warming       | categorical   | A - W                                                                                                                                                        | A or W                | Warming treatment as W for warming or A for ambient                                                         | defined       |
 | grazing       | categorical   | C - N                                                                                                                                                        | C, I, M, N            | Grazing treatment as C for control, I for intensive, M for medium and N for natural grazing                 | defined       |
@@ -637,37 +662,37 @@ temperature (°C, Temperature)
 | date          | NA            | NA                                                                                                                                                           | dd-mm-yyyy            | Date of sampling                                                                                            | defined       |
 | year          | numeric       | 2019 - 2020                                                                                                                                                  | 2019                  | Year of the sampling                                                                                        | defined       |
 | species       | categorical   | Achillea millefolium - Viola palustris                                                                                                                       | Achillea millefolium  | Latin genus and species name                                                                                | identified    |
-| recorder      | categorical   | aud - vigdis                                                                                                                                                 | aud                   | Name of person that recorded the data                                                                       | recorded      |
-| file          | categorical   | data/community//2019/Joa/THREE-D\_CommunityData\_Joasete\_1\_2019.xlsx - data/community//2020/Vik/THREE-D\_CommunityData\_Vikesland\_4\_2020\_iPad copy.xlsx | data/community/2019/… | name of file of raw data                                                                                    | recorded      |
 | cover         | numeric       | 1 - 80                                                                                                                                                       | percentage            | Percent cover of a species in a turf                                                                        | measured      |
+| recorder      | categorical   | aud - vigdis                                                                                                                                                 | aud                   | Name of person that recorded the data                                                                       | recorded      |
+| scribe        | categorical   | NA - NA                                                                                                                                                      | NA                    | NA                                                                                                          | NA            |
+| remark        | categorical   | NA - NA                                                                                                                                                      | NA                    | Comment                                                                                                     | NA            |
+| file          | categorical   | data/community//2019/Joa/THREE-D\_CommunityData\_Joasete\_1\_2019.xlsx - data/community//2020/Vik/THREE-D\_CommunityData\_Vikesland\_4\_2020\_iPad copy.xlsx | data/community/2019/… | name of file of raw data                                                                                    | recorded      |
 
 #### Plant community presence
 
-| Variable name | Variable type | Variable range or levels                                                                                                                                     | unit                  | description                                                                                                 | how\_measured |
-| :------------ | :------------ | :----------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------- | :---------------------------------------------------------------------------------------------------------- | :------------ |
-| origSiteID    | categorical   | Joa - Lia                                                                                                                                                    | Vikesland             | Unique site ID of origin site                                                                               | defined       |
-| origBlockID   | numeric       | 1 - 10                                                                                                                                                       | 1-10                  | Unique origin block ID as number 1 to 10                                                                    | defined       |
-| origPlotID    | numeric       | 1 - 160                                                                                                                                                      | 1                     | Unique numeric origin plot ID for geographic location of the turf                                           | defined       |
-| destSiteID    | categorical   | Joa - Vik                                                                                                                                                    | Vikesland             | Unique site ID of destination site                                                                          | defined       |
-| destBlockID   | numeric       | 1 - 10                                                                                                                                                       | 1-10                  | Unique numeric destination plot ID for geographic location of the turf                                      | defined       |
-| destPlotID    | numeric       | 2 - 200                                                                                                                                                      | 81                    | Unique destination block ID as number 1 to 10                                                               | defined       |
-| turfID        | categorical   | 1 WN1M 84 - 99 WN5C 170                                                                                                                                      | 81 AN1C 81            | Unique ID of vegetation turf as originplotID, warming, nitrogen and grazing treatment and destinationplotID | defined       |
-| warming       | categorical   | A - W                                                                                                                                                        | A or W                | Warming treatment as W for warming or A for ambient                                                         | defined       |
-| grazing       | categorical   | C - N                                                                                                                                                        | C, I, M, N            | Grazing treatment as C for control, I for intensive, M for medium and N for natural grazing                 | defined       |
-| Nlevel        | numeric       | 1 - 10                                                                                                                                                       | 1-10                  | Nitrogen level treatment as numeric value from 1 - 10                                                       | defined       |
-| date          | date          | 2019-07-02 - 2020-08-06                                                                                                                                      | dd-mm-yyyy            | Date of sampling                                                                                            | defined       |
-| year          | numeric       | 2019 - 2020                                                                                                                                                  | 2019                  | Year of the sampling                                                                                        | defined       |
-| species       | categorical   | Achillea millefolium - Viola palustris                                                                                                                       | Achillea millefolium  | Latin genus and species name                                                                                | identified    |
-| cover         | numeric       | NA - NA                                                                                                                                                      | percentage            | Percent cover of a species in a turf                                                                        | measured      |
-| recorder      | categorical   | aud - vigdis                                                                                                                                                 | aud                   | Name of person that recorded the data                                                                       | recorded      |
-| remark        | categorical   | NA - NA                                                                                                                                                      | NA                    | Comment                                                                                                     | NA            |
-| file          | categorical   | data/community//2019/Joa/THREE-D\_CommunityData\_Joasete\_1\_2019.xlsx - data/community//2020/Vik/THREE-D\_CommunityData\_Vikesland\_4\_2020\_iPad copy.xlsx | data/community/2019/… | name of file of raw data                                                                                    | recorded      |
-| subplot       | numeric       | 1 - 25                                                                                                                                                       | 1-25                  | Location of subturf within the turf                                                                         | defined       |
-| presence      | numeric       | 0 - 1                                                                                                                                                        | 0-1                   | Presence of species                                                                                         | measured      |
-| fertile       | numeric       | 0 - 1                                                                                                                                                        | 0-1                   | Presence of fertile                                                                                         | measured      |
-| dominant      | numeric       | 0 - 1                                                                                                                                                        | 0-1                   | Species cover more than 50 percent of subturf                                                               | measured      |
-| juvenile      | numeric       | 0 - 1                                                                                                                                                        | 0-1                   | Presence of juveniles that are not fully grown plants                                                       | measured      |
-| seedling      | numeric       | 0 - 1                                                                                                                                                        | NA                    | NA                                                                                                          | NA            |
+| Variable name | Variable type | Variable range or levels               | unit                  | description                                                                                                 | how\_measured |
+| :------------ | :------------ | :------------------------------------- | :-------------------- | :---------------------------------------------------------------------------------------------------------- | :------------ |
+| scribe        | categorical   | NA - NA                                | NA                    | NA                                                                                                          | NA            |
+| file          | categorical   | NA - NA                                | data/community/2019/… | name of file of raw data                                                                                    | recorded      |
+| year          | numeric       | 2019 - 2020                            | 2019                  | Year of the sampling                                                                                        | defined       |
+| date          | date          | NA - NA                                | dd-mm-yyyy            | Date of sampling                                                                                            | defined       |
+| origSiteID    | categorical   | Joa - Lia                              | Vikesland             | Unique site ID of origin site                                                                               | defined       |
+| origBlockID   | numeric       | 1 - 10                                 | 1-10                  | Unique origin block ID as number 1 to 10                                                                    | defined       |
+| origPlotID    | numeric       | 1 - 160                                | 1                     | Unique numeric origin plot ID for geographic location of the turf                                           | defined       |
+| destSiteID    | categorical   | Joa - Vik                              | Vikesland             | Unique site ID of destination site                                                                          | defined       |
+| destBlockID   | numeric       | 1 - 10                                 | 1-10                  | Unique numeric destination plot ID for geographic location of the turf                                      | defined       |
+| destPlotID    | numeric       | 2 - 200                                | 81                    | Unique destination block ID as number 1 to 10                                                               | defined       |
+| turfID        | categorical   | 1 WN1M 84 - 99 WN5C 170                | 81 AN1C 81            | Unique ID of vegetation turf as originplotID, warming, nitrogen and grazing treatment and destinationplotID | defined       |
+| warming       | categorical   | A - W                                  | A or W                | Warming treatment as W for warming or A for ambient                                                         | defined       |
+| grazing       | categorical   | C - N                                  | C, I, M, N            | Grazing treatment as C for control, I for intensive, M for medium and N for natural grazing                 | defined       |
+| Nlevel        | numeric       | 1 - 10                                 | 1-10                  | Nitrogen level treatment as numeric value from 1 - 10                                                       | defined       |
+| subplot       | numeric       | 1 - 25                                 | 1-25                  | Location of subturf within the turf                                                                         | defined       |
+| species       | categorical   | Achillea millefolium - Viola palustris | Achillea millefolium  | Latin genus and species name                                                                                | identified    |
+| variable      | categorical   | cover - seedling                       | temperture            | Climate logger                                                                                              | defined       |
+| variable      | categorical   | cover - seedling                       | °C                    | Climate logger                                                                                              | defined       |
+| value         | numeric       | NA - NA                                | numeric value         | Value for climate data                                                                                      | measured      |
+| remark        | date          | NA                                     | NA                    | Comment                                                                                                     | NA            |
+| recorder      | categorical   | NA - NA                                | aud                   | Name of person that recorded the data                                                                       | recorded      |
 
 #### Plant community structure
 
@@ -751,6 +776,7 @@ temperature (°C, Temperature)
 
 | Variable name   | Variable type | Variable range or levels | unit       | description                                                                                                 | how\_measured |
 | :-------------- | :------------ | :----------------------- | :--------- | :---------------------------------------------------------------------------------------------------------- | :------------ |
+| year            | numeric       | 2019 - 2019              | 2019       | Year of the sampling                                                                                        | defined       |
 | origSiteID      | categorical   | Joa - Lia                | Vikesland  | Unique site ID of origin site                                                                               | defined       |
 | origBlockID     | numeric       | 1 - 10                   | 1-10       | Unique origin block ID as number 1 to 10                                                                    | defined       |
 | origPlotID      | numeric       | 1 - 160                  | 1          | Unique numeric origin plot ID for geographic location of the turf                                           | defined       |
@@ -758,16 +784,15 @@ temperature (°C, Temperature)
 | destPlotID      | numeric       | 2 - 200                  | 81         | Unique destination block ID as number 1 to 10                                                               | defined       |
 | destBlockID     | numeric       | 1 - 10                   | 1-10       | Unique numeric destination plot ID for geographic location of the turf                                      | defined       |
 | turfID          | categorical   | 1 WN1M 84 - 99 WN5C 170  | 81 AN1C 81 | Unique ID of vegetation turf as originplotID, warming, nitrogen and grazing treatment and destinationplotID | defined       |
+| warming         | categorical   | A - W                    | A or W     | Warming treatment as W for warming or A for ambient                                                         | defined       |
+| grazing         | categorical   | C - N                    | C, I, M, N | Grazing treatment as C for control, I for intensive, M for medium and N for natural grazing                 | defined       |
+| Nlevel          | numeric       | 1 - 10                   | 1-10       | Nitrogen level treatment as numeric value from 1 - 10                                                       | defined       |
 | date\_slope     | categorical   | 04.07.19 - 17.07.19      | dd-mm-yyyy | Date of sampling of slope and aspect                                                                        | defined       |
 | slope           | numeric       | 0.3 - 280                | degree     | Slope of the plot                                                                                           | measured      |
 | exposure        | numeric       | 2 - 380                  | NA         | NA                                                                                                          | NA            |
 | date\_depth     | categorical   | 17.07.19 - 24.06.19      | dd-mm-yyyy | Date of sampling of soil depth                                                                              | defined       |
-| remark          | categorical   | NA - NA                  | NA         | Comment                                                                                                     | NA            |
-| warming         | categorical   | A - W                    | A or W     | Warming treatment as W for warming or A for ambient                                                         | defined       |
-| grazing         | categorical   | C - N                    | C, I, M, N | Grazing treatment as C for control, I for intensive, M for medium and N for natural grazing                 | defined       |
-| Nlevel          | numeric       | 1 - 10                   | 1-10       | Nitrogen level treatment as numeric value from 1 - 10                                                       | defined       |
 | soil\_depth\_cm | numeric       | 4.625 - 36.1             | cm         | Soil depth                                                                                                  | measured      |
-| year            | numeric       | 2019 - 2019              | 2019       | Year of the sampling                                                                                        | defined       |
+| remark          | categorical   | NA - NA                  | NA         | Comment                                                                                                     | NA            |
 
 #### Soil texture, pH, bulk density, SOM
 

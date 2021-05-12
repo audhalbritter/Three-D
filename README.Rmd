@@ -425,23 +425,24 @@ The function `flux.calc` calculates the flux with default values for Three-D set
 
 
 
-**Soil sampling for CN stocks, pH, soil organic matter and soil texture** In summer 2019, two soil samples were collected from each blocks, but outside the plots.
-The soil samples of 5 cm diameter and 4 - 8 cm deep were taken.
-One sample was taken from the upper organic layer, and another one from the lower part of the soil.
-In 2020, 5 soil samples per site were taken using the same method for CN stocks.
+**Soil sampling for CN stocks, pH, soil organic matter and soil texture** In summer 2019, two soil samples were collected from each block, but outside the plots to avoid destructive sampling.
+The soil samples were 5 cm in diameter and 4 - 8 cm deep.
+The whole soil depth was sampled, and each soil sample contained one sample from the upper organic layer, and if possible another sample from the lower mineral part of the soil.
+In 2020, 5 soil samples per site (in between the blocks) were taken using the same method for CN stocks.
 The soil samples were stored in the fridge (4°C) until further use.
 
-The soils samples were dried at 60°C for 24h and sieved with a 2mm sieve.
+The soils samples were dried at 60°C for 24h and sieved with a 2mm sieve to remove stones and roots.
 Each soil sample was weighed before and after drying to measure the water stored in each sample.
-Stones and larger roots were sorted and weighed.
+Stones and larger roots were also weighed.
 
+These soil samples were used to measure soil pH, soil organic matter, bulk density, C and N content and soil structure.
 
 
 **Soil pH** The pH was measured in a soil water solution.
 The soil:water ratio depends on the amount of organic matter in the soil with a ratio of soil to water of 1:2.5 to 1:5 by weight for mineral soil.
 The method described here is based upon that employed by the Soil Survey of England and Wales (Avery & Bascomb, 1974) and by the Countryside Survey (Emmett et al., 2010).
 
-The pH meter was calibrated in a buffer solutions of pH 4, 7 and 9 and was regularly checked again after some samples.
+The pH meter was calibrated in a buffer solutions of pH 4, 7 and 9 every 10th samples.
 
 10 g of fresh field-moist soil was weighed into a 50 ml plastic pH beaker.
 50 ml of deionised water was added and the suspension was stirred thoroughly.
@@ -450,13 +451,13 @@ After 30 minutes of waiting and occasionally stirring, the soil pH was measured 
 
 **Soil organic matter** (Hidden Cost protocol)
 To measure soil organic matter (SOM), we used the method described by Ball(1964).
-10 g of fresh soil was weight into a cup. The soil was then dried for 16h at 105°C.
-The soil was weighed again.
-Then the sample was placed in a furnace for 6h at 550 °C.
-The soil was weighed again.
-The sample was burned a second time at 950°C for 1h and weight recorded after cooling period in the desiccator
+10 g of fresh soil was weighed into a cup.
+The soil was then dried for 16h at 105°C and weighed.
+Then the sample was placed in a furnace for 6h at 550 °C and weighed.
+The sample was burned a second time at 950°C for 1h and weight.
+Each weight was recorded and all the weighing was done after a cooling period in the desiccator.
 
-SOM is defined as the difference in the weight between the dried and burned soil.
+SOM is defined as the difference in the weight between the dried and burned soil (at 550°C).
 
 The weight loss when the samples are dried at 105 °C (wet weight - dry weight) represents of the amount of pore-water held within the sample.
 The percentage of water should be expressed as a proportion of the wet weight.
@@ -467,7 +468,23 @@ The weight loss between 550 and 950°C is representative of the amount of CO~2~ 
 
 **Bulk density** 
 
+Bulk density is a measure of the amount of soil per unit volume of oven dried soil and gives information on the physical status of the soil.
 
+Soil cores with known volume, that have been sieved (see above) were used.
+The stones and roots (> 2mm) were removed and weighed separately.
+The soil samples are dried at 65°C and then weighed.
+
+Dry bulk density was calculated using the following equation:
+
+Bulk density (g/cm) = (dry weight core (g) - stone weight (g)) / (core volume (cm3) - stone volume (cm3))
+
+stone density (~2.65 g cm–³) = stone mass (g) / stone volume (cm3)
+
+
+**C and N content** 
+The C and N content was measured from dried and well mixed subsample of each soil sample, excluding large roots and stones (excluding particles > 2mm).
+The measurement was done at NMBU in Ås.
+Measurements of soil C and N were done by dry combustion (Matejovic, 1997; Senesi & Senesi, 2016).
 
 
 **Soil Texture** 
