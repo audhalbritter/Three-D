@@ -26,7 +26,6 @@ duplicate_problem = tribble(
 #68 AN9I 68 
 #72 AN9N 72 
 
-source()
 # impute subplot values that have been removed by removing duplicates
 subplot_missing = tribble(
   ~year, ~turfID, ~species, ~subplot, ~variable, ~value,

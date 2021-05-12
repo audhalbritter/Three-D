@@ -294,10 +294,10 @@ community <- metaComm %>%
   rename(date = Date, year = Year, species = Species, cover = Cover, recorder = Recorder, scribe = Scribe, remark = Remark) %>% 
   
   # # check for subplot level data
-  community %>% 
-  # summarize cover from species that have been merged
-  group_by(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID, warming, grazing, Nlevel, year, species) %>%
-  mutate(n = n()) %>% filter(n > 1) %>% View()
+  # community %>% 
+  # # summarize cover from species that have been merged
+  # group_by(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID, warming, grazing, Nlevel, year, species) %>%
+  # mutate(n = n()) %>% filter(n > 1) %>% View()
   
   # remove duplicate species that differ in cover. Duplcated because species name was changed (11 cases with very low cover (1-6), no need in changing cover estimate).
   anti_join(duplicate_problem, by = c("year", "turfID", "species", "cover")) %>% 
@@ -354,11 +354,11 @@ CommunityStructure <- community %>%
 write_csv(CommunityStructure, path = "data_cleaned/vegetation/THREE-D_CommunityStructure_2019_2020.csv", col_names = TRUE)
 
 
-
-community %>% 
-  # summarize cover from species that have been merged
-  group_by(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID, warming, grazing, Nlevel, year, species) %>% 
-  mutate(n = n()) %>% filter(n > 1) %>% View()
+# 
+# community %>% 
+#   # summarize cover from species that have been merged
+#   group_by(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID, warming, grazing, Nlevel, year, species) %>% 
+#   mutate(n = n()) %>% filter(n > 1) %>% View()
 
 
 # subplot level data
