@@ -31,7 +31,7 @@ plotMetaData <- read_csv(file = "data/soil/Three-D_PlotLevel_MetaData_2019.csv")
   mutate(soil_depth_cm = (soil_depth1 + soil_depth2 + soil_depth3 + soil_depth4) / 4,
          soil_depth_cm = if_else(origPlotID == 106, 36.1, soil_depth_cm),
          year = 2019) %>% 
-  select(-soil_depth1, -soil_depth2, -soil_depth3, -soil_depth4)
+  select(year, origSiteID:turfID, warming:Nlevel, date_slope:date_depth, soil_depth_cm, remark)
 
 write_csv(plotMetaData, path = "data_cleaned/soil/THREE-D_PlotLevel_Depth_2019.csv")
 
