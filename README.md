@@ -54,16 +54,16 @@ The specific research questions of the THREE-D project are:
 
 The study is conducted in three semi-natural grassland sites in western
 Norway and the eastern edge of the Himalaya in Gongga Mountain, Sichuan
-in China. The sites are location on calcareous soil in Norway, and on
-mountain grey-brown soil in China. The sites were chosen to fit within
-an elevational gradient with three temperature levels that differ in
-c. 400 m elevation, a temperature difference of approximately 2°C in
-summer temperature (Figure 1). The sites correspond to the alpine,
-sub-alpine and boreal biogeographic zones in Norway and subalpine to
-alpine grasslands in China. Other factors such as grazing regime and
-history, bedrock, vegetation type and structure, slope and exposure were
-kept as constant as possible among the selected sites within each
-country.
+in China. The sites are location on calcareous soil (loamy sand) in
+Norway, and on mountain grey-brown soil in China. The sites were chosen
+to fit within an elevational gradient with three temperature levels that
+differ in c. 400 m elevation, a temperature difference of approximately
+2°C in summer temperature (Figure 1). The sites correspond to the
+alpine, sub-alpine and boreal biogeographic zones in Norway and
+subalpine to alpine grasslands in China. Other factors such as grazing
+regime and history, bedrock, vegetation type and structure, slope and
+exposure were kept as constant as possible among the selected sites
+within each country.
 
 <div class="figure">
 
@@ -85,18 +85,19 @@ areas.
 
 </div>
 
-| Site | Latitude | Longitude | Layer  | Bulk density | SOM         | Carbon content | C%           | N%          | pH          |
-| :--- | -------: | --------: | :----- | :----------- | :---------- | :------------- | :----------- | :---------- | :---------- |
-| Vik  | 60.88019 |   7.16990 | Top    | 0.47 ± 0.04  | 0.34 ± 0.01 | 0.01 ± 0       | 16.74 ± 0.78 | 1.26 ± 0.05 | 4.24 ± 0.01 |
-| Vik  | 60.88019 |   7.16990 | Bottom | 0.48 ± NA    | 0.12 ± 0    | 0.01 ± 0       | 10.81 ± 2.77 | 0.82 ± 0.18 | NaN ± NA    |
-| Joa  | 60.86183 |   7.16800 | Top    | 0.72 ± 0.08  | 0.27 ± 0.05 | 0.01 ± 0       | 12.93 ± 0.93 | 1.03 ± 0.07 | 4.5 ± 0.05  |
-| Joa  | 60.86183 |   7.16800 | Bottom | 0.92 ± 0.06  | 0.11 ± 0.01 | 0.01 ± 0       | 7.1 ± 0.78   | 0.62 ± 0.07 | NaN ± NA    |
-| Lia  | 60.85994 |   7.19504 | Top    | 0.31 ± 0.05  | 0.62 ± 0.06 | 0.01 ± 0       | 27.61 ± 3.22 | 2.04 ± 0.24 | 5.16 ± 0.11 |
-| Lia  | 60.85994 |   7.19504 | Bottom | 0.39 ± 0.05  | 0.33 ± 0.05 | 0.02 ± 0       | 15.05 ± 1.7  | 1.22 ± 0.13 | NaN ± NA    |
+| Site | Elevation | Latitude | Longitude | Layer  | Bulk density | Sand %       | Silt %      | Clay % | SOM         | Carbon content | C%           | N%          | pH          |
+| :--- | --------: | -------: | --------: | :----- | :----------- | :----------- | :---------- | -----: | :---------- | :------------- | :----------- | :---------- | :---------- |
+| Vik  |       469 | 60.88019 |   7.16990 | Top    | 0.47 ± 0.04  | 91.96 ± 1.77 | 7.13 ± 1.72 |   0.92 | 0.34 ± 0.01 | 0.01 ± 0       | 16.74 ± 0.78 | 1.26 ± 0.05 | 4.24 ± 0.01 |
+| Vik  |       469 | 60.88019 |   7.16990 | Bottom | 0.48 ± NA    | 91.96 ± 1.83 | 7.13 ± 1.78 |   0.92 | 0.12 ± 0    | 0.01 ± 0       | 10.81 ± 2.77 | 0.82 ± 0.18 | NA          |
+| Joa  |       920 | 60.86183 |   7.16800 | Top    | 0.72 ± 0.08  | 90.58 ± 1.4  | 8.77 ± 1.32 |   0.65 | 0.27 ± 0.05 | 0.01 ± 0       | 12.93 ± 0.93 | 1.03 ± 0.07 | 4.5 ± 0.05  |
+| Joa  |       920 | 60.86183 |   7.16800 | Bottom | 0.92 ± 0.06  | 90.58 ± 1.4  | 8.77 ± 1.32 |   0.65 | 0.11 ± 0.01 | 0.01 ± 0       | 7.1 ± 0.78   | 0.62 ± 0.07 | NA          |
+| Lia  |      1290 | 60.85994 |   7.19504 | Top    | 0.31 ± 0.05  | 91.67 ± NA   | 7.5 ± NA    |   0.84 | 0.62 ± 0.06 | 0.01 ± 0       | 27.61 ± 3.22 | 2.04 ± 0.24 | 5.16 ± 0.11 |
+| Lia  |      1290 | 60.85994 |   7.19504 | Bottom | 0.39 ± 0.05  | 91.67 ± NA   | 7.5 ± NA    |   0.84 | 0.33 ± 0.05 | 0.02 ± 0       | 15.05 ± 1.7  | 1.22 ± 0.13 | NA          |
 
-Table 1: Site level information including site name, coordinates,
-elevaiton, bulk density (g/cm), soil organic matter (SOM), carbon
-content, carbon and nitrogen stocks and pH.
+Table 1: Site level information including site name, elevaiton,
+coordinates, bulk density (g/cm), soil texture (percentage sand, silt
+and clay), soil organic matter (SOM), carbon content, carbon and
+nitrogen stocks and pH.
 
 We chose species rich grasslands, that were large enough to contain 80
 50 x 50 cm plots and relatively flat to avoid contamination between the
@@ -326,11 +327,13 @@ on OSF:
 | Species presence                 | 2019 - 2020 | Subplot   | THREE-D\_CommunitySubplot\_2019\_2020.csv      |
 | Plant functional group cover     | 2019 - 2020 | Plot      | THREE-D\_CommunityStructure\_2019\_2020.csv    |
 | Ecosystem fluxes                 | 2020        | Plot      | Three-D\_c-flux\_2020.csv                      |
-| Soil respiration                 | 2021?       | Plot/Site | Three-D\_c-flux\_2020.csv                      |
+| Soil respiration                 | 2021        | Plot/Site | Three-D\_c-flux\_2020.csv                      |
 | **Vegetation**                   |             |           |                                                |
 | Vegetation height                | 2019 - 2020 | Plot      | THREE-D\_Height\_2019\_2020.csv                |
 | Aboveground biomass              | 2019 - 2020 | Plot      | THREE-D\_Biomass\_2020.csv                     |
-| Plant productivity               | ???         | Plot      | xxx                                            |
+| Belowground biomass              | 2021        | Plot      | xxx                                            |
+| Aboveground plant productivity   | 2021        | Plot      | xxx                                            |
+| Belowground plant productivity   | 2021        | Plot      | xxx                                            |
 | Reflectance                      | 2020        | Plot      | THREE-D\_Reflectance\_2020.csv                 |
 | **Soil**                         |             |           |                                                |
 | Soil depth                       | 2019        | Plot      | THREE-D\_PlotLevel\_Depth\_2019.csv            |
@@ -339,9 +342,8 @@ on OSF:
 | Soil pH                          | 2019        | Site      | THREE-D\_Soil\_2019-2020.csv                   |
 | Soil organic matter              | 2019        | Block     | THREE-D\_Soil\_2019-2020.csv                   |
 | Soil C and N stocks              | 2019 - 2020 | Site      | THREE-D\_Soil\_2019-2020.csv                   |
-| Soil nutrients                   | ???         | Site      | xxx                                            |
-| Decomposition                    | ???         | Plot      | xxx                                            |
-| Carbon uptake (root growth)      | ???         | Plot      | xxx                                            |
+| Soil nutrients                   | 2021        | Site      | xxx                                            |
+| Decomposition                    | 2021        | Plot      | xxx                                            |
 | **Climate**                      |             |           |                                                |
 | Air, ground and soil temperature | 2019 - 2020 | Plot      | THREE-D\_TomstLogger\_2019\_2020.csv           |
 | Soil moisture                    | 2019 - 2020 | Plot      | THREE-D\_TomstLogger\_2019\_2020.csv           |
@@ -591,13 +593,32 @@ volume (cm3) - stone volume (cm3))
 
 stone density (\~2.65 g cm–³) = stone mass (g) / stone volume (cm3)
 
+**Soil Texture** Soil texture was measured using the particle size
+analysis (REF). We used 3 soil samples per site (mixing top and bottom
+layer), that were dried and where stones and roots have been removed. A
+jar was filled with one third of soil and 2 thirds of water plus some
+dishwashing powder. The solution was mixed thoroughly for several
+seconds. After 1 minute, the height of the layer (sand) that set was
+marked on the jar. After 2 hours, the height of the next layer (silt)
+was marked on the jar. Finally, after 48 hours the last layer (clay) was
+also marked on the jar.
+
+The height of each layer was used to calculate the proportion of sand,
+silt and clay in the soil sample. The soil type was then defined by
+using the soil texture triangle.
+
+<!-- Cannot find this ref! -->
+
+Bowman GM and Hutka J (2002) Particle Size Analysis. In Soil Physical
+Measurement and Interpretation for Land Evaluation (Eds N McKenzie, K
+Coughlan, H Cresswell) pp 224-239. CSIRO Publishing: Victoria. (method:
+<https://hgic.clemson.edu/factsheet/soil-texture-analysis-the-jar-test/>)
+
 **C and N content** The C and N content was measured from dried and well
 mixed subsample of each soil sample, excluding large roots and stones
 (excluding particles \> 2mm). The measurement was done at NMBU in Ås.
 Measurements of soil C and N were done by dry combustion (Matejovic,
 1997; Senesi & Senesi, 2016).
-
-**Soil Texture**
 
 **Climate data** Temperature was measured continuously (every 15 min) at
 three heights (15 cm, at ground level, and 5 cm below ground) and soil
@@ -634,6 +655,12 @@ temperature (°C, Temperature)
 | layer                     | categorical   | Bottom - Top                              | top        | Layer at which soil sample was taken: top or bottom 5cm | defined       |
 | bulk\_density\_se         | numeric       | 0.0354977932720117 - 0.0763008350515654   | NA         | Standard deviation for bulk density                     | measured      |
 | bulk\_density\_g\_cm      | numeric       | 0.308566003620947 - 0.9186359822776       | g\_cm      | Bulk density                                            | measured      |
+| sand\_se                  | numeric       | 1.40050240959657 - 1.83144933502523       | NA         | NA                                                      | NA            |
+| sand\_percent             | numeric       | 90.5808080808081 - 91.9590643274854       | percentage | Percentage of sand                                      | measured      |
+| silt\_se                  | numeric       | 1.32404288796134 - 1.78448149075234       | NA         | NA                                                      | NA            |
+| silt\_percent             | numeric       | 7.13450292397661 - 8.77380952380953       | percentage | Percentage of clay                                      | measured      |
+| clay\_se                  | numeric       | 0.0801333787052576 - 0.0829459271973544   | NA         | NA                                                      | NA            |
+| clay\_percent             | numeric       | 0.650234754476752 - 0.915361503576373     | percentage | Percentage of silt                                      | measured      |
 | soil\_organic\_matter\_se | numeric       | 0.00485375837365208 - 0.0584435476188698  | NA         | Standard deviation for soil organic matter              | measured      |
 | soil\_organic\_matter     | numeric       | 0.112320812496602 - 0.620930035989389     | percentage | Soil organic matter                                     | measured      |
 | carbon\_content\_se       | numeric       | 0.000290271928794042 - 0.0010393780518453 | NA         | Standard deviaiton for carbon content                   | measured      |
@@ -650,15 +677,15 @@ temperature (°C, Temperature)
 | Variable name | Variable type | Variable range or levels                                                                                                                                     | unit                  | description                                                                                                 | how\_measured |
 | :------------ | :------------ | :----------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------- | :---------------------------------------------------------------------------------------------------------- | :------------ |
 | origSiteID    | categorical   | Joa - Lia                                                                                                                                                    | Vikesland             | Unique site ID of origin site                                                                               | defined       |
-| origBlockID   | numeric       | 1 - 10                                                                                                                                                       | 1-10                  | Unique origin block ID as number 1 to 10                                                                    | defined       |
+| origBlockID   | numeric       | 1 - 10                                                                                                                                                       | 01.Oct                | Unique origin block ID as number 1 to 10                                                                    | defined       |
 | origPlotID    | numeric       | 1 - 160                                                                                                                                                      | 1                     | Unique numeric origin plot ID for geographic location of the turf                                           | defined       |
 | destSiteID    | categorical   | Joa - Vik                                                                                                                                                    | Vikesland             | Unique site ID of destination site                                                                          | defined       |
-| destBlockID   | numeric       | 1 - 10                                                                                                                                                       | 1-10                  | Unique numeric destination plot ID for geographic location of the turf                                      | defined       |
+| destBlockID   | numeric       | 1 - 10                                                                                                                                                       | 01.Oct                | Unique numeric destination plot ID for geographic location of the turf                                      | defined       |
 | destPlotID    | numeric       | 2 - 200                                                                                                                                                      | 81                    | Unique destination block ID as number 1 to 10                                                               | defined       |
 | turfID        | categorical   | 1 WN1M 84 - 99 WN5C 170                                                                                                                                      | 81 AN1C 81            | Unique ID of vegetation turf as originplotID, warming, nitrogen and grazing treatment and destinationplotID | defined       |
 | warming       | categorical   | A - W                                                                                                                                                        | A or W                | Warming treatment as W for warming or A for ambient                                                         | defined       |
 | grazing       | categorical   | C - N                                                                                                                                                        | C, I, M, N            | Grazing treatment as C for control, I for intensive, M for medium and N for natural grazing                 | defined       |
-| Nlevel        | numeric       | 1 - 10                                                                                                                                                       | 1-10                  | Nitrogen level treatment as numeric value from 1 - 10                                                       | defined       |
+| Nlevel        | numeric       | 1 - 10                                                                                                                                                       | 01.Oct                | Nitrogen level treatment as numeric value from 1 - 10                                                       | defined       |
 | date          | NA            | NA                                                                                                                                                           | dd-mm-yyyy            | Date of sampling                                                                                            | defined       |
 | year          | numeric       | 2019 - 2020                                                                                                                                                  | 2019                  | Year of the sampling                                                                                        | defined       |
 | species       | categorical   | Achillea millefolium - Viola palustris                                                                                                                       | Achillea millefolium  | Latin genus and species name                                                                                | identified    |
@@ -677,16 +704,16 @@ temperature (°C, Temperature)
 | year          | numeric       | 2019 - 2020                            | 2019                  | Year of the sampling                                                                                        | defined       |
 | date          | date          | NA - NA                                | dd-mm-yyyy            | Date of sampling                                                                                            | defined       |
 | origSiteID    | categorical   | Joa - Lia                              | Vikesland             | Unique site ID of origin site                                                                               | defined       |
-| origBlockID   | numeric       | 1 - 10                                 | 1-10                  | Unique origin block ID as number 1 to 10                                                                    | defined       |
+| origBlockID   | numeric       | 1 - 10                                 | 01.Oct                | Unique origin block ID as number 1 to 10                                                                    | defined       |
 | origPlotID    | numeric       | 1 - 160                                | 1                     | Unique numeric origin plot ID for geographic location of the turf                                           | defined       |
 | destSiteID    | categorical   | Joa - Vik                              | Vikesland             | Unique site ID of destination site                                                                          | defined       |
-| destBlockID   | numeric       | 1 - 10                                 | 1-10                  | Unique numeric destination plot ID for geographic location of the turf                                      | defined       |
+| destBlockID   | numeric       | 1 - 10                                 | 01.Oct                | Unique numeric destination plot ID for geographic location of the turf                                      | defined       |
 | destPlotID    | numeric       | 2 - 200                                | 81                    | Unique destination block ID as number 1 to 10                                                               | defined       |
 | turfID        | categorical   | 1 WN1M 84 - 99 WN5C 170                | 81 AN1C 81            | Unique ID of vegetation turf as originplotID, warming, nitrogen and grazing treatment and destinationplotID | defined       |
 | warming       | categorical   | A - W                                  | A or W                | Warming treatment as W for warming or A for ambient                                                         | defined       |
 | grazing       | categorical   | C - N                                  | C, I, M, N            | Grazing treatment as C for control, I for intensive, M for medium and N for natural grazing                 | defined       |
-| Nlevel        | numeric       | 1 - 10                                 | 1-10                  | Nitrogen level treatment as numeric value from 1 - 10                                                       | defined       |
-| subplot       | numeric       | 1 - 25                                 | 1-25                  | Location of subturf within the turf                                                                         | defined       |
+| Nlevel        | numeric       | 1 - 10                                 | 01.Oct                | Nitrogen level treatment as numeric value from 1 - 10                                                       | defined       |
+| subplot       | numeric       | 1 - 25                                 | Jan.25                | Location of subturf within the turf                                                                         | defined       |
 | species       | categorical   | Achillea millefolium - Viola palustris | Achillea millefolium  | Latin genus and species name                                                                                | identified    |
 | variable      | categorical   | cover - seedling                       | temperture            | Climate logger                                                                                              | defined       |
 | variable      | categorical   | cover - seedling                       | °C                    | Climate logger                                                                                              | defined       |
@@ -699,15 +726,15 @@ temperature (°C, Temperature)
 | Variable name     | Variable type | Variable range or levels    | unit       | description                                                                                                 | how\_measured |
 | :---------------- | :------------ | :-------------------------- | :--------- | :---------------------------------------------------------------------------------------------------------- | :------------ |
 | origSiteID        | categorical   | Joa - Lia                   | Vikesland  | Unique site ID of origin site                                                                               | defined       |
-| origBlockID       | numeric       | 1 - 10                      | 1-10       | Unique origin block ID as number 1 to 10                                                                    | defined       |
+| origBlockID       | numeric       | 1 - 10                      | 01.Oct     | Unique origin block ID as number 1 to 10                                                                    | defined       |
 | origPlotID        | numeric       | 1 - 160                     | 1          | Unique numeric origin plot ID for geographic location of the turf                                           | defined       |
 | destSiteID        | categorical   | Joa - Vik                   | Vikesland  | Unique site ID of destination site                                                                          | defined       |
 | destPlotID        | numeric       | 2 - 200                     | 81         | Unique destination block ID as number 1 to 10                                                               | defined       |
-| destBlockID       | numeric       | 1 - 10                      | 1-10       | Unique numeric destination plot ID for geographic location of the turf                                      | defined       |
+| destBlockID       | numeric       | 1 - 10                      | 01.Oct     | Unique numeric destination plot ID for geographic location of the turf                                      | defined       |
 | turfID            | categorical   | 1 WN1M 84 - 99 WN5C 170     | 81 AN1C 81 | Unique ID of vegetation turf as originplotID, warming, nitrogen and grazing treatment and destinationplotID | defined       |
 | warming           | categorical   | A - W                       | A or W     | Warming treatment as W for warming or A for ambient                                                         | defined       |
 | grazing           | categorical   | C - N                       | C, I, M, N | Grazing treatment as C for control, I for intensive, M for medium and N for natural grazing                 | defined       |
-| Nlevel            | numeric       | 1 - 10                      | 1-10       | Nitrogen level treatment as numeric value from 1 - 10                                                       | defined       |
+| Nlevel            | numeric       | 1 - 10                      | 01.Oct     | Nitrogen level treatment as numeric value from 1 - 10                                                       | defined       |
 | date              | date          | 2019-07-02 - 2020-08-06     | dd-mm-yyyy | Date of sampling                                                                                            | defined       |
 | year              | numeric       | 2019 - 2020                 | 2019       | Year of the sampling                                                                                        | defined       |
 | functional\_group | categorical   | Bare rock - Vascular plants | forb       | Plant functional group                                                                                      | literature    |
@@ -718,11 +745,11 @@ temperature (°C, Temperature)
 | Variable name | Variable type | Variable range or levels | unit          | description                                                                                                 | how\_measured |
 | :------------ | :------------ | :----------------------- | :------------ | :---------------------------------------------------------------------------------------------------------- | :------------ |
 | destSiteID    | categorical   | Joa - Vik                | Vikesland     | Unique site ID of destination site                                                                          | defined       |
-| destBlockID   | numeric       | 1 - 10                   | 1-10          | Unique numeric destination plot ID for geographic location of the turf                                      | defined       |
+| destBlockID   | numeric       | 1 - 10                   | 01.Oct        | Unique numeric destination plot ID for geographic location of the turf                                      | defined       |
 | destPlotID    | numeric       | 2 - 198                  | 81            | Unique destination block ID as number 1 to 10                                                               | defined       |
 | turfID        | categorical   | 1 WN1M 84 - 97 WN5M 169  | 81 AN1C 81    | Unique ID of vegetation turf as originplotID, warming, nitrogen and grazing treatment and destinationplotID | defined       |
 | warming       | categorical   | A - W                    | A or W        | Warming treatment as W for warming or A for ambient                                                         | defined       |
-| Nlevel        | numeric       | 1 - 10                   | 1-10          | Nitrogen level treatment as numeric value from 1 - 10                                                       | defined       |
+| Nlevel        | numeric       | 1 - 10                   | 01.Oct        | Nitrogen level treatment as numeric value from 1 - 10                                                       | defined       |
 | grazing       | categorical   | I - M                    | C, I, M, N    | Grazing treatment as C for control, I for intensive, M for medium and N for natural grazing                 | defined       |
 | cut           | numeric       | 1 - 4                    | NA            | Number of times the plot has been cut                                                                       | defined       |
 | date          | date          | NA                       | dd-mm-yyyy    | Date of sampling                                                                                            | defined       |
@@ -730,15 +757,15 @@ temperature (°C, Temperature)
 | fun\_group    | categorical   | Bryophytes\_g - Shrub\_g | graminoids    | Functional group                                                                                            | defined       |
 | value         | numeric       | 0.00094 - 86.54          | numeric value | Value for climate data                                                                                      | measured      |
 | origSiteID    | categorical   | Joa - Lia                | Vikesland     | Unique site ID of origin site                                                                               | defined       |
-| origBlockID   | numeric       | 1 - 10                   | 1-10          | Unique origin block ID as number 1 to 10                                                                    | defined       |
+| origBlockID   | numeric       | 1 - 10                   | 01.Oct        | Unique origin block ID as number 1 to 10                                                                    | defined       |
 | origPlotID    | numeric       | 1 - 157                  | 1             | Unique numeric origin plot ID for geographic location of the turf                                           | defined       |
 | year          | numeric       | NA - NA                  | 2019          | Year of the sampling                                                                                        | defined       |
 | destSiteID    | categorical   | Joa - Vik                | Vikesland     | Unique site ID of destination site                                                                          | defined       |
-| destBlockID   | numeric       | 1 - 10                   | 1-10          | Unique numeric destination plot ID for geographic location of the turf                                      | defined       |
+| destBlockID   | numeric       | 1 - 10                   | 01.Oct        | Unique numeric destination plot ID for geographic location of the turf                                      | defined       |
 | destPlotID    | numeric       | 2 - 198                  | 81            | Unique destination block ID as number 1 to 10                                                               | defined       |
 | turfID        | categorical   | 1 WN1M 84 - 97 WN5M 169  | 81 AN1C 81    | Unique ID of vegetation turf as originplotID, warming, nitrogen and grazing treatment and destinationplotID | defined       |
 | warming       | categorical   | A - W                    | A or W        | Warming treatment as W for warming or A for ambient                                                         | defined       |
-| Nlevel        | numeric       | 1 - 10                   | 1-10          | Nitrogen level treatment as numeric value from 1 - 10                                                       | defined       |
+| Nlevel        | numeric       | 1 - 10                   | 01.Oct        | Nitrogen level treatment as numeric value from 1 - 10                                                       | defined       |
 | grazing       | categorical   | I - M                    | C, I, M, N    | Grazing treatment as C for control, I for intensive, M for medium and N for natural grazing                 | defined       |
 | cut           | numeric       | 1 - 4                    | NA            | Number of times the plot has been cut                                                                       | defined       |
 | date          | date          | NA                       | dd-mm-yyyy    | Date of sampling                                                                                            | defined       |
@@ -746,7 +773,7 @@ temperature (°C, Temperature)
 | fun\_group    | categorical   | Bryophytes\_g - Shrub\_g | graminoids    | Functional group                                                                                            | defined       |
 | value         | numeric       | 0.00094 - 86.54          | numeric value | Value for climate data                                                                                      | measured      |
 | origSiteID    | categorical   | Joa - Lia                | Vikesland     | Unique site ID of origin site                                                                               | defined       |
-| origBlockID   | numeric       | 1 - 10                   | 1-10          | Unique origin block ID as number 1 to 10                                                                    | defined       |
+| origBlockID   | numeric       | 1 - 10                   | 01.Oct        | Unique origin block ID as number 1 to 10                                                                    | defined       |
 | origPlotID    | numeric       | 1 - 157                  | 1             | Unique numeric origin plot ID for geographic location of the turf                                           | defined       |
 | year          | numeric       | NA - NA                  | 2019          | Year of the sampling                                                                                        | defined       |
 
@@ -755,14 +782,14 @@ temperature (°C, Temperature)
 | Variable name | Variable type | Variable range or levels        | unit             | description                                                                                                 | how\_measured |
 | :------------ | :------------ | :------------------------------ | :--------------- | :---------------------------------------------------------------------------------------------------------- | :------------ |
 | origSiteID    | categorical   | Joa - Lia                       | Vikesland        | Unique site ID of origin site                                                                               | defined       |
-| origBlockID   | numeric       | 1 - 10                          | 1-10             | Unique origin block ID as number 1 to 10                                                                    | defined       |
+| origBlockID   | numeric       | 1 - 10                          | 01.Oct           | Unique origin block ID as number 1 to 10                                                                    | defined       |
 | warming       | categorical   | A - W                           | A or W           | Warming treatment as W for warming or A for ambient                                                         | defined       |
 | grazing       | categorical   | C - N                           | C, I, M, N       | Grazing treatment as C for control, I for intensive, M for medium and N for natural grazing                 | defined       |
-| Nlevel        | numeric       | 1 - 10                          | 1-10             | Nitrogen level treatment as numeric value from 1 - 10                                                       | defined       |
+| Nlevel        | numeric       | 1 - 10                          | 01.Oct           | Nitrogen level treatment as numeric value from 1 - 10                                                       | defined       |
 | origPlotID    | numeric       | 1 - 160                         | 1                | Unique numeric origin plot ID for geographic location of the turf                                           | defined       |
 | destSiteID    | categorical   | Joa - Vik                       | Vikesland        | Unique site ID of destination site                                                                          | defined       |
 | destPlotID    | numeric       | 2 - 200                         | 81               | Unique destination block ID as number 1 to 10                                                               | defined       |
-| destBlockID   | numeric       | 1 - 10                          | 1-10             | Unique numeric destination plot ID for geographic location of the turf                                      | defined       |
+| destBlockID   | numeric       | 1 - 10                          | 01.Oct           | Unique numeric destination plot ID for geographic location of the turf                                      | defined       |
 | turfID        | categorical   | 1 WN1M 84 - 99 WN5C 170         | 81 AN1C 81       | Unique ID of vegetation turf as originplotID, warming, nitrogen and grazing treatment and destinationplotID | defined       |
 | measurement   | numeric       | 1 - 2                           | 1 or 2           | First or second measurement per plot                                                                        | defined       |
 | date          | date          | 2020-06-26 - 2020-10-16         | dd-mm-yyyy       | Date of sampling                                                                                            | defined       |
@@ -770,7 +797,7 @@ temperature (°C, Temperature)
 | remark        | categorical   | NA - NA                         | NA               | Comment                                                                                                     | NA            |
 | timing        | categorical   | After 1. cut - Before treatment | before treatment | Timing of measurement in relation to cutting treatment                                                      | defined       |
 | year          | numeric       | NA - NA                         | 2019             | Year of the sampling                                                                                        | defined       |
-| campaign      | numeric       | NA - NA                         | 1-4              | Campgain connected to carbon flux measurements                                                              | defined       |
+| campaign      | numeric       | NA - NA                         | 01.Apr           | Campgain connected to carbon flux measurements                                                              | defined       |
 
 #### Soil depth, slope and exposure
 
@@ -778,15 +805,15 @@ temperature (°C, Temperature)
 | :-------------- | :------------ | :----------------------- | :--------- | :---------------------------------------------------------------------------------------------------------- | :------------ |
 | year            | numeric       | 2019 - 2019              | 2019       | Year of the sampling                                                                                        | defined       |
 | origSiteID      | categorical   | Joa - Lia                | Vikesland  | Unique site ID of origin site                                                                               | defined       |
-| origBlockID     | numeric       | 1 - 10                   | 1-10       | Unique origin block ID as number 1 to 10                                                                    | defined       |
+| origBlockID     | numeric       | 1 - 10                   | 01.Oct     | Unique origin block ID as number 1 to 10                                                                    | defined       |
 | origPlotID      | numeric       | 1 - 160                  | 1          | Unique numeric origin plot ID for geographic location of the turf                                           | defined       |
 | destSiteID      | categorical   | Joa - Vik                | Vikesland  | Unique site ID of destination site                                                                          | defined       |
 | destPlotID      | numeric       | 2 - 200                  | 81         | Unique destination block ID as number 1 to 10                                                               | defined       |
-| destBlockID     | numeric       | 1 - 10                   | 1-10       | Unique numeric destination plot ID for geographic location of the turf                                      | defined       |
+| destBlockID     | numeric       | 1 - 10                   | 01.Oct     | Unique numeric destination plot ID for geographic location of the turf                                      | defined       |
 | turfID          | categorical   | 1 WN1M 84 - 99 WN5C 170  | 81 AN1C 81 | Unique ID of vegetation turf as originplotID, warming, nitrogen and grazing treatment and destinationplotID | defined       |
 | warming         | categorical   | A - W                    | A or W     | Warming treatment as W for warming or A for ambient                                                         | defined       |
 | grazing         | categorical   | C - N                    | C, I, M, N | Grazing treatment as C for control, I for intensive, M for medium and N for natural grazing                 | defined       |
-| Nlevel          | numeric       | 1 - 10                   | 1-10       | Nitrogen level treatment as numeric value from 1 - 10                                                       | defined       |
+| Nlevel          | numeric       | 1 - 10                   | 01.Oct     | Nitrogen level treatment as numeric value from 1 - 10                                                       | defined       |
 | date\_slope     | categorical   | 04.07.19 - 17.07.19      | dd-mm-yyyy | Date of sampling of slope and aspect                                                                        | defined       |
 | slope           | numeric       | 0.3 - 280                | degree     | Slope of the plot                                                                                           | measured      |
 | exposure        | numeric       | 2 - 380                  | NA         | NA                                                                                                          | NA            |
@@ -796,28 +823,28 @@ temperature (°C, Temperature)
 
 #### Soil texture, pH, bulk density, SOM
 
-| Variable name         | Variable type | Variable range or levels               | unit       | description                                                            | how\_measured |
-| :-------------------- | :------------ | :------------------------------------- | :--------- | :--------------------------------------------------------------------- | :------------ |
-| date                  | date          | 2019-07-16 - 2020-10-16                | dd-mm-yyyy | Date of sampling                                                       | defined       |
-| year                  | numeric       | 2019 - 2020                            | 2019       | Year of the sampling                                                   | defined       |
-| destSiteID            | categorical   | Joa - Vik                              | Vikesland  | Unique site ID of destination site                                     | defined       |
-| destBlockID           | categorical   | 1 - 9-10                               | 1-10       | Unique numeric destination plot ID for geographic location of the turf | defined       |
-| layer                 | categorical   | Bottom - Top                           | Moss layer | Moss or vegetation layer                                               | defined       |
-| layer                 | categorical   | Bottom - Top                           | top        | Layer at which soil sample was taken: top or bottom 5cm                | defined       |
-| wet\_weight\_soil\_g  | numeric       | 11.12 - 167.76                         | g          | Wet weight                                                             | measured      |
-| dry\_weight\_soil\_g  | numeric       | 7.27 - 149.51                          | g          | Dry weight                                                             | measured      |
-| stone\_weight\_g      | numeric       | 0.0053 - 99.93                         | g          | Stone weight                                                           | measured      |
-| roots\_weight\_g      | numeric       | 0.0126 - 1.4315                        | g          | Root weight                                                            | measured      |
-| sand\_g               | date          | NA                                     | percentage | Percentage of sand                                                     | measured      |
-| clay\_g               | date          | NA                                     | percentage | Percentage of clay                                                     | measured      |
-| silt\_g               | date          | NA                                     | percentage | Percentage of silt                                                     | measured      |
-| pH                    | numeric       | NA - NA                                | NA         | pH value                                                               | measured      |
-| bulk\_density\_g\_cm  | numeric       | NA - NA                                | g\_cm      | Bulk density                                                           | measured      |
-| pore\_water\_content  | numeric       | 0.0820595333869671 - 0.742588369441277 | percentage | Pore water content                                                     | measured      |
-| soil\_organic\_matter | numeric       | NA - NA                                | percentage | Soil organic matter                                                    | measured      |
-| carbon\_content       | numeric       | NA - NA                                | percentage | Carbon content                                                         | measured      |
-| C\_percent            | numeric       | NA - NA                                | percentage | Carbon content                                                         | measured      |
-| N\_percent            | numeric       | NA - NA                                | percentage | Nitrogen content                                                       | measured      |
+| Variable name         | Variable type | Variable range or levels                 | unit       | description                                                            | how\_measured |
+| :-------------------- | :------------ | :--------------------------------------- | :--------- | :--------------------------------------------------------------------- | :------------ |
+| date                  | date          | 2019-07-16 - 2020-10-16                  | dd-mm-yyyy | Date of sampling                                                       | defined       |
+| year                  | numeric       | 2019 - 2020                              | 2019       | Year of the sampling                                                   | defined       |
+| destSiteID            | categorical   | Joa - Vik                                | Vikesland  | Unique site ID of destination site                                     | defined       |
+| destBlockID           | categorical   | 1 - 9-10                                 | 01.Oct     | Unique numeric destination plot ID for geographic location of the turf | defined       |
+| layer                 | categorical   | Bottom - Top                             | Moss layer | Moss or vegetation layer                                               | defined       |
+| layer                 | categorical   | Bottom - Top                             | top        | Layer at which soil sample was taken: top or bottom 5cm                | defined       |
+| wet\_weight\_soil\_g  | numeric       | 11.12 - 167.76                           | g          | Wet weight                                                             | measured      |
+| dry\_weight\_soil\_g  | numeric       | 7.27 - 149.51                            | g          | Dry weight                                                             | measured      |
+| stone\_weight\_g      | numeric       | 0.0053 - 99.93                           | g          | Stone weight                                                           | measured      |
+| roots\_weight\_g      | numeric       | 0.0126 - 1.4315                          | g          | Root weight                                                            | measured      |
+| sand\_percent         | numeric       | 84.2105263157895 - 97.2222222222222      | percentage | Percentage of sand                                                     | measured      |
+| silt\_percent         | numeric       | 2.22222222222222 - 14.7368421052631      | percentage | Percentage of clay                                                     | measured      |
+| clay\_percent         | numeric       | 0.418410041840995 - 1.12359550561798     | percentage | Percentage of silt                                                     | measured      |
+| pH                    | numeric       | 4.17 - 5.52                              | NA         | pH value                                                               | measured      |
+| bulk\_density\_g\_cm  | numeric       | 0.155832329229846 - 1.31188238283117     | g\_cm      | Bulk density                                                           | measured      |
+| pore\_water\_content  | numeric       | 0.0820595333869671 - 0.742588369441277   | percentage | Pore water content                                                     | measured      |
+| soil\_organic\_matter | numeric       | 0.0463865852547159 - 0.860215053763441   | percentage | Soil organic matter                                                    | measured      |
+| carbon\_content       | numeric       | 0.00883556547619136 - 0.0213830308974995 | percentage | Carbon content                                                         | measured      |
+| C\_percent            | numeric       | 3.07181 - 38.64797                       | percentage | Carbon content                                                         | measured      |
+| N\_percent            | numeric       | 0.26784 - 2.98151                        | percentage | Nitrogen content                                                       | measured      |
 
 #### C-flux
 
@@ -836,7 +863,7 @@ temperature (°C, Temperature)
 | p.value       | numeric       | 8.42094622572888e-197 - 0.786563753459083 | NA         | NA                                             | NA            |
 | nobs          | numeric       | 29 - 129                                  | NA         | NA                                             | NA            |
 | flux          | numeric       | \-25.8473002606009 - 244.931729610437     | NA         | NA                                             | NA            |
-| campaign      | categorical   | 1 - LRC                                   | 1-4        | Campgain connected to carbon flux measurements | defined       |
+| campaign      | categorical   | 1 - LRC                                   | 01.Apr     | Campgain connected to carbon flux measurements | defined       |
 | datetime      | date          | NA                                        | NA         | NA                                             | NA            |
 | ID            | numeric       | 1 - 307                                   | 5612       | Unique logger value                            | defined       |
 | turf\_ID      | categorical   | 105 WN3C 173 - 85 WN1C 162                | NA         | NA                                             | NA            |
@@ -850,7 +877,7 @@ temperature (°C, Temperature)
 | p.value       | numeric       | 8.42094622572888e-197 - 0.786563753459083 | NA         | NA                                             | NA            |
 | nobs          | numeric       | 29 - 129                                  | NA         | NA                                             | NA            |
 | flux          | numeric       | \-25.8473002606009 - 244.931729610437     | NA         | NA                                             | NA            |
-| campaign      | categorical   | 1 - LRC                                   | 1-4        | Campgain connected to carbon flux measurements | defined       |
+| campaign      | categorical   | 1 - LRC                                   | 01.Apr     | Campgain connected to carbon flux measurements | defined       |
 
 #### Temperature and soil moisture
 
@@ -862,8 +889,8 @@ temperature (°C, Temperature)
 | :------------ | :------------ | :----------------------- | :------------ | :--------------------------------- | :------------ |
 | destSiteID    | categorical   | Joa - Vik                | Vikesland     | Unique site ID of destination site | defined       |
 | year          | numeric       | 2009 - 2019              | 2019          | Year of the sampling               | defined       |
-| month         | numeric       | 1 - 12                   | 1-12          | Month of observation               | defined       |
-| day           | numeric       | 1 - 31                   | 1-31          | Day of observaiton                 | defined       |
+| month         | numeric       | 1 - 12                   | 01.Dec        | Month of observation               | defined       |
+| day           | numeric       | 1 - 31                   | Jan.31        | Day of observaiton                 | defined       |
 | date          | date          | 2009-01-02 - 2019-10-31  | dd-mm-yyyy    | Date of sampling                   | defined       |
 | logger        | categorical   | cloud\_cover - wind      | NA            | NA                                 | NA            |
 | value         | numeric       | \-23.2 - 108.3           | numeric value | Value for climate data             | measured      |

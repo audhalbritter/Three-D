@@ -184,7 +184,7 @@ range_soil <- soil %>%
   summarise(
     across(where(is.character), ~ paste(min(.), max(.), sep = " - ")),
     across(where(is.Date), ~ paste(min(.), max(.), sep = " - ")),
-    across(where(is.numeric), ~paste(min(.), max(.), sep = " - "))) %>% 
+    across(where(is.numeric), ~paste(min(., na.rm = TRUE), max(., na.rm = TRUE), sep = " - "))) %>% 
   pivot_longer(cols = everything(), names_to = "Variable name", values_to = "Variable range or levels")
 
 

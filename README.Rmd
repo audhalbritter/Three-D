@@ -63,7 +63,7 @@ The specific research questions of the THREE-D project are:
 ### Research site
 
 The study is conducted in three semi-natural grassland sites in western Norway and the eastern edge of the Himalaya in Gongga Mountain, Sichuan in China.
-The sites are location on calcareous soil in Norway, and on mountain grey-brown soil in China.
+The sites are location on calcareous soil (loamy sand) in Norway, and on mountain grey-brown soil in China.
 The sites were chosen to fit within an elevational gradient with three temperature levels that differ in c. 400 m elevation, a temperature difference of approximately 2°C in summer temperature (Figure 1).
 The sites correspond to the alpine, sub-alpine and boreal biogeographic zones in Norway and subalpine to alpine grasslands in China. Other factors such as grazing regime and history, bedrock, vegetation type and structure, slope and exposure were kept as constant as possible among the selected sites within each country.
 
@@ -75,7 +75,7 @@ knitr::include_graphics('Pics/ExperimentalDesign.jpg')
 
 
 ```{r site-table, echo=FALSE}
-knitr::kable(siteMetaData_pretty, caption = "Table 1: Site level information including site name, coordinates, elevaiton, bulk density (g/cm), soil organic matter (SOM), carbon content, carbon and nitrogen stocks and pH.")
+knitr::kable(siteMetaData_pretty, caption = "Table 1: Site level information including site name, elevaiton, coordinates, bulk density (g/cm), soil texture (percentage sand, silt and clay), soil organic matter (SOM), carbon content, carbon and nitrogen stocks and pH.")
 ```
 
 
@@ -271,11 +271,13 @@ The following data was collected and is available in the mentioned files on OSF:
 | Species presence  | 2019 - 2020  | Subplot  | THREE-D_CommunitySubplot_2019_2020.csv  |
 | Plant functional group cover  | 2019 - 2020  | Plot  | THREE-D_CommunityStructure_2019_2020.csv  |
 | Ecosystem fluxes  | 2020  | Plot  | Three-D_c-flux_2020.csv  |
-| Soil respiration  | 2021?  | Plot/Site  | Three-D_c-flux_2020.csv  |
+| Soil respiration  | 2021  | Plot/Site  | Three-D_c-flux_2020.csv  |
 | **Vegetation** |  |  |  |
 | Vegetation height  | 2019 - 2020  | Plot  | THREE-D_Height_2019_2020.csv  |
 | Aboveground biomass  | 2019 - 2020  | Plot  | THREE-D_Biomass_2020.csv  |
-| Plant productivity  | ???  | Plot  | xxx  |
+| Belowground biomass  | 2021  | Plot  | xxx  |
+| Aboveground plant productivity  | 2021  | Plot  | xxx  |
+| Belowground plant productivity  | 2021  | Plot  | xxx  |
 | Reflectance  | 2020  | Plot  | THREE-D_Reflectance_2020.csv  |
 | **Soil** |  |  |  |
 | Soil depth  | 2019  | Plot  | THREE-D_PlotLevel_Depth_2019.csv  |
@@ -284,9 +286,8 @@ The following data was collected and is available in the mentioned files on OSF:
 | Soil pH  | 2019  | Site  | THREE-D_Soil_2019-2020.csv  |
 | Soil organic matter  | 2019  | Block  | THREE-D_Soil_2019-2020.csv  |
 | Soil C and N stocks  | 2019 - 2020  | Site  | THREE-D_Soil_2019-2020.csv  |
-| Soil nutrients  | ???  | Site  | xxx  |
-| Decomposition | ???  | Plot  | xxx  |
-| Carbon uptake (root growth) | ???  | Plot  | xxx  |
+| Soil nutrients  | 2021  | Site  | xxx  |
+| Decomposition | 2021  | Plot  | xxx  |
 | **Climate** |  |  |  |
 | Air, ground and soil temperature  | 2019 - 2020  | Plot  | THREE-D_TomstLogger_2019_2020.csv  |
 | Soil moisture  | 2019 - 2020  | Plot  | THREE-D_TomstLogger_2019_2020.csv  |
@@ -481,14 +482,30 @@ Bulk density (g/cm) = (dry weight core (g) - stone weight (g)) / (core volume (c
 stone density (~2.65 g cm–³) = stone mass (g) / stone volume (cm3)
 
 
+**Soil Texture** 
+Soil texture was measured using the particle size analysis (REF).
+We used 3 soil samples per site (mixing top and bottom layer), that were dried and where stones and roots have been removed.
+A jar was filled with one third of soil and 2 thirds of water plus some dishwashing powder.
+The solution was mixed thoroughly for several seconds.
+After 1 minute, the height of the layer (sand) that set was marked on the jar.
+After 2 hours, the height of the next layer (silt) was marked on the jar.
+Finally, after 48 hours the last layer (clay) was also marked on the jar.
+
+The height of each layer was used to calculate the proportion of sand, silt and clay in the soil sample.
+The soil type was then defined by using the soil texture triangle.
+
+<!-- Cannot find this ref! -->
+Bowman GM and Hutka J (2002) Particle Size Analysis. In Soil Physical Measurement and Interpretation for Land Evaluation
+(Eds N McKenzie, K Coughlan, H Cresswell) pp 224-239. CSIRO Publishing: Victoria.
+(method: https://hgic.clemson.edu/factsheet/soil-texture-analysis-the-jar-test/)
+
+
+
+
 **C and N content** 
 The C and N content was measured from dried and well mixed subsample of each soil sample, excluding large roots and stones (excluding particles > 2mm).
 The measurement was done at NMBU in Ås.
 Measurements of soil C and N were done by dry combustion (Matejovic, 1997; Senesi & Senesi, 2016).
-
-
-**Soil Texture** 
-
 
 
 **Climate data** Temperature was measured continuously (every 15 min) at three heights (15 cm, at ground level, and 5 cm below ground) and soil moisture was measured continuously 5 cm below ground using Tomst TM4 loggers (Wild et al., 2019).
