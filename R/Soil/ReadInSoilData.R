@@ -95,10 +95,11 @@ soil_site <- soil %>%
   group_by(destSiteID, layer) %>% 
   summarise(bulk_density_se = sd(bulk_density_g_cm, na.rm = TRUE) / sqrt(n()),
             bulk_density_g_cm = mean(bulk_density_g_cm, na.rm = TRUE),
-            sand_percent = mean(sand_percent, na.rm = TRUE),
             sand_se = sd(sand_percent, na.rm = TRUE) / sqrt(n()),
-            silt_percent = mean(silt_percent, na.rm = TRUE),
+            sand_percent = mean(sand_percent, na.rm = TRUE),
             silt_se = sd(silt_percent, na.rm = TRUE) / sqrt(n()),
+            silt_percent = mean(silt_percent, na.rm = TRUE),
+            clay_se = sd(clay_percent, na.rm = TRUE) / sqrt(n()),
             clay_percent = mean(clay_percent, na.rm = TRUE),
             soil_organic_matter_se = sd(soil_organic_matter, na.rm = TRUE) / sqrt(n()),
             soil_organic_matter = mean(soil_organic_matter, na.rm = TRUE),
@@ -125,14 +126,15 @@ siteMetaData <- tibble(destSiteID = c("Vik", "Vik", "Joa", "Joa", "Lia", "Lia"),
 
 siteMetaData_pretty <- siteMetaData %>% 
   mutate("Bulk density" = paste(round(bulk_density_g_cm, 2), "±", round(bulk_density_se, 2)),
-         sand_percent = paste(round(sand_percent, 2), "±", round(sand_se, 2)),
-         silt_percent = paste(round(silt_percent, 2), "±", round(silt_se, 2)),
-         clay_percent = round(clay_percent, 2),
+         "Sand %" = paste(round(sand_percent, 2), "±", round(sand_se, 2)),
+         "Silt %" = paste(round(silt_percent, 2), "±", round(silt_se, 2)),
+         "Clay %" = round(clay_percent, 2),
          SOM = paste(round(soil_organic_matter, 2), "±", round(soil_organic_matter_se, 2)),
          "Carbon content" = paste(round(carbon_content, 2), "±", round(carbon_content_se, 2)),
          "C%" = paste(round(C_percent, 2), "±", round(C_percent_se, 2)),
          "N%" = paste(round(N_percent, 2), "±", round(N_percent_se, 2)),
          pH = paste(round(pH, 2), "±", round(pH_se, 2))) %>% 
+  mutate(pH = if_else(pH == "NaN ± NA", NA_character_, pH)) %>% 
   select(Site = destSiteID, Elevation = elevation_m_asl, Latitude = latitude_N, Longitude = longitude_E, Layer = layer, `Bulk density`:`N%`, pH)
 
 
