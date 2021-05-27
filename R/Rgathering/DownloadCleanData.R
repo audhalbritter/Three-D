@@ -7,22 +7,27 @@ library("dataDownloader")
 ### VEGETATION
 dir.create("data_cleaned/vegetation")
 get_file(node = "pk4bg",
-         file = "THREE-D_CommunitySubplot_2019.csv",
+         file = "THREE-D_CommunitySubplot_2019_2020.csv",
          path = "data_cleaned/vegetation",
          remote_path = "Vegetation")
 
 get_file(node = "pk4bg",
-         file = "THREE-D_Cover_2019.csv",
+         file = "THREE-D_Cover_2019_2020.csv",
          path = "data_cleaned/vegetation",
          remote_path = "Vegetation")
 
 get_file(node = "pk4bg",
-         file = "THREE-D_CommunityStructure_2019.csv",
+         file = "THREE-D_CommunityStructure_2019_2020.csv",
          path = "data_cleaned/vegetation",
          remote_path = "Vegetation")
 
 get_file(node = "pk4bg",
          file = "THREE-D_Reflectance_2020.csv",
+         path = "data_cleaned/vegetation",
+         remote_path = "Vegetation")
+
+get_file(node = "pk4bg",
+         file = "THREE-D_Biomass_2020.csv",
          path = "data_cleaned/vegetation",
          remote_path = "Vegetation")
 
