@@ -62,5 +62,7 @@ vignettes/*.pdf
 !Pics/ProposalFigure_small.jpg
 !Pics/Subblots.jpg
 !ReadMe.md
+!data_cleaned/Three-D_data_dic.csv
+!README_files/figure-gfm/site-figure-1.png
 
 *.DS_Store
