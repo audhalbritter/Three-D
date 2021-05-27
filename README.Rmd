@@ -89,6 +89,19 @@ Finally, we wanted other environmental factors to be as similar as possible amon
 
 
 ```{r site-figure, echo=FALSE, fig.cap="Soil characteristics for all three sites at the top and bottom soil layer."}
+
+dir.create("data_cleaned/soil")
+
+get_file(node = "pk4bg",
+         file = "THREE-D_PlotLevel_Depth_2019.csv",
+         path = "data_cleaned/soil/",
+         remote_path = "Soil")
+
+get_file(node = "pk4bg",
+         file = "THREE-D_Soil_2019-2020.csv",
+         path = "data_cleaned/soil/",
+         remote_path = "Soil")
+
 soil <- read_delim(file = "data_cleaned/soil/THREE-D_Soil_2019-2020.csv", delim = ",")
 meta <- read_csv(file ="data_cleaned/soil/THREE-D_PlotLevel_Depth_2019.csv")
 

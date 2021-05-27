@@ -6,20 +6,21 @@ source("R/Load packages.R")
 source("R/Rgathering/create meta data.R")
 
 # Run this code if you need to download raw data from OSF
-# get_file(node = "pk4bg",
-#          file = "Three-D_PlotLevel_MetaData_2019.csv",
-#          path = "data/soil",
-#          remote_path = "RawData/Soil")
-# 
-# get_file(node = "pk4bg",
-#          file = "ThreeD_SoilSamples_2019.csv",
-#          path = "data/soil",
-#          remote_path = "RawData/Soil")
+dir.create("data/soil")
+get_file(node = "pk4bg",
+         file = "Three-D_PlotLevel_MetaData_2019.csv",
+         path = "data/soil",
+         remote_path = "RawData/Soil")
 
-# get_file(node = "pk4bg",
-#          file = "TThreeD_2019_2020_CN_resultater.xlsx",
-#          path = "data/soil",
-#          remote_path = "RawData/Soil")
+get_file(node = "pk4bg",
+         file = "ThreeD_SoilSamples_2019.xlsx",
+         path = "data/soil",
+         remote_path = "RawData/Soil")
+
+get_file(node = "pk4bg",
+         file = "ThreeD_2019_2020_CN_resultater.xlsx",
+         path = "data/soil",
+         remote_path = "RawData/Soil")
 
 
 #### PLOT LEVEL META DATA ####
@@ -33,7 +34,7 @@ plotMetaData <- read_csv(file = "data/soil/Three-D_PlotLevel_MetaData_2019.csv")
          year = 2019) %>% 
   select(year, origSiteID:turfID, warming:Nlevel, date_slope:date_depth, soil_depth_cm, remark)
 
-write_csv(plotMetaData, path = "data_cleaned/soil/THREE-D_PlotLevel_Depth_2019.csv")
+#write_csv(plotMetaData, path = "data_cleaned/soil/THREE-D_PlotLevel_Depth_2019.csv")
 
 
 #### SOIL SAMPLES
