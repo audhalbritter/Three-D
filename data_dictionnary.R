@@ -23,7 +23,7 @@ get_file(node = "pk4bg",
          path = "data/C-Flux/summer_2020",
          remote_path = "C-Flux")
 
-flux <- read_csv("data/C-Flux/summer_2020/Three-D_c-flux_2020.csv")
+flux <- read_csv("data/C-Flux/summer_2020/Three-D_c-flux_2020.csv", col_types = "TdfffcDdddddf")
 
 flux.colnames <- flux %>% 
   colnames()
@@ -74,13 +74,13 @@ variables.cflux <- tibble(flux.colnames, "Variable type" = c(
   # Datetime
   paste(range(flux$Datetime), collapse = " - "),
   # ID
-  "[flux ID]",
+  paste(range(flux$ID), collapse = " - "),
   # Turf_ID
   "[origin plotID]x[treatment]x[destination plotID]",
   # Type
-  "[type]",
+  paste(levels(flux$Type), collapse = ", "),
   # Replicate
-  "[replicate]",
+  paste(levels(flux$Replicate), collapse = ", "),
   # Remarks
   "Field observations",
   # Date
@@ -96,7 +96,7 @@ variables.cflux <- tibble(flux.colnames, "Variable type" = c(
   # flux
   paste(range(flux$flux), collapse = " - "),
   # Campaign
-  paste(range(flux$Campaign), collapse = " - ")
+  paste(levels(flux$Campaign), collapse = ", ")
 ),
 "How measured" = c(
   # Datetime
@@ -130,13 +130,13 @@ variables.cflux <- tibble(flux.colnames, "Variable type" = c(
   # Datetime
   "AC CET",
   # ID
-  paste(range(flux$ID), collapse = " - "),
+  " ",
   # Turf_ID
   "Ex.: 158 WN2C 199", #I am not sure what it is
   # Type
-  paste(levels(as.factor(flux$Type)), collapse = ", "),
+  " ",
   # Replicate
-  paste(levels(as.factor(flux$Replicate)), collapse = ", "),
+  " ",
   # Remarks
   " ",
   # Date
@@ -152,7 +152,7 @@ variables.cflux <- tibble(flux.colnames, "Variable type" = c(
   # flux
   "mmol m⁻² h⁻¹",
   # Campaign
-  paste(levels(as.factor(flux$Campaign)), collapse = ", ")
+  " "
 )
 ) %>% 
   rename("Variable name" = flux.colnames)
