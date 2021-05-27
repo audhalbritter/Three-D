@@ -5,6 +5,7 @@
 library("dataDownloader")
 
 ### VEGETATION
+dir.create("data_cleaned/vegetation")
 get_file(node = "pk4bg",
          file = "THREE-D_CommunitySubplot_2019.csv",
          path = "data_cleaned/vegetation",
@@ -26,24 +27,27 @@ get_file(node = "pk4bg",
          remote_path = "Vegetation")
 
 ### SOIL
-# get_file(node = "pk4bg",
-#          file = "THREE-D_PlotLevel_Depth_2019.csv",
-#          path = "data_cleaned/soil",
-#          remote_path = "Soil")
+dir.create("data_cleaned/soil")
+get_file(node = "pk4bg",
+         file = "THREE-D_PlotLevel_Depth_2019.csv",
+         path = "data_cleaned/soil/",
+         remote_path = "Soil")
 
-# get_file(node = "pk4bg",
-#          file = "THREE-D_Soil_2019-2020.csv",
-#          path = "data_cleaned/soil",
-#          remote_path = "Soil")
+get_file(node = "pk4bg",
+         file = "THREE-D_Soil_2019-2020.csv",
+         path = "data_cleaned/soil/",
+         remote_path = "Soil")
 
 
 ### C-FLUX
+dir.create("data_cleaned/c-flux")
 get_file(node = "pk4bg",
          file = "Three-D_c-flux_2020.csv",
          path = "data_cleaned/c-flux",
          remote_path = "C-Flux")
 
 ### CLIMATE
+dir.create("data_cleaned/climate")
 get_file(node = "pk4bg",
          file = "THREE_D_Gridded_DailyClimate_2009-2019.csv",
          path = "data_cleaned/climate",

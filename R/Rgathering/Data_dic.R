@@ -1,7 +1,7 @@
 #### CREATE DATA DIC FOR READMEFILE ####
 
 source("R/Load packages.R")
-#source("R/Rgathering/DownloadCleanData.R")
+source("R/Rgathering/DownloadCleanData.R")
 
 # get attribute table
 attribute_table <- read_csv(file = "data_cleaned/Three-D_data_dic.csv")
