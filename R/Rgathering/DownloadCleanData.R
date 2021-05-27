@@ -29,6 +29,11 @@ get_file(node = "pk4bg",
 ### SOIL
 dir.create("data_cleaned/soil")
 get_file(node = "pk4bg",
+         file = "THREE-D_metaSite.csv",
+         path = "data_cleaned/soil/",
+         remote_path = "Soil")
+
+get_file(node = "pk4bg",
          file = "THREE-D_PlotLevel_Depth_2019.csv",
          path = "data_cleaned/soil/",
          remote_path = "Soil")
