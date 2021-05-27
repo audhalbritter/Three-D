@@ -99,11 +99,13 @@ three_d <- read_csv("data/C-Flux/summer_2020/Three-D_field-record_2020.csv", na 
 #   ) %>%  
 #   rename(Plot_ID = Turf_ID) %>% 
 #   select(Plot_ID,Type,Replicate,Starting_time,Date,Campaign,Remarks,Start,End)
+
   
 #matching fluxes
 
 
 co2_threed <- match.flux(combined,three_d)
+
 
 
 #adjusting the time window with the actual fluxes
@@ -160,11 +162,13 @@ ggplot(co2_threed_cut, aes(x = datetime, y = CO2, color = cut)) +
   ggsave("threed_detail.png", height = 60, width = 126, units = "cm")
 
 
+
 #graph CO2 fluxes to visually check the data
 ggplot(co2_threed_cut, aes(x=datetime, y=CO2, color = cut)) + 
   # geom_point(size=0.005) +
   geom_line(size = 0.2, aes(group = ID)) +
   # coord_fixed(ratio = 10) +
+
   scale_x_datetime(date_breaks = "10 min", minor_breaks = "30 sec", date_labels = "%e/%m \n %H:%M:%S") +
   facet_wrap(vars(date), ncol = 1, scales = "free") +
   # geom_line(size=0.05)
