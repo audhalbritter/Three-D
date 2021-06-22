@@ -31,6 +31,7 @@ if(file.exists(zipFile)){
   unzip(zipFile, exdir = outDir)
 }
 
+#importing fluxes data
 location <- "data/c-flux/summer_2021/rawData" #location of datafiles
 
 fluxes <-
@@ -48,3 +49,58 @@ fluxes <-
   ) %>%
   select(datetime,CO2, PAR, temp_air, temp_soil)
 
+
+#import the record file from the field
+
+record <- read_csv("data/c-flux/summer_2021/Three-D_field-record_2021.csv", na = c(""), col_types = "ccntDfc") %>% 
+  drop_na(starting_time) %>% #delete row without starting time (meaning no measurement was done)
+  mutate(
+    start = ymd_hms(paste(date, starting_time)), #converting the date as posixct, pasting date and starting time together
+    end = start + measurement, #creating column End
+    start_window = start + startcrop, #cropping the start
+    end_window = end - endcrop #cropping the end of the measurement
+  ) %>% 
+  rename(plot_ID = turf_ID) #because the function to calculate fluxes takes plot_ID, but I might change that
+
+#matching the CO2 concentration data with the turfs using the field record
+co2_fluxes <- match.flux(fluxes,record)
+
+#adjusting the time window with the actual fluxes
+
+# import cutting
+cutting <- read_csv("data/c-flux/summer_2021/Three-D_cutting_2021.csv", na = "", col_types = "dtt")
+
+co2_cut <- co2_fluxes %>% 
+  left_join(cutting, by = "ID") %>% 
+  mutate(
+    start_cut = ymd_hms(paste(date, .$start_cut)),
+    end_cut = ymd_hms(paste(date, .$end_cut))
+  )
+
+# adjusting the time window with manual cuts
+co2_cut <- co2_cut %>% mutate(
+  start_window = case_when(
+    is.na(start_cut) == FALSE ~ start_cut,
+    TRUE ~ start_window
+  ),
+  end_window = case_when(
+    is.na(end_cut) == FALSE ~ end_cut,
+    TRUE ~ end_window
+  ),
+  cut = case_when(
+    datetime <= start_window | datetime >= end_window ~ "cut",
+    # ID == 185 & datetime %in% c(ymd_hms("2020-08-02T12:12:35"):ymd_hms("2020-08-02T12:12:38")) ~ "cut",
+    # ID ==  & datetime %in%  ~ "cut",
+    # ID ==  & datetime %in%  ~ "cut",
+    # ID ==  & datetime %in%  ~ "cut",
+    TRUE ~ "keep"
+  ),
+  cut = as_factor(cut)
+)
+
+#need to do the same with the PAR, temp_air, temp_soil
+
+#temp_air and temp_soil: graph after the cleaning of CO2 and check if data are "normal"
+#put NA for when the soil temp sensor was not pluged in
+
+#PAR: same + NA for soilR and ER
