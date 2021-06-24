@@ -104,3 +104,6 @@ co2_cut <- co2_cut %>% mutate(
 #put NA for when the soil temp sensor was not pluged in
 
 #PAR: same + NA for soilR and ER
+
+
+
