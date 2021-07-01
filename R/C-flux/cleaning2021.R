@@ -97,11 +97,43 @@ co2_cut <- co2_cut %>% mutate(
   ),
   cut = as_factor(cut)
 )
+#plot each flux to look into details what to cut off
+ggplot(co2_cut, aes(x = datetime, y = CO2, color = cut)) +
+  geom_line(size = 0.2, aes(group = ID)) +
+  scale_x_datetime(date_breaks = "1 min", minor_breaks = "10 sec", date_labels = "%e/%m \n %H:%M") +
+  # scale_x_date(date_labels = "%H:%M:%S") +
+  facet_wrap(vars(ID), ncol = 40, scales = "free") +
+  ggsave("threed_2021_detail.png", height = 60, width = 126, units = "cm")
 
-#need to do the same with the PAR, temp_air, temp_soil
+
+# co2_cut <- filter(co2_cut, cut == "keep") #to keep only the part we want to keep
+
+#need to clean PAR, temp_air, temp_soil
 
 #temp_air and temp_soil: graph after the cleaning of CO2 and check if data are "normal"
 #put NA for when the soil temp sensor was not pluged in
+ggplot(co2_cut, aes(x = datetime, y = temp_air)) +
+  geom_line(size = 0.2, aes(group = ID)) +
+  scale_x_datetime(date_breaks = "1 min", minor_breaks = "10 sec", date_labels = "%e/%m \n %H:%M") +
+  # scale_x_date(date_labels = "%H:%M:%S") +
+  facet_wrap(vars(ID), ncol = 40, scales = "free") +
+  ggsave("threed_2021_detail_tempair.png", height = 60, width = 126, units = "cm")
+
+ggplot(co2_cut, aes(x = datetime, y = temp_soil)) +
+  geom_line(size = 0.2, aes(group = ID)) +
+  scale_x_datetime(date_breaks = "1 min", minor_breaks = "10 sec", date_labels = "%e/%m \n %H:%M") +
+  # scale_x_date(date_labels = "%H:%M:%S") +
+  facet_wrap(vars(ID), ncol = 40, scales = "free") +
+  ggsave("threed_2021_detail_tempsoil.png", height = 60, width = 126, units = "cm")
+
+co2_cut <- co2_cut %>% 
+  mutate(
+    temp_soil = case_when(
+      ID == XX ~ NA#for measurements when the sensor was not in the right place
+      
+    )
+  )
+
 
 #PAR: same + NA for soilR and ER
 
