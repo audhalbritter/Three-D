@@ -136,6 +136,22 @@ co2_cut <- co2_cut %>%
 
 
 #PAR: same + NA for soilR and ER
+ggplot(co2_cut, aes(x = datetime, y = PAR)) +
+  geom_line(size = 0.2, aes(group = ID)) +
+  scale_x_datetime(date_breaks = "1 min", minor_breaks = "10 sec", date_labels = "%e/%m \n %H:%M") +
+  # scale_x_date(date_labels = "%H:%M:%S") +
+  facet_wrap(vars(ID), ncol = 40, scales = "free") +
+  ggsave("threed_2021_detail_PAR.png", height = 60, width = 126, units = "cm")
+
+co2_cut <- co2_cut %>% 
+  mutate(
+    PAR = case_when(
+      type == "ER" ~ NA, #no PAR for ecosystem respiration (but maybe I should keep it??)
+      type == "SoilR" ~ NA, #no PAR with soil respiration, the sensor was somewhere else anyway
+      # datetime %in% c(ymd_hms("2020-08-02T12:12:35"):ymd_hms("2020-08-02T12:12:38")) # for when the sensor messed up because of the heat (should see a drop close to 0 or negative values)
+    )
+  )
+
 
 
 
