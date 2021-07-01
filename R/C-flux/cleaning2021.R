@@ -1,7 +1,24 @@
 library("dataDownloader")
 library(broom)
+library(fs)
 source("R/Load packages.R")
-source("https://raw.githubusercontent.com/jogaudard/common/master/fun-fluxes.R")
+# source("https://raw.githubusercontent.com/jogaudard/common/master/fun-fluxes.R")
+
+#function to match the fluxes with the record file
+match.flux <- function(raw_flux, field_record){
+  co2conc <- full_join(raw_flux, field_record, by = c("datetime" = "start"), keep = TRUE) %>% #joining both dataset in one
+    fill(PAR, temp_air, temp_soil, turfID, type, campaign, start, date, start, end, start_window, end_window) %>% #filling all rows (except Remarks) with data from above
+    group_by(date, turfID, type) %>% #this part is to fill Remarks while keeping the NA (some fluxes have no remark)
+    fill(comments) %>% 
+    ungroup() %>% 
+    mutate(ID = group_indices(., date, turfID, type, start)) %>% #assigning a unique ID to each flux, useful for plotting uzw
+    filter(
+      datetime <= end
+      & datetime >= start) #%>% #cropping the part of the flux that is after the End and before the Start
+
+  
+  return(co2conc)
+}
 
 
 measurement <- 240 #the length of the measurement taken on the field in seconds
@@ -52,15 +69,14 @@ fluxes <-
 
 #import the record file from the field
 
-record <- read_csv("data/c-flux/summer_2021/Three-D_field-record_2021.csv", na = c(""), col_types = "ccntDfc") %>% 
+record <- read_csv("data/c-flux/summer_2021/Three-D_field-record_2021.csv", na = c(""), col_types = "cctDfc") %>% 
   drop_na(starting_time) %>% #delete row without starting time (meaning no measurement was done)
   mutate(
     start = ymd_hms(paste(date, starting_time)), #converting the date as posixct, pasting date and starting time together
     end = start + measurement, #creating column End
     start_window = start + startcrop, #cropping the start
     end_window = end - endcrop #cropping the end of the measurement
-  ) %>% 
-  rename(plot_ID = turf_ID) #because the function to calculate fluxes takes plot_ID, but I might change that
+  ) 
 
 #matching the CO2 concentration data with the turfs using the field record
 co2_fluxes <- match.flux(fluxes,record)
@@ -102,7 +118,7 @@ ggplot(co2_cut, aes(x = datetime, y = CO2, color = cut)) +
   geom_line(size = 0.2, aes(group = ID)) +
   scale_x_datetime(date_breaks = "1 min", minor_breaks = "10 sec", date_labels = "%e/%m \n %H:%M") +
   # scale_x_date(date_labels = "%H:%M:%S") +
-  facet_wrap(vars(ID), ncol = 40, scales = "free") +
+  facet_wrap(vars(ID), ncol = 30, scales = "free") +
   ggsave("threed_2021_detail.png", height = 60, width = 126, units = "cm")
 
 
@@ -136,6 +152,18 @@ co2_cut <- co2_cut %>%
 
 
 #PAR: same + NA for soilR and ER
+
+co2_cut <- co2_cut %>% 
+  mutate(
+    PAR = case_when(
+      type == "ER" ~ NA_real_, #no PAR for ecosystem respiration (but maybe I should keep it??)
+      type == "SoilR" ~ NA_real_, #no PAR with soil respiration, the sensor was somewhere else anyway
+      # datetime %in% c(ymd_hms("2020-08-02T12:12:35"):ymd_hms("2020-08-02T12:12:38")) # for when the sensor messed up because of the heat (should see a drop close to 0 or negative values)
+      TRUE ~ as.numeric(PAR)
+      )
+  )
+
+
 ggplot(co2_cut, aes(x = datetime, y = PAR)) +
   geom_line(size = 0.2, aes(group = ID)) +
   scale_x_datetime(date_breaks = "1 min", minor_breaks = "10 sec", date_labels = "%e/%m \n %H:%M") +
@@ -143,14 +171,6 @@ ggplot(co2_cut, aes(x = datetime, y = PAR)) +
   facet_wrap(vars(ID), ncol = 40, scales = "free") +
   ggsave("threed_2021_detail_PAR.png", height = 60, width = 126, units = "cm")
 
-co2_cut <- co2_cut %>% 
-  mutate(
-    PAR = case_when(
-      type == "ER" ~ NA, #no PAR for ecosystem respiration (but maybe I should keep it??)
-      type == "SoilR" ~ NA, #no PAR with soil respiration, the sensor was somewhere else anyway
-      # datetime %in% c(ymd_hms("2020-08-02T12:12:35"):ymd_hms("2020-08-02T12:12:38")) # for when the sensor messed up because of the heat (should see a drop close to 0 or negative values)
-    )
-  )
 
 
 
