@@ -105,7 +105,10 @@ co2_cut <- co2_cut %>% mutate(
   ),
   cut = case_when(
     datetime <= start_window | datetime >= end_window ~ "cut",
-    # ID == 185 & datetime %in% c(ymd_hms("2020-08-02T12:12:35"):ymd_hms("2020-08-02T12:12:38")) ~ "cut",
+    ID == 23 & datetime %in% c(ymd_hms("2021-06-04T14:12:30"):ymd_hms("2021-06-04T14:12:50")) ~ "cut",
+    ID == 24 & datetime %in% c(ymd_hms("2021-06-04T14:07:30"):ymd_hms("2021-06-04T14:07:50")) ~ "cut",
+    ID == 25 & datetime %in% c(ymd_hms("2021-06-04T14:23:30"):ymd_hms("2021-06-04T14:23:50")) ~ "cut",
+    ID == 26 & datetime %in% c(ymd_hms("2021-06-04T14:17:20"):ymd_hms("2021-06-04T14:17:30")) ~ "cut",
     # ID ==  & datetime %in%  ~ "cut",
     # ID ==  & datetime %in%  ~ "cut",
     # ID ==  & datetime %in%  ~ "cut",
