@@ -112,7 +112,11 @@ community <- metaComm %>%
   
   # Remove white space after Species name
   mutate(Species = str_trim(Species, side = "right")) %>% 
-  mutate(Recorder = recode(Recorder, "so" = "silje", "vv" = "vigdis", "lhv" = "linn")) %>% 
+  mutate(Recorder = recode(Recorder, "so" = "silje", "vv" = "vigdis", "lhv" = "linn")) %>%
+  
+  # Fix wrong turfID
+  mutate(turfID = case_when(turfID == "87 WN1M 164" ~ "87 WN1N 164",
+                            TRUE ~ turfID)) %>% 
   
   # Fix wrong species names
   mutate(Species = recode(Species, 
@@ -130,6 +134,8 @@ community <- metaComm %>%
                           "Cerastium fontana" = "Cerastium fontanum",
                           "Equiseum arvense" = "Equisetum arvense",
                           "Equisetum vaginatum" = "Equisetum variegatum",
+                          "Galeopsis sp" = "Galeopsis tetrahit",
+                          "Galeopsis tetrait" = "Galeopsis tetrahit",
                           "Gentiana nivalus" = "Gentiana nivalis",
                           "Gron or fjellkurle" = "Orchid sp",
                           "Hieraceum sp." = "Hieraceum sp",
@@ -207,6 +213,13 @@ community <- metaComm %>%
                           "Carex sp2" = "Carex brunnescens cf",
                           "Carex sp2 dark m" = "Carex brunnescens cf",
                           "Carex sp2 dark v thin" = "Carex brunnescens cf",
+                          
+                          # Carex canescense cf
+                          "Carex canescens" = "Carex canescens cf",
+                          "Carex canescense cf" = "Carex canescens cf",
+                          
+                          # Carex pilulifera cf
+                          "Carex pilulifera" = "Carex pilulifera cf",
                           
                           # Carex norvegica cf
                           "Carex norwegica" = "Carex norvegica cf",
@@ -294,7 +307,7 @@ community <- metaComm %>%
   rename(date = Date, year = Year, species = Species, cover = Cover, recorder = Recorder, scribe = Scribe, remark = Remark) %>% 
   
   # # check for subplot level data
-  # community %>% 
+  # community %>%
   # # summarize cover from species that have been merged
   # group_by(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID, warming, grazing, Nlevel, year, species) %>%
   # mutate(n = n()) %>% filter(n > 1) %>% View()
@@ -364,16 +377,15 @@ write_csv(CommunityStructure, path = "data_cleaned/vegetation/THREE-D_CommunityS
 # subplot level data
 CommunitySubplot <- community %>% 
   filter(!species %in% c("Moss layer", "Vascular plant layer", "SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop")) %>% 
-  select(-scribe) %>%
   
   # make long table
-  pivot_longer(cols = `1`:`25`, names_to = "subplot", values_to = "presence") %>%
+  pivot_longer(cols = `1`:`25`, names_to = "subplot", values_to = "presence") %>% 
   # remove non-presence in subplot
-  filter(presence == "1") %>% 
+  filter(presence != "0") %>% 
   
   # Unknown seedlings have sometimes counts, but not consistent. So make just presence.
-  mutate(presence = ifelse(species == "Unknown seedlings" & presence != "0", "s", presence),
-         presence = recode(presence, "df" = "fd", "1j" = "j")) %>% 
+  mutate(presence = ifelse(species == "Unknown seedlings", "s", presence),
+         presence = recode(presence, "fd" = "df", "1j" = "j")) %>% 
   mutate(fertile = ifelse(presence %in% c("F", "f", "fd"), 1, 0),
          dominant = ifelse(presence %in% c("d", "fd", "dj"), 1, 0),
          juvenile = ifelse(presence %in% c("j", "dj"), 1, 0),
@@ -381,8 +393,8 @@ CommunitySubplot <- community %>%
   mutate(remark = if_else(presence %in% c("1?", "cf"), "species id uncertain", remark),
          remark = if_else(presence %in% c("3"), "probably 3 leontodon seedlings", remark),
          presence = if_else(presence %in% c("1", "1?", "cf", "3"), 1, 0)) %>% 
-  pivot_longer(cols = c(cover, presence:seedling), names_to = "variable", values_to = "value") %>% 
-  select(year, date, origSiteID:Nlevel, subplot, species, variable, value, remark, recorder) %>% 
+  pivot_longer(cols = c(presence:seedling), names_to = "variable", values_to = "value") %>% 
+  select(year, date, origSiteID:Nlevel, subplot, species, variable, value, cover, remark, recorder) %>% 
   bind_rows(subplot_missing)
 
-write_csv(CommunitySubplot, file = "data_cleaned/vegetation/THREE-D_CommunitySubplot_2019_2020.csv", col_names = TRUE)
+write_csv(CommunitySubplot, file = "data_cleaned/vegetation/THREE-D_CommunitySubplot_2019_2021.csv", col_names = TRUE)
