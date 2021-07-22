@@ -7,11 +7,11 @@ source("R/Load packages.R")
 #function to match the fluxes with the record file
 match.flux <- function(raw_flux, field_record){
   co2conc <- full_join(raw_flux, field_record, by = c("datetime" = "start"), keep = TRUE) %>% #joining both dataset in one
-    fill(PAR, temp_air, temp_soil, turfID, type, campaign, start, date, start, end, start_window, end_window) %>% #filling all rows (except Remarks) with data from above
+    fill(PAR, temp_air, temp_soil, turfID, type, campaign, start, date, end, start_window, end_window) %>% #filling all rows (except Remarks) with data from above
     group_by(date, turfID, type) %>% #this part is to fill Remarks while keeping the NA (some fluxes have no remark)
     fill(comments) %>% 
     ungroup() %>% 
-    mutate(ID = group_indices(., date, turfID, type, start)) %>% #assigning a unique ID to each flux, useful for plotting uzw
+    mutate(ID = group_indices(., date, turfID, type)) %>% #assigning a unique ID to each flux, useful for plotting uzw
     filter(
       datetime <= end
       & datetime >= start) #%>% #cropping the part of the flux that is after the End and before the Start
@@ -21,9 +21,9 @@ match.flux <- function(raw_flux, field_record){
 }
 
 
-measurement <- 240 #the length of the measurement taken on the field in seconds
+measurement <- 210 #the length of the measurement taken on the field in seconds
 startcrop <- 10 #how much to crop at the beginning of the measurement in seconds
-endcrop <- 60 #how much to crop at the end of the measurement in seconds
+endcrop <- 40 #how much to crop at the end of the measurement in seconds
 
 #download and unzip files from OSF
 get_file(node = "pk4bg",
@@ -117,13 +117,35 @@ co2_cut <- co2_cut %>% mutate(
   cut = as_factor(cut)
 )
 #plot each flux to look into details what to cut off
-ggplot(co2_cut, aes(x = datetime, y = CO2, color = cut)) +
+# ggplot(co2_cut, aes(x = datetime, y = CO2, color = cut)) +
+#   geom_line(size = 0.2, aes(group = ID)) +
+#   scale_x_datetime(date_breaks = "1 min", minor_breaks = "10 sec", date_labels = "%e/%m \n %H:%M") +
+#   # scale_x_date(date_labels = "%H:%M:%S") +
+#   facet_wrap(vars(ID), ncol = 30, scales = "free") +
+#   ggsave("threed_2021_detailb.png", height = 60, width = 90, units = "cm")
+#graph is too big, will need to do one per campaign or something...
+
+theme_set(theme_grey(base_size = 5)) 
+
+filter(co2_cut, campaign == 1) %>% 
+  ggplot(aes(x = datetime, y = CO2, color = cut)) +
   geom_line(size = 0.2, aes(group = ID)) +
   scale_x_datetime(date_breaks = "1 min", minor_breaks = "10 sec", date_labels = "%e/%m \n %H:%M") +
   # scale_x_date(date_labels = "%H:%M:%S") +
   facet_wrap(vars(ID), ncol = 30, scales = "free") +
-  ggsave("threed_2021_detail.png", height = 60, width = 126, units = "cm")
+  ggsave("threed_2021_detail_1.png", height = 40, width = 80, units = "cm")
 
+filter(co2_cut, campaign == 2) %>% 
+  ggplot(aes(x = datetime, y = CO2, color = cut)) +
+  geom_line(size = 0.2, aes(group = ID)) +
+  scale_x_datetime(date_breaks = "1 min", minor_breaks = "10 sec", date_labels = "%e/%m \n %H:%M") +
+  # scale_x_date(date_labels = "%H:%M:%S") +
+  facet_wrap(vars(ID), ncol = 30, scales = "free") +
+  ggsave("threed_2021_detail_2.png", height = 40, width = 80, units = "cm")
+
+
+
+#Is there a more automated way to do one file per campaign??
 
 # co2_cut <- filter(co2_cut, cut == "keep") #to keep only the part we want to keep
 
