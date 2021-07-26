@@ -19,7 +19,7 @@ flux <- left_join(flux, metaTurfID, by = c("turf_ID"="turfID"))
 
 #LRC
 lrc_flux <- flux %>% 
-  filter(campaign == "LRC")
+  filter(type == c("LRC1", "LRC2", "LRC3", "LRC4", "LRC5"))
 
 #graph each light response curves
 ggplot(lrc_flux, aes(x = PARavg, y = flux, color = turf_ID)) +
