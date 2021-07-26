@@ -291,6 +291,7 @@ flux.calc <- function(co2conc, # dataset of CO2 concentration versus time (outpu
   
 }
 
-flux2021 <- flux.calc(co2_cut)
+fluxes2021 <- flux.calc(co2_cut)
 
+write_csv(fluxes2021, "data/c-flux/summer_2021/Three-D_c-flux_2021.csv")
 
