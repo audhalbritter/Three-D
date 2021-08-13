@@ -179,7 +179,9 @@ flux_threed <- filter(co2_threed_cut, cut == "keep") %>% #cut out the discarded 
   flux.calc() %>% 
   rename(
     turfID = plot_ID, #because in Three-D they are turfs but the function uses plots
-    fluxID = ID #ID is already in use in the Three-D project
+    fluxID = ID, #ID is already in use in the Three-D project
+    date_time = datetime,
+    remark = remarks
   )
 
 # count(flux_threed)
