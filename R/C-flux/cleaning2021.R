@@ -11,7 +11,7 @@ match.flux <- function(raw_flux, field_record){
     group_by(date, turfID, type) %>% #this part is to fill Remarks while keeping the NA (some fluxes have no remark)
     fill(comments) %>% 
     ungroup() %>% 
-    mutate(ID = group_indices(., date, turfID, type)) %>% #assigning a unique ID to each flux, useful for plotting uzw
+    mutate(fluxID = group_indices(., date, turfID, type)) %>% #assigning a unique ID to each flux, useful for plotting uzw
     filter(
       datetime <= end
       & datetime >= start) #%>% #cropping the part of the flux that is after the End and before the Start
@@ -105,14 +105,14 @@ co2_cut <- co2_cut %>% mutate(
   ),
   cut = case_when(
     datetime <= start_window | datetime >= end_window ~ "cut",
-    ID == 23 & datetime %in% c(ymd_hms("2021-06-04T14:12:30"):ymd_hms("2021-06-04T14:12:50")) ~ "cut",
-    ID == 24 & datetime %in% c(ymd_hms("2021-06-04T14:07:30"):ymd_hms("2021-06-04T14:07:50")) ~ "cut",
-    ID == 25 & datetime %in% c(ymd_hms("2021-06-04T14:23:30"):ymd_hms("2021-06-04T14:23:50")) ~ "cut",
-    ID == 26 & datetime %in% c(ymd_hms("2021-06-04T14:17:23"):ymd_hms("2021-06-04T14:17:30")) ~ "cut",
-    ID == 248 & datetime %in% c(ymd_hms("2021-06-22T14:19:45"):ymd_hms("2021-06-22T14:19:55")) ~ "cut",
-    # ID ==  & datetime %in%  ~ "cut",
-    # ID ==  & datetime %in%  ~ "cut",
-    # ID ==  & datetime %in%  ~ "cut",
+    fluxID == 23 & datetime %in% c(ymd_hms("2021-06-04T14:12:30"):ymd_hms("2021-06-04T14:12:50")) ~ "cut",
+    fluxID == 24 & datetime %in% c(ymd_hms("2021-06-04T14:07:30"):ymd_hms("2021-06-04T14:07:50")) ~ "cut",
+    fluxID == 25 & datetime %in% c(ymd_hms("2021-06-04T14:23:30"):ymd_hms("2021-06-04T14:23:50")) ~ "cut",
+    fluxID == 26 & datetime %in% c(ymd_hms("2021-06-04T14:17:23"):ymd_hms("2021-06-04T14:17:30")) ~ "cut",
+    fluxID == 248 & datetime %in% c(ymd_hms("2021-06-22T14:19:45"):ymd_hms("2021-06-22T14:19:55")) ~ "cut",
+    # fluxID ==  & datetime %in%  ~ "cut",
+    # fluxID ==  & datetime %in%  ~ "cut",
+    # fluxID ==  & datetime %in%  ~ "cut",
     TRUE ~ "keep"
   ),
   cut = as_factor(cut)
@@ -130,18 +130,18 @@ theme_set(theme_grey(base_size = 5))
 
 filter(co2_cut, campaign == 1) %>% 
   ggplot(aes(x = datetime, y = CO2, color = cut)) +
-  geom_line(size = 0.2, aes(group = ID)) +
+  geom_line(size = 0.2, aes(group = fluxID)) +
   scale_x_datetime(date_breaks = "1 min", minor_breaks = "10 sec", date_labels = "%e/%m \n %H:%M") +
   # scale_x_date(date_labels = "%H:%M:%S") +
-  facet_wrap(vars(ID), ncol = 30, scales = "free") +
+  facet_wrap(vars(fluxID), ncol = 30, scales = "free") +
   ggsave("threed_2021_detail_1.png", height = 40, width = 80, units = "cm")
 
 filter(co2_cut, campaign == 2) %>% 
   ggplot(aes(x = datetime, y = CO2, color = cut)) +
-  geom_line(size = 0.2, aes(group = ID)) +
+  geom_line(size = 0.2, aes(group = fluxID)) +
   scale_x_datetime(date_breaks = "1 min", minor_breaks = "10 sec", date_labels = "%e/%m \n %H:%M") +
   # scale_x_date(date_labels = "%H:%M:%S") +
-  facet_wrap(vars(ID), ncol = 30, scales = "free") +
+  facet_wrap(vars(fluxID), ncol = 30, scales = "free") +
   ggsave("threed_2021_detail_2.png", height = 40, width = 80, units = "cm")
 
 
@@ -156,34 +156,34 @@ filter(co2_cut, campaign == 2) %>%
 #put NA for when the soil temp sensor was not pluged in
 filter(co2_cut, campaign == 1) %>% 
   ggplot(aes(x = datetime, y = temp_air)) +
-    geom_line(size = 0.2, aes(group = ID)) +
+    geom_line(size = 0.2, aes(group = fluxID)) +
     scale_x_datetime(date_breaks = "1 min", minor_breaks = "10 sec", date_labels = "%e/%m \n %H:%M") +
     # scale_x_date(date_labels = "%H:%M:%S") +
-    facet_wrap(vars(ID), ncol = 30, scales = "free") +
+    facet_wrap(vars(fluxID), ncol = 30, scales = "free") +
     ggsave("threed_2021_detail_tempair_1.png", height = 40, width = 80, units = "cm")
 
 filter(co2_cut, campaign == 2) %>% 
   ggplot(aes(x = datetime, y = temp_air)) +
-  geom_line(size = 0.2, aes(group = ID)) +
+  geom_line(size = 0.2, aes(group = fluxID)) +
   scale_x_datetime(date_breaks = "1 min", minor_breaks = "10 sec", date_labels = "%e/%m \n %H:%M") +
   # scale_x_date(date_labels = "%H:%M:%S") +
-  facet_wrap(vars(ID), ncol = 30, scales = "free") +
+  facet_wrap(vars(fluxID), ncol = 30, scales = "free") +
   ggsave("threed_2021_detail_tempair_2.png", height = 40, width = 80, units = "cm")
 
 filter(co2_cut, campaign == 1) %>% 
   ggplot(aes(x = datetime, y = temp_soil)) +
-  geom_line(size = 0.2, aes(group = ID)) +
+  geom_line(size = 0.2, aes(group = fluxID)) +
   scale_x_datetime(date_breaks = "1 min", minor_breaks = "10 sec", date_labels = "%e/%m \n %H:%M") +
   # scale_x_date(date_labels = "%H:%M:%S") +
-  facet_wrap(vars(ID), ncol = 30, scales = "free") +
+  facet_wrap(vars(fluxID), ncol = 30, scales = "free") +
   ggsave("threed_2021_detail_tempsoil_1.png", height = 40, width = 80, units = "cm")
 
 filter(co2_cut, campaign == 2) %>% 
   ggplot(aes(x = datetime, y = temp_soil)) +
-  geom_line(size = 0.2, aes(group = ID)) +
+  geom_line(size = 0.2, aes(group = fluxID)) +
   scale_x_datetime(date_breaks = "1 min", minor_breaks = "10 sec", date_labels = "%e/%m \n %H:%M") +
   # scale_x_date(date_labels = "%H:%M:%S") +
-  facet_wrap(vars(ID), ncol = 30, scales = "free") +
+  facet_wrap(vars(fluxID), ncol = 30, scales = "free") +
   ggsave("threed_2021_detail_tempsoil_2.png", height = 40, width = 80, units = "cm")
 
 # ggplot(co2_cut, aes(x = datetime, y = temp_soil)) +
@@ -198,7 +198,7 @@ filter(co2_cut, campaign == 2) %>%
 co2_cut <- co2_cut %>% 
   mutate(
     temp_soil = case_when(
-      # ID == c(120,119,123) ~ NA#for measurements when the sensor was not in the right place
+      # fluxID == c(120,119,123) ~ NA#for measurements when the sensor was not in the right place
       comments == "soilT logger not plugged in" ~ NA_real_,
       comments == "Soil T NA" ~ NA_real_,
       TRUE ~ temp_soil
@@ -221,26 +221,26 @@ co2_cut <- co2_cut %>%
 # filter(co2_cut, campaign == 1) %>% 
 filter(co2_cut, type == "NEE") %>% 
   ggplot(aes(x = datetime, y = PAR)) +
-    geom_line(size = 0.2, aes(group = ID)) +
+    geom_line(size = 0.2, aes(group = fluxID)) +
     scale_x_datetime(date_breaks = "1 min", minor_breaks = "10 sec", date_labels = "%e/%m \n %H:%M") +
     # scale_x_date(date_labels = "%H:%M:%S") +
-    facet_wrap(vars(ID), ncol = 40, scales = "free") +
+    facet_wrap(vars(fluxID), ncol = 40, scales = "free") +
     ggsave("threed_2021_detail_PAR_NEE.png", height = 40, width = 80, units = "cm")
 
 filter(co2_cut, type == "ER") %>% 
   ggplot(aes(x = datetime, y = PAR)) +
-  geom_line(size = 0.2, aes(group = ID)) +
+  geom_line(size = 0.2, aes(group = fluxID)) +
   scale_x_datetime(date_breaks = "1 min", minor_breaks = "10 sec", date_labels = "%e/%m \n %H:%M") +
   # scale_x_date(date_labels = "%H:%M:%S") +
-  facet_wrap(vars(ID), ncol = 40, scales = "free") +
+  facet_wrap(vars(fluxID), ncol = 40, scales = "free") +
   ggsave("threed_2021_detail_PAR_ER.png", height = 40, width = 80, units = "cm")
 
 filter(co2_cut, type == c("LRC1", "LRC2", "LRC3", "LRC4", "LRC5")) %>% 
   ggplot(aes(x = datetime, y = PAR)) +
-  geom_line(size = 0.2, aes(group = ID)) +
+  geom_line(size = 0.2, aes(group = fluxID)) +
   scale_x_datetime(date_breaks = "1 min", minor_breaks = "10 sec", date_labels = "%e/%m \n %H:%M") +
   # scale_x_date(date_labels = "%H:%M:%S") +
-  facet_wrap(vars(ID), ncol = 10, scales = "free") +
+  facet_wrap(vars(fluxID), ncol = 10, scales = "free") +
   ggsave("threed_2021_detail_PAR_LRC.png", height = 40, width = 80, units = "cm")
 
 
@@ -258,7 +258,7 @@ flux.calc <- function(co2conc, # dataset of CO2 concentration versus time (outpu
   vol = chamber_volume + tube_volume
   fluxes_final <- co2conc %>% 
     # group_by(ID) %>% 
-    nest(-ID) %>% 
+    nest(-fluxID) %>% 
     mutate(
       data = map(data, ~.x %>% 
                    mutate(time = difftime(datetime[1:length(datetime)],datetime[1] , units = "secs"), #add a column with the time difference between each measurements and the beginning of the measurement. Usefull to calculate the slope.
@@ -280,13 +280,13 @@ flux.calc <- function(co2conc, # dataset of CO2 concentration versus time (outpu
            # & p.value < 0.05 #keeping only the significant fluxes
     ) %>% 
     # select(ID, Plot_ID, Type, Replicate, Remarks, Date, PARavg, Temp_airavg, r.squared, p.value, estimate, Campaign) %>% #select the column we need, dump the rest
-    distinct(ID, turf_ID, type, commments, date, PARavg, temp_airavg, temp_soilavg, r.squared, p.value, estimate, campaign, .keep_all = TRUE) %>%  #remove duplicate. Because of the nesting, we get one row per Datetime entry. We only need one row per flux. Select() gets rid of Datetime and then distinct() is cleaning those extra rows.
+    distinct(fluxID, turf_ID, type, commments, date, PARavg, temp_airavg, temp_soilavg, r.squared, p.value, estimate, campaign, .keep_all = TRUE) %>%  #remove duplicate. Because of the nesting, we get one row per Datetime entry. We only need one row per flux. Select() gets rid of Datetime and then distinct() is cleaning those extra rows.
     #calculate fluxes using the trendline and the air temperature
     mutate(flux = (estimate * atm_pressure * vol)/(R * temp_airavg * plot_area) #gives flux in micromol/s/m^2
            *3600 #secs to hours
            /1000 #micromol to mmol
     ) %>%  #flux is now in mmol/m^2/h, which is more common
-    select(datetime, ID, turf_ID, type, comments, date, PARavg, temp_airavg, temp_soilavg, r.squared, p.value, nobs, flux, campaign)
+    select(datetime, fluxID, turf_ID, type, comments, date, PARavg, temp_airavg, temp_soilavg, r.squared, p.value, nobs, flux, campaign)
   
   return(fluxes_final)
   
