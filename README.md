@@ -1788,8 +1788,8 @@ Bowman GM and Hutka J (2002) Particle Size Analysis. In Soil Physical Measuremen
 <td align="left">campaign</td>
 <td align="left">numeric</td>
 <td align="left">NA - NA</td>
-<td align="left">01.Apr</td>
-<td align="left">Campgain connected to carbon flux measurements</td>
+<td align="left">NA</td>
+<td align="left">Campaign connected to carbon flux measurements</td>
 <td align="left">defined</td>
 </tr>
 </tbody>
@@ -2145,12 +2145,12 @@ Bowman GM and Hutka J (2002) Particle Size Analysis. In Soil Physical Measuremen
 
 <table style="width:100%;">
 <colgroup>
-<col width="10%" />
-<col width="10%" />
-<col width="29%" />
+<col width="6%" />
+<col width="6%" />
+<col width="18%" />
 <col width="8%" />
-<col width="32%" />
-<col width="9%" />
+<col width="45%" />
+<col width="14%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -2164,51 +2164,51 @@ Bowman GM and Hutka J (2002) Particle Size Analysis. In Soil Physical Measuremen
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">datetime</td>
+<td align="left">date_time</td>
 <td align="left">date</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left">yyyy-mm-dd_hh:mm:ss</td>
+<td align="left">Date and time of observation</td>
+<td align="left">defined</td>
 </tr>
 <tr class="even">
-<td align="left">ID</td>
+<td align="left">fluxID</td>
 <td align="left">numeric</td>
 <td align="left">1 - 307</td>
-<td align="left">5612</td>
-<td align="left">Unique logger value</td>
+<td align="left">NA</td>
+<td align="left">Unique ID for each flux</td>
 <td align="left">defined</td>
 </tr>
 <tr class="odd">
-<td align="left">turf_ID</td>
+<td align="left">turfID</td>
 <td align="left">categorical</td>
 <td align="left">105 WN3C 173 - 85 WN1C 162</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left">81 AN1C 81</td>
+<td align="left">Unique ID of vegetation turf as originplotID, warming, nitrogen and grazing treatment and destinationplotID</td>
+<td align="left">defined</td>
 </tr>
 <tr class="even">
 <td align="left">type</td>
 <td align="left">categorical</td>
 <td align="left">1 - NEE</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left">type of flux measurements</td>
+<td align="left">defined</td>
 </tr>
 <tr class="odd">
 <td align="left">replicate</td>
 <td align="left">numeric</td>
 <td align="left">1 - 3</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left">replicate measurement of same turf</td>
+<td align="left">defined</td>
 </tr>
 <tr class="even">
-<td align="left">remarks</td>
+<td align="left">remark</td>
 <td align="left">categorical</td>
 <td align="left">NA - NA</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left">Comment</td>
 <td align="left">NA</td>
 </tr>
 <tr class="odd">
@@ -2223,104 +2223,104 @@ Bowman GM and Hutka J (2002) Particle Size Analysis. In Soil Physical Measuremen
 <td align="left">PARavg</td>
 <td align="left">numeric</td>
 <td align="left">-0.0249615508474576 - 2068.95633027523</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left">micromol/s/sqm</td>
+<td align="left">PAR value measured every 15 seconds during flux measurement and averaged</td>
+<td align="left">measured</td>
 </tr>
 <tr class="odd">
 <td align="left">temp_airavg</td>
 <td align="left">numeric</td>
 <td align="left">281.231816326531 - 310.627443037975</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left">°K</td>
+<td align="left">air temperature measured inside the flux chamber every 10 seconds and averaged</td>
+<td align="left">measured</td>
 </tr>
 <tr class="even">
 <td align="left">r.squared</td>
 <td align="left">numeric</td>
 <td align="left">0.000688199786800194 - 0.999773081117464</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left">R squared of the linear relation between CO2 concentration and time</td>
+<td align="left">calculated</td>
 </tr>
 <tr class="odd">
 <td align="left">p.value</td>
 <td align="left">numeric</td>
 <td align="left">8.42094622572888e-197 - 0.786563753459083</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left">p value of the linear relation between CO2 concentration and time</td>
+<td align="left">calculated</td>
 </tr>
 <tr class="even">
 <td align="left">nobs</td>
 <td align="left">numeric</td>
 <td align="left">29 - 129</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left">number of CO2 concentration measurements for each flux</td>
+<td align="left">measured</td>
 </tr>
 <tr class="odd">
 <td align="left">flux</td>
 <td align="left">numeric</td>
 <td align="left">-25.8473002606009 - 244.931729610437</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left">mmol/sqm/h</td>
+<td align="left">CO2 flux (postive when emitting to atmosphere</td>
+<td align="left">negative when vegetation uptake)</td>
 </tr>
 <tr class="even">
 <td align="left">campaign</td>
 <td align="left">categorical</td>
 <td align="left">1 - LRC</td>
-<td align="left">01.Apr</td>
-<td align="left">Campgain connected to carbon flux measurements</td>
+<td align="left">NA</td>
+<td align="left">Campaign connected to carbon flux measurements</td>
 <td align="left">defined</td>
 </tr>
 <tr class="odd">
-<td align="left">datetime</td>
+<td align="left">date_time</td>
 <td align="left">date</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left">yyyy-mm-dd_hh:mm:ss</td>
+<td align="left">Date and time of observation</td>
+<td align="left">defined</td>
 </tr>
 <tr class="even">
-<td align="left">ID</td>
+<td align="left">fluxID</td>
 <td align="left">numeric</td>
 <td align="left">1 - 307</td>
-<td align="left">5612</td>
-<td align="left">Unique logger value</td>
+<td align="left">NA</td>
+<td align="left">Unique ID for each flux</td>
 <td align="left">defined</td>
 </tr>
 <tr class="odd">
-<td align="left">turf_ID</td>
+<td align="left">turfID</td>
 <td align="left">categorical</td>
 <td align="left">105 WN3C 173 - 85 WN1C 162</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left">81 AN1C 81</td>
+<td align="left">Unique ID of vegetation turf as originplotID, warming, nitrogen and grazing treatment and destinationplotID</td>
+<td align="left">defined</td>
 </tr>
 <tr class="even">
 <td align="left">type</td>
 <td align="left">categorical</td>
 <td align="left">1 - NEE</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left">type of flux measurements</td>
+<td align="left">defined</td>
 </tr>
 <tr class="odd">
 <td align="left">replicate</td>
 <td align="left">numeric</td>
 <td align="left">1 - 3</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left">replicate measurement of same turf</td>
+<td align="left">defined</td>
 </tr>
 <tr class="even">
-<td align="left">remarks</td>
+<td align="left">remark</td>
 <td align="left">categorical</td>
 <td align="left">NA - NA</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left">Comment</td>
 <td align="left">NA</td>
 </tr>
 <tr class="odd">
@@ -2335,56 +2335,56 @@ Bowman GM and Hutka J (2002) Particle Size Analysis. In Soil Physical Measuremen
 <td align="left">PARavg</td>
 <td align="left">numeric</td>
 <td align="left">-0.0249615508474576 - 2068.95633027523</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left">micromol/s/sqm</td>
+<td align="left">PAR value measured every 15 seconds during flux measurement and averaged</td>
+<td align="left">measured</td>
 </tr>
 <tr class="odd">
 <td align="left">temp_airavg</td>
 <td align="left">numeric</td>
 <td align="left">281.231816326531 - 310.627443037975</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left">°K</td>
+<td align="left">air temperature measured inside the flux chamber every 10 seconds and averaged</td>
+<td align="left">measured</td>
 </tr>
 <tr class="even">
 <td align="left">r.squared</td>
 <td align="left">numeric</td>
 <td align="left">0.000688199786800194 - 0.999773081117464</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left">R squared of the linear relation between CO2 concentration and time</td>
+<td align="left">calculated</td>
 </tr>
 <tr class="odd">
 <td align="left">p.value</td>
 <td align="left">numeric</td>
 <td align="left">8.42094622572888e-197 - 0.786563753459083</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left">p value of the linear relation between CO2 concentration and time</td>
+<td align="left">calculated</td>
 </tr>
 <tr class="even">
 <td align="left">nobs</td>
 <td align="left">numeric</td>
 <td align="left">29 - 129</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left">number of CO2 concentration measurements for each flux</td>
+<td align="left">measured</td>
 </tr>
 <tr class="odd">
 <td align="left">flux</td>
 <td align="left">numeric</td>
 <td align="left">-25.8473002606009 - 244.931729610437</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left">mmol/sqm/h</td>
+<td align="left">CO2 flux (postive when emitting to atmosphere</td>
+<td align="left">negative when vegetation uptake)</td>
 </tr>
 <tr class="even">
 <td align="left">campaign</td>
 <td align="left">categorical</td>
 <td align="left">1 - LRC</td>
-<td align="left">01.Apr</td>
-<td align="left">Campgain connected to carbon flux measurements</td>
+<td align="left">NA</td>
+<td align="left">Campaign connected to carbon flux measurements</td>
 <td align="left">defined</td>
 </tr>
 </tbody>
