@@ -27,7 +27,7 @@ layer,Moss layer,Moss or vegetation layer,defined
 height,numeric value,Average height of the vascular vegetation or moss in the plot,measured
 ndvi,numeric value,NDVI measured per plot,measured
 measurement,1 or 2,First or second measurement per plot,defined
-campaign,01.Apr,Campgain connected to carbon flux measurements,defined
+campaign,NA,Campaign connected to carbon flux measurements,defined
 timing,before treatment,Timing of measurement in relation to cutting treatment,defined
 month,01.Dec,Month of observation,defined
 day,Jan.31,Day of observaiton,defined
