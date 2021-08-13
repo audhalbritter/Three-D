@@ -178,7 +178,8 @@ ggplot(co2_threed_cut, aes(x=datetime, y=CO2, color = cut)) +
 flux_threed <- filter(co2_threed_cut, cut == "keep") %>% #cut out the discarded parts
   flux.calc() %>% 
   rename(
-    turf_ID = plot_ID #because in Three-D they are turfs but the function uses plots
+    turf_ID = plot_ID, #because in Three-D they are turfs but the function uses plots
+    fluxID = ID #ID is already in use in the Three-D project
   )
 
 # count(flux_threed)
