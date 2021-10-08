@@ -418,15 +418,14 @@ A linear regression is fitted to every measurements and the slope is used to cal
 
 <img src="https://render.githubusercontent.com/render/math?math=flux=slope\times \frac{P\times V}{R\times T\times A}">
 
-Where:
-
-- flux: the flux of CO~2~ at the surface of the plot (mmol/m^2^/h)
-- slope: slope of linear regression fitting the CO~2~ concentration versus time (ppm^-1^)
-- P: pressure, assumed 1 atm
-- V: volume of the chamber and tubing (L)
-- R: gas constant (0.082057 L\*atm\*K^-1^\*mol^-1^)
-- T: chamber air temperature (K)
-- A: area of chamber frame base (m^2^)
+where
+flux: the flux of CO~2~ at the surface of the plot (mmol/m^2^/h)
+slope: slope of linear regression fitting the CO~2~ concentration versus time (ppm^-1^)
+P: pressure, assumed 1 atm
+V: volume of the chamber and tubing (L)
+R: gas constant (0.082057 L\*atm\*K^-1^\*mol^-1^)
+T: chamber air temperature (K)
+A: area of chamber frame base (m^2^)
 
 
 
@@ -451,15 +450,9 @@ The function `flux.calc` calculates the flux with default values for Three-D set
 <!-- data description -->
 <!-- Make a new table in an R script and call it here. Use the col names from the flux data set and take exemple on the China data paper (https://www.nature.com/articles/s41597-020-0529-0/tables/4?proof=t) -->
 
-<!-- # ```{r, include=FALSE, code=xfun::read_utf8("description.R")} -->
-<!-- # ``` -->
-```{r cflux-data-dic}
 
-#knitr::kable(variables.cflux, format="html")
-
-```
-
-<!-- light response curves -->
+### Light response curves
+...
 
 
 

@@ -522,17 +522,12 @@ to calculated the flux.
 
 <img src="https://render.githubusercontent.com/render/math?math=flux=slope\times \frac{P\times V}{R\times T\times A}">
 
-Where:
-
-  - flux: the flux of CO<sub>2</sub> at the surface of the plot
-    (mmol/m<sup>2</sup>/h)
-  - slope: slope of linear regression fitting the CO<sub>2</sub>
-    concentration versus time (ppm<sup>-1</sup>)
-  - P: pressure, assumed 1 atm
-  - V: volume of the chamber and tubing (L)
-  - R: gas constant (0.082057 L\*atm\*K<sup>-1</sup>\*mol<sup>-1</sup>)
-  - T: chamber air temperature (K)
-  - A: area of chamber frame base (m<sup>2</sup>)
+where flux: the flux of CO<sub>2</sub> at the surface of the plot
+(mmol/m<sup>2</sup>/h) slope: slope of linear regression fitting the
+CO<sub>2</sub> concentration versus time (ppm<sup>-1</sup>) P: pressure,
+assumed 1 atm V: volume of the chamber and tubing (L) R: gas constant
+(0.082057 L\*atm\*K<sup>-1</sup>\*mol<sup>-1</sup>) T: chamber air
+temperature (K) A: area of chamber frame base (m<sup>2</sup>)
 
 The function `flux.calc` calculates the flux with default values for
 Three-D setup.
@@ -567,11 +562,9 @@ Three-D setup.
 
 <!-- Make a new table in an R script and call it here. Use the col names from the flux data set and take exemple on the China data paper (https://www.nature.com/articles/s41597-020-0529-0/tables/4?proof=t) -->
 
-<!-- # ```{r, include=FALSE, code=xfun::read_utf8("description.R")} -->
+### Light response curves
 
-<!-- # ``` -->
-
-<!-- light response curves -->
+…
 
 ### Soil
 
