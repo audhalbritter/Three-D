@@ -4,14 +4,13 @@ fig_caption: yes
 ---
 
 
-
-````{r InitialSettings, out.width='100%', include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  message = FALSE,
-  warning = FALSE
-)
+```{r setup, out.width='100%', include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, 
+                      comment = "#>", 
+                      message = FALSE, 
+                      warning = FALSE, 
+                      eval = TRUE,
+                      echo=FALSE)
 library("tidyverse")
 library("lubridate")
 library("readxl")
@@ -26,8 +25,8 @@ theme_set(theme_bw(base_size = 12))
 
 
 # Data
-source("R/Soil/ReadInSoilData.R")
 source("R/Rgathering/DownloadCleanData.R")
+source("R/Soil/ReadInSoilData.R")
 source("R/Rgathering/Data_dic.R")
 
 
@@ -48,7 +47,7 @@ This enables us to explore the circumstances under which grazing is itself a maj
 To assess effects of three global change drivers and their impacts on ecosystem using a single framework, represents a significant advancement beyond the state-of-the-art.
 
 
-```{r proposal_figure, echo=FALSE, fig.cap= "Figure 1. Pathways of warmer climate, nitrogen deposition and grazing via productiviy and biomass on biodiverstiy and ecosystem function."}
+```{r proposal_figure, fig.cap= "Figure 1. Pathways of warmer climate, nitrogen deposition and grazing via productiviy and biomass on biodiverstiy and ecosystem function."}
 knitr::include_graphics('Pics/ProposalFigure_small.jpg')
 ```
 
@@ -60,9 +59,9 @@ The specific research questions of the THREE-D project are:
 2)	When and at what level does grazing mitigate the effects of these two global change drivers on biodiversity and ecosystem functioning?
 
 
-## METHODS
+# METHODS
 
-### Research site
+## Research site
 
 The study is conducted in three semi-natural grassland sites in western Norway and the eastern edge of the Himalaya in Gongga Mountain, Sichuan in China.
 The sites are location on calcareous soil (loamy sand) in Norway, and on mountain grey-brown soil in China.
@@ -70,13 +69,13 @@ The sites were chosen to fit within an elevational gradient with three temperatu
 The sites correspond to the alpine, sub-alpine and boreal biogeographic zones in Norway and subalpine to alpine grasslands in China. Other factors such as grazing regime and history, bedrock, vegetation type and structure, slope and exposure were kept as constant as possible among the selected sites within each country.
 
 
-```{r exp_design, echo=FALSE, fig.cap= "Figure 2: A) Experimental design at sites with low productivity (range centre) and high productivity (warm edge). The treatments are warming (red), nitrogen deposition (green), warming and nitrogen deposition (orange), and control (grey). These treatments are crossed with two clipping levels (intermediate and intensive) and natural grazing outside the grazing exclosure (stippled line). B) Example of a plot divided into data collection (species composition, carbon flux measures) and destructive harvesting (soil samples, litter bags, biomass harvesting) areas."}
+```{r exp_design, fig.cap= "Figure 2: A) Experimental design at sites with low productivity (range centre) and high productivity (warm edge). The treatments are warming (red), nitrogen deposition (green), warming and nitrogen deposition (orange), and control (grey). These treatments are crossed with two clipping levels (intermediate and intensive) and natural grazing outside the grazing exclosure (stippled line). B) Example of a plot divided into data collection (species composition, carbon flux measures) and destructive harvesting (soil samples, litter bags, biomass harvesting) areas."}
 knitr::include_graphics('Pics/ExperimentalDesign.jpg')
 ```
 
 
 
-```{r site-table, echo=FALSE}
+```{r site-table}
 knitr::kable(siteMetaData_pretty, caption = "Table 1: Site level information including site name, elevaiton, coordinates, bulk density (g/cm), soil texture (percentage sand, silt and clay), soil organic matter (SOM), carbon content, carbon and nitrogen stocks and pH.")
 ```
 
@@ -88,7 +87,7 @@ The sites should also be relatively easy to access, because of transplanting lar
 Finally, we wanted other environmental factors to be as similar as possible among the sites, within each of the countries (i.e. grazing regime and history, bedrock, vegetation type and structure, slope and exposure).
 
 
-```{r site-figure, echo=FALSE, fig.cap="Soil characteristics for all three sites at the top and bottom soil layer."}
+```{r site-figure, fig.cap="Soil characteristics for all three sites at the top and bottom soil layer."}
 
 soil <- read_delim(file = "data_cleaned/soil/THREE-D_Soil_2019-2020.csv", delim = ",")
 meta <- read_csv(file ="data_cleaned/soil/THREE-D_PlotLevel_Depth_2019.csv")
@@ -114,11 +113,12 @@ soil %>%
   facet_wrap(~ variable, scales = "free_y") +
   theme_minimal() +
   theme(legend.position = "top")
+
 ```
 
 
 
-### Experimental design
+## Experimental design
 
 In each site, a large enough area for 40 – 80 plots was chosen.
 Ten blocks, with 6 plots inside was marked with wooden poles in each corner.
@@ -150,11 +150,12 @@ Each block contained eight plots with one nitrogen level, ambient and warmed plo
 The total number of plots was 160.
 
 
-### Experimental treatments
+## Experimental treatments
 
 All the treatments were applied to the whole 50 x 50 cm plot (Figure 2B).
 
-**Warming treatment** The warming treatment was conducted at the end of the growing season in 2019, by transplanting entire plant communities to the lower elevation (c. +2-3°C).
+### Warming treatment
+The warming treatment was conducted at the end of the growing season in 2019, by transplanting entire plant communities to the lower elevation (c. +2-3°C).
 The upslope left-hand corner of each turf was marked with a toothpick that the turfs could be placed in the similar position relative to the slope and block orientation at the destination site.
 We used a knife to cut the turfs to 50 x 50 cm and to a depth of c. 10 - 25 cm, unless the soil was shallower, as was the case for some of the alpine plots.
 After excavation, the turfs were packed into a cardboard box and transported to their respective target sites within one day. The control plots were not excavated or moved. We did not have local transplants, to control for the transplanting effect, because this was tested in a previous project and the transplanting did not affect species composition in any of the system: SeedClim (Vandvik et al. 2020) and TransPlant, (Yang et al., 2018).
@@ -165,7 +166,8 @@ Transplanted turfs were carefully planted into their destination plots (destinat
 If necessary, loose soil was carefully removed from the underside of the turf, or local soil was added to the gap or around the edges to achieve this.
 
 
-**Nitrogen addition** In each plot we added slow dissolving fertilizer as pellets (YaraBela OPTI-NS 27-0-0 (4S)).
+###Nitrogen addition
+In each plot we added slow dissolving fertilizer as pellets (YaraBela OPTI-NS 27-0-0 (4S)).
 We used oxidised nitrogen (NO and N~2~O) formed mainly by combustion processes, which are the main sources of atmospheric nitrogen deposition in remote regions (i.e., away from intensive agriculture and other sources or reduced nitrogen).
 The fertilizer was added once at the start and once in the middle of the growing season from 2020 - 2021 (or 2022). 
 Each block reveived one of the seven nitrogen levels: 0, 0.5, 1, 5, 10, 50, 100, 150 kg N ha^−1^ yr^−1^.
@@ -178,7 +180,8 @@ Although the natural annual deposition differs between Norway and China, the Nit
 
 In 2020, the nitrogen treatment was only applied once at Vikesland due to an accident.
 
-**Grazing treatment** The warming and nitrogen treatments were crossed with four grazing treatments.
+### Grazing treatment
+The warming and nitrogen treatments were crossed with four grazing treatments.
 Grazing was simulated by clipping the vegetation manually with scissors 2-3 cm above the ground.
 The four grazing treatments were natural grazing (N; outside the fence), medium level of grazing (M; 2x clipp), intensive level of grazing (I; 4x clipp), and untreated control plots (C).
 The intermediate clipping level reflects the natural grazing level outside the exclosure and should control for differences between grazing and clipping (i.e. clipping is not selective and will not add faeces and urine).
@@ -198,13 +201,14 @@ Cut 3 for Lia does not exist in 2020.
 | 2  | 2020  | 24 June  | 17 July  | 11 August  |
 | 3  | 2020  | 12-13 August  | 10-12 August  | NA |
 | 4  | 2020  | 6,7,11 September  | 8-9 September  | 10 September  |
-| 1  | 2021  | .. June  | .. July  | .. July  |
-| 2  | 2021  | .. July  | .. July  | .. August  |
-| 3  | 2021  | .. August  | .. August  | .. August |
-| 4  | 2021  | .. September  | .. September  | .. September  |
+| 1  | 2021  | 29 May  | 30 May / 15 June  | 16 June  |
+| 2  | 2021  | 7-9 July  | 5-9 July  | 5-9 July  |
+| 3  | 2021  | 2-11 August  | 2-11 August  | 2-11 August |
+| 4  | 2021  | 3 September  | 2 September  | 1 September  |
 
 
-**Field site maintenance** To simulate the natural grazing regime at each site, and to avoid accumulation of biomass, all biomass within the fence was removed at the end of each field season.
+### Field site maintenance
+To simulate the natural grazing regime at each site, and to avoid accumulation of biomass, all biomass within the fence was removed at the end of each field season.
 Note that the biomass removal, is not the same as the grazing treatment (see above) and biomass harvesting (see below).
 The grazing treatment is applied to each plot (50 x 50 cm) in early and peak season, while the biomass harvesting occurs at the end of the last field season (25 x 25cm plot).
 The site maintenance has to be done after biomass harvesting.
@@ -213,9 +217,9 @@ Climate data was downloaded at start and the end of each field season.
  
  
 
-### Data management
+## Data management
 
-#### Location of data and supporting information 
+### Location of data and supporting information 
 
 Project meta-information, data set overview and metadata for each dataset are in this readme file you are now reading, available on GitHub: https://github.com/audhalbritter/Three-D
 
@@ -227,21 +231,21 @@ Links to information, data, popular science and publications are on the THREE-D 
 http://www.audhalbritter.com/three-d/ and https://betweenthefjords.w.uib.no/three-d/
 
 
-#### Naming conventions used for the data
+### Naming conventions used for the data
 
 | Data or file  | Description of naming convention  |
 |:---|:---|
 | Data files  | Project_Experiment_Dataset_Year.extension  |
 | Readme files  | Project_Experiment_Dataset_Year_Readme.extension  |
-| Taxa  | Vascular plant taxon names follow for Norway Lid & Lid(Lid J & Lid, 2010) and for China e-flora of China? The species names are abbreviated with 3 + 3 first letters of genus + species names. A list of all taxa and abbreviations are in the THREE-D database.  |
+| species  | Vascular plant taxon names follow for Norway Lid & Lid(Lid J & Lid, 2010) and for China e-flora of China? The full taxa is written using genus and species with a blank. |
 | Country  | Norway or China  |
 | Project  | THREE-D  |
 | Experiment  | Grazing exclosure  |
 | Datasets  | Project_Experiment_Dataset_Year, THREE-D_plant_community_2019, THREE-D_carbon_flux_2021  |
 | EN_predictor  | Environmental data are generally used for more than one experiment, and are therefore coded as [EN]  |
-| Treatment  | Warming: Ambient (A), Warm (W)  |
-| Nitrogen level  | 1-10, where N1 is 0 kg ha^-1^ y^-1^ and N10 is 150 kg ha^-1^ y^-1^|
-| Grazing  | Medium grazing (M), intensive grazing (I), natural grazing (N), control/no grazing (C)  |
+| warming  | ambient (A), warm (W)  |
+| Nlevel  | 1-10, where N1 is 0 kg ha^-1^ y^-1^ and N10 is 150 kg ha^-1^ y^-1^|
+| grazing  | Medium grazing (M), intensive grazing (I), natural grazing (N), control/no grazing (C)  |
 | origSiteID  | Name of the origin site; Norway: Joasete (Joa), Liahovden (Lia); China: Ridge, Middle, Low |
 | destSiteID  | Name of the destination site; Norway: Vikesland (Vik), Joasete (Joa), Liahovden (Lia); China: Ridge, Middle, Low |
 | origBlockID  | 1-10  |
@@ -249,9 +253,9 @@ http://www.audhalbritter.com/three-d/ and https://betweenthefjords.w.uib.no/thre
 | origPlotID  | 1-160 (plots only in high and middle site) |
 | destPlotID  | 1-200 (plots all 3 sites) |
 | turfID | originPlotID-3 treatments (warming, nitrogen level, and grazing)-destPlotID e.g. 1-A5C-1 or 2-W5M-125|
-| Responses  | response, e.g. cover, biomass, Reco, etc. |
+| responses  | response, e.g. cover, biomass, Reco, etc. |
 
-#### Data handling and curation
+### Data handling and curation
 
 All collected data was checked for errors and unrealistic values using vizualization.
 Errors were fixed or deleted if there was a valid reason.
@@ -260,28 +264,28 @@ The community data was checked using turf maps that show change in species cover
 
 
 
-### Data collection and measurements
+## Data collection and measurements
 
-The following data was collected and is available in the mentioned files on OSF:
+The following datasets were collected and are available : https://osf.io/pk4bg/
 
-| Variable  | Time  | Level | Data file  |
+| Variable  | Time period  | Level | Data file  |
 |:---|:---|:---|:---|
 | **Site** |  |  |  |
 | Elevation | 2019  | Site  | THREE-D_metaSite.csv  |
 | Coordinates, slope and aspect  | 2019  | Plot  | THREE-D_metaSite.csv  |
-| **Response variables** |  |  |  |
+| **Vegetation** |  |  |  |
 | Species cover  | 2019 - 2020  | Plot  | THREE-D_Cover_2019_2020.csv  |
 | Species presence  | 2019 - 2020  | Subplot  | THREE-D_CommunitySubplot_2019_2020.csv  |
 | Plant functional group cover  | 2019 - 2020  | Plot  | THREE-D_CommunityStructure_2019_2020.csv  |
-| Ecosystem fluxes  | 2020  | Plot  | Three-D_c-flux_2020.csv  |
-| Soil respiration  | 2021  | Plot/Site  | Three-D_c-flux_2020.csv  |
-| **Vegetation** |  |  |  |
 | Vegetation height  | 2019 - 2020  | Plot  | THREE-D_Height_2019_2020.csv  |
 | Aboveground biomass  | 2019 - 2020  | Plot  | THREE-D_Biomass_2020.csv  |
 | Belowground biomass  | 2021  | Plot  | xxx  |
 | Aboveground plant productivity  | 2021  | Plot  | xxx  |
 | Belowground plant productivity  | 2021  | Plot  | xxx  |
 | Reflectance  | 2020  | Plot  | THREE-D_Reflectance_2020.csv  |
+| **C-flux** |  |  |  |
+| Ecosystem fluxes  | 2020  | Plot  | Three-D_c-flux_2020.csv  |
+| Soil respiration  | 2021  | Plot/Site  | Three-D_c-flux_2020.csv  |
 | **Soil** |  |  |  |
 | Soil depth  | 2019  | Plot  | THREE-D_PlotLevel_Depth_2019.csv  |
 | Soil texture  | 2019  | Site  | THREE-D_Soil_2019-2020.csv  |
@@ -298,11 +302,12 @@ The following data was collected and is available in the mentioned files on OSF:
 
 
 
-**Site/plot level meta data**
+### Site/plot level meta data
 Elevation was assessed using a GPS at the site level, while slope, exposure and soil depth (using metal pole at each corner) was recorded for each plot.
 
 
-**Plant species composition** Plant species composition was recorded annually at peak growing season, in 2019 and 2021.
+### Plant species composition
+Plant species composition was recorded annually at peak growing season, in 2019 and 2021.
 In 2020, not all the plots were surveyed due to fieldwork restrictions related to the corona pandemic.
 Each 25 x 25 cm plots was divided into 25 subplots (Figure 3).
 The recording started in the upper left corner, and went row by row, from left to the right.
@@ -316,7 +321,7 @@ In 2020, species composition was recorded fully only for the control and warmed 
 For the rest of the plots, only percentage cover by functional group was recorded.
 
 
-```{r subplots, echo=FALSE, fig.cap= "Figure 3: Plot and sub-plot design. Orange plots indicate the subplot for the vegetation height measurements."}
+```{r subplots, fig.cap= "Figure 3: Plot and sub-plot design. Orange plots indicate the subplot for the vegetation height measurements."}
 knitr::include_graphics('Pics/Subblots.jpg')
 ```
 
@@ -341,7 +346,8 @@ Problematic species are:
 
 
 
-**Reflectance** Reflectance (greeness) was measured several times during the season in each plot from 2020-2021 (2022).
+### Reflectance
+Reflectance (greeness) was measured several times during the season in each plot from 2020-2021 (2022).
 The greenseeker measures in an elliptical shape, and the light source and receiver should be located in the middle of the plot.
 The green seeker is placed 60 cm above the plot and parallel to the ground, using a ruler.
 Two measurements are done per plot perpendicular to each other to account for the elliptical shape.
@@ -351,24 +357,37 @@ Unrealistic values, where the comma was forgotten, were divided by 100.
 
 
 
-**Aboveground biomass** There are two types of biomass measurements.
+### Aboveground biomass
 
-*Grazing treatment:* biomass was clipped and harvested as a grazing treatment in the plots that received intermediate or intensive grazing.
+There are two types of biomass measurements.
+
+#### Grazing treatment
+biomass was clipped and harvested as a grazing treatment in the plots that received intermediate or intensive grazing.
 The biomass was clipped 2cm above the ground in several round during each growing season (2020-2021, 2022?).
 The biomass was stored in the freezer until sorted into functional groups: grasses, sedges, forbs, legumes, shrubs, bryophytes, lichens and litter.
 The biomass was then dried at 65°C for 72 hours and weighed.
 
 
 
-*Biomass harvest:* Biomass will was harvested at the end of the growing season in 2021 from all plots.
+#### Biomass harvest
+Biomass will was harvested at the end of the growing season in 2021 from all plots.
 The vegetation was cut 2cm above the ground and stored in the freezer until sorted into functional groups: grasses, sedges, forbs, legumes, shrubs, bryophytes, lichens and litter.
 The biomass was then dried at 65°C for 72 hours and weighed.
 
 *Data handling:* The data was visually checked for unrealistic values, which were corrected or removed if there was a valid reason.
 
 
+### Belowground biomass
+Root ingrowth cores (Helene)
 
-**Ecosystem fluxes** Net ecosystem exchange (NEE) and ecosystem respiration (ER) were measured on the field while gross ecosystem production (GEP) is calculated as GEP = NEE - ER.
+
+### Decomposition
+Tea bag index... (Helene)
+
+
+
+### Ecosystem fluxes
+Net ecosystem exchange (NEE) and ecosystem respiration (ER) were measured on the field while gross ecosystem production (GEP) is calculated as GEP = NEE - ER.
 Carbon fluxes are measured with a closed loop chamber system connected to an infrared gaz analyser (INGRA; Li-840A, Li-cor).
 The plexiglas chamber (25x25x40 cm) is connected to the INGRA with plastic tubes (inlet and outlet, 3m long and 4mm diameter each).
 A filter prevents water droplets and small particules from entering the INGRA and an air pump ensures a flow of 1L/mn.
@@ -434,7 +453,7 @@ The function `flux.calc` calculates the flux with default values for Three-D set
 
 <!-- # ```{r, include=FALSE, code=xfun::read_utf8("description.R")} -->
 <!-- # ``` -->
-```{r cflux-data-dic, echo=FALSE}
+```{r cflux-data-dic}
 
 #knitr::kable(variables.cflux, format="html")
 
@@ -444,8 +463,9 @@ The function `flux.calc` calculates the flux with default values for Three-D set
 
 
 
-
-**Soil sampling for CN stocks, pH, soil organic matter and soil texture** In summer 2019, two soil samples were collected from each block, but outside the plots to avoid destructive sampling.
+### Soil
+#### Soil sampling for CN stocks, pH, soil organic matter and soil texture
+In summer 2019, two soil samples were collected from each block, but outside the plots to avoid destructive sampling.
 The soil samples were 5 cm in diameter and 4 - 8 cm deep.
 The whole soil depth was sampled, and each soil sample contained one sample from the upper organic layer, and if possible another sample from the lower mineral part of the soil.
 In 2020, 5 soil samples per site (in between the blocks) were taken using the same method for CN stocks.
@@ -458,7 +478,8 @@ Stones and larger roots were also weighed.
 These soil samples were used to measure soil pH, soil organic matter, bulk density, C and N content and soil structure.
 
 
-**Soil pH** The pH was measured in a soil water solution.
+#### Soil pH
+The pH was measured in a soil water solution.
 The soil:water ratio depends on the amount of organic matter in the soil with a ratio of soil to water of 1:2.5 to 1:5 by weight for mineral soil.
 The method described here is based upon that employed by the Soil Survey of England and Wales (Avery & Bascomb, 1974) and by the Countryside Survey (Emmett et al., 2010).
 
@@ -469,7 +490,7 @@ The pH meter was calibrated in a buffer solutions of pH 4, 7 and 9 every 10th sa
 After 30 minutes of waiting and occasionally stirring, the soil pH was measured electrometrically using the calibrated pH meter.
 
 
-**Soil organic matter** (Hidden Cost protocol)
+#### Soil organic matter (Hidden Cost protocol)
 To measure soil organic matter (SOM), we used the method described by Ball(1964).
 10 g of fresh soil was weighed into a cup.
 The soil was then dried for 16h at 105°C and weighed.
@@ -486,7 +507,7 @@ The weight loss between 550 and 950°C is representative of the amount of CO~2~ 
 
 
 
-**Bulk density** 
+#### Bulk density
 
 Bulk density is a measure of the amount of soil per unit volume of oven dried soil and gives information on the physical status of the soil.
 
@@ -501,7 +522,7 @@ Bulk density (g/cm) = (dry weight core (g) - stone weight (g)) / (core volume (c
 stone density (~2.65 g cm–³) = stone mass (g) / stone volume (cm3)
 
 
-**Soil Texture** 
+#### Soil Texture
 Soil texture was measured using the particle size analysis (REF).
 We used 3 soil samples per site (mixing top and bottom layer), that were dried and where stones and roots have been removed.
 A jar was filled with one third of soil and 2 thirds of water plus some dishwashing powder.
@@ -521,13 +542,14 @@ Bowman GM and Hutka J (2002) Particle Size Analysis. In Soil Physical Measuremen
 
 
 
-**C and N content** 
+#### C and N content
 The C and N content was measured from dried and well mixed subsample of each soil sample, excluding large roots and stones (excluding particles > 2mm).
 The measurement was done at NMBU in Ås.
 Measurements of soil C and N were done by dry combustion (Matejovic, 1997; Senesi & Senesi, 2016).
 
 
-**Climate data** Temperature was measured continuously (every 15 min) at three heights (15 cm, at ground level, and 5 cm below ground) and soil moisture was measured continuously 5 cm below ground using Tomst TM4 loggers (Wild et al., 2019).
+#### Climate data
+Temperature was measured continuously (every 15 min) at three heights (15 cm, at ground level, and 5 cm below ground) and soil moisture was measured continuously 5 cm below ground using Tomst TM4 loggers (Wild et al., 2019).
 A Tomst logger was placed in all 6 plots inside the fence in the blocks receiving nitrogen treatments: N1, N2, N4,  N5, N6, N9, N10 (the plots receiving a climate logger will be indicated on the site map). The logger was place in the corner of the 50x50 cm plot.
 The climate loggers were put on the plots between July and September 2019.
 In total there are 72 climate loggers.
@@ -545,47 +567,47 @@ The climate variables are:
 ### Data dictionary
 
 #### Site
-```{r sitedic, echo=FALSE}
+```{r sitedic}
 knitr::kable(site_dic)
 ```
 
 #### Plant community cover
-```{r coverdic, echo=FALSE}
+```{r coverdic}
 knitr::kable(cover_dic)
 ```
 
 #### Plant community presence
-```{r subplotdic, echo=FALSE}
+```{r subplotdic}
 knitr::kable(subplot_dic)
 ```
 
 #### Plant community structure
-```{r structuredic, echo=FALSE}
+```{r structuredic}
 knitr::kable(structure_dic)
 ```
 
 #### Biomass
-```{r biomassdic, echo=FALSE}
+```{r biomassdic}
  knitr::kable(biomass_dic)
 ```
 
 #### Reflectance
-```{r reflectancedic, echo=FALSE}
+```{r reflectancedic}
 knitr::kable(reflectance_dic)
 ```
 
 #### Soil depth, slope and exposure
-```{r soildepthdic, echo=FALSE}
+```{r soildepthdic}
 knitr::kable(depth_dic)
 ```
 
 #### Soil texture, pH, bulk density, SOM
-```{r soildic, echo=FALSE}
+```{r soildic}
 knitr::kable(soil_dic)
 ```
 
 #### C-flux
-```{r cfluxdic, echo=FALSE}
+```{r cfluxdic}
 knitr::kable(cflux_dic)
 ```
 
@@ -595,6 +617,6 @@ knitr::kable(cflux_dic)
 # ```
 
 #### Climate
-```{r climatedic, echo=FALSE}
+```{r climatedic}
 knitr::kable(climate_gridded_dic)
 ```
