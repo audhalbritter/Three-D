@@ -111,7 +111,38 @@ fix_species = tribble(
   2019, "54 WN4I 134", "Salix reticulata", "Vaccinium uliginosum",
   2019, "54 WN4I 134", "Taraxacum sp.", "Leontodon autumnalis",
   2019, "61 WN8I 140", "Luzula spicata cf", "Luzula sp",
-  2021, "71 WN9N 151", "Luzula multiflora cf", "Luzula multiflora"
+  2021, "71 WN9N 151", "Luzula multiflora cf", "Luzula multiflora",
+  2019, "73 WN2M 153", "Leontodon autumnalis", "Taraxacum sp.",
+  2019, "4 AN1C 4", "Antennaria alpina cf", "Antennaria dioica",
+  2020, "4 AN1C 4", "Antennaria dioica cf", "Antennaria dioica",
+  2021, "4 AN1C 4", "Antennaria sp", "Antennaria dioica",
+  2021, "6 AN1I 6", "Antennaria sp", "Antennaria alpina cf",
+  2021, "7 AN1N 7", "Antennaria sp", "Antennaria alpina cf",
+  2019, "9 AN6M 9", "Achillea millefolium", "Alchemilla alpina",
+  2021, "9 AN6M 9", "Antennaria dioica cf", "Antennaria alpina cf",
+  2019, "9 AN6M 9", "Avenella flexuosa", "Festuca rubra",
+  2019, "9 AN6M 9", "Leontodon autumnalis", "Taraxacum sp.",
+  2019, "11 AN6I 11", "Antennaria alpina cf", "Antennaria sp",
+  2019, "11 AN6I 11", "Antennaria dioica cf", "Antennaria sp",
+  2019, "11 AN6I 11", "Taraxacum sp.", "Leontodon autumnalis",
+  2019, "16 AN6N 16", "Astragalus alpina", "Oxytropa laponica",
+  2019, "16 AN6N 16", "Antennaria alpina cf", "Antennaria sp",
+  2019, "23 AN5N 23", "Antennaria dioica cf", "Antennaria dioica",
+  2021, "23 AN5N 23", "Antennaria dioica cf", "Antennaria dioica",
+  2019, "27 AN3C 27", "Deschampsia cespitosa", "Deschampsia alpina",
+  2020, "27 AN3C 27", "Deschampsia cespitosa", "Deschampsia alpina",
+  2019, "27 AN3C 27", "Taraxacum sp.", "Leontodon autumnalis",
+  2019, "27 AN3C 27", "Luzula multiflora", "Luzula multiflora cf",
+  2019, "28 AN3I 28", "Antennaria alpina cf", "Antennaria sp",
+  2019, "28 AN3I 28", "Antennaria dioica cf", "Antennaria sp",
+  2020, "28 AN3I 28", "Antennaria dioica cf", "Antennaria sp",
+  2021, "28 AN3I 28", "Luzula sp", "Luzula spicata cf",
+  2019, "31 AN3N 31", "Deschampsia cespitosa", "Deschampsia alpina",
+  2020, "31 AN3N 31", "Deschampsia cespitosa", "Deschampsia alpina",
+  2019, "31 AN3N 31", "Luzula spicata cf", "Luzula sp",
+  2020, "31 AN3N 31", "Luzula spicata cf", "Luzula sp",
+  2020, "31 AN3N 31", "Luzula multiflora cf", "Luzula sp",
+  2021, "31 AN3N 31", "Luzula spicata cf", "Luzula sp"
   )
   
 
@@ -131,7 +162,12 @@ fix_cover = tribble(
   2019, "36 WN10M 115", "Agrostis capillaris", 12,
   2019, "59 WN8C 1385", "Leontodon autumnalis", 17,
   2019, "59 WN8C 1385", "Taraxacum sp.", 8,
-  2019, "61 WN8I 140", "Leontodon autumnalis", 4
+  2019, "61 WN8I 140", "Leontodon autumnalis", 4,
+  2019, "9 AN6M 9", "Festuca rubra", 2,
+  2019, "11 AN6I 11", "Leontodon autumnalis", 4,
+  2019, "16 AN6N 16", "Leontodon autumnalis", 2,
+  2019, "20 AN5I 20", "Festuca rubra", 17,
+  2019, "20 AN5I 20", "Potentilla crantzii", 3
   )
 
 add_cover = tribble(
@@ -140,7 +176,12 @@ add_cover = tribble(
 2019, "30 WN3M 107", "Luzula multiflora cf", 1,
 2019, "36 WN10M 115", "Taraxacum sp.", 1,
 2019, "53 WN4C 133", "Taraxacum sp.", 1,
-2019, "54 WN4I 134", "Taraxacum sp.", 2
+2019, "54 WN4I 134", "Taraxacum sp.", 2,
+2019, "11 AN6I 11", "Taraxacum sp.", 2,
+2019, "16 AN6N 16", "Taraxacum sp.", 6,
+2019, "20 AN5I 20", "Geranium sylvaticum", 5,
+2019, "20 AN5I 20", "Taraxacum sp.", 4,
+2019, "23 AN5N 23", "Antennaria sp", 2
 )  %>% 
   left_join(metaTurfID, by = "turfID")
 # need to add 5 WN1I 86 Leo aut in cover dataset. Full record.
@@ -153,7 +194,8 @@ remove_wrong_species = tribble(
   2020, "83 AN1I 83", "Avenella flexuosa",
   2019, "5 WN1I 86", "Festuca ovina",
   2019, "13 WN6C 90", "Festuca rubra",
-  2019, "36 WN10M 115", "Phleum alpinum"
+  2019, "36 WN10M 115", "Phleum alpinum",
+  2019, "20 AN5I 20", "Avenella flexuosa"
   
   
 )
@@ -173,7 +215,15 @@ add_subplot = tribble(
   2019, "53 WN4C 133", "Taraxacum sp.", list(2, 18, 22), "presence", 1, "silje",
   2019, "54 WN4I 134", "Taraxacum sp.", list(11, 12, 13, 16, 21), "presence", 1, "silje",
   2019, "59 WN8C 138", "Taraxacum sp.", list(3, 7, 13, 14, 17, 18, 19, 22), "presence", 1, "linn",
-  2019, "61 WN8I 140", "Leontodon autumnalis", list(5, 11, 16, 17, 21, 22, 25), "presence", 1, "silje"
+  2019, "61 WN8I 140", "Leontodon autumnalis", list(5, 11, 16, 17, 21, 22, 25), "presence", 1, "silje",
+  2019, "9 AN6M 9", "Festuca rubra", list(19, 24), "presence", 1, "linn",
+  2019, "9 AN6M 9", "Festuca rubra", list(24), "fertile", 1, "linn",
+  2019, "11 AN6I 11", "Taraxacum sp.", list(3, 8, 9), "presence", 1, "silje",
+  2019, "16 AN5I 16", "Taraxacum sp.", list(2, 3, 4, 5, 6, 7, 12, 14, 16, 22, 23, 24), "presence", 1, "linn",
+  2019, "20 AN5I 20", "Festuca rubra", list(2, 5, 7, 9, 10, 13, 14, 18, 19, 25), "presence", 1, "linn",
+  2019, "20 AN5I 20", "Geranium sylvaticum", list(1, 6, 7, 17, 22, 23), "presence", 1, "linn",
+  2019, "20 AN5I 20", "Taraxacum sp.", list(14, 15, 19, 20), "presence", 1, "linn",
+  2019, "23 AN5N 23", "Antennaria sp", list(14, 15, 18, 22, 23), "presence", 1, "silje"
   
   ) %>% 
   unchop(subplot) %>% 
@@ -185,7 +235,9 @@ remove_subplot = tribble(
   ~year, ~turfID, ~species, ~subplot, ~variable,
   2019, "1 WN1M 84", "Festuca ovina", list(1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 14, 15, 19, 20), "presence",
   2019, "5 WN1I 86", "Taraxacum sp.", list(8, 9, 10, 15, 20), "presence",
-  2019, "30 WN3M 107", "Luzula spicata cf", list(2, 7), "presence"
+  2019, "30 WN3M 107", "Luzula spicata cf", list(2, 7), "presence",
+  2019, "20 AN5I 20", "Potentilla crantzii", list(1, 6, 7, 17, 22, 23), "presence",
+  2019, "23 AN5N 23", "Antennaria dioica", list(14, 15, 18, 22, 23), "presence"
   
 ) %>% 
   unchop(subplot) %>% 
@@ -195,18 +247,20 @@ remove_subplot = tribble(
 
 c("Antennaria alpina cf", "Antennaria dioica cf", "Antennaria sp")
 c("Luzula multiflora cf", "Luzula sp", "Luzula spicata cf")
+c("Taraxacum sp.", "Leontodon autumnalis")
 
 cover %>% filter(turfID == "61 WN8I 140", species %in% c("Taraxacum sp.", "Leontodon autumnalis")) %>% as.data.frame()
-community %>% filter(turfID == "71 WN9N 151", species %in% c("Luzula multiflora cf", "Luzula sp", "Luzula spicata cf")) %>% as.data.frame()
-CommunitySubplot %>% filter(turfID == "5 WN1I 86", species %in% c("Festuca rubra"), variable == "presence") %>% as.data.frame()
+community %>% filter(turfID == "31 AN3N 31", species %in% c("Luzula multiflora cf", "Luzula sp", "Luzula spicata cf")) %>% as.data.frame()
+CommunitySubplot %>% filter(turfID == "9 AN6M 9", species %in% c("Festuca rubra"), variable == "presence") %>% as.data.frame()
 
 cover %>% filter(turfID == "3 WN1C 85") %>% distinct(species) %>% pn
   
-
+library("turfmapper")
+grid <- make_grid(ncol = 5)
 CommunitySubplot %>% 
   filter(variable == "presence",
          ! grepl("Carex", species),
-         turfID == "59 WN8C 138"
+         turfID == "31 AN3N 31"
   ) %>%
   left_join(cover %>% select(year, turfID, species, cover)) %>% 
   mutate(subplot = as.numeric(subplot),
