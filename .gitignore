@@ -65,5 +65,6 @@ vignettes/*.pdf
 !ReadMe.md
 !data_cleaned/Three-D_data_dic.csv
 !README_files/figure-gfm/site-figure-1.png
+!bibi.bib
 
 *.DS_Store
