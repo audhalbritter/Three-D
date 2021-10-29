@@ -322,7 +322,7 @@ remove_subplot = tribble(
 
 # CHECKS
 
-c("Antennaria alpina cf", "Antennaria dioica cf", "Antennaria sp")
+# c("Antennaria alpina cf", "Antennaria dioica cf", "Antennaria sp")
 # c("Luzula multiflora cf", "Luzula sp", "Luzula spicata cf")
 # c("Taraxacum sp.", "Leontodon autumnalis")
 # 
