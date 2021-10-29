@@ -120,7 +120,7 @@ community <- metaComm %>%
   
   # Remove white space after Species name
   mutate(Species = str_trim(Species, side = "right")) %>% 
-  mutate(Recorder = recode(Recorder, "so" = "silje", "vv" = "vigdis", "lhv" = "linn")) %>%
+  mutate(Recorder = recode(Recorder, "so" = "silje", "vv" = "vigdis", "lhv" = "linn", "kri" = "kari")) %>%
   
   # Fix wrong turfID
   mutate(turfID = case_when(turfID == "87 WN1M 164" ~ "87 WN1N 164",
@@ -156,7 +156,7 @@ community <- metaComm %>%
                           "Lycopodium" = "Lycopodium annotinum ssp alpestre cf",
                           "Omalothrca supina" = "Omalotheca supina",
                           "Pyrola" = "Pyrola sp",
-                          "Poa alpigena" = "Poa pratensis ssp alpigena",
+                          "Poa alpigena" = "Poa pratensis", # did not distinguish in later years
                           "Ranunculus" = "Ranunculus",
                           "Rubus idaes" = "Rubus idaeus",
                           "Sagina saginoides" = "Sagina saginella",
