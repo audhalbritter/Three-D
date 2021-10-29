@@ -1,6 +1,12 @@
-#suplot data problems
+### THIS SCRIPT FIXES PROBLEMS IN THE COMMUNITY DATA ###
 
-# names that were merged to the same name and now 2 entires per subplot exist. The solution is to remove one and if needed change the cover from the whole plot. Cover change is only needed for 51 WN4M 132, Carex light green.
+# MERGING SPECIES
+# Problems regarding merging of species and then there are multiple entries at the subplot level and cover
+# "duplicate_problem" and "subpot_missing" are fixing these problems before community is created.
+
+# Names that were merged to the same name and now 2 entries per subplot exist. The solution is to remove one and if needed change the cover from the whole plot.
+#80 WN2N 159 and #54 WN4I 134 have same cover!
+
 duplicate_problem = tribble(
   ~year, ~turfID, ~species, ~cover,
   2019, "51 WN4M 132", "Carex light green", 6,
@@ -15,18 +21,7 @@ duplicate_problem = tribble(
   )
 
 
-#77 AN2C 77 
-#80 WN2N 159 # same cover!
-#42 WN7I 123
-#48 AN7N 48 
-#51 WN4M 132
-#54 WN4I 134 # same cover!
-#60 AN8M 60 
-#67 AN9M 67 
-#68 AN9I 68 
-#72 AN9N 72 
-
-# impute subplot values that have been removed by removing duplicates
+# Impute presence in subplot for species that have been removed by removing duplicate entries (Merging species)
 subplot_missing = tribble(
   ~year, ~turfID, ~species, ~subplot, ~variable, ~value,
   2019, "77 AN2C 77", "Carex saxatilis cf", "15", "fertile", 1,
@@ -74,10 +69,12 @@ subplot_missing = tribble(
 
 
 
+### FIX MISIDENTIFICAITONS OR WRONG ENTRIES IN THE DATA
+# The following data frames fix misidentification of species, change species names, or problems in the data
+# All these changes need to be done in community data frame when producing cover and CommunitySubplot
 
-# Change wrong species name
-# Fix misidentification, or change cf to correct species
-# needs to be done in community for cover and subplotComm
+## Changes species names
+# Fixes misidentification, or change uncertainties in species names containing cf to species or vice versa according to data in other years of pictures
 fix_species = tribble(
   ~year, ~turfID, ~species, ~species_new,
   2019, "1 WN1M 84", "Antennaria alpina cf", "Antennaria sp",
@@ -115,6 +112,9 @@ fix_species = tribble(
   2019, "61 WN8I 140", "Luzula spicata cf", "Luzula sp",
   2021, "71 WN9N 151", "Luzula multiflora cf", "Luzula multiflora",
   2019, "73 WN2M 153", "Leontodon autumnalis", "Taraxacum sp.",
+  2019, "73 WN2M 153", "Luzula spicata cf", "Luzula spicata",
+  2020, "73 WN2M 153", "Luzula multiflora cf", "Luzula spicata",
+  2021, "73 WN2M 153", "Luzula sp", "Luzula spicata",
   2019, "4 AN1C 4", "Antennaria alpina cf", "Antennaria dioica",
   2020, "4 AN1C 4", "Antennaria dioica cf", "Antennaria dioica",
   2021, "4 AN1C 4", "Antennaria sp", "Antennaria dioica",
@@ -175,8 +175,8 @@ fix_species = tribble(
   
 
 
-# Fix cover of wrong species (replace with correct species)
-# in community for both cover and subplotComm
+## Fixes cover of species
+# This needs doing if species were merged, added or removed according to other years or pictures
 fix_cover = tribble(
   ~year, ~turfID, ~species, ~cover_new,
   2020, "83 AN1I 83", "Agrostis capillaris",  34,
@@ -206,6 +206,9 @@ fix_cover = tribble(
   2019, "63 AN8N 63", "Leontodon autumnalis", 3
   )
 
+
+## Adds cover for new species
+# This needs doing if species was missing, or species was split into 2 species according to other years or pictures
 add_cover = tribble(
   ~year, ~turfID, ~species, ~cover,
   2019, "1 WN1M 84", "Leontodon autumnalis", 1,
@@ -230,11 +233,14 @@ add_cover = tribble(
 2019, "58 AN8I 58", "Taraxacum sp.", 8,
 2019, "63 AN8N 63", "Taraxacum sp.", 5
 )  %>% 
+  # needs joining with metadata, because these are new entries
   left_join(metaTurfID, by = "turfID")
 # need to add 5 WN1I 86 Leo aut in cover dataset. Full record.
 
-# remove wrong species using anti_join (in community)
-#community %>% anti_join(remove_wrong_species, by = c("year", "turfID", "species"))
+
+
+## Remove species using anti_join
+# This is needed for species that were misidentified and only some of the subplots are change to another species
 remove_wrong_species = tribble(
   ~year, ~turfID, ~species,
   2020, "83 AN1I 83", "Phleum alpinum",
@@ -245,12 +251,13 @@ remove_wrong_species = tribble(
   2019, "36 WN10M 115", "Phleum alpinum",
   2019, "20 AN5I 20", "Avenella flexuosa",
   2019, "52 AN4C 52", "Antennaria alpina cf"
-  
-  
 )
 
 
-# in CommunitySubplot
+## Adds presence in new subplots
+# This is needed in cases where species names were changed or species were split into 2 and presence in some subplots need to be added to the dataset
+# list for subplot is created and then made into a long table
+# also needs more info like recorder, because this is needed for the maps
 add_subplot = tribble(
   ~year, ~turfID, ~species, ~subplot, ~variable, ~value, ~recorder,
   2020, "83 AN1I 83", "Festuca rubra", list(4, 5, 9, 12, 15, 18, 19, 20, 21, 22, 23, 24, 25), "presence", 1, "aud",
@@ -294,6 +301,8 @@ add_subplot = tribble(
          subplot = as.character(subplot)) %>% 
   left_join(metaTurfID, by = "turfID")
 
+# Removes presence data in subplots
+# This is needed for misidentified species, or wrong entries in the data
 remove_subplot = tribble(
   ~year, ~turfID, ~species, ~subplot, ~variable,
   2019, "1 WN1M 84", "Taraxacum sp.", list(3, 4, 10, 21, 22), "presence",
@@ -309,39 +318,43 @@ remove_subplot = tribble(
          subplot = as.character(subplot))
 
 
+
+
+# CHECKS
+
 c("Antennaria alpina cf", "Antennaria dioica cf", "Antennaria sp")
-c("Luzula multiflora cf", "Luzula sp", "Luzula spicata cf")
-c("Taraxacum sp.", "Leontodon autumnalis")
-
-cover %>% filter(turfID == "61 WN8I 140", species %in% c("Taraxacum sp.", "Leontodon autumnalis")) %>% as.data.frame()
-community %>% filter(turfID == "109 AN3C 109", species %in% c("Taraxacum sp.", "Leontodon autumnalis")) %>% as.data.frame()
-CommunitySubplot %>% filter(turfID == "9 AN6M 9", species %in% c("Festuca rubra"), variable == "presence") %>% as.data.frame()
-
-cover %>% filter(turfID == "3 WN1C 85") %>% distinct(species) %>% pn
-  
-library("turfmapper")
-grid <- make_grid(ncol = 5)
-CommunitySubplot %>% 
-  filter(variable == "presence",
-         ! grepl("Carex", species),
-         turfID == "109 AN3C 109"
-  ) %>%
-  left_join(cover %>% select(year, turfID, species, cover)) %>% 
-  mutate(subplot = as.numeric(subplot),
-         year_recorder = paste(year, recorder, sep = "_")) %>% 
-  select(-year) %>% 
-  arrange(destSiteID, destPlotID, turfID) %>% 
-  group_by(destSiteID, destPlotID, turfID) %>% 
-  nest() %>% 
-  {map2(
-    .x = .$data, 
-    .y = glue::glue("Site {.$destSiteID}: plot {.$destPlotID}: turf {.$turfID}"),
-    .f = ~make_turf_plot(
-      data = .x, 
-      year = year_recorder, 
-      species = species, 
-      cover = cover, 
-      subturf = subplot, 
-      title = glue::glue(.y), 
-      grid_long = grid)
-  )}
+# c("Luzula multiflora cf", "Luzula sp", "Luzula spicata cf")
+# c("Taraxacum sp.", "Leontodon autumnalis")
+# 
+# cover %>% filter(turfID == "61 WN8I 140", species %in% c("Taraxacum sp.", "Leontodon autumnalis")) %>% as.data.frame()
+# community %>% filter(turfID == "73 WN2M 153", species %in% c("Luzula multiflora cf", "Luzula sp", "Luzula spicata cf")) %>% as.data.frame()
+# CommunitySubplot %>% filter(turfID == "9 AN6M 9", species %in% c("Festuca rubra"), variable == "presence") %>% as.data.frame()
+# 
+# cover %>% filter(turfID == "3 WN1C 85") %>% distinct(species) %>% pn
+#   
+# library("turfmapper")
+# grid <- make_grid(ncol = 5)
+# CommunitySubplot %>% 
+#   filter(variable == "presence",
+#          ! grepl("Carex", species),
+#          turfID == "73 WN2M 153"
+#   ) %>%
+#   left_join(cover %>% select(year, turfID, species, cover)) %>% 
+#   mutate(subplot = as.numeric(subplot),
+#          year_recorder = paste(year, recorder, sep = "_")) %>% 
+#   select(-year) %>% 
+#   arrange(destSiteID, destPlotID, turfID) %>% 
+#   group_by(destSiteID, destPlotID, turfID) %>% 
+#   nest() %>% 
+#   {map2(
+#     .x = .$data, 
+#     .y = glue::glue("Site {.$destSiteID}: plot {.$destPlotID}: turf {.$turfID}"),
+#     .f = ~make_turf_plot(
+#       data = .x, 
+#       year = year_recorder, 
+#       species = species, 
+#       cover = cover, 
+#       subturf = subplot, 
+#       title = glue::glue(.y), 
+#       grid_long = grid)
+#   )}

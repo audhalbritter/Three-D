@@ -1,4 +1,5 @@
 ### Community data corrections
+# This script contains all changes that have been made to the community data (Cover and CommunitySubplot datasets)
 
 comm_corrections = tribble(
   ~year, ~turfID, ~correction,
@@ -24,7 +25,9 @@ comm_corrections = tribble(
   2019, "32 WN3N 112", "Change Luzula sspicata cf to Luzula sp",
   2021, "34 WN10I 114", "Change Antennaria sp to Antennaria dioica cf, because flower in 2019; Change Luzula sp to Luzula spicata cf, very narrow leaves",
   2019, "36 WN10M 115", "Change Tar to Leo aut, adjust cover, add Tar sp to some sublots and add cover; Remove Phl alp, because it looks like it was never there and add some subplots for Agr cap, often confused these two sp.",
-  2021, "37 WN10C 116", "Change Antennaria sp to Antennaria dioica cf, because flowering in 2019",
+  2019, "73 WN2M 153", "Change Luzula spicata cf to Luzula spicata because of flower",
+  2020, "73 WN2M 153", "Change Luzula multiflora cf to Luzula spicata, because of flower in 2019",
+  2021, "37 WN10C 116", "Change Antennaria sp to Antennaria dioica cf, because flowering in 2019; Change Luzula sp to Luz spicata because of flower in 2019",
   2019, "42 WN7I 123", "Change Antennaria alpina cf to Antennaria sp, no comment on which species it could be.",
   2019, "44 WN7M 125", "Change Taraxacum sp. to Leontodon autumnalis, misidentificaiton.",
   2021, "53 WN4C 133", "Change Antennaria sp to Antennaria alpina cf, because of comment",
@@ -80,19 +83,24 @@ comm_corrections = tribble(
 
 )
 
+### General problems in the data
 # Lot's of Phleum alpinum in 2019 at Joa, which is not there in 2021 anymore. Checked on pictures is real.
+# In 2019 lots of Tar sp and Leo aut were mixed. Many of those can be fixed by checking on the pictures and with the data from the following years
+# Ant alp and dio cannot always be distinguished. Ant sp have been changed to species when a plant was flowering or when there was a clear remark in the data that it was a specific species. In the other cases Antennaria has been change to Ant sp.
+# Luzula species are difficult to distinguish. Luzula has been change to species if flowers are present in one year or if the recorded strongly suggests that it is a specific species. Otherwise, it has been changed to Luz sp.
+# If species only occurs in one year, but shows similar patterns for another species, pictures and datasheets were checked and wrong entries/species names were fixed.
 
-# CHECK PICS
-# 73 WN2M 153 Ant odo in 2019 could be agr cap because of following years; Luz spi in sublpt 21 flowering in 2019, change to sp in some subplots in following years? rest luz sp. Desch alp?
+
+
+# CHECK PICS !!!
 # 74 WN2C 155 Ave, Fes o, r...?
-# 156 AN2C 156 Poa pra in 2020?
-# 78 WN2I 158 check fes o and r and agr mert
+# 156 AN2C 156 Poa pra in 2020 is Poa alp?
 # 80 WN2N 159 ver alp and ver fru; check leo tar; Poas?
-# 160 AN2N 160 Cerastium 2019? Festucas?
 
 
-# Things to maybe fix
-### Joa
+
+### PROBLEMS IN THE DATA THAT MIGHT NEED FIXING ###
+### JOA
 # 94 AN6I 94 2019 Fes rub, 2021 Fes ovi? Unclear
 # 19 WN5I 97 might not be much Tar sp in 2019, unsure from pic
 # 110 AN3I 110 Phl alp only in 2020? Could be some in 2019...
@@ -107,6 +115,11 @@ comm_corrections = tribble(
 # 65 WN9M 145 Vac myr in 2019 maybe some of the salix?  
 # 66 WN9I 147 Vac myr in 2021 Salix? Def Salix in 2019, pic! Poa vs. Phle??? 
 # 69 WN9C 150 Def more Fes rub?ovi? in 2019! There is salix herb in 2019, what happens in 2021? Does not look like there is Sibb pro in 2019... very dark plot, maybe all disappeared.
+# 73 WN2M 153 Desch alp in 2020, could be Fes ovi and/or rub?
+# 78 WN2I 158 Fes rub and Agr mert could be the same?
+# 160 AN2N 160 Cerastium fontanum in 2019 could be Cer cer? Festucas could be the same?
+
+### LIA
 # 12 AN6C 12 Poa pra could be poa alp in 2019?
 # 16 AN6N 16 Ave flex in 2019? Agr mert?
 # 17 AN5M 17 Ave flex in 2019 Fes rub?
@@ -125,4 +138,6 @@ comm_corrections = tribble(
 # 63 AN8N 63 Festuca rubra 2019, does not look like much in 2019, seem ok.
 # 70 AN9C 70 Unsure about Fes ovi in 2019
 # 76 AN2M 76 Viola probably the same
+
+### VIK
 # 159 WN2N 200 Ave and Fes?
