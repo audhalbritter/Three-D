@@ -91,6 +91,7 @@ fix_species = tribble(
   2019, "21 WN5C 99", "Antennaria alpina cf", "Antennaria sp",
   2019, "22 WN5M 102", "Antennaria alpina cf", "Antennaria sp",
   2019, "24 WN5N 103", "Taraxacum sp.", "Leontodon autumnalis",
+  2019, "26 WN3I 105", "Taraxacum sp.", "Leontodon autumnalis",
   2021, "29 WN3C 106", "Antennaria sp", "Antennaria alpina cf",
   2019, "29 WN3C 106", "Taraxacum sp.", "Leontodon autumnalis",
   2019, "29 WN3C 106", "Luzula spicata cf", "Luzula spicata",
@@ -279,7 +280,7 @@ add_subplot = tribble(
   2019, "9 AN6M 9", "Festuca rubra", list(24), "fertile", 1, "linn",
   2019, "11 AN6I 11", "Taraxacum sp.", list(3, 8, 9), "presence", 1, "silje",
   2019, "15 WN6N 95", "Leontodon autumnalis", list(7, 8, 22, 23), "presence", 1, "silje",
-  2019, "16 AN5I 16", "Taraxacum sp.", list(2, 3, 4, 5, 6, 7, 12, 14, 16, 22, 23, 24), "presence", 1, "linn",
+  2019, "16 AN6N 16", "Taraxacum sp.", list(2, 3, 4, 5, 6, 7, 12, 14, 16, 22, 23, 24), "presence", 1, "linn",
   2019, "20 AN5I 20", "Festuca rubra", list(2, 5, 7, 9, 10, 13, 14, 18, 19, 25), "presence", 1, "linn",
   2019, "20 AN5I 20", "Geranium sylvaticum", list(1, 6, 7, 17, 22, 23), "presence", 1, "linn",
   2019, "20 AN5I 20", "Taraxacum sp.", list(14, 15, 19, 20), "presence", 1, "linn",
@@ -334,27 +335,27 @@ remove_subplot = tribble(
 #   
 # library("turfmapper")
 # grid <- make_grid(ncol = 5)
-# CommunitySubplot %>% 
+# CommunitySubplot %>%
 #   filter(variable == "presence",
 #          ! grepl("Carex", species),
-#          turfID == "73 WN2M 153"
+#          turfID == "16 AN6N 16"
 #   ) %>%
-#   left_join(cover %>% select(year, turfID, species, cover)) %>% 
+#   left_join(cover %>% select(year, turfID, species, cover)) %>%
 #   mutate(subplot = as.numeric(subplot),
-#          year_recorder = paste(year, recorder, sep = "_")) %>% 
-#   select(-year) %>% 
-#   arrange(destSiteID, destPlotID, turfID) %>% 
-#   group_by(destSiteID, destPlotID, turfID) %>% 
-#   nest() %>% 
+#          year_recorder = paste(year, recorder, sep = "_")) %>%
+#   select(-year) %>%
+#   arrange(destSiteID, destPlotID, turfID) %>%
+#   group_by(destSiteID, destPlotID, turfID) %>%
+#   nest() %>%
 #   {map2(
-#     .x = .$data, 
+#     .x = .$data,
 #     .y = glue::glue("Site {.$destSiteID}: plot {.$destPlotID}: turf {.$turfID}"),
 #     .f = ~make_turf_plot(
-#       data = .x, 
-#       year = year_recorder, 
-#       species = species, 
-#       cover = cover, 
-#       subturf = subplot, 
-#       title = glue::glue(.y), 
+#       data = .x,
+#       year = year_recorder,
+#       species = species,
+#       cover = cover,
+#       subturf = subplot,
+#       title = glue::glue(.y),
 #       grid_long = grid)
 #   )}
