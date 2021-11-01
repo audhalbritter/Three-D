@@ -372,7 +372,7 @@ cover <- community %>%
   tidylog::anti_join(remove_wrong_species, by = c("year", "turfID", "species"))
 
   
-#write_csv(cover, file = "data_cleaned/vegetation/THREE-D_Cover_2019_2021.csv", col_names = TRUE)
+#write_csv(cover, file = "data_cleaned/vegetation/THREE-D_Cover_2019-2021.csv", col_names = TRUE)
 
 
 # subplot level data
@@ -417,7 +417,7 @@ CommunitySubplot <- community %>%
 ### NEED FIXING!!!
 ### filter(presence %in% c("2", "3", "4", "7")) %>% as.data.frame()
 
-write_csv(CommunitySubplot, file = "data_cleaned/vegetation/THREE-D_CommunitySubplot_2019_2021.csv", col_names = TRUE)
+#write_csv(CommunitySubplot, file = "data_cleaned/vegetation/THREE-D_CommunitySubplot_2019-2021.csv", col_names = TRUE)
 
 
 
