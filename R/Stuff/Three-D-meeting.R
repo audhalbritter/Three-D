@@ -1,5 +1,7 @@
 # ThreeD meeting 2021
 
+source("R/Load packages.R")
+source("R/Rgathering/create meta data.R")
 
 ndvi <- read_csv(file = "data_cleaned/vegetation/THREE-D_Reflectance_2020.csv")
 library("Hmisc")
@@ -36,7 +38,14 @@ ndvi_site <- ndvi %>%
 ggsave(ndvi_site, filename = "ndvi_site.png", height = 6, width = 8)
 
 
-biomass <- read_excel(path = "data/biomass/THREE_D_Biomass_Grazing_2020_Feb_2021.xlsx")
+biomass <- read_excel(path = "data/biomass/THREE_D_Biomass_Grazing_2020_March_2021.xlsx", 
+                      col_types = c("text", "numeric", "numeric", "text", "text", "numeric", "text", "numeric", "date", rep("numeric", 6), "text", rep("numeric", 4))) %>% 
+  pivot_longer(cols = c(Graminoids_g:Litter_g, Lichen_g:Fungi_g), names_to = "fun_group", values_to = "value") %>% 
+  filter(grazing %in% c("M", "I"),
+         !is.na(value)) %>% 
+  rename(date = Date, cut = Cut, remark = Remark) %>% 
+  left_join(metaTurfID, by = c("destSiteID", "destBlockID", "destPlotID", "turfID", "warming", "Nlevel", "grazing")) %>% 
+  mutate(year = year(date))
 
 
 biomass %>% 
@@ -51,30 +60,43 @@ biomass %>%
   print(n = Inf)
 
 
-biomass_plot <- biomass_sum %>% 
+biomass_plot <- biomass %>% 
+  mutate(year = 2020) %>% 
+  bind_rows(biomass21_raw) %>% 
+  filter(!Nlevel %in% c(3, 1),
+         grazing %in% c("I", "M"),
+         value < 200) %>%
   mutate(warm.graz = paste(warming, grazing, sep = "_"),
-         warm.graz = recode(warm.graz, A_I = 'A intensive', A_M = 'A medium', W_I = 'W intensive', W_M = 'W medium')) %>% 
-  filter(!fun_group %in% c("Fungi_g")) %>% 
+         warm.graz = recode(warm.graz, A_I = 'A intensive', A_M = 'A medium', W_I = 'W intensive', W_M = 'W medium'),
+         warm.graz = factor(warm.graz, levels = c('A medium', 'W medium', 'A intensive', 'W intensive')),
+         origSiteID = recode(origSiteID, "Lia" = "High alpine", "Joa" = "Alpine"),
+         origSiteID = factor(origSiteID, levels = c("High alpine", "Alpine"))) %>% 
+  filter(fun_group %in% c("Litter_g", "Forbs_g", "Graminoids_g")) %>% 
   left_join(NitrogenDictionary, by = "Nlevel") %>% 
-  group_by(Namount_kg_ha_y, year, fun_group, origSiteID, warming, grazing, warm.graz) %>% 
-  summarise(biomass = mean(sum)) %>% 
+  group_by(Namount_kg_ha_y, year, fun_group, origSiteID, warming, grazing, warm.graz) %>% # ADD YEAR
+  summarise(biomass = sum(value)) %>% 
   mutate(N = as.factor(Namount_kg_ha_y),
-         fun_group = factor(fun_group, levels = c("Litter_g", "Lichen_g", "Bryophytes_g", "Shrub_g", "Legumes_g", "Forbs_g", "Cyperaceae_g", "Graminoids_g"))) %>% 
-  ggplot(aes(x = N, y = biomass, fill = fun_group)) +
-  geom_col() +
+         #fun_group = factor(fun_group, levels = c("Litter_g", "Lichen_g", "Bryophytes_g", "Shrub_g", "Legumes_g", "Forbs_g", "Cyperaceae_g", "Graminoids_g"))) %>% 
+         fun_group = factor(fun_group, levels = c("Litter_g", "Forbs_g", "Graminoids_g"))) %>% 
+  ggplot(aes(x = Namount_kg_ha_y, y = biomass, colour = fun_group, linetype = factor(year), shape = factor(year))) +
+  geom_point() +
   #geom_point(alpha = 0.6) +
-  #geom_smooth(method = "lm", se = FALSE, formula = "y ~ x") +
-  scale_fill_manual(values = c("peru", "orange", "tomato", "darkgreen", "plum2", "plum4", "lawngreen", "limegreen"), name = "") +
+  geom_smooth(method = "lm", se = FALSE, formula = "y ~ x") +
+  #scale_colour_manual(values = c("peru", "darkgreen", "plum2", "plum4", "lawngreen", "limegreen"), name = "") +
+  scale_colour_manual(values = c("peru", "plum4", "limegreen"), name = "") +
+  scale_shape_manual(values = c(1, 16), name = "Year") +
+  scale_linetype_manual(values = c("dotted", "solid"), name = "Year") +
   labs(x = expression(paste("Nitrogen in kg ", ha^-1, y^-1)), y = "Biomass in g") +
-  facet_grid(origSiteID ~ warm.graz, scales = "free_y", labeller = labeller(origSiteID = site.labs)) +
+  facet_grid(origSiteID ~ warm.graz, scales = "free_y") +
   theme_minimal() +
   theme(text = element_text(size = 15))
-ggsave(biomass_plot, filename = "biomass_plot.png", height = 7, width = 6)
+ggsave(biomass_plot, filename = "biomass_plot_2.png", height = 7, width = 8, bg = "white")
+
 
 
 library(vegan)
 CommunityStructure <- read_csv(file = "data_cleaned/vegetation/THREE-D_CommunityStructure_2019_2020.csv")
-cover <- read_csv(file = "data_cleaned/vegetation/THREE-D_Cover_2019_2020.csv")
+cover <- read_csv(file = "data_cleaned/vegetation/THREE-D_Cover_2019-2021.csv")
 
 library("vegan")
 library("ggvegan")
@@ -114,24 +136,64 @@ ordination <- ggplot(fNMDS, aes(x = NMDS1, y = NMDS2, shape = factor(year), colo
 ggsave(ordination, filename = "ordination.png", height = 6, width = 8)
 
 
+cover %>% ungroup() %>% distinct(species) %>% write_csv(file = "species_list.csv")
+
+sp_list <- read_csv(file = "species_list.csv")
+
 richness <- cover %>% 
-  filter(year == 2019) %>% 
-  group_by(turfID, origBlockID, origSiteID) %>%  
-  summarise(richness = n(), 
-            diversity = diversity(cover), 
-            evenness = diversity/log(richness)) %>% 
-  pivot_longer(cols = c(richness, evenness), names_to = "metric", values_to = "value") %>%
-  select(-diversity) %>% 
-  mutate(metric = factor(metric, levels = c("richness", "evenness")),
+  filter(!is.na(origSiteID),
+         year != 2020,
+         !str_detect(species, "Carex"),
+         !Nlevel %in% c(3, 2)) %>% 
+  left_join(NitrogenDictionary, by = "Nlevel") %>%
+  ungroup() %>% 
+  group_by(turfID, origBlockID, origSiteID, year, warming, grazing, Namount_kg_ha_y) %>%  
+  summarise(richness = n()) %>% 
+            #diversity = diversity(cover), 
+            #evenness = diversity/log(richness)) %>% 
+  pivot_wider(names_from = year, values_from = richness) %>% 
+  mutate(delta = `2021` - `2019`,
          origSiteID = recode(origSiteID, "Lia" = "High alpine", "Joa" = "Alpine"),
-         origSiteID = factor(origSiteID, levels = c("High alpine", "Alpine"))) %>% 
-  ggplot(aes(x = origSiteID, y = value, fill = origSiteID)) +
-  geom_boxplot() +
-  labs(x = "", y = "") +
-  scale_fill_manual(name = "Site", values = c("light blue", "orange")) +
-  facet_wrap(~ metric, scales = "free_y") +
+         origSiteID = factor(origSiteID, levels = c("High alpine", "Alpine")),
+         grazing = factor(grazing, levels = c("C", "M", "I", "N")),
+         grazing = recode(grazing, "C" = "Control", "M" = "Medium", "I" = "Intensive", "N" = "Natural")) %>% 
+  ggplot(aes(x = Namount_kg_ha_y, y = delta, colour = warming, linetype = origSiteID)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "Nitrogen in kg ha^-1, y^-1", y = "Difference in richness (2021 - 2019)") +
+  scale_colour_manual(name = "Warming", values = c("light blue", "orange")) +
+  scale_linetype_manual(name = "", values = c("dashed", "solid")) +
+  facet_grid(origSiteID ~ grazing) +
   theme_minimal()
-ggsave(richness, filename = "richness.png", height = 4, width = 6)
+ggsave(richness, filename = "richness.png", height = 4, width = 6, bg = "white")
+
+
+# cover
+cover_plot <- cover %>% 
+  filter(year %in% c(2019, 2021), 
+         !is.na(origSiteID),
+         !Nlevel %in% c(3, 2)) %>% 
+  left_join(NitrogenDictionary, by = "Nlevel") %>%
+  left_join(sp_list, by = "species") %>%
+  ungroup() %>% 
+  group_by(turfID, origBlockID, origSiteID, warming, grazing, Namount_kg_ha_y, functional_group, year) %>%  
+  summarise(cover = sum(cover)) %>% 
+  pivot_wider(names_from = year, values_from = cover) %>% 
+  mutate(delta = `2021` - `2019`,
+         origSiteID = recode(origSiteID, "Lia" = "High alpine", "Joa" = "Alpine"),
+    origSiteID = factor(origSiteID, levels = c("High alpine", "Alpine")),
+    warming = recode(warming, "A" = "Ambient", "W" = "Warming"),
+    grazing = factor(grazing, levels = c("C", "M", "I", "N")),
+    grazing = recode(grazing, "C" = "Control", "M" = "Medium", "I" = "Intensive", "N" = "Natural")) %>% 
+  filter(functional_group %in% c("forb", "graminoid")) %>% 
+  ggplot(aes(x = Namount_kg_ha_y, y = delta, colour = functional_group, linetype = warming)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "Nitrogen in kg ha^-1, y^-1", y = "Cover") +
+  scale_colour_manual(name = "Func. group", values = c("plum4", "limegreen")) +
+  facet_grid(origSiteID ~ grazing) +
+  theme_minimal()
+ggsave(cover_plot, filename = "cover.png", height = 4, width = 6, bg = "white")
 
 
 height <- CommunityStructure %>% 
