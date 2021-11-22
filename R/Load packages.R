@@ -8,6 +8,7 @@ library("writexl")
 #devtools::install_github("Between-the-Fjords/dataDownloader")
 library("dataDownloader")
 library(validate)
+library(usethis)
 
 
 # Stuff
