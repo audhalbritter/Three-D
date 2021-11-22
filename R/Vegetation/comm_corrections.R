@@ -17,6 +17,7 @@ comm_corrections = tribble(
   2019, "21 WN5C 99", "Change Antennaria alpina cf to Antennaria sp; Remove Tar sp, and add some subplots to Leo aut, adjust cover, according to pic.",
   2019, "22 WN5M 102", "Change Antennaria alpina cf to Antennaria sp",
   2019, "24 WN5N 103", "Change Taraxacum sp. to Leontodon autumnalis, because of picutre",
+  2019, "26 WN3I 105", "Change Taraxacum sp. to Leontodon autumnalis, because of picutre",
   2019, "29 WN3C 106", "Change Luz spi cf to Luz spi: flower; Change Tar to Leo, according to picutre",
   2020, "29 WN3C 106", "Change Luz spi cf to Luz spi: flower",
   2021, "29 WN3C 106", "Change Antennaria sp to Antennaria alpina cf; change Luz spi cf to Luz spi: flower",
@@ -89,24 +90,25 @@ comm_corrections = tribble(
 # Ant alp and dio cannot always be distinguished. Ant sp have been changed to species when a plant was flowering or when there was a clear remark in the data that it was a specific species. In the other cases Antennaria has been change to Ant sp.
 # Luzula species are difficult to distinguish. Luzula has been change to species if flowers are present in one year or if the recorded strongly suggests that it is a specific species. Otherwise, it has been changed to Luz sp.
 # If species only occurs in one year, but shows similar patterns for another species, pictures and datasheets were checked and wrong entries/species names were fixed.
+# Trifolium repens comes into warm plots in 2021, and there is nothing there before.
 
 
 
 # CHECK PICS !!!
-# 74 WN2C 155 Ave, Fes o, r...?
-# 156 AN2C 156 Poa pra in 2020 is Poa alp?
 # 80 WN2N 159 ver alp and ver fru; check leo tar; Poas?
+# looks all like leo in 2019
 
+# Need to check Deschampsia cespisoa vs alpina!
 
 
 ### PROBLEMS IN THE DATA THAT MIGHT NEED FIXING ###
 ### JOA
 # 94 AN6I 94 2019 Fes rub, 2021 Fes ovi? Unclear
 # 19 WN5I 97 might not be much Tar sp in 2019, unsure from pic
+# 29 WN3C 106 Deschampsia in 2020? Looks like there could be Desch alp in 2019. Difficult to see if anything in 2021.
 # 110 AN3I 110 Phl alp only in 2020? Could be some in 2019...
 # 32 WN3N 112 Looks like 2019 Fes ovi is Fes rub and 2020 Des ces is Fes rub.
 # 120 AN10N 120 could Desch cesp in 2019 be Fes rub? According to pic...
-### Lia
 # 44 WN7M 125 poa pra very likely only poa alp in 2019, missing in 2021
 # 47 WN7N 128 Ave fle in 2019 is probabyl Fes rub, trust species ID in 2021 more; also check Poa alp, Phl alp in 2019, something is there! Also there are some Vac in 2019!
 # 53 WN4C 133 Ave fle in 2019 might be Fes rub
@@ -116,28 +118,29 @@ comm_corrections = tribble(
 # 66 WN9I 147 Vac myr in 2021 Salix? Def Salix in 2019, pic! Poa vs. Phle??? 
 # 69 WN9C 150 Def more Fes rub?ovi? in 2019! There is salix herb in 2019, what happens in 2021? Does not look like there is Sibb pro in 2019... very dark plot, maybe all disappeared.
 # 73 WN2M 153 Desch alp in 2020, could be Fes ovi and/or rub?
+# 74 WN2C 155 Ave fle in 2021 could be Fes ovi or rub?
+# 156 AN2C 156 Unclear if Poa alp in 2020 is Poa pra?
 # 78 WN2I 158 Fes rub and Agr mert could be the same?
 # 160 AN2N 160 Cerastium fontanum in 2019 could be Cer cer? Festucas could be the same?
 
 ### LIA
-# 12 AN6C 12 Poa pra could be poa alp in 2019?
 # 16 AN6N 16 Ave flex in 2019? Agr mert?
 # 17 AN5M 17 Ave flex in 2019 Fes rub?
 # 18 AN5C 18 Ave flex in 2019 Fes rub?
-# 23 AN5N 23 Ave flex in 2019 Fes rub?
 # 33 AN10I 33 most likely Luz spicata in 2021, Phle alp might be Agr cap
 # 35 AN10C 35 Ave fle could be Fes rub in 2019, looks like Fes ovi?
 # 39 AN10N 39 Phle alp looks like Agr cap on pic
 # 43 AN7C 43 Anth odo in 2019 could be Phle alp?
 # 45 AN7I 45 Ave flex in 2019 could be fes rub; potentially add Fes rub in 2019 in some subplots, according to pic.
 # 46 AN7M 46 Omalotheca supina in 2019 in pic?
-# 48 AN7N 48 Anth odo in 2019 Agr cap?
+# 48 AN7N 48 Anth odo and/or Phl alp in 2019 could be Agr cap? Pattern matches
 # 49 AN4I 49 Gen niv and Erigeron the same?
 # 57 AN8C 57 Violas the same? Agr and Poa?
-# 60 AN8M 60 Diphasiastrum...
+# 60 AN8M 60 Diphasiastrum is the same sp? probably...
 # 63 AN8N 63 Festuca rubra 2019, does not look like much in 2019, seem ok.
 # 70 AN9C 70 Unsure about Fes ovi in 2019
 # 76 AN2M 76 Viola probably the same
+# 79 AN2N 79 Ant alp cf in 2020 could be Omalotheca?
 
 ### VIK
 # 159 WN2N 200 Ave and Fes?

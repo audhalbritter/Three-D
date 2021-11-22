@@ -8,7 +8,8 @@ knitr::opts_chunk$set(echo = TRUE)
 library("tidyverse")
 library("turfmapper")
 
-CommunitySubplot <- read_csv(file = "data_cleaned/vegetation/THREE-D_CommunitySubplot_2019_2021.csv")
+CommunitySubplot <- read_csv(file = "data_cleaned/vegetation/THREE-D_CommunitySubplot_2019-2021.csv")
+cover <- read_csv(file = "data_cleaned/vegetation/THREE-D_Cover_2019-2021.csv")
 ```
 
 ## Check turfs
@@ -19,13 +20,14 @@ CommunitySubplot <- read_csv(file = "data_cleaned/vegetation/THREE-D_CommunitySu
 grid <- make_grid(ncol = 5)
 
 x <- CommunitySubplot %>% 
-  ungroup() %>% 
+  filter(variable == "presence",
+         # excluding carex for now!!!
+         ! grepl("Carex", species),
+         ) %>%
+  left_join(cover %>% select(year, turfID, species, cover)) %>% 
   mutate(subplot = as.numeric(subplot),
          year_recorder = paste(year, recorder, sep = "_")) %>% 
-    select(-year) %>% 
-  filter(variable == "presence",
-         value == 1,
-         destSiteID == "Vik") %>% 
+  select(-year) %>% 
   arrange(destSiteID, destPlotID, turfID) %>% 
   group_by(destSiteID, destPlotID, turfID) %>% 
   nest() %>% 
