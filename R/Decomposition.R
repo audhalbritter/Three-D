@@ -64,7 +64,7 @@ decomposition <- metaTurfID %>%
   tidylog::filter(!is.na(weight_loss_g)) %>% 
   select(origSiteID:Namount_kg_ha_y, teabag_ID, timing, tea_type, weight_loss_g, incubation_time, burial_depth_cm = tb_depth_cm, burial_date, preburial_weight_g, recover_date, post_burial_weight_g, comment_2)
   
-write_csv(decomposition, file = "data_cleaned/decomposition/ThreeD_clean_decomposition_fall_2021.csv")
+write_csv(decomposition, file = "data_cleaned/decomposition/THREE-D_clean_decomposition_fall_2021.csv")
 
 # Check data
 decomposition %>% 
