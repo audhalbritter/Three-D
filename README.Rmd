@@ -332,8 +332,10 @@ tibble(Variable = c("Elevation", "Coordinates, slope and aspect",
                 "Three-D_c-flux_2020.csv", "NA",
                 "THREE-D_PlotLevel_Depth_2019.csv", rep("THREE-D_Soil_2019-2020.cs", 5),
                 "NA",
-                "NA",
-                "NA", "NA", "THREE_D_Gridded_DailyClimate_2009-2019.csv")
+                "THREE-D_clean_decomposition_fall_2021.csv",
+                "NA", 
+                "NA", 
+                "THREE_D_Gridded_DailyClimate_2009-2019.csv")
        ) %>% 
   kbl(caption = "All avalble datasets with name, time period of data collection, level at which they were collected and file name on OSF.") %>% 
   pack_rows("Site", 1, 2) %>% 
@@ -719,6 +721,13 @@ knitr::kable(soil_dic)
 ```{r cfluxdic}
 knitr::kable(cflux_dic)
 ```
+
+
+#### Decomposition
+```{r decomposition}
+knitr::kable(decompose_dic)
+```
+
 
 <!-- ### Temperature and soil moisture -->
 <!-- ```{r tempdic, echo=FALSE} -->

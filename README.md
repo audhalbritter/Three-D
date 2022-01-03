@@ -1128,7 +1128,7 @@ Decomposition
 plot
 </td>
 <td style="text-align:left;">
-NA
+THREE-D_clean_decomposition_fall_2021.csv
 </td>
 </tr>
 <tr grouplength="3">
@@ -1245,10 +1245,10 @@ species of vascular plant was classified by functional type (graminoid,
 forb, woody) and biogeographic affinity based on information given in
 Lid & Lid (2010). Specifically, species reported to be present in the
 Nemoral but lacking from the Low- Mid- or High Alpine are classified as
-“lowland,” species present in the Alpine but lacking from the Nemoral to
-South Boreal are classified as “alpine,” whereas all other species
+“lowland”, species present in the Alpine but lacking from the Nemoral to
+South Boreal are classified as “alpine”, whereas all other species
 (i.e., species that span the gradient from Nemoral to Alpine zones) are
-classified as “generalist.”
+classified as “generalist”.
 
 **Data handling:** After each field season the data was checked vizually
 by plotting the cover of each species per plot over time using the
@@ -1602,7 +1602,7 @@ categorical
 Joa - Vik
 </td>
 <td style="text-align:left;">
-Vikesland
+NA
 </td>
 <td style="text-align:left;">
 Unique site ID of destination site
@@ -1662,7 +1662,7 @@ numeric
 469 - 1290
 </td>
 <td style="text-align:left;">
-m asl
+m a.s.l.
 </td>
 <td style="text-align:left;">
 elevation of site
@@ -1682,7 +1682,7 @@ categorical
 Bottom - Top
 </td>
 <td style="text-align:left;">
-Moss layer
+NA
 </td>
 <td style="text-align:left;">
 Moss or vegetation layer
@@ -1702,7 +1702,7 @@ categorical
 Bottom - Top
 </td>
 <td style="text-align:left;">
-top
+NA
 </td>
 <td style="text-align:left;">
 Layer at which soil sample was taken: top or bottom 5cm
@@ -1719,7 +1719,7 @@ bulk_density_se
 numeric
 </td>
 <td style="text-align:left;">
-0.0354977932720117 - 0.0763008350515654
+0.0354977932720116 - 0.0763008350515654
 </td>
 <td style="text-align:left;">
 NA
@@ -1879,7 +1879,7 @@ soil_organic_matter_se
 numeric
 </td>
 <td style="text-align:left;">
-0.00485375837365208 - 0.0584435476188698
+0.00485375837365207 - 0.0584435476188698
 </td>
 <td style="text-align:left;">
 NA
@@ -1919,7 +1919,7 @@ carbon_content_se
 numeric
 </td>
 <td style="text-align:left;">
-0.000290271928794042 - 0.0010393780518453
+0.000290271928794042 - 0.00103937805184529
 </td>
 <td style="text-align:left;">
 NA
@@ -2111,7 +2111,7 @@ categorical
 Joa - Lia
 </td>
 <td style="text-align:left;">
-Vikesland
+NA
 </td>
 <td style="text-align:left;">
 Unique site ID of origin site
@@ -2131,7 +2131,7 @@ numeric
 1 - 10
 </td>
 <td style="text-align:left;">
-01.Oct
+NA
 </td>
 <td style="text-align:left;">
 Unique origin block ID as number 1 to 10
@@ -2151,7 +2151,7 @@ numeric
 1 - 160
 </td>
 <td style="text-align:left;">
-1
+NA
 </td>
 <td style="text-align:left;">
 Unique numeric origin plot ID for geographic location of the turf
@@ -2171,7 +2171,7 @@ categorical
 Joa - Vik
 </td>
 <td style="text-align:left;">
-Vikesland
+NA
 </td>
 <td style="text-align:left;">
 Unique site ID of destination site
@@ -2191,7 +2191,7 @@ numeric
 1 - 10
 </td>
 <td style="text-align:left;">
-01.Oct
+NA
 </td>
 <td style="text-align:left;">
 Unique numeric destination plot ID for geographic location of the turf
@@ -2211,7 +2211,7 @@ numeric
 2 - 200
 </td>
 <td style="text-align:left;">
-81
+NA
 </td>
 <td style="text-align:left;">
 Unique destination block ID as number 1 to 10
@@ -2231,7 +2231,7 @@ categorical
 1 WN1M 84 - 99 WN5C 170
 </td>
 <td style="text-align:left;">
-81 AN1C 81
+NA
 </td>
 <td style="text-align:left;">
 Unique ID of vegetation turf as originplotID, warming, nitrogen and
@@ -2252,7 +2252,7 @@ categorical
 A - W
 </td>
 <td style="text-align:left;">
-A or W
+NA
 </td>
 <td style="text-align:left;">
 Warming treatment as W for warming or A for ambient
@@ -2272,7 +2272,7 @@ categorical
 C - N
 </td>
 <td style="text-align:left;">
-C, I, M, N
+NA
 </td>
 <td style="text-align:left;">
 Grazing treatment as C for control, I for intensive, M for medium and N
@@ -2293,7 +2293,7 @@ numeric
 1 - 10
 </td>
 <td style="text-align:left;">
-01.Oct
+NA
 </td>
 <td style="text-align:left;">
 Nitrogen level treatment as numeric value from 1 - 10
@@ -2353,7 +2353,7 @@ categorical
 Achillea millefolium - Viola palustris
 </td>
 <td style="text-align:left;">
-Achillea millefolium
+NA
 </td>
 <td style="text-align:left;">
 Latin genus and species name
@@ -2393,7 +2393,7 @@ categorical
 aud - vigdis
 </td>
 <td style="text-align:left;">
-aud
+NA
 </td>
 <td style="text-align:left;">
 Name of person that recorded the data
@@ -2455,7 +2455,7 @@ data/community//2020/Vik/THREE-D_CommunityData_Vikesland_4\_2020_iPad
 copy.xlsx
 </td>
 <td style="text-align:left;">
-data/community/2019/…
+NA
 </td>
 <td style="text-align:left;">
 name of file of raw data
@@ -2524,7 +2524,7 @@ categorical
 NA - NA
 </td>
 <td style="text-align:left;">
-data/community/2019/…
+NA
 </td>
 <td style="text-align:left;">
 name of file of raw data
@@ -2584,7 +2584,7 @@ categorical
 Joa - Lia
 </td>
 <td style="text-align:left;">
-Vikesland
+NA
 </td>
 <td style="text-align:left;">
 Unique site ID of origin site
@@ -2604,7 +2604,7 @@ numeric
 1 - 10
 </td>
 <td style="text-align:left;">
-01.Oct
+NA
 </td>
 <td style="text-align:left;">
 Unique origin block ID as number 1 to 10
@@ -2624,7 +2624,7 @@ numeric
 1 - 160
 </td>
 <td style="text-align:left;">
-1
+NA
 </td>
 <td style="text-align:left;">
 Unique numeric origin plot ID for geographic location of the turf
@@ -2644,7 +2644,7 @@ categorical
 Joa - Vik
 </td>
 <td style="text-align:left;">
-Vikesland
+NA
 </td>
 <td style="text-align:left;">
 Unique site ID of destination site
@@ -2664,7 +2664,7 @@ numeric
 1 - 10
 </td>
 <td style="text-align:left;">
-01.Oct
+NA
 </td>
 <td style="text-align:left;">
 Unique numeric destination plot ID for geographic location of the turf
@@ -2684,7 +2684,7 @@ numeric
 2 - 200
 </td>
 <td style="text-align:left;">
-81
+NA
 </td>
 <td style="text-align:left;">
 Unique destination block ID as number 1 to 10
@@ -2704,7 +2704,7 @@ categorical
 1 WN1M 84 - 99 WN5C 170
 </td>
 <td style="text-align:left;">
-81 AN1C 81
+NA
 </td>
 <td style="text-align:left;">
 Unique ID of vegetation turf as originplotID, warming, nitrogen and
@@ -2725,7 +2725,7 @@ categorical
 A - W
 </td>
 <td style="text-align:left;">
-A or W
+NA
 </td>
 <td style="text-align:left;">
 Warming treatment as W for warming or A for ambient
@@ -2745,7 +2745,7 @@ categorical
 C - N
 </td>
 <td style="text-align:left;">
-C, I, M, N
+NA
 </td>
 <td style="text-align:left;">
 Grazing treatment as C for control, I for intensive, M for medium and N
@@ -2766,7 +2766,7 @@ numeric
 1 - 10
 </td>
 <td style="text-align:left;">
-01.Oct
+NA
 </td>
 <td style="text-align:left;">
 Nitrogen level treatment as numeric value from 1 - 10
@@ -2786,7 +2786,7 @@ numeric
 1 - 25
 </td>
 <td style="text-align:left;">
-Jan.25
+NA
 </td>
 <td style="text-align:left;">
 Location of subturf within the turf
@@ -2806,7 +2806,7 @@ categorical
 Achillea millefolium - Viola palustris
 </td>
 <td style="text-align:left;">
-Achillea millefolium
+NA
 </td>
 <td style="text-align:left;">
 Latin genus and species name
@@ -2826,7 +2826,7 @@ categorical
 cover - seedling
 </td>
 <td style="text-align:left;">
-temperture
+NA
 </td>
 <td style="text-align:left;">
 Climate logger
@@ -2846,7 +2846,7 @@ categorical
 cover - seedling
 </td>
 <td style="text-align:left;">
-°C
+\<a1>C
 </td>
 <td style="text-align:left;">
 Climate logger
@@ -2866,7 +2866,7 @@ numeric
 NA - NA
 </td>
 <td style="text-align:left;">
-numeric value
+NA
 </td>
 <td style="text-align:left;">
 Value for climate data
@@ -2880,10 +2880,10 @@ measured
 remark
 </td>
 <td style="text-align:left;">
-date
+categorical
 </td>
 <td style="text-align:left;">
-NA
+NA - NA
 </td>
 <td style="text-align:left;">
 NA
@@ -2906,7 +2906,7 @@ categorical
 NA - NA
 </td>
 <td style="text-align:left;">
-aud
+NA
 </td>
 <td style="text-align:left;">
 Name of person that recorded the data
@@ -2955,7 +2955,7 @@ categorical
 Joa - Lia
 </td>
 <td style="text-align:left;">
-Vikesland
+NA
 </td>
 <td style="text-align:left;">
 Unique site ID of origin site
@@ -2975,7 +2975,7 @@ numeric
 1 - 10
 </td>
 <td style="text-align:left;">
-01.Oct
+NA
 </td>
 <td style="text-align:left;">
 Unique origin block ID as number 1 to 10
@@ -2995,7 +2995,7 @@ numeric
 1 - 160
 </td>
 <td style="text-align:left;">
-1
+NA
 </td>
 <td style="text-align:left;">
 Unique numeric origin plot ID for geographic location of the turf
@@ -3015,7 +3015,7 @@ categorical
 Joa - Vik
 </td>
 <td style="text-align:left;">
-Vikesland
+NA
 </td>
 <td style="text-align:left;">
 Unique site ID of destination site
@@ -3035,7 +3035,7 @@ numeric
 2 - 200
 </td>
 <td style="text-align:left;">
-81
+NA
 </td>
 <td style="text-align:left;">
 Unique destination block ID as number 1 to 10
@@ -3055,7 +3055,7 @@ numeric
 1 - 10
 </td>
 <td style="text-align:left;">
-01.Oct
+NA
 </td>
 <td style="text-align:left;">
 Unique numeric destination plot ID for geographic location of the turf
@@ -3075,7 +3075,7 @@ categorical
 1 WN1M 84 - 99 WN5C 170
 </td>
 <td style="text-align:left;">
-81 AN1C 81
+NA
 </td>
 <td style="text-align:left;">
 Unique ID of vegetation turf as originplotID, warming, nitrogen and
@@ -3096,7 +3096,7 @@ categorical
 A - W
 </td>
 <td style="text-align:left;">
-A or W
+NA
 </td>
 <td style="text-align:left;">
 Warming treatment as W for warming or A for ambient
@@ -3116,7 +3116,7 @@ categorical
 C - N
 </td>
 <td style="text-align:left;">
-C, I, M, N
+NA
 </td>
 <td style="text-align:left;">
 Grazing treatment as C for control, I for intensive, M for medium and N
@@ -3137,7 +3137,7 @@ numeric
 1 - 10
 </td>
 <td style="text-align:left;">
-01.Oct
+NA
 </td>
 <td style="text-align:left;">
 Nitrogen level treatment as numeric value from 1 - 10
@@ -3197,7 +3197,7 @@ categorical
 Bare rock - Vascular plants
 </td>
 <td style="text-align:left;">
-forb
+NA
 </td>
 <td style="text-align:left;">
 Plant functional group
@@ -3266,7 +3266,7 @@ categorical
 Joa - Vik
 </td>
 <td style="text-align:left;">
-Vikesland
+NA
 </td>
 <td style="text-align:left;">
 Unique site ID of destination site
@@ -3286,7 +3286,7 @@ numeric
 1 - 10
 </td>
 <td style="text-align:left;">
-01.Oct
+NA
 </td>
 <td style="text-align:left;">
 Unique numeric destination plot ID for geographic location of the turf
@@ -3306,7 +3306,7 @@ numeric
 2 - 198
 </td>
 <td style="text-align:left;">
-81
+NA
 </td>
 <td style="text-align:left;">
 Unique destination block ID as number 1 to 10
@@ -3326,7 +3326,7 @@ categorical
 1 WN1M 84 - 97 WN5M 169
 </td>
 <td style="text-align:left;">
-81 AN1C 81
+NA
 </td>
 <td style="text-align:left;">
 Unique ID of vegetation turf as originplotID, warming, nitrogen and
@@ -3347,7 +3347,7 @@ categorical
 A - W
 </td>
 <td style="text-align:left;">
-A or W
+NA
 </td>
 <td style="text-align:left;">
 Warming treatment as W for warming or A for ambient
@@ -3367,7 +3367,7 @@ numeric
 1 - 10
 </td>
 <td style="text-align:left;">
-01.Oct
+NA
 </td>
 <td style="text-align:left;">
 Nitrogen level treatment as numeric value from 1 - 10
@@ -3387,7 +3387,7 @@ categorical
 I - M
 </td>
 <td style="text-align:left;">
-C, I, M, N
+NA
 </td>
 <td style="text-align:left;">
 Grazing treatment as C for control, I for intensive, M for medium and N
@@ -3468,7 +3468,7 @@ categorical
 Bryophytes_g - Shrub_g
 </td>
 <td style="text-align:left;">
-graminoids
+NA
 </td>
 <td style="text-align:left;">
 Functional group
@@ -3488,7 +3488,7 @@ numeric
 0.00094 - 86.54
 </td>
 <td style="text-align:left;">
-numeric value
+NA
 </td>
 <td style="text-align:left;">
 Value for climate data
@@ -3508,7 +3508,7 @@ categorical
 Joa - Lia
 </td>
 <td style="text-align:left;">
-Vikesland
+NA
 </td>
 <td style="text-align:left;">
 Unique site ID of origin site
@@ -3528,7 +3528,7 @@ numeric
 1 - 10
 </td>
 <td style="text-align:left;">
-01.Oct
+NA
 </td>
 <td style="text-align:left;">
 Unique origin block ID as number 1 to 10
@@ -3548,7 +3548,7 @@ numeric
 1 - 157
 </td>
 <td style="text-align:left;">
-1
+NA
 </td>
 <td style="text-align:left;">
 Unique numeric origin plot ID for geographic location of the turf
@@ -3588,7 +3588,7 @@ categorical
 Joa - Vik
 </td>
 <td style="text-align:left;">
-Vikesland
+NA
 </td>
 <td style="text-align:left;">
 Unique site ID of destination site
@@ -3608,7 +3608,7 @@ numeric
 1 - 10
 </td>
 <td style="text-align:left;">
-01.Oct
+NA
 </td>
 <td style="text-align:left;">
 Unique numeric destination plot ID for geographic location of the turf
@@ -3628,7 +3628,7 @@ numeric
 2 - 198
 </td>
 <td style="text-align:left;">
-81
+NA
 </td>
 <td style="text-align:left;">
 Unique destination block ID as number 1 to 10
@@ -3648,7 +3648,7 @@ categorical
 1 WN1M 84 - 97 WN5M 169
 </td>
 <td style="text-align:left;">
-81 AN1C 81
+NA
 </td>
 <td style="text-align:left;">
 Unique ID of vegetation turf as originplotID, warming, nitrogen and
@@ -3669,7 +3669,7 @@ categorical
 A - W
 </td>
 <td style="text-align:left;">
-A or W
+NA
 </td>
 <td style="text-align:left;">
 Warming treatment as W for warming or A for ambient
@@ -3689,7 +3689,7 @@ numeric
 1 - 10
 </td>
 <td style="text-align:left;">
-01.Oct
+NA
 </td>
 <td style="text-align:left;">
 Nitrogen level treatment as numeric value from 1 - 10
@@ -3709,7 +3709,7 @@ categorical
 I - M
 </td>
 <td style="text-align:left;">
-C, I, M, N
+NA
 </td>
 <td style="text-align:left;">
 Grazing treatment as C for control, I for intensive, M for medium and N
@@ -3790,7 +3790,7 @@ categorical
 Bryophytes_g - Shrub_g
 </td>
 <td style="text-align:left;">
-graminoids
+NA
 </td>
 <td style="text-align:left;">
 Functional group
@@ -3810,7 +3810,7 @@ numeric
 0.00094 - 86.54
 </td>
 <td style="text-align:left;">
-numeric value
+NA
 </td>
 <td style="text-align:left;">
 Value for climate data
@@ -3830,7 +3830,7 @@ categorical
 Joa - Lia
 </td>
 <td style="text-align:left;">
-Vikesland
+NA
 </td>
 <td style="text-align:left;">
 Unique site ID of origin site
@@ -3850,7 +3850,7 @@ numeric
 1 - 10
 </td>
 <td style="text-align:left;">
-01.Oct
+NA
 </td>
 <td style="text-align:left;">
 Unique origin block ID as number 1 to 10
@@ -3870,7 +3870,7 @@ numeric
 1 - 157
 </td>
 <td style="text-align:left;">
-1
+NA
 </td>
 <td style="text-align:left;">
 Unique numeric origin plot ID for geographic location of the turf
@@ -3939,7 +3939,7 @@ categorical
 Joa - Lia
 </td>
 <td style="text-align:left;">
-Vikesland
+NA
 </td>
 <td style="text-align:left;">
 Unique site ID of origin site
@@ -3959,7 +3959,7 @@ numeric
 1 - 10
 </td>
 <td style="text-align:left;">
-01.Oct
+NA
 </td>
 <td style="text-align:left;">
 Unique origin block ID as number 1 to 10
@@ -3979,7 +3979,7 @@ categorical
 A - W
 </td>
 <td style="text-align:left;">
-A or W
+NA
 </td>
 <td style="text-align:left;">
 Warming treatment as W for warming or A for ambient
@@ -3999,7 +3999,7 @@ categorical
 C - N
 </td>
 <td style="text-align:left;">
-C, I, M, N
+NA
 </td>
 <td style="text-align:left;">
 Grazing treatment as C for control, I for intensive, M for medium and N
@@ -4020,7 +4020,7 @@ numeric
 1 - 10
 </td>
 <td style="text-align:left;">
-01.Oct
+NA
 </td>
 <td style="text-align:left;">
 Nitrogen level treatment as numeric value from 1 - 10
@@ -4040,7 +4040,7 @@ numeric
 1 - 160
 </td>
 <td style="text-align:left;">
-1
+NA
 </td>
 <td style="text-align:left;">
 Unique numeric origin plot ID for geographic location of the turf
@@ -4060,7 +4060,7 @@ categorical
 Joa - Vik
 </td>
 <td style="text-align:left;">
-Vikesland
+NA
 </td>
 <td style="text-align:left;">
 Unique site ID of destination site
@@ -4080,7 +4080,7 @@ numeric
 2 - 200
 </td>
 <td style="text-align:left;">
-81
+NA
 </td>
 <td style="text-align:left;">
 Unique destination block ID as number 1 to 10
@@ -4100,7 +4100,7 @@ numeric
 1 - 10
 </td>
 <td style="text-align:left;">
-01.Oct
+NA
 </td>
 <td style="text-align:left;">
 Unique numeric destination plot ID for geographic location of the turf
@@ -4120,7 +4120,7 @@ categorical
 1 WN1M 84 - 99 WN5C 170
 </td>
 <td style="text-align:left;">
-81 AN1C 81
+NA
 </td>
 <td style="text-align:left;">
 Unique ID of vegetation turf as originplotID, warming, nitrogen and
@@ -4141,7 +4141,7 @@ numeric
 1 - 2
 </td>
 <td style="text-align:left;">
-1 or 2
+NA
 </td>
 <td style="text-align:left;">
 First or second measurement per plot
@@ -4181,7 +4181,7 @@ numeric
 0.29 - 0.96
 </td>
 <td style="text-align:left;">
-numeric value
+NA
 </td>
 <td style="text-align:left;">
 NDVI measured per plot
@@ -4221,10 +4221,30 @@ categorical
 After 1. cut - Before treatment
 </td>
 <td style="text-align:left;">
-before treatment
+NA
 </td>
 <td style="text-align:left;">
 Timing of measurement in relation to cutting treatment
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+timing
+</td>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+After 1. cut - Before treatment
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+Time of recovery (fall or spring)
 </td>
 <td style="text-align:left;">
 defined
@@ -4330,7 +4350,7 @@ categorical
 Joa - Lia
 </td>
 <td style="text-align:left;">
-Vikesland
+NA
 </td>
 <td style="text-align:left;">
 Unique site ID of origin site
@@ -4350,7 +4370,7 @@ numeric
 1 - 10
 </td>
 <td style="text-align:left;">
-01.Oct
+NA
 </td>
 <td style="text-align:left;">
 Unique origin block ID as number 1 to 10
@@ -4370,7 +4390,7 @@ numeric
 1 - 160
 </td>
 <td style="text-align:left;">
-1
+NA
 </td>
 <td style="text-align:left;">
 Unique numeric origin plot ID for geographic location of the turf
@@ -4390,7 +4410,7 @@ categorical
 Joa - Vik
 </td>
 <td style="text-align:left;">
-Vikesland
+NA
 </td>
 <td style="text-align:left;">
 Unique site ID of destination site
@@ -4410,7 +4430,7 @@ numeric
 2 - 200
 </td>
 <td style="text-align:left;">
-81
+NA
 </td>
 <td style="text-align:left;">
 Unique destination block ID as number 1 to 10
@@ -4430,7 +4450,7 @@ numeric
 1 - 10
 </td>
 <td style="text-align:left;">
-01.Oct
+NA
 </td>
 <td style="text-align:left;">
 Unique numeric destination plot ID for geographic location of the turf
@@ -4450,7 +4470,7 @@ categorical
 1 WN1M 84 - 99 WN5C 170
 </td>
 <td style="text-align:left;">
-81 AN1C 81
+NA
 </td>
 <td style="text-align:left;">
 Unique ID of vegetation turf as originplotID, warming, nitrogen and
@@ -4471,7 +4491,7 @@ categorical
 A - W
 </td>
 <td style="text-align:left;">
-A or W
+NA
 </td>
 <td style="text-align:left;">
 Warming treatment as W for warming or A for ambient
@@ -4491,7 +4511,7 @@ categorical
 C - N
 </td>
 <td style="text-align:left;">
-C, I, M, N
+NA
 </td>
 <td style="text-align:left;">
 Grazing treatment as C for control, I for intensive, M for medium and N
@@ -4512,7 +4532,7 @@ numeric
 1 - 10
 </td>
 <td style="text-align:left;">
-01.Oct
+NA
 </td>
 <td style="text-align:left;">
 Nitrogen level treatment as numeric value from 1 - 10
@@ -4721,7 +4741,7 @@ categorical
 Joa - Vik
 </td>
 <td style="text-align:left;">
-Vikesland
+NA
 </td>
 <td style="text-align:left;">
 Unique site ID of destination site
@@ -4741,7 +4761,7 @@ categorical
 1 - 9-10
 </td>
 <td style="text-align:left;">
-01.Oct
+NA
 </td>
 <td style="text-align:left;">
 Unique numeric destination plot ID for geographic location of the turf
@@ -4761,7 +4781,7 @@ categorical
 Bottom - Top
 </td>
 <td style="text-align:left;">
-Moss layer
+NA
 </td>
 <td style="text-align:left;">
 Moss or vegetation layer
@@ -4781,7 +4801,7 @@ categorical
 Bottom - Top
 </td>
 <td style="text-align:left;">
-top
+NA
 </td>
 <td style="text-align:left;">
 Layer at which soil sample was taken: top or bottom 5cm
@@ -5150,7 +5170,7 @@ categorical
 105 WN3C 173 - 85 WN1C 162
 </td>
 <td style="text-align:left;">
-81 AN1C 81
+NA
 </td>
 <td style="text-align:left;">
 Unique ID of vegetation turf as originplotID, warming, nitrogen and
@@ -5271,7 +5291,7 @@ numeric
 281.231816326531 - 310.627443037975
 </td>
 <td style="text-align:left;">
-°K
+Kelvin
 </td>
 <td style="text-align:left;">
 air temperature measured inside the flux chamber every 10 seconds and
@@ -5355,10 +5375,11 @@ numeric
 mmol/sqm/h
 </td>
 <td style="text-align:left;">
-CO2 flux (postive when emitting to atmosphere
+CO2 flux (postive when emitting to atmosphere negative when vegetation
+uptake)
 </td>
 <td style="text-align:left;">
-negative when vegetation uptake)
+calculated
 </td>
 </tr>
 <tr>
@@ -5432,7 +5453,7 @@ categorical
 105 WN3C 173 - 85 WN1C 162
 </td>
 <td style="text-align:left;">
-81 AN1C 81
+NA
 </td>
 <td style="text-align:left;">
 Unique ID of vegetation turf as originplotID, warming, nitrogen and
@@ -5553,7 +5574,7 @@ numeric
 281.231816326531 - 310.627443037975
 </td>
 <td style="text-align:left;">
-°K
+Kelvin
 </td>
 <td style="text-align:left;">
 air temperature measured inside the flux chamber every 10 seconds and
@@ -5637,10 +5658,11 @@ numeric
 mmol/sqm/h
 </td>
 <td style="text-align:left;">
-CO2 flux (postive when emitting to atmosphere
+CO2 flux (postive when emitting to atmosphere negative when vegetation
+uptake)
 </td>
 <td style="text-align:left;">
-negative when vegetation uptake)
+calculated
 </td>
 </tr>
 <tr>
@@ -5661,6 +5683,497 @@ Campaign connected to carbon flux measurements
 </td>
 <td style="text-align:left;">
 defined
+</td>
+</tr>
+</tbody>
+</table>
+
+#### Decomposition
+
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+Variable name
+</th>
+<th style="text-align:left;">
+Variable type
+</th>
+<th style="text-align:left;">
+Variable range or levels
+</th>
+<th style="text-align:left;">
+unit
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:left;">
+how_measured
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+origSiteID
+</td>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+Joa - Lia
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+Unique site ID of origin site
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+origBlockID
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+1 - 10
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+Unique origin block ID as number 1 to 10
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+warming
+</td>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+A - W
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+Warming treatment as W for warming or A for ambient
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+grazing
+</td>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+C - N
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+Grazing treatment as C for control, I for intensive, M for medium and N
+for natural grazing
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Nlevel
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+1 - 10
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+Nitrogen level treatment as numeric value from 1 - 10
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+origPlotID
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+1 - 160
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+Unique numeric origin plot ID for geographic location of the turf
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+destSiteID
+</td>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+Joa - Vik
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+Unique site ID of destination site
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+destPlotID
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+2 - 200
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+Unique destination block ID as number 1 to 10
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+destBlockID
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+1 - 10
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+Unique numeric destination plot ID for geographic location of the turf
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+turfID
+</td>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+1 WN1M 84 - 99 WN5C 170
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+Unique ID of vegetation turf as originplotID, warming, nitrogen and
+grazing treatment and destinationplotID
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Namount_kg_ha_y
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+0 - 150
+</td>
+<td style="text-align:left;">
+kg ha^-1 y^-1
+</td>
+<td style="text-align:left;">
+Amount of nitrogen added
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+teabag_ID
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+3 - 338
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+timing
+</td>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+fall - fall
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+Timing of measurement in relation to cutting treatment
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+timing
+</td>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+fall - fall
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+Time of recovery (fall or spring)
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+tea_type
+</td>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+green - red
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+Type of teabag (red or green)
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+weight_loss_g
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+0.4943 - 1.6071
+</td>
+<td style="text-align:left;">
+g
+</td>
+<td style="text-align:left;">
+Weight loss in g between burial and recovery
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+incubation_time
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+94 - 119
+</td>
+<td style="text-align:left;">
+days
+</td>
+<td style="text-align:left;">
+Incubation time of tea bags in days
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+burial_depth_cm
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+NA - NA
+</td>
+<td style="text-align:left;">
+cm
+</td>
+<td style="text-align:left;">
+Burial depth in cm
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+burial_date
+</td>
+<td style="text-align:left;">
+date
+</td>
+<td style="text-align:left;">
+2021-06-01 - 2021-06-18
+</td>
+<td style="text-align:left;">
+yyyy-mm-dd
+</td>
+<td style="text-align:left;">
+Burial date
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+preburial_weight_g
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+1.9683 - 2.4856
+</td>
+<td style="text-align:left;">
+g
+</td>
+<td style="text-align:left;">
+Weight of tea bag before burial
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+recover_date
+</td>
+<td style="text-align:left;">
+date
+</td>
+<td style="text-align:left;">
+2021-09-20 - 2021-09-30
+</td>
+<td style="text-align:left;">
+yyyy-mm-dd
+</td>
+<td style="text-align:left;">
+Recovery date
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+post_burial_weight_g
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+0.558264 - 1.7233
+</td>
+<td style="text-align:left;">
+g
+</td>
+<td style="text-align:left;">
+Weight of tea bag after recovery
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+comment_2
+</td>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+NA - NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+Comments
+</td>
+<td style="text-align:left;">
+NA
 </td>
 </tr>
 </tbody>
@@ -5707,7 +6220,7 @@ categorical
 Joa - Vik
 </td>
 <td style="text-align:left;">
-Vikesland
+NA
 </td>
 <td style="text-align:left;">
 Unique site ID of destination site
@@ -5747,7 +6260,7 @@ numeric
 1 - 12
 </td>
 <td style="text-align:left;">
-01.Dec
+NA
 </td>
 <td style="text-align:left;">
 Month of observation
@@ -5767,7 +6280,7 @@ numeric
 1 - 31
 </td>
 <td style="text-align:left;">
-Jan.31
+NA
 </td>
 <td style="text-align:left;">
 Day of observaiton
@@ -5827,7 +6340,7 @@ numeric
 -23.2 - 108.3
 </td>
 <td style="text-align:left;">
-numeric value
+NA
 </td>
 <td style="text-align:left;">
 Value for climate data

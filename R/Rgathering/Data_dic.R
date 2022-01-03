@@ -221,6 +221,30 @@ cflux_dic <- map_df(cflux %>% as_tibble, class) %>%
   left_join(range_cflux, by = "Variable name") %>% 
   left_join(attribute_table, by = c("Variable name" = "attribute"))
 
+#***********************************************************************************************
+### DECOMPOSITION
+
+# read in data
+decompose <- read_csv("data_cleaned/decomposition/THREE-D_clean_decomposition_fall_2021.csv")
+
+range_decompose <- decompose %>% 
+  summarise(
+    across(where(is.character), ~ paste(min(.), max(.), sep = " - ")),
+    across(where(is.Date), ~ paste(min(.), max(.), sep = " - ")),
+    across(where(is.numeric), ~paste(min(.), max(.), sep = " - "))
+  ) %>% 
+  pivot_longer(cols = everything(), names_to = "Variable name", values_to = "Variable range or levels")
+
+
+decompose_dic <- map_df(decompose %>% as_tibble, class) %>% 
+  pivot_longer(cols = everything(), names_to = "Variable name", values_to = "Variable type") %>% 
+  mutate(`Variable type` = case_when(`Variable type` == "character" ~ "categorical",
+                                     !`Variable type` %in% c("integer", "numeric", "character") ~ "date",
+                                     `Variable type` %in% c("integer", "numeric") ~ "numeric")) %>% 
+  left_join(range_decompose, by = "Variable name") %>% 
+  left_join(attribute_table, by = c("Variable name" = "attribute"))
+
+
 
 #***********************************************************************************************
 ### CLIMATE - TOMST
