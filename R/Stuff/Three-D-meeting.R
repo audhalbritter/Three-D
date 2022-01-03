@@ -186,11 +186,12 @@ cover_plot <- cover %>%
     grazing = factor(grazing, levels = c("C", "M", "I", "N")),
     grazing = recode(grazing, "C" = "Control", "M" = "Medium", "I" = "Intensive", "N" = "Natural")) %>% 
   filter(functional_group %in% c("forb", "graminoid")) %>% 
-  ggplot(aes(x = Namount_kg_ha_y, y = delta, colour = functional_group, linetype = warming)) +
+  ggplot(aes(x = Namount_kg_ha_y, y = delta, colour = functional_group, linetype = warming, shape = warming)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   labs(x = "Nitrogen in kg ha^-1, y^-1", y = "Cover") +
   scale_colour_manual(name = "Func. group", values = c("plum4", "limegreen")) +
+  scale_shape_manual(name = "warming", values = c(16, 1)) +
   facet_grid(origSiteID ~ grazing) +
   theme_minimal()
 ggsave(cover_plot, filename = "cover.png", height = 4, width = 6, bg = "white")
