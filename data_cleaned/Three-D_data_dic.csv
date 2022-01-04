@@ -1,133 +1,138 @@
-attribute,unit,description,how_measured
-origSiteID,,Unique site ID of origin site,defined
-origBlockID,,Unique origin block ID as number 1 to 10,defined
-origPlotID,,Unique numeric origin plot ID for geographic location of the turf,defined
-destSiteID,,Unique site ID of destination site,defined
-destPlotID,,Unique destination block ID as number 1 to 10,defined
-destBlockID,,Unique numeric destination plot ID for geographic location of the turf,defined
-turfID,,"Unique ID of vegetation turf as originplotID, warming, nitrogen and grazing treatment and destinationplotID",defined
-warming,,Warming treatment as W for warming or A for ambient,defined
-grazing,,"Grazing treatment as C for control, I for intensive, M for medium and N for natural grazing",defined
-Nlevel,,Nitrogen level treatment as numeric value from 1 - 10,defined
-date,dd-mm-yyyy,Date of sampling,defined
-year,2019,Year of the sampling,defined
-species,,Latin genus and species name,identified
-recorder,,Name of person that recorded the data,recorded
-file,,name of file of raw data,recorded
-cover,percentage,Percent cover of a species in a turf,measured
-remark,,Comment,NA
-subplot,,Location of subturf within the turf,defined
-presence,,Presence of species,measured
-seedlings,,Presence of seedlings where cotyledons are visible,measured
-juvenile,,Presence of juveniles that are not fully grown plants,measured
-fertile,,Presence of fertile,measured
-dominant,,Species cover more than 50 percent of subturf,measured
-fun_group,,Functional group,defined
-layer,,Moss or vegetation layer,defined
-height,cm,Average height of the vascular vegetation or moss in the plot,measured
-ndvi,,NDVI measured per plot,measured
-measurement,,First or second measurement per plot,defined
-campaign,,Campaign connected to carbon flux measurements,defined
-timing,,Timing of measurement in relation to cutting treatment,defined
-month,,Month of observation,defined
-day,,Day of observaiton,defined
-variable,,Climate logger,defined
-value,,Value for climate data,measured
-unit,¡C,Unit of variable,defined
-ID,,Unique logger value,defined
-date_time,yyyy-mm-dd_hh:mm:ss,Date and time of observation,defined
-time_zone,,Time zone,defined
-shake,,Shake,defined
-error_flag,,Flag for error of logger,defined
-loggerID,,unique ID of logger,defined
-earlyStart,yyyy-mm-dd_hh:mm:ss,Earliest starting date of logging,defined
-InitialDate_Time,yyyy-mm-dd_hh:mm:ss,Date and Time of start of logging,defined
-EndDate_Time,yyyy-mm-dd_hh:mm:ss,Date and Time of end of logging,defined
-variable,¡C,Climate logger,defined
-slope,degree,Slope of the plot,measured
-aspect,degree,Aspect of the plot,measured
-date_slope,dd-mm-yyyy,Date of sampling of slope and aspect,defined
-date_depth,dd-mm-yyyy,Date of sampling of soil depth,defined
-soil_depth_cm,cm,Soil depth,measured
-layer,,Layer at which soil sample was taken: top or bottom 5cm,defined
-wet_weight_soil_g,g,Wet weight,measured
-dry_weight_soil_g,g,Dry weight,measured
-stone_weight_g,g,Stone weight,measured
-roots_weight_g,g,Root weight,measured
-sand_percent,percentage,Percentage of sand,measured
-silt_percent,percentage,Percentage of clay,measured
-clay_percent,percentage,Percentage of silt,measured
-pH_se,,Standard deviation for pH,measured
-pH,,pH value,measured
-bulk_density_se,,Standard deviation for bulk density,measured
-bulk_density_g_cm,g_cm,Bulk density,measured
-pore_water_content,percentage,Pore water content,measured
-soil_organic_matter_se,,Standard deviation for soil organic matter,measured
-soil_organic_matter,percentage,Soil organic matter,measured
-carbon_content_se,,Standard deviaiton for carbon content,measured
-carbon_content,percentage,Carbon content,measured
-C_percent_se,,Standard deviaiton for carbon content,measured
-C_percent,percentage,Carbon content,measured
-N_percent_se,,Standard deviaiton for nitrogen content,measured
-N_percent,percentage,Nitrogen content,measured
-latitude_N,degree N,latitude of site,measured
-longitude_E,degree E,longitude of site,measured
-elevation_m_asl,m a.s.l.,elevation of site,measured
-authority,,taxanomic authority,literature
-family,,Plant family name,identified
-value_numeric,,Numeric values,literature
-value_categorical,,Categorical values,literature
-norwegian_name,,Norwegian species name,literature
-flowering_start,,Start of flowering defined as spring early mid or late summer,literature
-flowering_finish,,End of flowering defined as spring early mid late summer or autumn,literature
-lower_vegetation_zone,,Lower vegetation zone,literature
-upper_vegetation_zone,,Upper vegetation zone,literature
-habitat,,Habitat the species occurs,literature
-soil_type,,Species association with base rich soils,literature
-rarity,,Common or scattered species,literature
-functional_group,,Plant functional group,literature
-lifespan,,Species lifespan,literature
-polyploid_2n,,Species polyploidy level,literature
-flowers_spring,,Species with main flowering time in spring,literature
-flowers_early_summer,,Species with main flowering time in early summer,literature
-flowers_mid_summer,,Species with main flowering time in mid-summer,literature
-flowers_late_summer,,Species with main flowering time in late summer,literature
-flowers_autumn,,Species with main flowering time in autumn,literature
-min_height,cm,Minimum species height,literature
-max_height,cm,Maximum species height,literature
-nemoral,,Species main vegetation zone is nemoral,literature
-boreal_nemoral,,Species main vegetation zone is boreal to nemoral,literature
-south_boreal,,Species main vegetation zone is south boreal,literature
-mid_boreal,,Species main vegetation zone is mid boreal,literature
-north_boreal,,Species main vegetation zone is north boreal,literature
-low_alpine,,Species main vegetation zone is low alpine,literature
-mid_alpine,,Species main vegetation zone is mid-alpine,literature
-high_alpine,,Species main vegetation zone is high alpine,literature
-grassland,,Species main habitat type is grassland,literature
-forest,,Species main habitat type is forest,literature
-rocky,,Species main habitat type is rocky,literature
-wetland,,Species main habitat type is wetland,literature
-Lids_page,,Page number of species in Lids Flora,literature
-Mossberg_page,,Page number of species in Mossbergs Flora,literature
-cut,,Number of times the plot has been cut,defined
-fluxID,,Unique ID for each flux,defined
-type,,type of flux measurements,defined
-replicate,,replicate measurement of same turf,defined
-PARavg,micromol/s/sqm,PAR value measured every 15 seconds during flux measurement and averaged,measured
-temp_airavg,Kelvin,air temperature measured inside the flux chamber every 10 seconds and averaged,measured
-r.squared,,R squared of the linear relation between CO2 concentration and time, calculated
-p.value,,p value of the linear relation between CO2 concentration and time, calculated
-nobs,,number of CO2 concentration measurements for each flux, measured
-flux,mmol/sqm/h,CO2 flux (postive when emitting to atmosphere  negative when vegetation uptake), calculated
-teabag_ID,,,defined
-timing,,Time of recovery (fall or spring),defined
-tea_type,,Type of teabag (red or green),defined
-weight_loss_g,g,Weight loss in g between burial and recovery,defined
-incubation_time,days,Incubation time of tea bags in days,defined
-burial_depth_cm,cm,Burial depth in cm,defined
-burial_date,yyyy-mm-dd,Burial date,defined
-preburial_weight_g,g,Weight of tea bag before burial,defined
-recover_date,yyyy-mm-dd,Recovery date,defined
-post_burial_weight_g,g,Weight of tea bag after recovery,defined
-comment_2,,Comments,
-Namount_kg_ha_y,kg ha^-1 y^-1,Amount of nitrogen added,defined
+TableID,Variable name,Unit,Description,How measured
+,origSiteID,,Unique site ID of origin site,defined
+,origBlockID,,Unique origin block ID as number 1 to 10,defined
+,origPlotID,,Unique numeric origin plot ID for geographic location of the turf,defined
+,destSiteID,,Unique site ID of destination site,defined
+,destPlotID,,Unique destination block ID as number 1 to 10,defined
+,destBlockID,,Unique numeric destination plot ID for geographic location of the turf,defined
+,turfID,,"Unique ID of vegetation turf as originplotID, warming, nitrogen and grazing treatment and destinationplotID",defined
+,warming,,Warming treatment as W for warming or A for ambient,defined
+,grazing,,"Grazing treatment as C for control, I for intensive, M for medium and N for natural grazing",defined
+,Nlevel,,Nitrogen level treatment as numeric value from 1 - 10,defined
+,date,dd-mm-yyyy,Date of sampling,defined
+,year,2019,Year of the sampling,defined
+,species,,Latin genus and species name,identified
+,recorder,,Name of person that recorded the data,recorded
+,file,,name of file of raw data,recorded
+,cover,percentage,Percent cover of a species in a turf,measured
+,remark,,Comment,NA
+,subplot,,Location of subturf within the turf,defined
+,presence,,Presence of species,measured
+,seedlings,,Presence of seedlings where cotyledons are visible,measured
+,juvenile,,Presence of juveniles that are not fully grown plants,measured
+,fertile,,Presence of fertile,measured
+,dominant,,Species cover more than 50 percent of subturf,measured
+,fun_group,,Functional group,defined
+,layer,,Moss or vegetation layer,defined
+,height,cm,Average height of the vascular vegetation or moss in the plot,measured
+,ndvi,,NDVI measured per plot,measured
+,measurement,,First or second measurement per plot,defined
+,campaign,,Campaign connected to carbon flux measurements,defined
+,timing,,Timing of measurement in relation to cutting treatment,defined
+,month,,Month of observation,defined
+,day,,Day of observaiton,defined
+,variable,,Climate logger,defined
+,value,,Value for climate data,measured
+,unit,¡C,Unit of variable,defined
+,ID,,Unique logger value,defined
+,date_time,yyyy-mm-dd_hh:mm:ss,Date and time of observation,defined
+,time_zone,,Time zone,defined
+,shake,,Shake,defined
+,error_flag,,Flag for error of logger,defined
+,loggerID,,unique ID of logger,defined
+,earlyStart,yyyy-mm-dd_hh:mm:ss,Earliest starting date of logging,defined
+,InitialDate_Time,yyyy-mm-dd_hh:mm:ss,Date and Time of start of logging,defined
+,EndDate_Time,yyyy-mm-dd_hh:mm:ss,Date and Time of end of logging,defined
+,variable,¡C,Climate logger,defined
+,slope,degree,Slope of the plot,measured
+,aspect,degree,Aspect of the plot,measured
+,date_slope,dd-mm-yyyy,Date of sampling of slope and aspect,defined
+,date_depth,dd-mm-yyyy,Date of sampling of soil depth,defined
+,soil_depth_cm,cm,Soil depth,measured
+,layer,,Layer at which soil sample was taken: top or bottom 5cm,defined
+,wet_weight_soil_g,g,Wet weight,measured
+,dry_weight_soil_g,g,Dry weight,measured
+,stone_weight_g,g,Stone weight,measured
+,roots_weight_g,g,Root weight,measured
+,sand_percent,percentage,Percentage of sand,measured
+,silt_percent,percentage,Percentage of clay,measured
+,clay_percent,percentage,Percentage of silt,measured
+,pH_se,,Standard deviation for pH,measured
+,pH,,pH value,measured
+,bulk_density_se,,Standard deviation for bulk density,measured
+,bulk_density_g_cm,g_cm,Bulk density,measured
+,pore_water_content,percentage,Pore water content,measured
+,soil_organic_matter_se,,Standard deviation for soil organic matter,measured
+,soil_organic_matter,percentage,Soil organic matter,measured
+,carbon_content_se,,Standard deviaiton for carbon content,measured
+,carbon_content,percentage,Carbon content,measured
+,C_percent_se,,Standard deviaiton for carbon content,measured
+,C_percent,percentage,Carbon content,measured
+,N_percent_se,,Standard deviaiton for nitrogen content,measured
+,N_percent,percentage,Nitrogen content,measured
+,latitude_N,degree N,latitude of site,measured
+,longitude_E,degree E,longitude of site,measured
+,elevation_m_asl,m a.s.l.,elevation of site,measured
+,authority,,taxanomic authority,literature
+,family,,Plant family name,identified
+,value_numeric,,Numeric values,literature
+,value_categorical,,Categorical values,literature
+,norwegian_name,,Norwegian species name,literature
+,flowering_start,,Start of flowering defined as spring early mid or late summer,literature
+,flowering_finish,,End of flowering defined as spring early mid late summer or autumn,literature
+,lower_vegetation_zone,,Lower vegetation zone,literature
+,upper_vegetation_zone,,Upper vegetation zone,literature
+,habitat,,Habitat the species occurs,literature
+,soil_type,,Species association with base rich soils,literature
+,rarity,,Common or scattered species,literature
+,functional_group,,Plant functional group,literature
+,lifespan,,Species lifespan,literature
+,polyploid_2n,,Species polyploidy level,literature
+,flowers_spring,,Species with main flowering time in spring,literature
+,flowers_early_summer,,Species with main flowering time in early summer,literature
+,flowers_mid_summer,,Species with main flowering time in mid-summer,literature
+,flowers_late_summer,,Species with main flowering time in late summer,literature
+,flowers_autumn,,Species with main flowering time in autumn,literature
+,min_height,cm,Minimum species height,literature
+,max_height,cm,Maximum species height,literature
+,nemoral,,Species main vegetation zone is nemoral,literature
+,boreal_nemoral,,Species main vegetation zone is boreal to nemoral,literature
+,south_boreal,,Species main vegetation zone is south boreal,literature
+,mid_boreal,,Species main vegetation zone is mid boreal,literature
+,north_boreal,,Species main vegetation zone is north boreal,literature
+,low_alpine,,Species main vegetation zone is low alpine,literature
+,mid_alpine,,Species main vegetation zone is mid-alpine,literature
+,high_alpine,,Species main vegetation zone is high alpine,literature
+,grassland,,Species main habitat type is grassland,literature
+,forest,,Species main habitat type is forest,literature
+,rocky,,Species main habitat type is rocky,literature
+,wetland,,Species main habitat type is wetland,literature
+,Lids_page,,Page number of species in Lids Flora,literature
+,Mossberg_page,,Page number of species in Mossbergs Flora,literature
+,cut,,Number of times the plot has been cut,defined
+,fluxID,,Unique ID for each flux,defined
+,type,,type of flux measurements,defined
+,replicate,,replicate measurement of same turf,defined
+,PARavg,micromol/s/sqm,PAR value measured every 15 seconds during flux measurement and averaged,measured
+,temp_airavg,Kelvin,air temperature measured inside the flux chamber every 10 seconds and averaged,measured
+,r.squared,,R squared of the linear relation between CO2 concentration and time, calculated
+,p.value,,p value of the linear relation between CO2 concentration and time, calculated
+,nobs,,number of CO2 concentration measurements for each flux, measured
+,flux,mmol/sqm/h,CO2 flux (postive when emitting to atmosphere  negative when vegetation uptake), calculated
+,teabag_ID,,,defined
+,timing,,Time of recovery (fall or spring),defined
+,tea_type,,Type of teabag (red or green),defined
+,weight_loss_g,g,Weight loss in g between burial and recovery,defined
+,incubation_time,days,Incubation time of tea bags in days,defined
+,burial_depth_cm,cm,Burial depth in cm,defined
+,burial_date,yyyy-mm-dd,Burial date,defined
+,preburial_weight_g,g,Weight of tea bag before burial,defined
+,recover_date,yyyy-mm-dd,Recovery date,defined
+,post_burial_weight_g,g,Weight of tea bag after recovery,defined
+,comment_2,,Comments,
+,Namount_kg_ha_y,kg ha^-1 y^-1,Amount of nitrogen added,defined
+,Notes,,Notes,
+,elements,,Chemical elements,defined
+,retrieval_date,yyyy-mm-dd,Retrieval date,defined
+prs,value,micro grams/10cm2/35 days,Amount of nutrients from each element,measured
+,detection_limit,,Detection limit for specific element,defined
