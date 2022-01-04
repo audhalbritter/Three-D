@@ -31,19 +31,18 @@ TableID,Variable name,Unit,Description,How measured
 ,timing,,Timing of measurement in relation to cutting treatment,defined
 ,month,,Month of observation,defined
 ,day,,Day of observaiton,defined
-,variable,,Climate logger,defined
+,logger,,Climate variable,defined
 ,value,,Value for climate data,measured
 ,unit,¡C,Unit of variable,defined
 ,ID,,Unique logger value,defined
-,date_time,yyyy-mm-dd_hh:mm:ss,Date and time of observation,defined
+,date_time,yyyy-mm-dd_hh:mm:ss,Date and time of sampling or observation,defined
 ,time_zone,,Time zone,defined
 ,shake,,Shake,defined
 ,error_flag,,Flag for error of logger,defined
-,loggerID,,unique ID of logger,defined
+,loggerID,,Unique ID of logger,defined
 ,earlyStart,yyyy-mm-dd_hh:mm:ss,Earliest starting date of logging,defined
 ,InitialDate_Time,yyyy-mm-dd_hh:mm:ss,Date and Time of start of logging,defined
 ,EndDate_Time,yyyy-mm-dd_hh:mm:ss,Date and Time of end of logging,defined
-,variable,¡C,Climate logger,defined
 ,slope,degree,Slope of the plot,measured
 ,aspect,degree,Aspect of the plot,measured
 ,date_slope,dd-mm-yyyy,Date of sampling of slope and aspect,defined
@@ -70,10 +69,10 @@ TableID,Variable name,Unit,Description,How measured
 ,C_percent,percentage,Carbon content,measured
 ,N_percent_se,,Standard deviaiton for nitrogen content,measured
 ,N_percent,percentage,Nitrogen content,measured
-,latitude_N,degree N,latitude of site,measured
-,longitude_E,degree E,longitude of site,measured
-,elevation_m_asl,m a.s.l.,elevation of site,measured
-,authority,,taxanomic authority,literature
+,latitude_N,degree N,Latitude of site,measured
+,longitude_E,degree E,Longitude of site,measured
+,elevation_m_asl,m a.s.l.,Elevation of site,measured
+,authority,,Taxanomic authority,literature
 ,family,,Plant family name,identified
 ,value_numeric,,Numeric values,literature
 ,value_categorical,,Categorical values,literature
@@ -111,13 +110,13 @@ TableID,Variable name,Unit,Description,How measured
 ,Mossberg_page,,Page number of species in Mossbergs Flora,literature
 ,cut,,Number of times the plot has been cut,defined
 ,fluxID,,Unique ID for each flux,defined
-,type,,type of flux measurements,defined
-,replicate,,replicate measurement of same turf,defined
+,type,,Type of flux measurements,defined
+,replicate,,Replicate measurement of same turf,defined
 ,PARavg,micromol/s/sqm,PAR value measured every 15 seconds during flux measurement and averaged,measured
-,temp_airavg,Kelvin,air temperature measured inside the flux chamber every 10 seconds and averaged,measured
+,temp_airavg,Kelvin,Air temperature measured inside the flux chamber every 10 seconds and averaged,measured
 ,r.squared,,R squared of the linear relation between CO2 concentration and time, calculated
 ,p.value,,p value of the linear relation between CO2 concentration and time, calculated
-,nobs,,number of CO2 concentration measurements for each flux, measured
+,nobs,,Number of CO2 concentration measurements for each flux, measured
 ,flux,mmol/sqm/h,CO2 flux (postive when emitting to atmosphere  negative when vegetation uptake), calculated
 ,teabag_ID,,,defined
 ,timing,,Time of recovery (fall or spring),defined
@@ -136,3 +135,7 @@ TableID,Variable name,Unit,Description,How measured
 ,retrieval_date,yyyy-mm-dd,Retrieval date,defined
 prs,value,micro grams/10cm2/35 days,Amount of nutrients from each element,measured
 ,detection_limit,,Detection limit for specific element,defined
+,soil_temperature,¡C,Soil temperature at 5 cm below ground,measured
+,ground_temperature,¡C,Ground temperature,measured
+,air_temperature,¡C,Air temperature 15 cm above ground,measured
+,soilmoisture,percentage,Soil moisture,measured
