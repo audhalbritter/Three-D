@@ -26,12 +26,16 @@ prs_data <- metaTurfID %>%
   left_join(prs_raw, by = "ID") %>% 
   select(origSiteID:turfID, burial_date = `Burial Date`, retrieval_date = `Retrieval Date`, `NO3-N`:Cd, Notes) %>% 
   mutate(burial_date = ymd(burial_date),
-         retrieval_date = ymd(retrieval_date)) %>% 
+         retrieval_date = ymd(retrieval_date),
+         burial_length = retrieval_date - burial_date) %>% 
   pivot_longer(cols = `NO3-N`:Cd, names_to = "elements", values_to = "value") %>% 
   left_join(detection_limit, by = "elements") %>% 
   # remove values below detection limit
   filter(value > detection_limit) %>% 
-  left_join(NitrogenDictionary, by = "Nlevel")
+  left_join(NitrogenDictionary, by = "Nlevel") %>% 
+  select(origSiteID:turfID, Namount_kg_ha_y, burial_length, elements, value, detection_limit, burial_date, retrieval_date, Notes)
+
+write_csv(prs_data, file = "data_cleaned/soil/THREE-D_clean_nutrients_2021.csv")
   
 prs_data %>% 
   filter(elements == "K") %>% 
