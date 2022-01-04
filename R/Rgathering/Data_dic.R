@@ -77,7 +77,7 @@ reflectance_dic <- make_data_dictionary(data = reflectance,
 
 
 #***********************************************************************************************
-### SOIL
+### SOIL DEPTH
 
 # read in data
 depth <- read_csv("data_cleaned/soil/THREE-D_PlotLevel_Depth_2019.csv")
@@ -100,6 +100,27 @@ soil_dic <- make_data_dictionary(data = soil,
 
 
 #***********************************************************************************************
+### SOIL NUTRIENTS - PRS
+
+# read in data
+prs <- read_csv("data_cleaned/soil/THREE-D_clean_nutrients_2021.csv")
+
+prs_dic <- make_data_dictionary(data = prs,
+                                description_table = attribute_table,
+                                table_ID = "prs")
+
+#***********************************************************************************************
+### DECOMPOSITION
+
+# read in data
+decompose <- read_csv("data_cleaned/decomposition/THREE-D_clean_decomposition_fall_2021.csv")
+
+decompose_dic <- make_data_dictionary(data =  decompose,
+                                      description_table = attribute_table,
+                                      table_ID = NA_character_)
+
+
+#***********************************************************************************************
 ### C-FLUX
 
 # read in data
@@ -110,48 +131,20 @@ cflux_dic <- make_data_dictionary(data =  cflux,
                                  table_ID = NA_character_)
 
 
-#***********************************************************************************************
-### DECOMPOSITION
 
-# read in data
-decompose <- read_csv("data_cleaned/decomposition/THREE-D_clean_decomposition_fall_2021.csv")
-
-decompose_dic <- make_data_dictionary(data =  decompose,
-                                  description_table = attribute_table,
-                                  table_ID = NA_character_)
-
-
-#***********************************************************************************************
-### SOIL NUTRIENTS - PRS
-
-# read in data
-prs <- read_csv("data_cleaned/soil/THREE-D_clean_nutrients_2021.csv")
-
-prs_dic <- make_data_dictionary(data = prs,
-                                       description_table = attribute_table,
-                                       table_ID = "prs")
 
 
 #***********************************************************************************************
 ### CLIMATE - TOMST
 
 # read in data
-# climate_tomst <- read_csv("data_cleaned/climate/THREE-D_TomstLogger_2019_2020.csv")
-# 
-# range_climate_tomst <- climate_tomst %>% 
-#   summarise(
-#     across(where(is.character), ~ paste(min(.), max(.), sep = " - ")),
-#     across(where(is.numeric), ~paste(min(.), max(.), sep = " - "))
-#   ) %>% 
-#   pivot_longer(cols = everything(), names_to = "Variable name", values_to = "Variable range or levels")
-# 
-# 
-# climate_tomst_dic <- map_df(climate_tomst %>% as_tibble, class) %>% 
-#   pivot_longer(cols = everything(), names_to = "Variable name", values_to = "Variable type") %>% 
-#   mutate(`Variable type` = case_when(`Variable type` == "character" ~ "categorical",
-#                                      `Variable type` %in% c("integer", "numeric") ~ "numeric")) %>% 
-#   left_join(range_climate_tomst, by = "Variable name") %>% 
-#   left_join(attribute_table, by = c("Variable name" = "attribute"))
+climate <- read_csv("data_cleaned/climate/THREE-D_clean_microclimate_2019-2021.csv")
+
+climate_dic <- make_data_dictionary(data =  climate,
+                                            description_table = attribute_table,
+                                            table_ID = NA_character_)
+
+
 
 
 #***********************************************************************************************
@@ -163,3 +156,24 @@ climate_gridded <- read_csv("data_cleaned/climate/THREE_D_Gridded_DailyClimate_2
 climate_gridded_dic <- make_data_dictionary(data =  climate_gridded,
                                       description_table = attribute_table,
                                       table_ID = NA_character_)
+
+
+
+#************************************************************************
+
+##merge all dics together to one xlsx, with each parameter as a single sheet
+
+# write_xlsx(list(site = site_dic,
+#                 community_cover = cover_dic,
+#                 subplot_presence = subplot_dic,
+#                 community_structure = structure_dic,
+#                 biomass = biomass_dic,
+#                 ndvi = reflectance_dic,
+#                 soil_depth = depth_dic,
+#                 soil= soil_dic,
+#                 soil_nutrients = prs_dic,
+#                 decomposition = decompose_dic,
+#                 cflux = cflux_dic,
+#                 climate = climate_dic,
+#                 gridded_climate = climate_gridded_dic),
+#            path = "R/data_dic/data_dictionary.xlsx")
