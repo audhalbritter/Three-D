@@ -1114,7 +1114,7 @@ Soil nutrients
 site
 </td>
 <td style="text-align:left;">
-NA
+THREE-D_clean_nutrients_2021.csv
 </td>
 </tr>
 <tr>
@@ -1131,37 +1131,23 @@ plot
 THREE-D_clean_decomposition_fall_2021.csv
 </td>
 </tr>
-<tr grouplength="3">
+<tr grouplength="2">
 <td colspan="4" style="border-bottom: 1px solid;">
 <strong>Climate</strong>
 </td>
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-Air, ground and soil temperature
+Air, ground and soil temperature, and soil moisture
 </td>
 <td style="text-align:left;">
-2019-2020
-</td>
-<td style="text-align:left;">
-plot
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
-Soil moisture
-</td>
-<td style="text-align:left;">
-2019-2020
+2019-2021
 </td>
 <td style="text-align:left;">
 plot
 </td>
 <td style="text-align:left;">
-NA
+THREE-D_clean_microclimate_2019-2021.csv
 </td>
 </tr>
 <tr>
@@ -1536,6 +1522,14 @@ each soil sample, excluding large roots and stones (excluding particles
 \> 2mm). Measurements of soil C and N were done by dry combustion
 (Matejovic 1997; Senesi and Senesi 2016) at NMBU in Ås.
 
+#### Soil nutrients - PRS probes
+
+PRS probes were installed for 35 days at peak growing season (July -
+August) in plots with 0, 10 and 150 kg N per ha and y, ambient and
+warmed temperature and intermediate, intensive and not grazed plots. The
+probes were retrieved, brought back to the lab, washed with deionized
+water and shipped to the lab for analysis.
+
 #### Climate data
 
 Temperature was measured continuously (every 15 minutes) at three
@@ -1574,19 +1568,19 @@ temperature (°C, Temperature)
 Variable name
 </th>
 <th style="text-align:left;">
+Description
+</th>
+<th style="text-align:left;">
 Variable type
 </th>
 <th style="text-align:left;">
 Variable range or levels
 </th>
 <th style="text-align:left;">
-unit
+Unit
 </th>
 <th style="text-align:left;">
-description
-</th>
-<th style="text-align:left;">
-how_measured
+How measured
 </th>
 </tr>
 </thead>
@@ -1594,6 +1588,9 @@ how_measured
 <tr>
 <td style="text-align:left;">
 destSiteID
+</td>
+<td style="text-align:left;">
+Unique site ID of destination site
 </td>
 <td style="text-align:left;">
 categorical
@@ -1605,9 +1602,6 @@ Joa - Vik
 NA
 </td>
 <td style="text-align:left;">
-Unique site ID of destination site
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
@@ -1616,16 +1610,16 @@ defined
 latitude_N
 </td>
 <td style="text-align:left;">
+Latitude of site
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-60.85994 - 60.88019
+60.86 - 60.88
 </td>
 <td style="text-align:left;">
 degree N
-</td>
-<td style="text-align:left;">
-latitude of site
 </td>
 <td style="text-align:left;">
 measured
@@ -1636,16 +1630,16 @@ measured
 longitude_E
 </td>
 <td style="text-align:left;">
+Longitude of site
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-7.168 - 7.19504
+7.168 - 7.195
 </td>
 <td style="text-align:left;">
 degree E
-</td>
-<td style="text-align:left;">
-longitude of site
 </td>
 <td style="text-align:left;">
 measured
@@ -1654,6 +1648,9 @@ measured
 <tr>
 <td style="text-align:left;">
 elevation_m\_asl
+</td>
+<td style="text-align:left;">
+Elevation of site
 </td>
 <td style="text-align:left;">
 numeric
@@ -1665,15 +1662,15 @@ numeric
 m a.s.l.
 </td>
 <td style="text-align:left;">
-elevation of site
-</td>
-<td style="text-align:left;">
 measured
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 layer
+</td>
+<td style="text-align:left;">
+Moss or vegetation layer
 </td>
 <td style="text-align:left;">
 categorical
@@ -1683,9 +1680,6 @@ Bottom - Top
 </td>
 <td style="text-align:left;">
 NA
-</td>
-<td style="text-align:left;">
-Moss or vegetation layer
 </td>
 <td style="text-align:left;">
 defined
@@ -1696,6 +1690,9 @@ defined
 layer
 </td>
 <td style="text-align:left;">
+Layer at which soil sample was taken: top or bottom 5cm
+</td>
+<td style="text-align:left;">
 categorical
 </td>
 <td style="text-align:left;">
@@ -1703,9 +1700,6 @@ Bottom - Top
 </td>
 <td style="text-align:left;">
 NA
-</td>
-<td style="text-align:left;">
-Layer at which soil sample was taken: top or bottom 5cm
 </td>
 <td style="text-align:left;">
 defined
@@ -1716,16 +1710,16 @@ defined
 bulk_density_se
 </td>
 <td style="text-align:left;">
+Standard deviation for bulk density
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-0.0354977932720116 - 0.0763008350515654
+0.035 - 0.076
 </td>
 <td style="text-align:left;">
 NA
-</td>
-<td style="text-align:left;">
-Standard deviation for bulk density
 </td>
 <td style="text-align:left;">
 measured
@@ -1736,39 +1730,19 @@ measured
 bulk_density_g\_cm
 </td>
 <td style="text-align:left;">
+Bulk density
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-0.308566003620947 - 0.9186359822776
+0.309 - 0.919
 </td>
 <td style="text-align:left;">
 g_cm
 </td>
 <td style="text-align:left;">
-Bulk density
-</td>
-<td style="text-align:left;">
 measured
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-sand_se
-</td>
-<td style="text-align:left;">
-numeric
-</td>
-<td style="text-align:left;">
-1.40050240959657 - 1.83144933502523
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
 </td>
 </tr>
 <tr>
@@ -1776,39 +1750,19 @@ NA
 sand_percent
 </td>
 <td style="text-align:left;">
+Percentage of sand
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-90.5808080808081 - 91.9590643274854
+90.581 - 91.959
 </td>
 <td style="text-align:left;">
 percentage
 </td>
 <td style="text-align:left;">
-Percentage of sand
-</td>
-<td style="text-align:left;">
 measured
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-silt_se
-</td>
-<td style="text-align:left;">
-numeric
-</td>
-<td style="text-align:left;">
-1.32404288796134 - 1.78448149075234
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
 </td>
 </tr>
 <tr>
@@ -1816,16 +1770,16 @@ NA
 silt_percent
 </td>
 <td style="text-align:left;">
+Percentage of clay
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-7.13450292397661 - 8.77380952380953
+7.135 - 8.774
 </td>
 <td style="text-align:left;">
 percentage
-</td>
-<td style="text-align:left;">
-Percentage of clay
 </td>
 <td style="text-align:left;">
 measured
@@ -1833,39 +1787,19 @@ measured
 </tr>
 <tr>
 <td style="text-align:left;">
-clay_se
-</td>
-<td style="text-align:left;">
-numeric
-</td>
-<td style="text-align:left;">
-0.0801333787052576 - 0.0829459271973544
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 clay_percent
 </td>
 <td style="text-align:left;">
+Percentage of silt
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-0.650234754476752 - 0.915361503576373
+0.65 - 0.915
 </td>
 <td style="text-align:left;">
 percentage
-</td>
-<td style="text-align:left;">
-Percentage of silt
 </td>
 <td style="text-align:left;">
 measured
@@ -1876,16 +1810,16 @@ measured
 soil_organic_matter_se
 </td>
 <td style="text-align:left;">
+Standard deviation for soil organic matter
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-0.00485375837365207 - 0.0584435476188698
+0.005 - 0.058
 </td>
 <td style="text-align:left;">
 NA
-</td>
-<td style="text-align:left;">
-Standard deviation for soil organic matter
 </td>
 <td style="text-align:left;">
 measured
@@ -1896,16 +1830,16 @@ measured
 soil_organic_matter
 </td>
 <td style="text-align:left;">
+Soil organic matter
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-0.112320812496602 - 0.620930035989389
+0.112 - 0.621
 </td>
 <td style="text-align:left;">
 percentage
-</td>
-<td style="text-align:left;">
-Soil organic matter
 </td>
 <td style="text-align:left;">
 measured
@@ -1916,16 +1850,16 @@ measured
 carbon_content_se
 </td>
 <td style="text-align:left;">
+Standard deviaiton for carbon content
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-0.000290271928794042 - 0.00103937805184529
+0 - 0.001
 </td>
 <td style="text-align:left;">
 NA
-</td>
-<td style="text-align:left;">
-Standard deviaiton for carbon content
 </td>
 <td style="text-align:left;">
 measured
@@ -1936,16 +1870,16 @@ measured
 carbon_content
 </td>
 <td style="text-align:left;">
+Carbon content
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-0.0117932929862761 - 0.0156673518884987
+0.012 - 0.016
 </td>
 <td style="text-align:left;">
 percentage
-</td>
-<td style="text-align:left;">
-Carbon content
 </td>
 <td style="text-align:left;">
 measured
@@ -1956,16 +1890,16 @@ measured
 C_percent_se
 </td>
 <td style="text-align:left;">
+Standard deviaiton for carbon content
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-0.777051171840339 - 3.22262780507508
+0.777 - 3.223
 </td>
 <td style="text-align:left;">
 NA
-</td>
-<td style="text-align:left;">
-Standard deviaiton for carbon content
 </td>
 <td style="text-align:left;">
 measured
@@ -1976,16 +1910,16 @@ measured
 C_percent
 </td>
 <td style="text-align:left;">
+Carbon content
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-7.099429 - 27.609097
+7.099 - 27.609
 </td>
 <td style="text-align:left;">
 percentage
-</td>
-<td style="text-align:left;">
-Carbon content
 </td>
 <td style="text-align:left;">
 measured
@@ -1996,16 +1930,16 @@ measured
 N_percent_se
 </td>
 <td style="text-align:left;">
+Standard deviaiton for nitrogen content
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-0.0499862749051066 - 0.242550418308045
+0.05 - 0.243
 </td>
 <td style="text-align:left;">
 NA
-</td>
-<td style="text-align:left;">
-Standard deviaiton for nitrogen content
 </td>
 <td style="text-align:left;">
 measured
@@ -2016,16 +1950,16 @@ measured
 N_percent
 </td>
 <td style="text-align:left;">
+Nitrogen content
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-0.624487 - 2.036211
+0.624 - 2.036
 </td>
 <td style="text-align:left;">
 percentage
-</td>
-<td style="text-align:left;">
-Nitrogen content
 </td>
 <td style="text-align:left;">
 measured
@@ -2036,16 +1970,16 @@ measured
 pH_se
 </td>
 <td style="text-align:left;">
+Standard deviation for pH
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-0.0120554275466834 - 0.11116054455906
+0.012 - 0.111
 </td>
 <td style="text-align:left;">
 NA
-</td>
-<td style="text-align:left;">
-Standard deviation for pH
 </td>
 <td style="text-align:left;">
 measured
@@ -2056,6 +1990,9 @@ measured
 pH
 </td>
 <td style="text-align:left;">
+pH value
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
@@ -2063,9 +2000,6 @@ numeric
 </td>
 <td style="text-align:left;">
 NA
-</td>
-<td style="text-align:left;">
-pH value
 </td>
 <td style="text-align:left;">
 measured
@@ -2083,19 +2017,19 @@ measured
 Variable name
 </th>
 <th style="text-align:left;">
+Description
+</th>
+<th style="text-align:left;">
 Variable type
 </th>
 <th style="text-align:left;">
 Variable range or levels
 </th>
 <th style="text-align:left;">
-unit
+Unit
 </th>
 <th style="text-align:left;">
-description
-</th>
-<th style="text-align:left;">
-how_measured
+How measured
 </th>
 </tr>
 </thead>
@@ -2103,6 +2037,9 @@ how_measured
 <tr>
 <td style="text-align:left;">
 origSiteID
+</td>
+<td style="text-align:left;">
+Unique site ID of origin site
 </td>
 <td style="text-align:left;">
 categorical
@@ -2114,15 +2051,15 @@ Joa - Lia
 NA
 </td>
 <td style="text-align:left;">
-Unique site ID of origin site
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 origBlockID
+</td>
+<td style="text-align:left;">
+Unique origin block ID as number 1 to 10
 </td>
 <td style="text-align:left;">
 numeric
@@ -2134,15 +2071,15 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Unique origin block ID as number 1 to 10
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 origPlotID
+</td>
+<td style="text-align:left;">
+Unique numeric origin plot ID for geographic location of the turf
 </td>
 <td style="text-align:left;">
 numeric
@@ -2154,15 +2091,15 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Unique numeric origin plot ID for geographic location of the turf
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 destSiteID
+</td>
+<td style="text-align:left;">
+Unique site ID of destination site
 </td>
 <td style="text-align:left;">
 categorical
@@ -2174,15 +2111,15 @@ Joa - Vik
 NA
 </td>
 <td style="text-align:left;">
-Unique site ID of destination site
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 destBlockID
+</td>
+<td style="text-align:left;">
+Unique numeric destination plot ID for geographic location of the turf
 </td>
 <td style="text-align:left;">
 numeric
@@ -2194,15 +2131,15 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Unique numeric destination plot ID for geographic location of the turf
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 destPlotID
+</td>
+<td style="text-align:left;">
+Unique destination block ID as number 1 to 10
 </td>
 <td style="text-align:left;">
 numeric
@@ -2214,15 +2151,16 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Unique destination block ID as number 1 to 10
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 turfID
+</td>
+<td style="text-align:left;">
+Unique ID of vegetation turf as originplotID, warming, nitrogen and
+grazing treatment and destinationplotID
 </td>
 <td style="text-align:left;">
 categorical
@@ -2234,16 +2172,15 @@ categorical
 NA
 </td>
 <td style="text-align:left;">
-Unique ID of vegetation turf as originplotID, warming, nitrogen and
-grazing treatment and destinationplotID
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 warming
+</td>
+<td style="text-align:left;">
+Warming treatment as W for warming or A for ambient
 </td>
 <td style="text-align:left;">
 categorical
@@ -2255,15 +2192,16 @@ A - W
 NA
 </td>
 <td style="text-align:left;">
-Warming treatment as W for warming or A for ambient
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 grazing
+</td>
+<td style="text-align:left;">
+Grazing treatment as C for control, I for intensive, M for medium and N
+for natural grazing
 </td>
 <td style="text-align:left;">
 categorical
@@ -2275,16 +2213,15 @@ C - N
 NA
 </td>
 <td style="text-align:left;">
-Grazing treatment as C for control, I for intensive, M for medium and N
-for natural grazing
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 Nlevel
+</td>
+<td style="text-align:left;">
+Nitrogen level treatment as numeric value from 1 - 10
 </td>
 <td style="text-align:left;">
 numeric
@@ -2296,9 +2233,6 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Nitrogen level treatment as numeric value from 1 - 10
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
@@ -2307,16 +2241,16 @@ defined
 date
 </td>
 <td style="text-align:left;">
-NA
+Date of sampling
 </td>
 <td style="text-align:left;">
-NA
+date
+</td>
+<td style="text-align:left;">
+2019-07-02 - 2020-08-06
 </td>
 <td style="text-align:left;">
 dd-mm-yyyy
-</td>
-<td style="text-align:left;">
-Date of sampling
 </td>
 <td style="text-align:left;">
 defined
@@ -2325,6 +2259,9 @@ defined
 <tr>
 <td style="text-align:left;">
 year
+</td>
+<td style="text-align:left;">
+Year of the sampling
 </td>
 <td style="text-align:left;">
 numeric
@@ -2336,15 +2273,15 @@ numeric
 2019
 </td>
 <td style="text-align:left;">
-Year of the sampling
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 species
+</td>
+<td style="text-align:left;">
+Latin genus and species name
 </td>
 <td style="text-align:left;">
 categorical
@@ -2356,15 +2293,15 @@ Achillea millefolium - Viola palustris
 NA
 </td>
 <td style="text-align:left;">
-Latin genus and species name
-</td>
-<td style="text-align:left;">
 identified
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 cover
+</td>
+<td style="text-align:left;">
+Percent cover of a species in a turf
 </td>
 <td style="text-align:left;">
 numeric
@@ -2376,15 +2313,15 @@ numeric
 percentage
 </td>
 <td style="text-align:left;">
-Percent cover of a species in a turf
-</td>
-<td style="text-align:left;">
 measured
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 recorder
+</td>
+<td style="text-align:left;">
+Name of person that recorded the data
 </td>
 <td style="text-align:left;">
 categorical
@@ -2396,30 +2333,7 @@ aud - vigdis
 NA
 </td>
 <td style="text-align:left;">
-Name of person that recorded the data
-</td>
-<td style="text-align:left;">
 recorded
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-scribe
-</td>
-<td style="text-align:left;">
-categorical
-</td>
-<td style="text-align:left;">
-NA - NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
 </td>
 </tr>
 <tr>
@@ -2427,16 +2341,18 @@ NA
 remark
 </td>
 <td style="text-align:left;">
+Comment
+</td>
+<td style="text-align:left;">
 categorical
 </td>
 <td style="text-align:left;">
-NA - NA
+13 cf less white cerastium or anntennaria? - yellow green leaves, ca 5m,
+little m shape, tips cut, maybe carex leporina or brunecsene like other
+plots in block 10
 </td>
 <td style="text-align:left;">
 NA
-</td>
-<td style="text-align:left;">
-Comment
 </td>
 <td style="text-align:left;">
 NA
@@ -2445,6 +2361,9 @@ NA
 <tr>
 <td style="text-align:left;">
 file
+</td>
+<td style="text-align:left;">
+name of file of raw data
 </td>
 <td style="text-align:left;">
 categorical
@@ -2456,9 +2375,6 @@ copy.xlsx
 </td>
 <td style="text-align:left;">
 NA
-</td>
-<td style="text-align:left;">
-name of file of raw data
 </td>
 <td style="text-align:left;">
 recorded
@@ -2476,58 +2392,40 @@ recorded
 Variable name
 </th>
 <th style="text-align:left;">
+Description
+</th>
+<th style="text-align:left;">
 Variable type
 </th>
 <th style="text-align:left;">
 Variable range or levels
 </th>
 <th style="text-align:left;">
-unit
+Unit
 </th>
 <th style="text-align:left;">
-description
-</th>
-<th style="text-align:left;">
-how_measured
+How measured
 </th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align:left;">
-scribe
-</td>
-<td style="text-align:left;">
-categorical
-</td>
-<td style="text-align:left;">
-NA - NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 file
 </td>
 <td style="text-align:left;">
+name of file of raw data
+</td>
+<td style="text-align:left;">
 categorical
 </td>
 <td style="text-align:left;">
-NA - NA
+data/community//2019/Joa/THREE-D_CommunityData_Joasete_1\_2019.xlsx -
+data/community//2020/Vik/THREE-D_CommunityData_Vikesland_4\_2020_iPad
+copy.xlsx
 </td>
 <td style="text-align:left;">
 NA
-</td>
-<td style="text-align:left;">
-name of file of raw data
 </td>
 <td style="text-align:left;">
 recorded
@@ -2536,6 +2434,9 @@ recorded
 <tr>
 <td style="text-align:left;">
 year
+</td>
+<td style="text-align:left;">
+Year of the sampling
 </td>
 <td style="text-align:left;">
 numeric
@@ -2547,9 +2448,6 @@ numeric
 2019
 </td>
 <td style="text-align:left;">
-Year of the sampling
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
@@ -2558,16 +2456,16 @@ defined
 date
 </td>
 <td style="text-align:left;">
+Date of sampling
+</td>
+<td style="text-align:left;">
 date
 </td>
 <td style="text-align:left;">
-NA - NA
+2019-07-02 - 2020-08-06
 </td>
 <td style="text-align:left;">
 dd-mm-yyyy
-</td>
-<td style="text-align:left;">
-Date of sampling
 </td>
 <td style="text-align:left;">
 defined
@@ -2576,6 +2474,9 @@ defined
 <tr>
 <td style="text-align:left;">
 origSiteID
+</td>
+<td style="text-align:left;">
+Unique site ID of origin site
 </td>
 <td style="text-align:left;">
 categorical
@@ -2587,15 +2488,15 @@ Joa - Lia
 NA
 </td>
 <td style="text-align:left;">
-Unique site ID of origin site
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 origBlockID
+</td>
+<td style="text-align:left;">
+Unique origin block ID as number 1 to 10
 </td>
 <td style="text-align:left;">
 numeric
@@ -2607,15 +2508,15 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Unique origin block ID as number 1 to 10
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 origPlotID
+</td>
+<td style="text-align:left;">
+Unique numeric origin plot ID for geographic location of the turf
 </td>
 <td style="text-align:left;">
 numeric
@@ -2627,15 +2528,15 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Unique numeric origin plot ID for geographic location of the turf
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 destSiteID
+</td>
+<td style="text-align:left;">
+Unique site ID of destination site
 </td>
 <td style="text-align:left;">
 categorical
@@ -2647,15 +2548,15 @@ Joa - Vik
 NA
 </td>
 <td style="text-align:left;">
-Unique site ID of destination site
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 destBlockID
+</td>
+<td style="text-align:left;">
+Unique numeric destination plot ID for geographic location of the turf
 </td>
 <td style="text-align:left;">
 numeric
@@ -2667,15 +2568,15 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Unique numeric destination plot ID for geographic location of the turf
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 destPlotID
+</td>
+<td style="text-align:left;">
+Unique destination block ID as number 1 to 10
 </td>
 <td style="text-align:left;">
 numeric
@@ -2687,15 +2588,16 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Unique destination block ID as number 1 to 10
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 turfID
+</td>
+<td style="text-align:left;">
+Unique ID of vegetation turf as originplotID, warming, nitrogen and
+grazing treatment and destinationplotID
 </td>
 <td style="text-align:left;">
 categorical
@@ -2707,16 +2609,15 @@ categorical
 NA
 </td>
 <td style="text-align:left;">
-Unique ID of vegetation turf as originplotID, warming, nitrogen and
-grazing treatment and destinationplotID
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 warming
+</td>
+<td style="text-align:left;">
+Warming treatment as W for warming or A for ambient
 </td>
 <td style="text-align:left;">
 categorical
@@ -2728,15 +2629,16 @@ A - W
 NA
 </td>
 <td style="text-align:left;">
-Warming treatment as W for warming or A for ambient
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 grazing
+</td>
+<td style="text-align:left;">
+Grazing treatment as C for control, I for intensive, M for medium and N
+for natural grazing
 </td>
 <td style="text-align:left;">
 categorical
@@ -2748,16 +2650,15 @@ C - N
 NA
 </td>
 <td style="text-align:left;">
-Grazing treatment as C for control, I for intensive, M for medium and N
-for natural grazing
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 Nlevel
+</td>
+<td style="text-align:left;">
+Nitrogen level treatment as numeric value from 1 - 10
 </td>
 <td style="text-align:left;">
 numeric
@@ -2769,15 +2670,15 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Nitrogen level treatment as numeric value from 1 - 10
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 subplot
+</td>
+<td style="text-align:left;">
+Location of subturf within the turf
 </td>
 <td style="text-align:left;">
 numeric
@@ -2789,15 +2690,15 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Location of subturf within the turf
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 species
+</td>
+<td style="text-align:left;">
+Latin genus and species name
 </td>
 <td style="text-align:left;">
 categorical
@@ -2809,50 +2710,7 @@ Achillea millefolium - Viola palustris
 NA
 </td>
 <td style="text-align:left;">
-Latin genus and species name
-</td>
-<td style="text-align:left;">
 identified
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-variable
-</td>
-<td style="text-align:left;">
-categorical
-</td>
-<td style="text-align:left;">
-cover - seedling
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-Climate logger
-</td>
-<td style="text-align:left;">
-defined
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-variable
-</td>
-<td style="text-align:left;">
-categorical
-</td>
-<td style="text-align:left;">
-cover - seedling
-</td>
-<td style="text-align:left;">
-\<a1>C
-</td>
-<td style="text-align:left;">
-Climate logger
-</td>
-<td style="text-align:left;">
-defined
 </td>
 </tr>
 <tr>
@@ -2860,16 +2718,16 @@ defined
 value
 </td>
 <td style="text-align:left;">
+Value for climate data
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-NA - NA
+0 - 80
 </td>
 <td style="text-align:left;">
 NA
-</td>
-<td style="text-align:left;">
-Value for climate data
 </td>
 <td style="text-align:left;">
 measured
@@ -2880,16 +2738,18 @@ measured
 remark
 </td>
 <td style="text-align:left;">
+Comment
+</td>
+<td style="text-align:left;">
 categorical
 </td>
 <td style="text-align:left;">
-NA - NA
+13 cf less white cerastium or anntennaria? - yellow green leaves, ca 5m,
+little m shape, tips cut, maybe carex leporina or brunecsene like other
+plots in block 10
 </td>
 <td style="text-align:left;">
 NA
-</td>
-<td style="text-align:left;">
-Comment
 </td>
 <td style="text-align:left;">
 NA
@@ -2900,16 +2760,16 @@ NA
 recorder
 </td>
 <td style="text-align:left;">
+Name of person that recorded the data
+</td>
+<td style="text-align:left;">
 categorical
 </td>
 <td style="text-align:left;">
-NA - NA
+aud - vigdis
 </td>
 <td style="text-align:left;">
 NA
-</td>
-<td style="text-align:left;">
-Name of person that recorded the data
 </td>
 <td style="text-align:left;">
 recorded
@@ -2927,19 +2787,19 @@ recorded
 Variable name
 </th>
 <th style="text-align:left;">
+Description
+</th>
+<th style="text-align:left;">
 Variable type
 </th>
 <th style="text-align:left;">
 Variable range or levels
 </th>
 <th style="text-align:left;">
-unit
+Unit
 </th>
 <th style="text-align:left;">
-description
-</th>
-<th style="text-align:left;">
-how_measured
+How measured
 </th>
 </tr>
 </thead>
@@ -2947,6 +2807,9 @@ how_measured
 <tr>
 <td style="text-align:left;">
 origSiteID
+</td>
+<td style="text-align:left;">
+Unique site ID of origin site
 </td>
 <td style="text-align:left;">
 categorical
@@ -2958,15 +2821,15 @@ Joa - Lia
 NA
 </td>
 <td style="text-align:left;">
-Unique site ID of origin site
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 origBlockID
+</td>
+<td style="text-align:left;">
+Unique origin block ID as number 1 to 10
 </td>
 <td style="text-align:left;">
 numeric
@@ -2978,15 +2841,15 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Unique origin block ID as number 1 to 10
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 origPlotID
+</td>
+<td style="text-align:left;">
+Unique numeric origin plot ID for geographic location of the turf
 </td>
 <td style="text-align:left;">
 numeric
@@ -2998,15 +2861,15 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Unique numeric origin plot ID for geographic location of the turf
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 destSiteID
+</td>
+<td style="text-align:left;">
+Unique site ID of destination site
 </td>
 <td style="text-align:left;">
 categorical
@@ -3018,15 +2881,15 @@ Joa - Vik
 NA
 </td>
 <td style="text-align:left;">
-Unique site ID of destination site
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 destPlotID
+</td>
+<td style="text-align:left;">
+Unique destination block ID as number 1 to 10
 </td>
 <td style="text-align:left;">
 numeric
@@ -3038,15 +2901,15 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Unique destination block ID as number 1 to 10
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 destBlockID
+</td>
+<td style="text-align:left;">
+Unique numeric destination plot ID for geographic location of the turf
 </td>
 <td style="text-align:left;">
 numeric
@@ -3058,15 +2921,16 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Unique numeric destination plot ID for geographic location of the turf
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 turfID
+</td>
+<td style="text-align:left;">
+Unique ID of vegetation turf as originplotID, warming, nitrogen and
+grazing treatment and destinationplotID
 </td>
 <td style="text-align:left;">
 categorical
@@ -3078,16 +2942,15 @@ categorical
 NA
 </td>
 <td style="text-align:left;">
-Unique ID of vegetation turf as originplotID, warming, nitrogen and
-grazing treatment and destinationplotID
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 warming
+</td>
+<td style="text-align:left;">
+Warming treatment as W for warming or A for ambient
 </td>
 <td style="text-align:left;">
 categorical
@@ -3099,15 +2962,16 @@ A - W
 NA
 </td>
 <td style="text-align:left;">
-Warming treatment as W for warming or A for ambient
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 grazing
+</td>
+<td style="text-align:left;">
+Grazing treatment as C for control, I for intensive, M for medium and N
+for natural grazing
 </td>
 <td style="text-align:left;">
 categorical
@@ -3119,16 +2983,15 @@ C - N
 NA
 </td>
 <td style="text-align:left;">
-Grazing treatment as C for control, I for intensive, M for medium and N
-for natural grazing
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 Nlevel
+</td>
+<td style="text-align:left;">
+Nitrogen level treatment as numeric value from 1 - 10
 </td>
 <td style="text-align:left;">
 numeric
@@ -3140,15 +3003,15 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Nitrogen level treatment as numeric value from 1 - 10
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 date
+</td>
+<td style="text-align:left;">
+Date of sampling
 </td>
 <td style="text-align:left;">
 date
@@ -3160,15 +3023,15 @@ date
 dd-mm-yyyy
 </td>
 <td style="text-align:left;">
-Date of sampling
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 year
+</td>
+<td style="text-align:left;">
+Year of the sampling
 </td>
 <td style="text-align:left;">
 numeric
@@ -3180,15 +3043,15 @@ numeric
 2019
 </td>
 <td style="text-align:left;">
-Year of the sampling
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 functional_group
+</td>
+<td style="text-align:left;">
+Plant functional group
 </td>
 <td style="text-align:left;">
 categorical
@@ -3200,9 +3063,6 @@ Bare rock - Vascular plants
 NA
 </td>
 <td style="text-align:left;">
-Plant functional group
-</td>
-<td style="text-align:left;">
 literature
 </td>
 </tr>
@@ -3211,16 +3071,16 @@ literature
 cover
 </td>
 <td style="text-align:left;">
+Percent cover of a species in a turf
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-NA - NA
+0 - 97.8
 </td>
 <td style="text-align:left;">
 percentage
-</td>
-<td style="text-align:left;">
-Percent cover of a species in a turf
 </td>
 <td style="text-align:left;">
 measured
@@ -3238,19 +3098,19 @@ measured
 Variable name
 </th>
 <th style="text-align:left;">
+Description
+</th>
+<th style="text-align:left;">
 Variable type
 </th>
 <th style="text-align:left;">
 Variable range or levels
 </th>
 <th style="text-align:left;">
-unit
+Unit
 </th>
 <th style="text-align:left;">
-description
-</th>
-<th style="text-align:left;">
-how_measured
+How measured
 </th>
 </tr>
 </thead>
@@ -3260,326 +3120,7 @@ how_measured
 destSiteID
 </td>
 <td style="text-align:left;">
-categorical
-</td>
-<td style="text-align:left;">
-Joa - Vik
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
 Unique site ID of destination site
-</td>
-<td style="text-align:left;">
-defined
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-destBlockID
-</td>
-<td style="text-align:left;">
-numeric
-</td>
-<td style="text-align:left;">
-1 - 10
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-Unique numeric destination plot ID for geographic location of the turf
-</td>
-<td style="text-align:left;">
-defined
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-destPlotID
-</td>
-<td style="text-align:left;">
-numeric
-</td>
-<td style="text-align:left;">
-2 - 198
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-Unique destination block ID as number 1 to 10
-</td>
-<td style="text-align:left;">
-defined
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-turfID
-</td>
-<td style="text-align:left;">
-categorical
-</td>
-<td style="text-align:left;">
-1 WN1M 84 - 97 WN5M 169
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-Unique ID of vegetation turf as originplotID, warming, nitrogen and
-grazing treatment and destinationplotID
-</td>
-<td style="text-align:left;">
-defined
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-warming
-</td>
-<td style="text-align:left;">
-categorical
-</td>
-<td style="text-align:left;">
-A - W
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-Warming treatment as W for warming or A for ambient
-</td>
-<td style="text-align:left;">
-defined
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Nlevel
-</td>
-<td style="text-align:left;">
-numeric
-</td>
-<td style="text-align:left;">
-1 - 10
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-Nitrogen level treatment as numeric value from 1 - 10
-</td>
-<td style="text-align:left;">
-defined
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-grazing
-</td>
-<td style="text-align:left;">
-categorical
-</td>
-<td style="text-align:left;">
-I - M
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-Grazing treatment as C for control, I for intensive, M for medium and N
-for natural grazing
-</td>
-<td style="text-align:left;">
-defined
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-cut
-</td>
-<td style="text-align:left;">
-numeric
-</td>
-<td style="text-align:left;">
-1 - 4
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-Number of times the plot has been cut
-</td>
-<td style="text-align:left;">
-defined
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-date
-</td>
-<td style="text-align:left;">
-date
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-dd-mm-yyyy
-</td>
-<td style="text-align:left;">
-Date of sampling
-</td>
-<td style="text-align:left;">
-defined
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-remark
-</td>
-<td style="text-align:left;">
-categorical
-</td>
-<td style="text-align:left;">
-NA - NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-Comment
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fun_group
-</td>
-<td style="text-align:left;">
-categorical
-</td>
-<td style="text-align:left;">
-Bryophytes_g - Shrub_g
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-Functional group
-</td>
-<td style="text-align:left;">
-defined
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-value
-</td>
-<td style="text-align:left;">
-numeric
-</td>
-<td style="text-align:left;">
-0.00094 - 86.54
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-Value for climate data
-</td>
-<td style="text-align:left;">
-measured
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-origSiteID
-</td>
-<td style="text-align:left;">
-categorical
-</td>
-<td style="text-align:left;">
-Joa - Lia
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-Unique site ID of origin site
-</td>
-<td style="text-align:left;">
-defined
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-origBlockID
-</td>
-<td style="text-align:left;">
-numeric
-</td>
-<td style="text-align:left;">
-1 - 10
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-Unique origin block ID as number 1 to 10
-</td>
-<td style="text-align:left;">
-defined
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-origPlotID
-</td>
-<td style="text-align:left;">
-numeric
-</td>
-<td style="text-align:left;">
-1 - 157
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-Unique numeric origin plot ID for geographic location of the turf
-</td>
-<td style="text-align:left;">
-defined
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-year
-</td>
-<td style="text-align:left;">
-numeric
-</td>
-<td style="text-align:left;">
-NA - NA
-</td>
-<td style="text-align:left;">
-2019
-</td>
-<td style="text-align:left;">
-Year of the sampling
-</td>
-<td style="text-align:left;">
-defined
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-destSiteID
 </td>
 <td style="text-align:left;">
 categorical
@@ -3591,15 +3132,15 @@ Joa - Vik
 NA
 </td>
 <td style="text-align:left;">
-Unique site ID of destination site
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 destBlockID
+</td>
+<td style="text-align:left;">
+Unique numeric destination plot ID for geographic location of the turf
 </td>
 <td style="text-align:left;">
 numeric
@@ -3611,15 +3152,15 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Unique numeric destination plot ID for geographic location of the turf
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 destPlotID
+</td>
+<td style="text-align:left;">
+Unique destination block ID as number 1 to 10
 </td>
 <td style="text-align:left;">
 numeric
@@ -3631,15 +3172,16 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Unique destination block ID as number 1 to 10
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 turfID
+</td>
+<td style="text-align:left;">
+Unique ID of vegetation turf as originplotID, warming, nitrogen and
+grazing treatment and destinationplotID
 </td>
 <td style="text-align:left;">
 categorical
@@ -3651,16 +3193,15 @@ categorical
 NA
 </td>
 <td style="text-align:left;">
-Unique ID of vegetation turf as originplotID, warming, nitrogen and
-grazing treatment and destinationplotID
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 warming
+</td>
+<td style="text-align:left;">
+Warming treatment as W for warming or A for ambient
 </td>
 <td style="text-align:left;">
 categorical
@@ -3672,15 +3213,15 @@ A - W
 NA
 </td>
 <td style="text-align:left;">
-Warming treatment as W for warming or A for ambient
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 Nlevel
+</td>
+<td style="text-align:left;">
+Nitrogen level treatment as numeric value from 1 - 10
 </td>
 <td style="text-align:left;">
 numeric
@@ -3692,15 +3233,16 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Nitrogen level treatment as numeric value from 1 - 10
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 grazing
+</td>
+<td style="text-align:left;">
+Grazing treatment as C for control, I for intensive, M for medium and N
+for natural grazing
 </td>
 <td style="text-align:left;">
 categorical
@@ -3712,16 +3254,15 @@ I - M
 NA
 </td>
 <td style="text-align:left;">
-Grazing treatment as C for control, I for intensive, M for medium and N
-for natural grazing
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 cut
+</td>
+<td style="text-align:left;">
+Number of times the plot has been cut
 </td>
 <td style="text-align:left;">
 numeric
@@ -3733,9 +3274,6 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Number of times the plot has been cut
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
@@ -3744,16 +3282,16 @@ defined
 date
 </td>
 <td style="text-align:left;">
-date
+Date of sampling
 </td>
 <td style="text-align:left;">
-NA
+date_time
+</td>
+<td style="text-align:left;">
+2020-06-03 - 2020-09-11
 </td>
 <td style="text-align:left;">
 dd-mm-yyyy
-</td>
-<td style="text-align:left;">
-Date of sampling
 </td>
 <td style="text-align:left;">
 defined
@@ -3764,16 +3302,16 @@ defined
 remark
 </td>
 <td style="text-align:left;">
+Comment
+</td>
+<td style="text-align:left;">
 categorical
 </td>
 <td style="text-align:left;">
-NA - NA
+forbs and graminoids a bit rotten - Shrub bag missing
 </td>
 <td style="text-align:left;">
 NA
-</td>
-<td style="text-align:left;">
-Comment
 </td>
 <td style="text-align:left;">
 NA
@@ -3782,6 +3320,9 @@ NA
 <tr>
 <td style="text-align:left;">
 fun_group
+</td>
+<td style="text-align:left;">
+Functional group
 </td>
 <td style="text-align:left;">
 categorical
@@ -3793,9 +3334,6 @@ Bryophytes_g - Shrub_g
 NA
 </td>
 <td style="text-align:left;">
-Functional group
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
@@ -3804,16 +3342,16 @@ defined
 value
 </td>
 <td style="text-align:left;">
+Value for climate data
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-0.00094 - 86.54
+0.001 - 86.54
 </td>
 <td style="text-align:left;">
 NA
-</td>
-<td style="text-align:left;">
-Value for climate data
 </td>
 <td style="text-align:left;">
 measured
@@ -3822,6 +3360,9 @@ measured
 <tr>
 <td style="text-align:left;">
 origSiteID
+</td>
+<td style="text-align:left;">
+Unique site ID of origin site
 </td>
 <td style="text-align:left;">
 categorical
@@ -3833,15 +3374,15 @@ Joa - Lia
 NA
 </td>
 <td style="text-align:left;">
-Unique site ID of origin site
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 origBlockID
+</td>
+<td style="text-align:left;">
+Unique origin block ID as number 1 to 10
 </td>
 <td style="text-align:left;">
 numeric
@@ -3853,15 +3394,15 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Unique origin block ID as number 1 to 10
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 origPlotID
+</td>
+<td style="text-align:left;">
+Unique numeric origin plot ID for geographic location of the turf
 </td>
 <td style="text-align:left;">
 numeric
@@ -3873,9 +3414,6 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Unique numeric origin plot ID for geographic location of the turf
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
@@ -3884,16 +3422,16 @@ defined
 year
 </td>
 <td style="text-align:left;">
+Year of the sampling
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-NA - NA
+2020 - 2020
 </td>
 <td style="text-align:left;">
 2019
-</td>
-<td style="text-align:left;">
-Year of the sampling
 </td>
 <td style="text-align:left;">
 defined
@@ -3911,19 +3449,19 @@ defined
 Variable name
 </th>
 <th style="text-align:left;">
+Description
+</th>
+<th style="text-align:left;">
 Variable type
 </th>
 <th style="text-align:left;">
 Variable range or levels
 </th>
 <th style="text-align:left;">
-unit
+Unit
 </th>
 <th style="text-align:left;">
-description
-</th>
-<th style="text-align:left;">
-how_measured
+How measured
 </th>
 </tr>
 </thead>
@@ -3931,6 +3469,9 @@ how_measured
 <tr>
 <td style="text-align:left;">
 origSiteID
+</td>
+<td style="text-align:left;">
+Unique site ID of origin site
 </td>
 <td style="text-align:left;">
 categorical
@@ -3942,15 +3483,15 @@ Joa - Lia
 NA
 </td>
 <td style="text-align:left;">
-Unique site ID of origin site
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 origBlockID
+</td>
+<td style="text-align:left;">
+Unique origin block ID as number 1 to 10
 </td>
 <td style="text-align:left;">
 numeric
@@ -3962,15 +3503,15 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Unique origin block ID as number 1 to 10
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 warming
+</td>
+<td style="text-align:left;">
+Warming treatment as W for warming or A for ambient
 </td>
 <td style="text-align:left;">
 categorical
@@ -3982,15 +3523,16 @@ A - W
 NA
 </td>
 <td style="text-align:left;">
-Warming treatment as W for warming or A for ambient
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 grazing
+</td>
+<td style="text-align:left;">
+Grazing treatment as C for control, I for intensive, M for medium and N
+for natural grazing
 </td>
 <td style="text-align:left;">
 categorical
@@ -4002,16 +3544,15 @@ C - N
 NA
 </td>
 <td style="text-align:left;">
-Grazing treatment as C for control, I for intensive, M for medium and N
-for natural grazing
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 Nlevel
+</td>
+<td style="text-align:left;">
+Nitrogen level treatment as numeric value from 1 - 10
 </td>
 <td style="text-align:left;">
 numeric
@@ -4023,15 +3564,15 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Nitrogen level treatment as numeric value from 1 - 10
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 origPlotID
+</td>
+<td style="text-align:left;">
+Unique numeric origin plot ID for geographic location of the turf
 </td>
 <td style="text-align:left;">
 numeric
@@ -4043,15 +3584,15 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Unique numeric origin plot ID for geographic location of the turf
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 destSiteID
+</td>
+<td style="text-align:left;">
+Unique site ID of destination site
 </td>
 <td style="text-align:left;">
 categorical
@@ -4063,15 +3604,15 @@ Joa - Vik
 NA
 </td>
 <td style="text-align:left;">
-Unique site ID of destination site
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 destPlotID
+</td>
+<td style="text-align:left;">
+Unique destination block ID as number 1 to 10
 </td>
 <td style="text-align:left;">
 numeric
@@ -4083,15 +3624,15 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Unique destination block ID as number 1 to 10
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 destBlockID
+</td>
+<td style="text-align:left;">
+Unique numeric destination plot ID for geographic location of the turf
 </td>
 <td style="text-align:left;">
 numeric
@@ -4103,15 +3644,16 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Unique numeric destination plot ID for geographic location of the turf
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 turfID
+</td>
+<td style="text-align:left;">
+Unique ID of vegetation turf as originplotID, warming, nitrogen and
+grazing treatment and destinationplotID
 </td>
 <td style="text-align:left;">
 categorical
@@ -4123,16 +3665,15 @@ categorical
 NA
 </td>
 <td style="text-align:left;">
-Unique ID of vegetation turf as originplotID, warming, nitrogen and
-grazing treatment and destinationplotID
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 measurement
+</td>
+<td style="text-align:left;">
+First or second measurement per plot
 </td>
 <td style="text-align:left;">
 numeric
@@ -4144,15 +3685,15 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-First or second measurement per plot
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 date
+</td>
+<td style="text-align:left;">
+Date of sampling
 </td>
 <td style="text-align:left;">
 date
@@ -4164,15 +3705,15 @@ date
 dd-mm-yyyy
 </td>
 <td style="text-align:left;">
-Date of sampling
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 ndvi
+</td>
+<td style="text-align:left;">
+NDVI measured per plot
 </td>
 <td style="text-align:left;">
 numeric
@@ -4184,9 +3725,6 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-NDVI measured per plot
-</td>
-<td style="text-align:left;">
 measured
 </td>
 </tr>
@@ -4195,16 +3733,16 @@ measured
 remark
 </td>
 <td style="text-align:left;">
+Comment
+</td>
+<td style="text-align:left;">
 categorical
 </td>
 <td style="text-align:left;">
-NA - NA
+flat light - shadow
 </td>
 <td style="text-align:left;">
 NA
-</td>
-<td style="text-align:left;">
-Comment
 </td>
 <td style="text-align:left;">
 NA
@@ -4215,6 +3753,9 @@ NA
 timing
 </td>
 <td style="text-align:left;">
+Timing of measurement in relation to cutting treatment
+</td>
+<td style="text-align:left;">
 categorical
 </td>
 <td style="text-align:left;">
@@ -4222,9 +3763,6 @@ After 1. cut - Before treatment
 </td>
 <td style="text-align:left;">
 NA
-</td>
-<td style="text-align:left;">
-Timing of measurement in relation to cutting treatment
 </td>
 <td style="text-align:left;">
 defined
@@ -4235,6 +3773,9 @@ defined
 timing
 </td>
 <td style="text-align:left;">
+Time of recovery (fall or spring)
+</td>
+<td style="text-align:left;">
 categorical
 </td>
 <td style="text-align:left;">
@@ -4242,9 +3783,6 @@ After 1. cut - Before treatment
 </td>
 <td style="text-align:left;">
 NA
-</td>
-<td style="text-align:left;">
-Time of recovery (fall or spring)
 </td>
 <td style="text-align:left;">
 defined
@@ -4255,16 +3793,16 @@ defined
 year
 </td>
 <td style="text-align:left;">
+Year of the sampling
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-NA - NA
+2020 - 2020
 </td>
 <td style="text-align:left;">
 2019
-</td>
-<td style="text-align:left;">
-Year of the sampling
 </td>
 <td style="text-align:left;">
 defined
@@ -4275,16 +3813,16 @@ defined
 campaign
 </td>
 <td style="text-align:left;">
+Campaign connected to carbon flux measurements
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-NA - NA
+2 - 4
 </td>
 <td style="text-align:left;">
 NA
-</td>
-<td style="text-align:left;">
-Campaign connected to carbon flux measurements
 </td>
 <td style="text-align:left;">
 defined
@@ -4302,19 +3840,19 @@ defined
 Variable name
 </th>
 <th style="text-align:left;">
+Description
+</th>
+<th style="text-align:left;">
 Variable type
 </th>
 <th style="text-align:left;">
 Variable range or levels
 </th>
 <th style="text-align:left;">
-unit
+Unit
 </th>
 <th style="text-align:left;">
-description
-</th>
-<th style="text-align:left;">
-how_measured
+How measured
 </th>
 </tr>
 </thead>
@@ -4322,6 +3860,9 @@ how_measured
 <tr>
 <td style="text-align:left;">
 year
+</td>
+<td style="text-align:left;">
+Year of the sampling
 </td>
 <td style="text-align:left;">
 numeric
@@ -4333,15 +3874,15 @@ numeric
 2019
 </td>
 <td style="text-align:left;">
-Year of the sampling
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 origSiteID
+</td>
+<td style="text-align:left;">
+Unique site ID of origin site
 </td>
 <td style="text-align:left;">
 categorical
@@ -4353,15 +3894,15 @@ Joa - Lia
 NA
 </td>
 <td style="text-align:left;">
-Unique site ID of origin site
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 origBlockID
+</td>
+<td style="text-align:left;">
+Unique origin block ID as number 1 to 10
 </td>
 <td style="text-align:left;">
 numeric
@@ -4373,15 +3914,15 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Unique origin block ID as number 1 to 10
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 origPlotID
+</td>
+<td style="text-align:left;">
+Unique numeric origin plot ID for geographic location of the turf
 </td>
 <td style="text-align:left;">
 numeric
@@ -4393,15 +3934,15 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Unique numeric origin plot ID for geographic location of the turf
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 destSiteID
+</td>
+<td style="text-align:left;">
+Unique site ID of destination site
 </td>
 <td style="text-align:left;">
 categorical
@@ -4413,15 +3954,15 @@ Joa - Vik
 NA
 </td>
 <td style="text-align:left;">
-Unique site ID of destination site
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 destPlotID
+</td>
+<td style="text-align:left;">
+Unique destination block ID as number 1 to 10
 </td>
 <td style="text-align:left;">
 numeric
@@ -4433,15 +3974,15 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Unique destination block ID as number 1 to 10
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 destBlockID
+</td>
+<td style="text-align:left;">
+Unique numeric destination plot ID for geographic location of the turf
 </td>
 <td style="text-align:left;">
 numeric
@@ -4453,15 +3994,16 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Unique numeric destination plot ID for geographic location of the turf
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 turfID
+</td>
+<td style="text-align:left;">
+Unique ID of vegetation turf as originplotID, warming, nitrogen and
+grazing treatment and destinationplotID
 </td>
 <td style="text-align:left;">
 categorical
@@ -4473,16 +4015,15 @@ categorical
 NA
 </td>
 <td style="text-align:left;">
-Unique ID of vegetation turf as originplotID, warming, nitrogen and
-grazing treatment and destinationplotID
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 warming
+</td>
+<td style="text-align:left;">
+Warming treatment as W for warming or A for ambient
 </td>
 <td style="text-align:left;">
 categorical
@@ -4494,15 +4035,16 @@ A - W
 NA
 </td>
 <td style="text-align:left;">
-Warming treatment as W for warming or A for ambient
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 grazing
+</td>
+<td style="text-align:left;">
+Grazing treatment as C for control, I for intensive, M for medium and N
+for natural grazing
 </td>
 <td style="text-align:left;">
 categorical
@@ -4514,16 +4056,15 @@ C - N
 NA
 </td>
 <td style="text-align:left;">
-Grazing treatment as C for control, I for intensive, M for medium and N
-for natural grazing
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 Nlevel
+</td>
+<td style="text-align:left;">
+Nitrogen level treatment as numeric value from 1 - 10
 </td>
 <td style="text-align:left;">
 numeric
@@ -4535,15 +4076,15 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Nitrogen level treatment as numeric value from 1 - 10
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 date_slope
+</td>
+<td style="text-align:left;">
+Date of sampling of slope and aspect
 </td>
 <td style="text-align:left;">
 categorical
@@ -4555,15 +4096,15 @@ categorical
 dd-mm-yyyy
 </td>
 <td style="text-align:left;">
-Date of sampling of slope and aspect
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 slope
+</td>
+<td style="text-align:left;">
+Slope of the plot
 </td>
 <td style="text-align:left;">
 numeric
@@ -4575,35 +4116,15 @@ numeric
 degree
 </td>
 <td style="text-align:left;">
-Slope of the plot
-</td>
-<td style="text-align:left;">
 measured
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-exposure
-</td>
-<td style="text-align:left;">
-numeric
-</td>
-<td style="text-align:left;">
-2 - 380
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 date_depth
+</td>
+<td style="text-align:left;">
+Date of sampling of soil depth
 </td>
 <td style="text-align:left;">
 categorical
@@ -4615,15 +4136,15 @@ categorical
 dd-mm-yyyy
 </td>
 <td style="text-align:left;">
-Date of sampling of soil depth
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 soil_depth_cm
+</td>
+<td style="text-align:left;">
+Soil depth
 </td>
 <td style="text-align:left;">
 numeric
@@ -4635,9 +4156,6 @@ numeric
 cm
 </td>
 <td style="text-align:left;">
-Soil depth
-</td>
-<td style="text-align:left;">
 measured
 </td>
 </tr>
@@ -4646,16 +4164,16 @@ measured
 remark
 </td>
 <td style="text-align:left;">
+Comment
+</td>
+<td style="text-align:left;">
 categorical
 </td>
 <td style="text-align:left;">
-NA - NA
+soil depth 1 \> 32.5cm - soil depth 3 \> 46 cm
 </td>
 <td style="text-align:left;">
 NA
-</td>
-<td style="text-align:left;">
-Comment
 </td>
 <td style="text-align:left;">
 NA
@@ -4673,19 +4191,19 @@ NA
 Variable name
 </th>
 <th style="text-align:left;">
+Description
+</th>
+<th style="text-align:left;">
 Variable type
 </th>
 <th style="text-align:left;">
 Variable range or levels
 </th>
 <th style="text-align:left;">
-unit
+Unit
 </th>
 <th style="text-align:left;">
-description
-</th>
-<th style="text-align:left;">
-how_measured
+How measured
 </th>
 </tr>
 </thead>
@@ -4693,6 +4211,9 @@ how_measured
 <tr>
 <td style="text-align:left;">
 date
+</td>
+<td style="text-align:left;">
+Date of sampling
 </td>
 <td style="text-align:left;">
 date
@@ -4704,15 +4225,15 @@ date
 dd-mm-yyyy
 </td>
 <td style="text-align:left;">
-Date of sampling
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 year
+</td>
+<td style="text-align:left;">
+Year of the sampling
 </td>
 <td style="text-align:left;">
 numeric
@@ -4724,15 +4245,15 @@ numeric
 2019
 </td>
 <td style="text-align:left;">
-Year of the sampling
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 destSiteID
+</td>
+<td style="text-align:left;">
+Unique site ID of destination site
 </td>
 <td style="text-align:left;">
 categorical
@@ -4744,15 +4265,15 @@ Joa - Vik
 NA
 </td>
 <td style="text-align:left;">
-Unique site ID of destination site
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 destBlockID
+</td>
+<td style="text-align:left;">
+Unique numeric destination plot ID for geographic location of the turf
 </td>
 <td style="text-align:left;">
 categorical
@@ -4764,37 +4285,17 @@ categorical
 NA
 </td>
 <td style="text-align:left;">
-Unique numeric destination plot ID for geographic location of the turf
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 layer
-</td>
-<td style="text-align:left;">
-categorical
-</td>
-<td style="text-align:left;">
-Bottom - Top
-</td>
-<td style="text-align:left;">
-NA
 </td>
 <td style="text-align:left;">
 Moss or vegetation layer
 </td>
 <td style="text-align:left;">
-defined
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-layer
-</td>
-<td style="text-align:left;">
 categorical
 </td>
 <td style="text-align:left;">
@@ -4804,7 +4305,24 @@ Bottom - Top
 NA
 </td>
 <td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+layer
+</td>
+<td style="text-align:left;">
 Layer at which soil sample was taken: top or bottom 5cm
+</td>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+Bottom - Top
+</td>
+<td style="text-align:left;">
+NA
 </td>
 <td style="text-align:left;">
 defined
@@ -4813,6 +4331,9 @@ defined
 <tr>
 <td style="text-align:left;">
 wet_weight_soil_g
+</td>
+<td style="text-align:left;">
+Wet weight
 </td>
 <td style="text-align:left;">
 numeric
@@ -4824,15 +4345,15 @@ numeric
 g
 </td>
 <td style="text-align:left;">
-Wet weight
-</td>
-<td style="text-align:left;">
 measured
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 dry_weight_soil_g
+</td>
+<td style="text-align:left;">
+Dry weight
 </td>
 <td style="text-align:left;">
 numeric
@@ -4844,9 +4365,6 @@ numeric
 g
 </td>
 <td style="text-align:left;">
-Dry weight
-</td>
-<td style="text-align:left;">
 measured
 </td>
 </tr>
@@ -4855,16 +4373,16 @@ measured
 stone_weight_g
 </td>
 <td style="text-align:left;">
+Stone weight
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-0.0053 - 99.93
+0.005 - 99.93
 </td>
 <td style="text-align:left;">
 g
-</td>
-<td style="text-align:left;">
-Stone weight
 </td>
 <td style="text-align:left;">
 measured
@@ -4875,16 +4393,16 @@ measured
 roots_weight_g
 </td>
 <td style="text-align:left;">
+Root weight
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-0.0126 - 1.4315
+0.013 - 1.432
 </td>
 <td style="text-align:left;">
 g
-</td>
-<td style="text-align:left;">
-Root weight
 </td>
 <td style="text-align:left;">
 measured
@@ -4895,16 +4413,16 @@ measured
 sand_percent
 </td>
 <td style="text-align:left;">
+Percentage of sand
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-84.2105263157895 - 97.2222222222222
+84.211 - 97.222
 </td>
 <td style="text-align:left;">
 percentage
-</td>
-<td style="text-align:left;">
-Percentage of sand
 </td>
 <td style="text-align:left;">
 measured
@@ -4915,16 +4433,16 @@ measured
 silt_percent
 </td>
 <td style="text-align:left;">
+Percentage of clay
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-2.22222222222222 - 14.7368421052631
+2.222 - 14.737
 </td>
 <td style="text-align:left;">
 percentage
-</td>
-<td style="text-align:left;">
-Percentage of clay
 </td>
 <td style="text-align:left;">
 measured
@@ -4935,16 +4453,16 @@ measured
 clay_percent
 </td>
 <td style="text-align:left;">
+Percentage of silt
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-0.418410041840995 - 1.12359550561798
+0.418 - 1.124
 </td>
 <td style="text-align:left;">
 percentage
-</td>
-<td style="text-align:left;">
-Percentage of silt
 </td>
 <td style="text-align:left;">
 measured
@@ -4953,6 +4471,9 @@ measured
 <tr>
 <td style="text-align:left;">
 pH
+</td>
+<td style="text-align:left;">
+pH value
 </td>
 <td style="text-align:left;">
 numeric
@@ -4964,9 +4485,6 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-pH value
-</td>
-<td style="text-align:left;">
 measured
 </td>
 </tr>
@@ -4975,16 +4493,16 @@ measured
 bulk_density_g\_cm
 </td>
 <td style="text-align:left;">
+Bulk density
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-0.155832329229846 - 1.31188238283117
+0.156 - 1.312
 </td>
 <td style="text-align:left;">
 g_cm
-</td>
-<td style="text-align:left;">
-Bulk density
 </td>
 <td style="text-align:left;">
 measured
@@ -4995,16 +4513,16 @@ measured
 pore_water_content
 </td>
 <td style="text-align:left;">
+Pore water content
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-0.0820595333869671 - 0.742588369441277
+0.082 - 0.743
 </td>
 <td style="text-align:left;">
 percentage
-</td>
-<td style="text-align:left;">
-Pore water content
 </td>
 <td style="text-align:left;">
 measured
@@ -5015,16 +4533,16 @@ measured
 soil_organic_matter
 </td>
 <td style="text-align:left;">
+Soil organic matter
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-0.0463865852547159 - 0.860215053763441
+0.046 - 0.86
 </td>
 <td style="text-align:left;">
 percentage
-</td>
-<td style="text-align:left;">
-Soil organic matter
 </td>
 <td style="text-align:left;">
 measured
@@ -5035,16 +4553,16 @@ measured
 carbon_content
 </td>
 <td style="text-align:left;">
+Carbon content
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-0.00883556547619136 - 0.0213830308974995
+0.009 - 0.021
 </td>
 <td style="text-align:left;">
 percentage
-</td>
-<td style="text-align:left;">
-Carbon content
 </td>
 <td style="text-align:left;">
 measured
@@ -5055,16 +4573,16 @@ measured
 C_percent
 </td>
 <td style="text-align:left;">
+Carbon content
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-3.07181 - 38.64797
+3.072 - 38.648
 </td>
 <td style="text-align:left;">
 percentage
-</td>
-<td style="text-align:left;">
-Carbon content
 </td>
 <td style="text-align:left;">
 measured
@@ -5075,16 +4593,16 @@ measured
 N_percent
 </td>
 <td style="text-align:left;">
+Nitrogen content
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-0.26784 - 2.98151
+0.268 - 2.982
 </td>
 <td style="text-align:left;">
 percentage
-</td>
-<td style="text-align:left;">
-Nitrogen content
 </td>
 <td style="text-align:left;">
 measured
@@ -5093,7 +4611,7 @@ measured
 </tbody>
 </table>
 
-#### C-flux
+#### Soil nutrients
 
 <table>
 <thead>
@@ -5102,38 +4620,38 @@ measured
 Variable name
 </th>
 <th style="text-align:left;">
+Description
+</th>
+<th style="text-align:left;">
 Variable type
 </th>
 <th style="text-align:left;">
 Variable range or levels
 </th>
 <th style="text-align:left;">
-unit
+Unit
 </th>
 <th style="text-align:left;">
-description
-</th>
-<th style="text-align:left;">
-how_measured
+How measured
 </th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align:left;">
-date_time
+origSiteID
 </td>
 <td style="text-align:left;">
-date
+Unique site ID of origin site
+</td>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+Joa - Lia
 </td>
 <td style="text-align:left;">
 NA
-</td>
-<td style="text-align:left;">
-yyyy-mm-dd_hh:mm:ss
-</td>
-<td style="text-align:left;">
-Date and time of observation
 </td>
 <td style="text-align:left;">
 defined
@@ -5141,19 +4659,160 @@ defined
 </tr>
 <tr>
 <td style="text-align:left;">
-fluxID
+origBlockID
+</td>
+<td style="text-align:left;">
+Unique origin block ID as number 1 to 10
 </td>
 <td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-1 - 307
+1 - 6
 </td>
 <td style="text-align:left;">
 NA
 </td>
 <td style="text-align:left;">
-Unique ID for each flux
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+warming
+</td>
+<td style="text-align:left;">
+Warming treatment as W for warming or A for ambient
+</td>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+A - W
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+grazing
+</td>
+<td style="text-align:left;">
+Grazing treatment as C for control, I for intensive, M for medium and N
+for natural grazing
+</td>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+C - M
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Nlevel
+</td>
+<td style="text-align:left;">
+Nitrogen level treatment as numeric value from 1 - 10
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+1 - 10
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+origPlotID
+</td>
+<td style="text-align:left;">
+Unique numeric origin plot ID for geographic location of the turf
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+1 - 126
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+destSiteID
+</td>
+<td style="text-align:left;">
+Unique site ID of destination site
+</td>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+Joa - Vik
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+destPlotID
+</td>
+<td style="text-align:left;">
+Unique destination block ID as number 1 to 10
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+2 - 183
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+destBlockID
+</td>
+<td style="text-align:left;">
+Unique numeric destination plot ID for geographic location of the turf
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+1 - 6
+</td>
+<td style="text-align:left;">
+NA
 </td>
 <td style="text-align:left;">
 defined
@@ -5164,57 +4823,37 @@ defined
 turfID
 </td>
 <td style="text-align:left;">
-categorical
-</td>
-<td style="text-align:left;">
-105 WN3C 173 - 85 WN1C 162
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
 Unique ID of vegetation turf as originplotID, warming, nitrogen and
 grazing treatment and destinationplotID
 </td>
 <td style="text-align:left;">
-defined
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-type
-</td>
-<td style="text-align:left;">
 categorical
 </td>
 <td style="text-align:left;">
-1 - NEE
+1 WN1M 84 - 86 WN1I 163
 </td>
 <td style="text-align:left;">
 NA
 </td>
 <td style="text-align:left;">
-type of flux measurements
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-replicate
+Namount_kg_ha_y
+</td>
+<td style="text-align:left;">
+Amount of nitrogen added
 </td>
 <td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-1 - 3
+0 - 150
 </td>
 <td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-replicate measurement of same turf
+kg ha^-1 y^-1
 </td>
 <td style="text-align:left;">
 defined
@@ -5222,39 +4861,19 @@ defined
 </tr>
 <tr>
 <td style="text-align:left;">
-remark
+elements
+</td>
+<td style="text-align:left;">
+Chemical elements
 </td>
 <td style="text-align:left;">
 categorical
 </td>
 <td style="text-align:left;">
-NA - NA
+Al - Zn
 </td>
 <td style="text-align:left;">
 NA
-</td>
-<td style="text-align:left;">
-Comment
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-date
-</td>
-<td style="text-align:left;">
-date
-</td>
-<td style="text-align:left;">
-2020-06-26 - 2020-08-20
-</td>
-<td style="text-align:left;">
-dd-mm-yyyy
-</td>
-<td style="text-align:left;">
-Date of sampling
 </td>
 <td style="text-align:left;">
 defined
@@ -5262,19 +4881,19 @@ defined
 </tr>
 <tr>
 <td style="text-align:left;">
-PARavg
+value
+</td>
+<td style="text-align:left;">
+Value for climate data
 </td>
 <td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
--0.0249615508474576 - 2068.95633027523
+0.21 - 2513.14
 </td>
 <td style="text-align:left;">
-micromol/s/sqm
-</td>
-<td style="text-align:left;">
-PAR value measured every 15 seconds during flux measurement and averaged
+NA
 </td>
 <td style="text-align:left;">
 measured
@@ -5282,121 +4901,19 @@ measured
 </tr>
 <tr>
 <td style="text-align:left;">
-temp_airavg
+detection_limit
+</td>
+<td style="text-align:left;">
+Detection limit for specific element
 </td>
 <td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-281.231816326531 - 310.627443037975
-</td>
-<td style="text-align:left;">
-Kelvin
-</td>
-<td style="text-align:left;">
-air temperature measured inside the flux chamber every 10 seconds and
-averaged
-</td>
-<td style="text-align:left;">
-measured
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-r.squared
-</td>
-<td style="text-align:left;">
-numeric
-</td>
-<td style="text-align:left;">
-0.000688199786800194 - 0.999773081117464
+0.2 - 4
 </td>
 <td style="text-align:left;">
 NA
-</td>
-<td style="text-align:left;">
-R squared of the linear relation between CO2 concentration and time
-</td>
-<td style="text-align:left;">
-calculated
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-p.value
-</td>
-<td style="text-align:left;">
-numeric
-</td>
-<td style="text-align:left;">
-8.42094622572888e-197 - 0.786563753459083
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-p value of the linear relation between CO2 concentration and time
-</td>
-<td style="text-align:left;">
-calculated
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-nobs
-</td>
-<td style="text-align:left;">
-numeric
-</td>
-<td style="text-align:left;">
-29 - 129
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-number of CO2 concentration measurements for each flux
-</td>
-<td style="text-align:left;">
-measured
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flux
-</td>
-<td style="text-align:left;">
-numeric
-</td>
-<td style="text-align:left;">
--25.8473002606009 - 244.931729610437
-</td>
-<td style="text-align:left;">
-mmol/sqm/h
-</td>
-<td style="text-align:left;">
-CO2 flux (postive when emitting to atmosphere negative when vegetation
-uptake)
-</td>
-<td style="text-align:left;">
-calculated
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-campaign
-</td>
-<td style="text-align:left;">
-categorical
-</td>
-<td style="text-align:left;">
-1 - LRC
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-Campaign connected to carbon flux measurements
 </td>
 <td style="text-align:left;">
 defined
@@ -5404,19 +4921,19 @@ defined
 </tr>
 <tr>
 <td style="text-align:left;">
-date_time
+burial_date
+</td>
+<td style="text-align:left;">
+Burial date
 </td>
 <td style="text-align:left;">
 date
 </td>
 <td style="text-align:left;">
-NA
+2021-07-07 - 2021-07-08
 </td>
 <td style="text-align:left;">
-yyyy-mm-dd_hh:mm:ss
-</td>
-<td style="text-align:left;">
-Date and time of observation
+yyyy-mm-dd
 </td>
 <td style="text-align:left;">
 defined
@@ -5424,120 +4941,19 @@ defined
 </tr>
 <tr>
 <td style="text-align:left;">
-fluxID
+retrieval_date
 </td>
 <td style="text-align:left;">
-numeric
-</td>
-<td style="text-align:left;">
-1 - 307
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-Unique ID for each flux
-</td>
-<td style="text-align:left;">
-defined
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-turfID
-</td>
-<td style="text-align:left;">
-categorical
-</td>
-<td style="text-align:left;">
-105 WN3C 173 - 85 WN1C 162
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-Unique ID of vegetation turf as originplotID, warming, nitrogen and
-grazing treatment and destinationplotID
-</td>
-<td style="text-align:left;">
-defined
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-type
-</td>
-<td style="text-align:left;">
-categorical
-</td>
-<td style="text-align:left;">
-1 - NEE
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-type of flux measurements
-</td>
-<td style="text-align:left;">
-defined
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-replicate
-</td>
-<td style="text-align:left;">
-numeric
-</td>
-<td style="text-align:left;">
-1 - 3
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-replicate measurement of same turf
-</td>
-<td style="text-align:left;">
-defined
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-remark
-</td>
-<td style="text-align:left;">
-categorical
-</td>
-<td style="text-align:left;">
-NA - NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-Comment
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-date
+Retrieval date
 </td>
 <td style="text-align:left;">
 date
 </td>
 <td style="text-align:left;">
-2020-06-26 - 2020-08-20
+2021-08-11 - 2021-08-12
 </td>
 <td style="text-align:left;">
-dd-mm-yyyy
-</td>
-<td style="text-align:left;">
-Date of sampling
+yyyy-mm-dd
 </td>
 <td style="text-align:left;">
 defined
@@ -5545,144 +4961,42 @@ defined
 </tr>
 <tr>
 <td style="text-align:left;">
-PARavg
+Notes
 </td>
 <td style="text-align:left;">
-numeric
-</td>
-<td style="text-align:left;">
--0.0249615508474576 - 2068.95633027523
-</td>
-<td style="text-align:left;">
-micromol/s/sqm
-</td>
-<td style="text-align:left;">
-PAR value measured every 15 seconds during flux measurement and averaged
-</td>
-<td style="text-align:left;">
-measured
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-temp_airavg
-</td>
-<td style="text-align:left;">
-numeric
-</td>
-<td style="text-align:left;">
-281.231816326531 - 310.627443037975
-</td>
-<td style="text-align:left;">
-Kelvin
-</td>
-<td style="text-align:left;">
-air temperature measured inside the flux chamber every 10 seconds and
-averaged
-</td>
-<td style="text-align:left;">
-measured
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-r.squared
-</td>
-<td style="text-align:left;">
-numeric
-</td>
-<td style="text-align:left;">
-0.000688199786800194 - 0.999773081117464
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-R squared of the linear relation between CO2 concentration and time
-</td>
-<td style="text-align:left;">
-calculated
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-p.value
-</td>
-<td style="text-align:left;">
-numeric
-</td>
-<td style="text-align:left;">
-8.42094622572888e-197 - 0.786563753459083
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-p value of the linear relation between CO2 concentration and time
-</td>
-<td style="text-align:left;">
-calculated
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-nobs
-</td>
-<td style="text-align:left;">
-numeric
-</td>
-<td style="text-align:left;">
-29 - 129
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-number of CO2 concentration measurements for each flux
-</td>
-<td style="text-align:left;">
-measured
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flux
-</td>
-<td style="text-align:left;">
-numeric
-</td>
-<td style="text-align:left;">
--25.8473002606009 - 244.931729610437
-</td>
-<td style="text-align:left;">
-mmol/sqm/h
-</td>
-<td style="text-align:left;">
-CO2 flux (postive when emitting to atmosphere negative when vegetation
-uptake)
-</td>
-<td style="text-align:left;">
-calculated
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-campaign
+Notes
 </td>
 <td style="text-align:left;">
 categorical
 </td>
 <td style="text-align:left;">
-1 - LRC
+1 broken probe - 1 broken probe
 </td>
 <td style="text-align:left;">
 NA
 </td>
 <td style="text-align:left;">
-Campaign connected to carbon flux measurements
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+value
 </td>
 <td style="text-align:left;">
-defined
+Amount of nutrients from each element
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+0.21 - 2513.14
+</td>
+<td style="text-align:left;">
+micro grams/10cm2/35 days
+</td>
+<td style="text-align:left;">
+measured
 </td>
 </tr>
 </tbody>
@@ -5697,19 +5011,19 @@ defined
 Variable name
 </th>
 <th style="text-align:left;">
+Description
+</th>
+<th style="text-align:left;">
 Variable type
 </th>
 <th style="text-align:left;">
 Variable range or levels
 </th>
 <th style="text-align:left;">
-unit
+Unit
 </th>
 <th style="text-align:left;">
-description
-</th>
-<th style="text-align:left;">
-how_measured
+How measured
 </th>
 </tr>
 </thead>
@@ -5717,6 +5031,9 @@ how_measured
 <tr>
 <td style="text-align:left;">
 origSiteID
+</td>
+<td style="text-align:left;">
+Unique site ID of origin site
 </td>
 <td style="text-align:left;">
 categorical
@@ -5728,15 +5045,15 @@ Joa - Lia
 NA
 </td>
 <td style="text-align:left;">
-Unique site ID of origin site
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 origBlockID
+</td>
+<td style="text-align:left;">
+Unique origin block ID as number 1 to 10
 </td>
 <td style="text-align:left;">
 numeric
@@ -5748,15 +5065,15 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Unique origin block ID as number 1 to 10
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 warming
+</td>
+<td style="text-align:left;">
+Warming treatment as W for warming or A for ambient
 </td>
 <td style="text-align:left;">
 categorical
@@ -5768,15 +5085,16 @@ A - W
 NA
 </td>
 <td style="text-align:left;">
-Warming treatment as W for warming or A for ambient
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 grazing
+</td>
+<td style="text-align:left;">
+Grazing treatment as C for control, I for intensive, M for medium and N
+for natural grazing
 </td>
 <td style="text-align:left;">
 categorical
@@ -5788,16 +5106,15 @@ C - N
 NA
 </td>
 <td style="text-align:left;">
-Grazing treatment as C for control, I for intensive, M for medium and N
-for natural grazing
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 Nlevel
+</td>
+<td style="text-align:left;">
+Nitrogen level treatment as numeric value from 1 - 10
 </td>
 <td style="text-align:left;">
 numeric
@@ -5809,15 +5126,15 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Nitrogen level treatment as numeric value from 1 - 10
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 origPlotID
+</td>
+<td style="text-align:left;">
+Unique numeric origin plot ID for geographic location of the turf
 </td>
 <td style="text-align:left;">
 numeric
@@ -5829,15 +5146,15 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Unique numeric origin plot ID for geographic location of the turf
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 destSiteID
+</td>
+<td style="text-align:left;">
+Unique site ID of destination site
 </td>
 <td style="text-align:left;">
 categorical
@@ -5849,15 +5166,15 @@ Joa - Vik
 NA
 </td>
 <td style="text-align:left;">
-Unique site ID of destination site
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 destPlotID
+</td>
+<td style="text-align:left;">
+Unique destination block ID as number 1 to 10
 </td>
 <td style="text-align:left;">
 numeric
@@ -5869,15 +5186,15 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Unique destination block ID as number 1 to 10
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 destBlockID
+</td>
+<td style="text-align:left;">
+Unique numeric destination plot ID for geographic location of the turf
 </td>
 <td style="text-align:left;">
 numeric
@@ -5889,15 +5206,16 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Unique numeric destination plot ID for geographic location of the turf
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 turfID
+</td>
+<td style="text-align:left;">
+Unique ID of vegetation turf as originplotID, warming, nitrogen and
+grazing treatment and destinationplotID
 </td>
 <td style="text-align:left;">
 categorical
@@ -5909,16 +5227,15 @@ categorical
 NA
 </td>
 <td style="text-align:left;">
-Unique ID of vegetation turf as originplotID, warming, nitrogen and
-grazing treatment and destinationplotID
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 Namount_kg_ha_y
+</td>
+<td style="text-align:left;">
+Amount of nitrogen added
 </td>
 <td style="text-align:left;">
 numeric
@@ -5930,15 +5247,15 @@ numeric
 kg ha^-1 y^-1
 </td>
 <td style="text-align:left;">
-Amount of nitrogen added
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 teabag_ID
+</td>
+<td style="text-align:left;">
+NA
 </td>
 <td style="text-align:left;">
 numeric
@@ -5950,37 +5267,17 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 timing
-</td>
-<td style="text-align:left;">
-categorical
-</td>
-<td style="text-align:left;">
-fall - fall
-</td>
-<td style="text-align:left;">
-NA
 </td>
 <td style="text-align:left;">
 Timing of measurement in relation to cutting treatment
 </td>
 <td style="text-align:left;">
-defined
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-timing
-</td>
-<td style="text-align:left;">
 categorical
 </td>
 <td style="text-align:left;">
@@ -5990,7 +5287,24 @@ fall - fall
 NA
 </td>
 <td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+timing
+</td>
+<td style="text-align:left;">
 Time of recovery (fall or spring)
+</td>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+fall - fall
+</td>
+<td style="text-align:left;">
+NA
 </td>
 <td style="text-align:left;">
 defined
@@ -5999,6 +5313,9 @@ defined
 <tr>
 <td style="text-align:left;">
 tea_type
+</td>
+<td style="text-align:left;">
+Type of teabag (red or green)
 </td>
 <td style="text-align:left;">
 categorical
@@ -6010,9 +5327,6 @@ green - red
 NA
 </td>
 <td style="text-align:left;">
-Type of teabag (red or green)
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
@@ -6021,16 +5335,16 @@ defined
 weight_loss_g
 </td>
 <td style="text-align:left;">
+Weight loss in g between burial and recovery
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-0.4943 - 1.6071
+0.494 - 1.607
 </td>
 <td style="text-align:left;">
 g
-</td>
-<td style="text-align:left;">
-Weight loss in g between burial and recovery
 </td>
 <td style="text-align:left;">
 defined
@@ -6039,6 +5353,9 @@ defined
 <tr>
 <td style="text-align:left;">
 incubation_time
+</td>
+<td style="text-align:left;">
+Incubation time of tea bags in days
 </td>
 <td style="text-align:left;">
 numeric
@@ -6050,9 +5367,6 @@ numeric
 days
 </td>
 <td style="text-align:left;">
-Incubation time of tea bags in days
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
@@ -6061,16 +5375,16 @@ defined
 burial_depth_cm
 </td>
 <td style="text-align:left;">
+Burial depth in cm
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-NA - NA
+1 - 10
 </td>
 <td style="text-align:left;">
 cm
-</td>
-<td style="text-align:left;">
-Burial depth in cm
 </td>
 <td style="text-align:left;">
 defined
@@ -6079,6 +5393,9 @@ defined
 <tr>
 <td style="text-align:left;">
 burial_date
+</td>
+<td style="text-align:left;">
+Burial date
 </td>
 <td style="text-align:left;">
 date
@@ -6090,9 +5407,6 @@ date
 yyyy-mm-dd
 </td>
 <td style="text-align:left;">
-Burial date
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
@@ -6101,16 +5415,16 @@ defined
 preburial_weight_g
 </td>
 <td style="text-align:left;">
+Weight of tea bag before burial
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-1.9683 - 2.4856
+1.968 - 2.486
 </td>
 <td style="text-align:left;">
 g
-</td>
-<td style="text-align:left;">
-Weight of tea bag before burial
 </td>
 <td style="text-align:left;">
 defined
@@ -6119,6 +5433,9 @@ defined
 <tr>
 <td style="text-align:left;">
 recover_date
+</td>
+<td style="text-align:left;">
+Recovery date
 </td>
 <td style="text-align:left;">
 date
@@ -6130,9 +5447,6 @@ date
 yyyy-mm-dd
 </td>
 <td style="text-align:left;">
-Recovery date
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
@@ -6141,16 +5455,16 @@ defined
 post_burial_weight_g
 </td>
 <td style="text-align:left;">
+Weight of tea bag after recovery
+</td>
+<td style="text-align:left;">
 numeric
 </td>
 <td style="text-align:left;">
-0.558264 - 1.7233
+0.558 - 1.723
 </td>
 <td style="text-align:left;">
 g
-</td>
-<td style="text-align:left;">
-Weight of tea bag after recovery
 </td>
 <td style="text-align:left;">
 defined
@@ -6161,16 +5475,16 @@ defined
 comment_2
 </td>
 <td style="text-align:left;">
+Comments
+</td>
+<td style="text-align:left;">
 categorical
 </td>
 <td style="text-align:left;">
-NA - NA
+big hole - small hole
 </td>
 <td style="text-align:left;">
 NA
-</td>
-<td style="text-align:left;">
-Comments
 </td>
 <td style="text-align:left;">
 NA
@@ -6178,10 +5492,318 @@ NA
 </tr>
 </tbody>
 </table>
-<!-- ### Temperature and soil moisture -->
-<!-- ```{r tempdic, echo=FALSE} -->
-<!-- knitr::kable(climate_tomst_dic) -->
-<!-- ``` -->
+
+#### C-flux
+
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+Variable name
+</th>
+<th style="text-align:left;">
+Description
+</th>
+<th style="text-align:left;">
+Variable type
+</th>
+<th style="text-align:left;">
+Variable range or levels
+</th>
+<th style="text-align:left;">
+Unit
+</th>
+<th style="text-align:left;">
+How measured
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+date_time
+</td>
+<td style="text-align:left;">
+Date and time of sampling or observation
+</td>
+<td style="text-align:left;">
+date_time
+</td>
+<td style="text-align:left;">
+2020-06-26 12:59:41 - 2020-08-20 16:50:11
+</td>
+<td style="text-align:left;">
+yyyy-mm-dd_hh:mm:ss
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fluxID
+</td>
+<td style="text-align:left;">
+Unique ID for each flux
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+1 - 307
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+turfID
+</td>
+<td style="text-align:left;">
+Unique ID of vegetation turf as originplotID, warming, nitrogen and
+grazing treatment and destinationplotID
+</td>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+105 WN3C 173 - 85 WN1C 162
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+type
+</td>
+<td style="text-align:left;">
+Type of flux measurements
+</td>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+1 - NEE
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+replicate
+</td>
+<td style="text-align:left;">
+Replicate measurement of same turf
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+1 - 3
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+remark
+</td>
+<td style="text-align:left;">
+Comment
+</td>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+maybe loose tube - windy
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+date
+</td>
+<td style="text-align:left;">
+Date of sampling
+</td>
+<td style="text-align:left;">
+date
+</td>
+<td style="text-align:left;">
+2020-06-26 - 2020-08-20
+</td>
+<td style="text-align:left;">
+dd-mm-yyyy
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PARavg
+</td>
+<td style="text-align:left;">
+PAR value measured every 15 seconds during flux measurement and averaged
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+-0.025 - 2068.956
+</td>
+<td style="text-align:left;">
+micromol/s/sqm
+</td>
+<td style="text-align:left;">
+measured
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+temp_airavg
+</td>
+<td style="text-align:left;">
+Air temperature measured inside the flux chamber every 10 seconds and
+averaged
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+281.232 - 310.627
+</td>
+<td style="text-align:left;">
+Kelvin
+</td>
+<td style="text-align:left;">
+measured
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+r.squared
+</td>
+<td style="text-align:left;">
+R squared of the linear relation between CO2 concentration and time
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+0.001 - 1
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+calculated
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p.value
+</td>
+<td style="text-align:left;">
+p value of the linear relation between CO2 concentration and time
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+0 - 0.787
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+calculated
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+nobs
+</td>
+<td style="text-align:left;">
+Number of CO2 concentration measurements for each flux
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+29 - 129
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+measured
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+flux
+</td>
+<td style="text-align:left;">
+CO2 flux (postive when emitting to atmosphere negative when vegetation
+uptake)
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+-25.847 - 244.932
+</td>
+<td style="text-align:left;">
+mmol/sqm/h
+</td>
+<td style="text-align:left;">
+calculated
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+campaign
+</td>
+<td style="text-align:left;">
+Campaign connected to carbon flux measurements
+</td>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+1 - LRC
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+</tbody>
+</table>
 
 #### Climate
 
@@ -6192,26 +5814,49 @@ NA
 Variable name
 </th>
 <th style="text-align:left;">
+Description
+</th>
+<th style="text-align:left;">
 Variable type
 </th>
 <th style="text-align:left;">
 Variable range or levels
 </th>
 <th style="text-align:left;">
-unit
+Unit
 </th>
 <th style="text-align:left;">
-description
-</th>
-<th style="text-align:left;">
-how_measured
+How measured
 </th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align:left;">
+date_time
+</td>
+<td style="text-align:left;">
+Date and time of sampling or observation
+</td>
+<td style="text-align:left;">
+date_time
+</td>
+<td style="text-align:left;">
+2019-08-22 23:15:00 - 2021-10-17 15:15:00
+</td>
+<td style="text-align:left;">
+yyyy-mm-dd_hh:mm:ss
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 destSiteID
+</td>
+<td style="text-align:left;">
+Unique site ID of destination site
 </td>
 <td style="text-align:left;">
 categorical
@@ -6223,7 +5868,436 @@ Joa - Vik
 NA
 </td>
 <td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+destBlockID
+</td>
+<td style="text-align:left;">
+Unique numeric destination plot ID for geographic location of the turf
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+1 - 10
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+destPlotID
+</td>
+<td style="text-align:left;">
+Unique destination block ID as number 1 to 10
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+2 - 199
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+turfID
+</td>
+<td style="text-align:left;">
+Unique ID of vegetation turf as originplotID, warming, nitrogen and
+grazing treatment and destinationplotID
+</td>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+1 WN1M 84 - 99 WN5C 170
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+origPlotID
+</td>
+<td style="text-align:left;">
+Unique numeric origin plot ID for geographic location of the turf
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+1 - 158
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+origBlockID
+</td>
+<td style="text-align:left;">
+Unique origin block ID as number 1 to 10
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+1 - 10
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+origSiteID
+</td>
+<td style="text-align:left;">
+Unique site ID of origin site
+</td>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+Joa - Lia
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+warming
+</td>
+<td style="text-align:left;">
+Warming treatment as W for warming or A for ambient
+</td>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+A - W
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Nlevel
+</td>
+<td style="text-align:left;">
+Nitrogen level treatment as numeric value from 1 - 10
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+1 - 10
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+grazing
+</td>
+<td style="text-align:left;">
+Grazing treatment as C for control, I for intensive, M for medium and N
+for natural grazing
+</td>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+C - M
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+soil_temperature
+</td>
+<td style="text-align:left;">
+Soil temperature at 5 cm below ground
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+-7.938 - 43.375
+</td>
+<td style="text-align:left;">
+\<a1>C
+</td>
+<td style="text-align:left;">
+measured
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ground_temperature
+</td>
+<td style="text-align:left;">
+Ground temperature
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+-16.875 - 45
+</td>
+<td style="text-align:left;">
+\<a1>C
+</td>
+<td style="text-align:left;">
+measured
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+air_temperature
+</td>
+<td style="text-align:left;">
+Air temperature 15 cm above ground
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+-22 - 47
+</td>
+<td style="text-align:left;">
+\<a1>C
+</td>
+<td style="text-align:left;">
+measured
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+soilmoisture
+</td>
+<td style="text-align:left;">
+Soil moisture
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+-0.027 - 0.598
+</td>
+<td style="text-align:left;">
+percentage
+</td>
+<td style="text-align:left;">
+measured
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+loggerID
+</td>
+<td style="text-align:left;">
+Unique ID of logger
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+94195201 - 94200499
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+shake
+</td>
+<td style="text-align:left;">
+Shake
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+202 - 202
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+error_flag
+</td>
+<td style="text-align:left;">
+Flag for error of logger
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+0 - 33
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+InitialDate_Time
+</td>
+<td style="text-align:left;">
+Date and Time of start of logging
+</td>
+<td style="text-align:left;">
+date_time
+</td>
+<td style="text-align:left;">
+2019-08-22 23:00:00 - 2020-10-16 23:00:00
+</td>
+<td style="text-align:left;">
+yyyy-mm-dd_hh:mm:ss
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EndDate_Time
+</td>
+<td style="text-align:left;">
+Date and Time of end of logging
+</td>
+<td style="text-align:left;">
+date_time
+</td>
+<td style="text-align:left;">
+2020-06-27 14:30:00 - 2020-10-15 01:00:00
+</td>
+<td style="text-align:left;">
+yyyy-mm-dd_hh:mm:ss
+</td>
+<td style="text-align:left;">
+defined
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+file
+</td>
+<td style="text-align:left;">
+name of file of raw data
+</td>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+data/climate/2019_Sept_Joa/data_94195201_0.csv -
+data/climate/Fixed_by_tomst/data_tomst_94195256_0.csv
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+recorded
+</td>
+</tr>
+</tbody>
+</table>
+
+#### Gridded climate
+
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+Variable name
+</th>
+<th style="text-align:left;">
+Description
+</th>
+<th style="text-align:left;">
+Variable type
+</th>
+<th style="text-align:left;">
+Variable range or levels
+</th>
+<th style="text-align:left;">
+Unit
+</th>
+<th style="text-align:left;">
+How measured
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+destSiteID
+</td>
+<td style="text-align:left;">
 Unique site ID of destination site
+</td>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+Joa - Vik
+</td>
+<td style="text-align:left;">
+NA
 </td>
 <td style="text-align:left;">
 defined
@@ -6232,6 +6306,9 @@ defined
 <tr>
 <td style="text-align:left;">
 year
+</td>
+<td style="text-align:left;">
+Year of the sampling
 </td>
 <td style="text-align:left;">
 numeric
@@ -6243,15 +6320,15 @@ numeric
 2019
 </td>
 <td style="text-align:left;">
-Year of the sampling
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 month
+</td>
+<td style="text-align:left;">
+Month of observation
 </td>
 <td style="text-align:left;">
 numeric
@@ -6263,15 +6340,15 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Month of observation
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 day
+</td>
+<td style="text-align:left;">
+Day of observaiton
 </td>
 <td style="text-align:left;">
 numeric
@@ -6283,15 +6360,15 @@ numeric
 NA
 </td>
 <td style="text-align:left;">
-Day of observaiton
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 date
+</td>
+<td style="text-align:left;">
+Date of sampling
 </td>
 <td style="text-align:left;">
 date
@@ -6303,15 +6380,15 @@ date
 dd-mm-yyyy
 </td>
 <td style="text-align:left;">
-Date of sampling
-</td>
-<td style="text-align:left;">
 defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 logger
+</td>
+<td style="text-align:left;">
+Climate variable
 </td>
 <td style="text-align:left;">
 categorical
@@ -6323,15 +6400,15 @@ cloud_cover - wind
 NA
 </td>
 <td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
+defined
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 value
+</td>
+<td style="text-align:left;">
+Value for climate data
 </td>
 <td style="text-align:left;">
 numeric
@@ -6341,9 +6418,6 @@ numeric
 </td>
 <td style="text-align:left;">
 NA
-</td>
-<td style="text-align:left;">
-Value for climate data
 </td>
 <td style="text-align:left;">
 measured

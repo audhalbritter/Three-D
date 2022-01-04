@@ -322,19 +322,18 @@ tibble(Variable = c("Elevation", "Coordinates, slope and aspect",
                     "Soil depth", "Soil texture", "Bulk density",
                     "Soil pH", "Soil organic matter", "Soil C and N stocks", "Soil nutrients",
                     "Decomposition",
-                    "Air, ground and soil temperature", "Soil moisture", "Gridded climate"),
-       Period = c("2019", "2019", "2019-2021", "2019-2021", "2019-2021", "2019-2021", "2020-2021", "2021", "2021", "2021", "2020-2021", "2020-2021", "2021", rep("2019", 5), "2019-2020", "2021", "2021", "2019-2020", "2019-2020", "2009-2020"),
-       Level = c("site", "plot", "plot", "subplot", rep("plot", 10), "site", "plot", "site", "block", "site", "site", "plot", "plot", "plot", "site"),
+                    "Air, ground and soil temperature, and soil moisture", "Gridded climate"),
+       Period = c("2019", "2019", "2019-2021", "2019-2021", "2019-2021", "2019-2021", "2020-2021", "2021", "2021", "2021", "2020-2021", "2020-2021", "2021", rep("2019", 5), "2019-2020", "2021", "2021", "2019-2021", "2009-2020"),
+       Level = c("site", "plot", "plot", "subplot", rep("plot", 10), "site", "plot", "site", "block", "site", "site", "plot", "plot", "site"),
        File = c("THREE-D_metaSite.csv", "THREE-D_metaSite.csv", 
                 "THREE-D_Cover_2019_2020.csv", "THREE-D_CommunitySubplot_2019_2020.csv", "THREE-D_CommunityStructure_2019_2020.csv", "THREE-D_Height_2019_2020.csv", 
                 "THREE-D_Biomass_2020.csv", "NA", "NA", "NA", 
                 "THREE-D_Reflectance_2020.csv ", 
                 "Three-D_c-flux_2020.csv", "NA",
                 "THREE-D_PlotLevel_Depth_2019.csv", rep("THREE-D_Soil_2019-2020.cs", 5),
-                "NA",
+                "THREE-D_clean_nutrients_2021.csv",
                 "THREE-D_clean_decomposition_fall_2021.csv",
-                "NA", 
-                "NA", 
+                "THREE-D_clean_microclimate_2019-2021.csv", 
                 "THREE_D_Gridded_DailyClimate_2009-2019.csv")
        ) %>% 
   kbl(caption = "All avalble datasets with name, time period of data collection, level at which they were collected and file name on OSF.") %>% 
@@ -342,7 +341,7 @@ tibble(Variable = c("Elevation", "Coordinates, slope and aspect",
   pack_rows("Vegetation", 3, 11) %>% 
   pack_rows("C-flux", 12, 13) %>% 
   pack_rows("Soil", 14, 21) %>% 
-  pack_rows("Climate", 22, 24)
+  pack_rows("Climate", 22, 23)
 ```
 
 
@@ -650,6 +649,11 @@ The C and N content was measured from dried and well mixed subsample of each soi
 Measurements of soil C and N were done by dry combustion [@Matejovic1997-tf; @Senesi2016-pu] at NMBU in Ås.
 
 
+#### Soil nutrients - PRS probes
+PRS probes were installed for 35 days at peak growing season (July - August) in plots with 0, 10 and 150 kg N per ha and y, ambient and warmed temperature and intermediate, intensive and not grazed plots.
+The probes were retrieved, brought back to the lab, washed with deionized water and shipped to the lab for analysis.
+
+
 
 #### Climate data
 Temperature was measured continuously (every 15 minutes) at three heights (15 cm, at ground level, and 5 cm below ground) and soil moisture was measured continuously 5 cm below ground using Tomst TM4 loggers [@Wild2019-nk].
@@ -717,25 +721,29 @@ knitr::kable(depth_dic)
 knitr::kable(soil_dic)
 ```
 
-#### C-flux
-```{r cfluxdic}
-knitr::kable(cflux_dic)
+#### Soil nutrients
+```{r nutrients}
+knitr::kable(prs_dic)
 ```
-
 
 #### Decomposition
 ```{r decomposition}
 knitr::kable(decompose_dic)
 ```
 
-
-<!-- ### Temperature and soil moisture -->
-<!-- ```{r tempdic, echo=FALSE} -->
-<!-- knitr::kable(climate_tomst_dic) -->
-<!-- ``` -->
+#### C-flux
+```{r cfluxdic}
+knitr::kable(cflux_dic)
+```
 
 #### Climate
 ```{r climatedic}
+knitr::kable(climate_dic)
+```
+
+
+#### Gridded climate
+```{r gridded-climatedic}
 knitr::kable(climate_gridded_dic)
 ```
 
