@@ -176,4 +176,4 @@ climate_gridded_dic <- make_data_dictionary(data =  climate_gridded,
 #                 cflux = cflux_dic,
 #                 climate = climate_dic,
 #                 gridded_climate = climate_gridded_dic),
-#            path = "R/data_dic/data_dictionary.xlsx")
+#            path = "data_cleaned/data_dictionary.xlsx")
