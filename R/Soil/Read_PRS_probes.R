@@ -37,8 +37,38 @@ prs_data <- metaTurfID %>%
 
 write_csv(prs_data, file = "data_cleaned/soil/THREE-D_clean_nutrients_2021.csv")
   
-prs_data %>% 
-  filter(elements == "K") %>% 
-  ggplot(aes(x = Namount_kg_ha_y, y = value, colour = warming)) +
+
+
+### PRS probe report
+
+prs_plot <- prs_data %>% 
+  filter(!elements %in% c("Cu", "Pb")) %>% 
+  mutate(warming = recode(warming, "A" = "ambient", "W" = "warm"),
+         grazing = recode(grazing, "C" = "ungrazed", "I" = "intensive", "M" = "medium"),
+         elements = factor(elements, levels = c("Ca", "NO3-N", "NH4-N", "K", "Mg", "P", "Mn", "S", "Zn", "Al", "Fe", "B"))) %>% 
+  ggplot(aes(x = Namount_kg_ha_y, y = value, 
+             colour = warming, shape = grazing,
+             linetype = grazing)) +
   geom_point() +
-  facet_grid(grazing ~ origSiteID)
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(y = expression("Available soil nutrients (μg/10cm2/35 days)"),
+       x = expression("Nitrogen addition (kg " *N*"/ha/y)")) +
+  scale_color_manual(name = "temperature", values = c("grey", "red")) +
+  scale_shape_manual(values = c(15, 16, 1)) +
+  scale_linetype_manual(values = c("solid", "dashed", "dotted")) +
+  facet_wrap( ~ elements, scales = "free_y")
+
+ggsave(prs_plot, filename = "Pics/prs_plot.jpeg", dpi = 150, width = 10, height = 8)
+
+library(broom)
+prs_data %>%
+  filter(!elements %in% c("Cu", "Pb")) %>% 
+  mutate(warming = recode(warming, "A" = "ambient", "W" = "warm"),
+         warming = factor(warming, levels = c("ambient", "warm"))) %>% 
+  group_by(elements, grazing) %>%
+  nest() %>%
+  mutate(model = map(data, ~ lm(value ~ Namount_kg_ha_y * warming, data = .,)),
+         result = map(model, tidy)) %>%
+  unnest(result) %>% 
+  filter(p.value <= 0.05, term != "(Intercept)") %>% 
+  arrange(elements)
