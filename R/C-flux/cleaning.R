@@ -249,7 +249,7 @@ flux_threed <- filter(co2_threed_cut, cut == "keep") %>% #cut out the discarded 
     )
 
 # count(flux_threed)
-write_csv(flux_threed, "data/C-Flux/summer_2020/Three-D_c-flux_2020.csv")
+write_csv(flux_threed, "data_cleaned/c-flux/Three-D_c-flux_2020.csv")
 
 #make a freq hist about length of fluxes
 ggplot(flux_threed, aes(nobs)) +
