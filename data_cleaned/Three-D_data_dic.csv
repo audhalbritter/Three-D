@@ -1,4 +1,4 @@
-﻿attribute,unit,description,how_measured
+attribute,unit,description,how_measured
 origSiteID,Vikesland,Unique site ID of origin site,defined
 origBlockID,01.Oct,Unique origin block ID as number 1 to 10,defined
 origPlotID,1,Unique numeric origin plot ID for geographic location of the turf,defined
@@ -27,7 +27,7 @@ layer,Moss layer,Moss or vegetation layer,defined
 height,numeric value,Average height of the vascular vegetation or moss in the plot,measured
 ndvi,numeric value,NDVI measured per plot,measured
 measurement,1 or 2,First or second measurement per plot,defined
-campaign,01.Apr,Campgain connected to carbon flux measurements,defined
+campaign,NA,Campaign connected to carbon flux measurements,defined
 timing,before treatment,Timing of measurement in relation to cutting treatment,defined
 month,01.Dec,Month of observation,defined
 day,Jan.31,Day of observaiton,defined
@@ -110,3 +110,12 @@ wetland,1,Species main habitat type is wetland,literature
 Lids_page,6,Page number of species in Lids Flora,literature
 Mossberg_page,32,Page number of species in Mossbergs Flora,literature
 cut,NA,Number of times the plot has been cut,defined
+fluxID,NA,Unique ID for each flux,defined
+type,NA,type of flux measurements,defined
+replicate,NA,replicate measurement of same turf, defined
+PARavg,micromol/s/sqm,PAR value measured every 15 seconds during flux measurement and averaged,measured
+temp_airavg,°K,air temperature measured inside the flux chamber every 10 seconds and averaged,measured
+r.squared,NA,R squared of the linear relation between CO2 concentration and time, calculated
+p.value,NA,p value of the linear relation between CO2 concentration and time, calculated
+nobs,NA,number of CO2 concentration measurements for each flux, measured
+flux,mmol/sqm/h,CO2 flux (postive when emitting to atmosphere, negative when vegetation uptake), calculated
