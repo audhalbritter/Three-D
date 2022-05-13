@@ -19,40 +19,54 @@ biomass20 <- read_excel(path = "data/biomass/THREE_D_Biomass_Grazing_2020_March_
          !is.na(value)) %>% 
   rename(date = Date, cut = Cut, remark = Remark) %>% 
   left_join(metaTurfID, by = c("destSiteID", "destBlockID", "destPlotID", "turfID", "warming", "Nlevel", "grazing")) %>% 
-  mutate(year = year(date))
-
-#write_csv(biomass, path = "data_cleaned/vegetation/THREE-D_Biomass_2020.csv")
+  mutate(year = year(date),
+         area = 2500)
 
 # 2021 data
-biomass21_raw <- read_excel(path = "data/biomass/THREE_D_Raw_Biomass_2021_10_21.xlsx",
-           col_types = c("text", "numeric", "text", "text", "numeric", "numeric", "text", "numeric", "numeric", "text", "numeric", "date", rep("numeric", 9), "text", "text", rep("numeric", 6))) %>% 
+biomass21_raw <- read_excel(path = "data/biomass/THREE_D_raw_Biomass_2021_12_09.xlsx",
+           col_types = c("text", "numeric", "text", "text", "numeric", "numeric", "text", "numeric", "numeric", "text", "numeric", "date", rep("numeric", 9), "text",  "text", rep("numeric", 6))) %>% 
   pivot_longer(cols = c(Graminoids_g:Fungi_g), names_to = "fun_group", values_to = "value") %>% 
   filter(!is.na(value)) %>% 
   rename(date = Date, cut = Cut, remark = Remark, collector = Collector) %>% 
-  mutate(year = year(date)) %>% 
-  #### REMOVE CUT 2 BECAUSE THERE IS SOME PROBLEM WITH THE DATA!!!
-  filter(cut != 2)
+  mutate(year = year(date))
 
-# biomass for L shaped plots
-dd <- biomass21_raw %>% 
+# get mean area for missing measurements
+mean_area <- biomass21_raw %>% 
   filter(!is.na(top)) %>% 
+  mutate(area = (top * r_side - inner_l_side * inner_top)) %>%
+  summarise(mean_area = mean(area, na.rm = TRUE))
+
+
+# Add area and calculate for L shaped plots
+biomass21 <- biomass21_raw %>% 
   # outer square minus inner square
-  mutate(area_L = top * r_side - inner_l_side * inner_top)
+  mutate(inner_l_side = if_else(is.na(inner_l_side), r_side - l_side, inner_l_side),
+         area = case_when(remark == "corner" & !is.na(top) ~ (top * r_side - inner_l_side * inner_top),
+                          remark == "corner" & is.na(top) ~ as.numeric(mean_area),
+                          cut == 3 & grazing %in% c("C", "N") ~ (top * r_side - inner_l_side * inner_top),
+                          TRUE ~ 2500))
+                        
+  
+biomass <- biomass20 %>% 
+  bind_rows(biomass21 %>% select(-c(top:l_side))) %>% 
+  left_join(NitrogenDictionary, by = "Nlevel") %>% 
+  mutate(fun_group = tolower(fun_group),
+         fun_group = str_remove(fun_group, "_g"),
+         unit = "g") %>% 
+  select(origSiteID, origBlockID, origPlotID, turfID, destSiteID, destBlockID, destPlotID, warming, Nlevel, Namount_kg_ha_y, grazing, cut, year, date, fun_group, biomass = value, unit, area_cm2 = area, collector, remark)
 
 
-
-biomass %>% 
-  filter(fun_group %in% c("Graminoids_g", "Forbs_g")) %>% 
-  group_by(turfID, grazing) %>% 
-  count(cut) %>% View()
+write_csv(biomass, file = "data_cleaned/vegetation/THREE-D_clean_biomass_2020-2021.csv")
 
 
+biomass %>% filter(is.na(turfID)) %>% distinct(year)
 
-biomass21 %>% distinct(fun_group)
-biomass21 %>% View()
-biomass21 %>% filter(Cut == 3, origSiteID == "Joa") %>% distinct(grazing, Date) %>% arrange(grazing)
+# cleaning steps
+biomass %>% View()
+biomass %>% filter(biomass > 100) %>% as.data.frame()
+biomass %>% distinct(fun_group) %>% pn
+biomass %>% filter(cut == 3, destSiteID == "Joa") %>% distinct(grazing, date) %>% arrange(grazing) %>% pn
 
-# find cutting date for cut 4 turfID 110 AN3I 110
 
 # get unique cutting dates
 cutting_date <- biomass %>% 
