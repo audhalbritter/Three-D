@@ -3,8 +3,9 @@
 source("R/Load packages.R")
 source("R/Rgathering/create meta data.R")
 
+# species, family and functional groups
+sp_list <- read_csv("data_china/species_list_china.csv")
 
-# turfID dic for wrong turfIDs in 2021
 
 # # fix site names in meta data
 meta_c <- metaTurfID_China %>%
@@ -58,7 +59,8 @@ metaComm <- metaComm_raw %>%
 
   # bind rows with 2021 data
   bind_rows(
-    metaComm_raw2 %>% 
+    metaComm_raw %>% 
+      mutate(Year = year(Date)) %>% 
       filter(Year == 2021) %>% 
       mutate(turfID = if_else(turfID == "9 WN6I 89" & destSiteID == "H", "11 AN6M 11", turfID),
            destPlotID = case_when(turfID == "101 WN5M 171" ~ 171,
@@ -124,12 +126,18 @@ community <- metaComm %>%
   
   # fix species names
   mutate(species = case_when(str_detect(species, "Anaphalis nepalensis") ~ "Anaphalis nepalensis",
+                             str_detect(species, "Stellaria") ~ "Stellaria decumbens var. pulvinata",
+                             str_detect(species, "glacialis") ~ "Oxygraphis glacialis",
+                             str_detect(species, "atroviolacea") ~ "Ligularia atroviolacea",
+                             str_detect(species, "capillaris") ~ "Carex capillaris",
+                             str_detect(species, "Franch.") ~ "Saussurea pachyneura",
+                             str_detect(species, "spurium") ~ "Galium spurium",
+                             str_detect(species, "rotundus") ~ "Cyperus rotundus",
+                             
                              species == "Caltha palustris Linnaeus" ~ "Caltha palustris",
                              species == "Carex atrofusca subsp.minor" ~ "Carex atrofusca subsp. minor",
                              species == "Crambe Linn" ~ "Crambe sp.",
-                             species == "Cyperus rotundus L." ~ "Cyperus rotundus",
                              species == "Fragaria orientalis L" ~ "Fragaria orientalis",
-                             species == "Galium spurium L" ~ "Galium spurium",
                              species == "Juncus allioides Franchet" ~ "Juncus allioides",
                              species == "oxytropis kansuensis" ~ "Oxytropis kansuensis",
                              species == "Pedicularis sima M" ~ "Pedicularis sima",
@@ -139,8 +147,7 @@ community <- metaComm %>%
                              species == "Rhodiola" ~ "Rhodiola sp.",
                              species == "Rhodiola rosea Linn." ~ "Rhodiola rosea",
                              species == "Saussurea graminea Dunn" ~ "Saussurea graminea",
-                             species == "Saussurea pachyneura Franch." ~ "Saussurea pachyneura",
-                             species == "Stellaria decumbensvar. pulvinata" ~ "Stellaria decumbens var. pulvinata",
+                             species == "Geranium pylzowianumAletris pauciflora" ~ "Aletris pauciflora",
                              TRUE ~ species)) %>% 
   
   # fix cover
@@ -158,14 +165,32 @@ community <- metaComm %>%
   # add weather from scribe column
   mutate(weather = if_else(scribe %in% c("sunny", "cloudy", "Rain", "Sun"), scribe, NA_character_))
 
-# needs fixing
-community %>% filter(species == "Geranium pylzowianumAletris pauciflora")
-# Geranium pylzowianumAletris pauciflora
+
+# Check species names (TNRS)
+library(TNRS)
+library(Taxonstand) # the Plant List
+dat <- community %>%
+  distinct(species) %>%
+  filter(!species %in% c("Bare rock", "Bare soil", "Bryophyes", "Lichen", "Litter", "Poop", "Vascular plants", "Total Cover (%)", "Height / depth (cm)", "Vascular plant layer", "Moss layer", "Unknown seedlings")) %>% 
+  arrange(species) %>%
+  rownames_to_column() %>% 
+  rename(taxon = species)
+
+results <- TNRS(taxonomic_names = dat, matches = "best")
+results %>% View()
+
+sp_check <- TPL(dat$taxon)
+sp_check %>% filter(Taxonomic.status == "Synonym") ## need to be changed
+sp_check %>% filter(Taxonomic.status == "Unresolved") # not relevant
+sp_check %>% filter(Taxonomic.status == "") # not relevant
+
 
 # Cover data
 cover <- community %>% 
   filter(!species %in% c("Bare rock", "Bare soil", "Bryophyes", "Lichen", "Litter", "Poop", "Vascular plants", "Total Cover (%)", "Height / depth (cm)", "Vascular plant layer", "Moss layer")) %>% 
-  select(year, date, origSiteID:Nlevel, species, cover, weather, recorder, file)
+  # join with species list
+  left_join(sp_list, by = "species") %>% 
+  select(year, date, origSiteID:Nlevel, functional_group, species, cover, weather, recorder, file)
 write_csv(x = cover, file = "data_china/China_clean_cover_2019_2021.csv")
 
 # Subplot community data
