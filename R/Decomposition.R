@@ -58,22 +58,46 @@ decomposition <- metaTurfID %>%
   left_join(NitrogenDictionary, by = "Nlevel") %>% 
   left_join(meta, by = c("destSiteID", "destBlockID", "turfID")) %>% 
   inner_join(decomposition, by = c("teabag_ID")) %>% 
-  mutate(weight_loss_g = preburial_weight_g - post_burial_weight_g,
-         incubation_time = recover_date - burial_date) %>% 
-  #incubation_time = yday(recover_date) - yday(burial_date))
-  tidylog::filter(!is.na(weight_loss_g)) %>% 
-  select(origSiteID:Namount_kg_ha_y, teabag_ID, timing, tea_type, weight_loss_g, incubation_time, burial_depth_cm = tb_depth_cm, burial_date, preburial_weight_g, recover_date, post_burial_weight_g, comment_2)
+  # remove tea bag without post burial weight
+  tidylog::filter(!is.na(post_burial_weight_g)) %>% 
+  mutate(incubation_time = as.numeric(recover_date - burial_date)) |>
+  select(origSiteID:Namount_kg_ha_y, teabag_ID, timing, tea_type, incubation_time, burial_depth_cm = tb_depth_cm, burial_date, preburial_weight_g, recover_date, post_burial_weight_g, comment_2)
   
 write_csv(decomposition, file = "data_cleaned/decomposition/THREE-D_clean_decomposition_fall_2021.csv")
 
+Hydrolysable_fraction_green = 0.842
+Hydrolysable_fraction_red = 0.552
+
+# Calculate tea bag index
+tea_bag_index <- decomposition |>
+  # split green and red tea into two columns
+  pivot_wider(names_from = tea_type,
+            values_from = c(preburial_weight_g, post_burial_weight_g, burial_depth_cm, comment_2)) |> 
+mutate(incubation_time = as.numeric(recover_date - burial_date),
+       fraction_decomposed_green = 1 - post_burial_weight_g_green/preburial_weight_g_green,
+       fraction_remaining_green = post_burial_weight_g_green/preburial_weight_g_green,
+       fraction_remaining_red = post_burial_weight_g_red/preburial_weight_g_red,
+       S = 1 - (fraction_decomposed_green / Hydrolysable_fraction_green),
+       predicted_labile_fraction_red = Hydrolysable_fraction_red * (1 - S),
+       k = log(predicted_labile_fraction_red / (fraction_remaining_red - (1 - predicted_labile_fraction_red))) / incubation_time)
+
+
 # Check data
-decomposition %>% 
-  ggplot(aes(x = Namount_kg_ha_y, y = weight_loss_g, shape = warming, color = tea_type)) +
+tea_bag_index |> 
+  #filter(grazing == "C") |> 
+  ggplot(aes(x = Namount_kg_ha_y, y = fraction_remaining_green, colour = warming)) +
   geom_point() +
-  scale_color_manual(values = c("green", "red")) +
-  scale_shape_manual(values = c(1, 16)) +
-  facet_grid(origSiteID ~ grazing)
- 
+  geom_smooth(method = "lm") +
+  scale_colour_manual(values = c("grey", "red")) +
+  facet_grid(origSiteID ~ grazing, scales = "free_y")
+  
+# decomposition rate
+tea_bag_index |> 
+  ggplot(aes(x = Namount_kg_ha_y, y = S, colour = warming)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  scale_colour_manual(values = c("grey", "red")) +
+  facet_grid(origSiteID ~ grazing, scales = "free_y")
 
 
 
