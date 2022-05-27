@@ -97,10 +97,5 @@ tea_bag_index |>
   geom_point() +
   geom_smooth(method = "lm") +
   scale_colour_manual(values = c("grey", "red")) +
-  facet_grid(origSiteID ~ grazing, scales = "free_y")
-
-
-
-
-
+  facet_grid(origSiteID ~ grazing)
   
