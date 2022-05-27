@@ -45,6 +45,31 @@ biomass21 <- biomass21_raw %>%
                           remark == "corner" & is.na(top) ~ as.numeric(mean_area),
                           cut == 3 & grazing %in% c("C", "N") ~ (top * r_side - inner_l_side * inner_top),
                           TRUE ~ 2500))
+
+
+
+### Check area scaling is correct
+# Scaling of the plot biomass just from the corner is not great!!!
+# I only get 54% of the biomass!!!
+biomass21 |> 
+  mutate(corner = if_else(is.na(top), "all", "corner")) |>
+  select(origSiteID, turfID, corner, fun_group, area, value, remark) |> 
+  group_by(origSiteID, turfID, corner, area) |> 
+  summarise(biomass = sum(value)) |> 
+  ungroup() |> 
+  group_by(turfID) |> 
+  mutate(n = n()) |> 
+  filter(n > 1,
+         !turfID %in% c("107 WN3M 175", "73 WN2M 153")) |> 
+  # calculate total biomass for larger plot
+  mutate(biomass = if_else(corner == "all", sum(biomass), biomass)) |> 
+  # calculate area in m2 and scale biomass to m2
+  mutate(area_m2 = area / 10000,
+         biomass_scaled = biomass / area_m2) |> 
+  select(-area, -area_m2, -biomass, -n) |> 
+  pivot_wider(names_from = corner, values_from = biomass_scaled) |> 
+  mutate(p = corner / all * 100)
+  
                         
   
 biomass <- biomass20 %>% 
