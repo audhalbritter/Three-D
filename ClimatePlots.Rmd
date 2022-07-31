@@ -1,0 +1,33 @@
+---
+title: "ClimateData"
+date: "11/19/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library("tidyverse")
+
+climate <- read_csv(file = "data_cleaned/climate/climate.csv")
+```
+
+## Check turfs
+
+```{r many_plots, eval = TRUE, fig.height=11, fig.width = 5, warning=FALSE}
+
+
+x <- climate %>% 
+  filter(loggerID %in% c("94195209")) %>%
+  group_by(destSiteID, destPlotID, turfID, loggerID) %>% 
+  nest() %>% 
+    {map2(
+      .x = .$data, 
+      .y = glue::glue("Site {.$destSiteID}: turf {.$turfID}: logger {.loggerID}"),
+      .f = ~ ggplot(
+      data = .x, 
+      x = date_time, y = air_temperature) + geom_line() +
+      title = glue::glue(.y))
+    } %>% 
+  walk(print)
+
+```

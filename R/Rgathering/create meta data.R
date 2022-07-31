@@ -94,10 +94,16 @@ origPlotID <- tibble(origPlotID = 1:160)
 warming <-  c("A", "W")
 grazing <-  c("C", "M", "I", "N")
 # Nitrogen level needs to be in a certain order
-nitrogen <- tibble(Nlevel = rep(rep(c(4,1,2,3,6,5,10,9,7,8), each = 8), 2))
+#nitrogen <- tibble(Nlevel = rep(rep(c(4,1,2,3,6,5,10,9,7,8), each = 8), 2))
+nitrogen <- tibble(Nlevel = rep(rep(c(1,6,5,3,10,7,4,8,9,2), each = 8), 2))
 # add corresponding N amount in kg per ha and year
-NitrogenDictionary <- tibble(Nlevel = c(4,1,2,3,6,5,10,9,7,8),
-                             Namount_kg_ha_y = c(0.5,0,0,0,5,1,150,100,10,50))
+# NitrogenDictionary <- tibble(Nlevel = c(4,1,2,3,6,5,10,9,7,8),
+#                              Namount_kg_ha_y = c(0.5,0,0,0,5,1,150,100,10,50))
+NitrogenDictionary <- tibble(Nlevel = c(1,6,5,3,10,7,4,8,9,2),
+                             Namount_kg_ha_y = c(0,5,1,0,150,10,0.5,50,100,0))
+
+
+
 
 # cross site, block warm and grazing treatment
 meta <- crossing(origSiteID, origBlockID, warming, grazing) %>% 
@@ -109,7 +115,8 @@ low <- tibble(
   origBlockID = rep(1:10, each = 4),
   origPlotID = 161:200,
   destSiteID = factor(NA, levels = c("Top", "Middle", "Low")),
-  Nlevel = rep(c(4,1,2,3,6,5,10,9,7,8), each = 4),
+  #Nlevel = rep(c(4,1,2,3,6,5,10,9,7,8), each = 4),
+  Nlevel = rep(c(1,6,5,3,10,7,4,8,9,2), each = 4),
   warming = "W",
   grazing = rep(c("notN", "notN", "notN", "N"), 10),
   fence = if_else(grazing == "N", "out", "in"))

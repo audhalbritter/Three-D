@@ -61,8 +61,10 @@ vignettes/*.pdf
 !Pics/ExperimentalDesign.jpg
 !Pics/ProposalFigure_small.jpg
 !Pics/Subblots.jpg
+!Pics/plot_harvest.png
 !ReadMe.md
 !data_cleaned/Three-D_data_dic.csv
 !README_files/figure-gfm/site-figure-1.png
+!bibi.bib
 
 *.DS_Store

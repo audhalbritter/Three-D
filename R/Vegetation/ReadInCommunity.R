@@ -48,6 +48,13 @@ metaComm_raw <- map_df(set_names(files), function(file) {
     map_df(~ read_xlsx(path = file, sheet = .x, n_max = 1, col_types = c("text", rep("text", 29))), .id = "sheet_name")
 }, .id = "file")
 
+# validate input
+rules <- validator(Date = is.Date(Date),
+                   Rec = is.character(Recorder),
+                   Scr = is.character(Scribe))
+out <- confront(metaComm, rules)
+summary(out)
+
 # need to break the workflow here, otherwise tedious to find problems
 metaComm <- metaComm_raw %>% 
   select(sheet_name, Date, origSiteID, origBlockID, origPlotID, turfID, destSiteID, destBlockID, destPlotID, Recorder, Scribe) %>% 
@@ -97,6 +104,7 @@ comm <- map_df(set_names(files), function(file) {
   rename("Cover" = `%`) %>% 
   mutate(Year = as.numeric(stri_extract_last_regex(file, "\\d{4}")))
 
+  
 
 # Join data and meta
 community <- metaComm %>% 
@@ -112,13 +120,19 @@ community <- metaComm %>%
   
   # Remove white space after Species name
   mutate(Species = str_trim(Species, side = "right")) %>% 
-  mutate(Recorder = recode(Recorder, "so" = "silje", "vv" = "vigdis", "lhv" = "linn")) %>% 
+  mutate(Recorder = recode(Recorder, "so" = "silje", "vv" = "vigdis", "lhv" = "linn", "kri" = "kari")) %>%
+  
+  # Fix wrong turfID
+  mutate(turfID = case_when(turfID == "87 WN1M 164" ~ "87 WN1N 164",
+                            TRUE ~ turfID)) %>% 
   
   # Fix wrong species names
   mutate(Species = recode(Species, 
                           "Agrostis sp 1" = "Agrostis mertensii",
                           "Alchemilla sp." = "Alchemilla sp",
-                          "Anntenaria alpina" = "Antennaria alpina",
+                          "Anntenaria alpina" = "Antennaria alpina cf",
+                          "Antennaria alpina" = "Antennaria alpina cf",
+                          "Antennaria dioica" = "Antennaria dioica cf",
                           "Bryophyes" = "Bryophytes", 
                           "Carex sp 1" = "Carex sp1",
                           "Carex sp 2" = "Carex sp2",
@@ -130,15 +144,19 @@ community <- metaComm %>%
                           "Cerastium fontana" = "Cerastium fontanum",
                           "Equiseum arvense" = "Equisetum arvense",
                           "Equisetum vaginatum" = "Equisetum variegatum",
+                          "Galeopsis sp" = "Galeopsis tetrahit",
+                          "Galeopsis tetrait" = "Galeopsis tetrahit",
                           "Gentiana nivalus" = "Gentiana nivalis",
                           "Gron or fjellkurle" = "Orchid sp",
                           "Hieraceum sp." = "Hieraceum sp",
                           "Hyperzia selago" = "Huperzia selago",
+                          "Luzula multiflora" = "Luzula multiflora cf",
+                          "Luzula spicata" = "Luzula spicata cf",
                           "Lycopodium sp" = "Lycopodium annotinum ssp alpestre cf",
                           "Lycopodium" = "Lycopodium annotinum ssp alpestre cf",
                           "Omalothrca supina" = "Omalotheca supina",
                           "Pyrola" = "Pyrola sp",
-                          "Poa alpigena" = "Poa pratensis ssp alpigena",
+                          "Poa alpigena" = "Poa pratensis", # did not distinguish in later years
                           "Ranunculus" = "Ranunculus",
                           "Rubus idaes" = "Rubus idaeus",
                           "Sagina saginoides" = "Sagina saginella",
@@ -146,7 +164,7 @@ community <- metaComm %>%
                           "Stellaria gramineae" = "Stellaria graminea",
                           "Unknown euphrasia sp?" = "Euphrasia sp1",
                           "Vaccinium myrtilis" = "Vaccinium myrtillus",
-                          "Viola biflora" = "Veronica biflora",
+                          "Veronica biflora" = "Viola biflora",
                           "Total Cover (%)" = "SumofCover")) %>% 
   
   # Carex hell
@@ -166,7 +184,7 @@ community <- metaComm %>%
                           "Carex wide darkgreen yellow" = "Carex atrata cf",
                           "Carex wide m yellow dark green" = "Carex atrata cf",
                           "Carex yellow dark green m wide" = "Carex atrata cf",
-                          "Carex atrata" = "Carex atrata cf",
+                          "Carex atrata" = "Carex atrata cf", # PROBLEM CREATES A DUPLICATE
                           "Carex wide v dark green yellowish" = "Carex atrata cf",
                           "Carex v dgreen wide" = "Carex atrata cf",
                           "Carex v dgreen yellow" = "Carex atrata cf",
@@ -207,6 +225,14 @@ community <- metaComm %>%
                           "Carex sp2" = "Carex brunnescens cf",
                           "Carex sp2 dark m" = "Carex brunnescens cf",
                           "Carex sp2 dark v thin" = "Carex brunnescens cf",
+                          
+                          # Carex canescense cf
+                          "Carex canescens" = "Carex canescens cf",
+                          "Carex canescense cf" = "Carex canescens cf",
+                          "carex cannescence cf" = "Carex canescens cf",
+                          
+                          # Carex pilulifera cf
+                          "Carex pilulifera" = "Carex pilulifera cf",
                           
                           # Carex norvegica cf
                           "Carex norwegica" = "Carex norvegica cf",
@@ -276,14 +302,15 @@ community <- metaComm %>%
          Species = ifelse(Species == "unknown graminoid" & origSiteID == "Lia" & origBlockID == 6 & year(Date) == 2019, "Unknown graminoid3", Species),
          Species = ifelse(Species == "unknown poaceae" & origSiteID == "Lia" & origBlockID == 5 & year(Date) == 2019, "Unknown graminoid4", Species),
          
-         Species = ifelse(Species == "unknown herb" & origSiteID == "Lia" & origBlockID == 1 & year(Date) == 2019, "Unknown herb1", Species),
+         Species = ifelse(Species == "unknown herb" & origSiteID == "Lia" & origBlockID == 1 & year(Date) == 2019, "Ranunculus acris", Species), # was called Unknown herb1 before, but likely to be R. acris
          Species = ifelse(Species == "unknown herb" & origSiteID == "Lia" & origBlockID == 3 & year(Date) == 2019, "Unknown herb2", Species),
          Species = ifelse(Species == "unknown herb" & origSiteID == "Lia" & origBlockID == 5 & year(Date) == 2019, "Unknown herb3", Species),
          Species = ifelse(Species == "unknown herb" & origSiteID == "Lia" & origBlockID == 9 & year(Date) == 2019, "Unknown herb4", Species),
          Species = ifelse(Species == "Unknown herb" & origSiteID == "Lia" & origBlockID == 3 & year(Date) == 2019, "Unknown herb5", Species),
          
          Remark = ifelse(Species == "Unknown shrub, maybe salix" & origSiteID == "Lia" & origBlockID == 1 & year(Date) == 2019, "Maybe salix", Remark),
-         Species = ifelse(Species == "Unknown shrub, maybe salix" & origSiteID == "Lia" & origBlockID == 1 & year(Date) == 2019, "Unknown shrub1", Species)) %>% 
+         # very likely S. herbaceae
+         Species = ifelse(Species == "Unknown shrub, maybe salix" & origSiteID == "Lia" & origBlockID == 1 & year(Date) == 2019, "Salix herbaceae", Species)) %>% 
 
   # Remove rows, with species, but where subplot and cover is zero
   filter_at(vars("1":"Cover"), any_vars(!is.na(.))) %>% 
@@ -294,7 +321,7 @@ community <- metaComm %>%
   rename(date = Date, year = Year, species = Species, cover = Cover, recorder = Recorder, scribe = Scribe, remark = Remark) %>% 
   
   # # check for subplot level data
-  # community %>% 
+  # community %>%
   # # summarize cover from species that have been merged
   # group_by(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID, warming, grazing, Nlevel, year, species) %>%
   # mutate(n = n()) %>% filter(n > 1) %>% View()
@@ -306,14 +333,91 @@ community <- metaComm %>%
   slice(1)
 
 
+# validate input
+rules_comm <- validator(Sp = is.character(species),
+                        Cov = is.numeric(cover),
+                        Y = is.numeric(Year),
+                        Warming = grepl("A|W", turfID),
+                        Site1 = origSiteID %in% c("Lia","Joa"),
+                        Site2 = destSiteID %in% c("Lia","Joa", "Vik"))
+out <- confront(community, rules_comm)
+summary(out)
+
+# find duplicate species
+rule <- validator(is_unique(turfID, species, year))
+out <- confront(community, rule)
+# showing 7 columns of output for readability
+summary(out)
+violating(community, out)
   
 #### COVER ####
 # Extract estimate of cover
 cover <- community %>% 
+  ungroup() %>% 
   select(origSiteID:species, cover:file) %>% 
-  filter(!species %in% c("Moss layer", "Vascular plant layer", "SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop", "Unknown seedlings"))
+  filter(!species %in% c("Moss layer", "Vascular plant layer", "SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop", "Unknown seedlings")) %>% 
+  
+  # fix errors
+  # fix wrong species
+  left_join(fix_species, by = c("year", "turfID", "species")) %>% 
+  mutate(species = if_else(!is.na(species_new), species_new, species)) %>%
+  select(-species_new) %>% 
+  # fix wrong cover
+  left_join(fix_cover, by = c("year", "turfID", "species")) %>% 
+  mutate(cover = if_else(!is.na(cover_new), cover_new, cover)) %>%
+  select(-cover_new) %>% 
+  # add cover
+  bind_rows(add_cover) %>% 
+  # remove species that have been replaced
+  tidylog::anti_join(remove_wrong_species, by = c("year", "turfID", "species"))
 
-write_csv(cover, path = "data_cleaned/vegetation/THREE-D_Cover_2019_2020.csv", col_names = TRUE)
+  
+#write_csv(cover, file = "data_cleaned/vegetation/THREE-D_Cover_2019-2021.csv", col_names = TRUE)
+
+
+# subplot level data
+CommunitySubplot <- community %>% 
+  filter(!species %in% c("Moss layer", "Vascular plant layer", "SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop")) %>% 
+  
+  # make long table
+  pivot_longer(cols = `1`:`25`, names_to = "subplot", values_to = "presence") %>% 
+  # remove non-presence in subplot
+  filter(presence != "0") %>% 
+  
+  # Unknown seedlings have sometimes counts, but not consistent. So make just presence.
+  tidylog::mutate(presence = ifelse(species == "Unknown seedlings", "s", presence),
+                  presence = recode(presence, "fd" = "df", "1j" = "j", "1f" = "f", "F" = "f")) %>% 
+  mutate(fertile = ifelse(presence %in% c("f", "fd"), 1, 0),
+         dominant = ifelse(presence %in% c("d", "fd", "dj"), 1, 0),
+         juvenile = ifelse(presence %in% c("j", "dj"), 1, 0),
+         seedling = ifelse(presence %in% c("s", "3"), 1, 0)) %>%
+  mutate(remark = if_else(presence %in% c("1?", "cf", "j?"), paste(remark, "species id uncertain"), remark),
+         remark = if_else(presence %in% c("3"), "probably 3 leontodon seedlings", remark),
+         presence = 1) %>%  
+  pivot_longer(cols = c(presence:seedling), names_to = "variable", values_to = "value") %>% 
+  ungroup() %>% 
+  select(year, date, origSiteID:Nlevel, subplot, species, variable, value, remark, recorder) %>% 
+  # fix errors
+  # ...
+  bind_rows(subplot_missing) %>% 
+  
+  # fix wrong species
+  left_join(fix_species, by = c("year", "turfID", "species")) %>% 
+  mutate(species = if_else(!is.na(species_new), species_new, species)) %>%
+  select(-species_new) %>% 
+
+  # add rows with subplot info
+  bind_rows(add_subplot) %>% 
+  # remove rows with subplot info (e.g. species that changed name)
+  anti_join(remove_subplot, by = c("year", "turfID", "species", "subplot")) %>% 
+  # remove species that have been replaced
+  tidylog::anti_join(remove_wrong_species, by = c("year", "turfID", "species"))
+
+
+### NEED FIXING!!!
+### filter(presence %in% c("2", "3", "4", "7")) %>% as.data.frame()
+
+#write_csv(CommunitySubplot, file = "data_cleaned/vegetation/THREE-D_CommunitySubplot_2019-2021.csv", col_names = TRUE)
 
 
 
@@ -328,7 +432,7 @@ height <- community %>%
   summarise(height = mean(height, na.rm = TRUE)) %>% 
   rename("vegetation_layer" = "species")
 
-write_csv(height, path = "data_cleaned/vegetation/THREE-D_Height_2019_2020.csv", col_names = TRUE)
+write_csv(height, file = "data_cleaned/vegetation/THREE-D_Height_2019_2020.csv", col_names = TRUE)
 
 
 # Cover from Functional Groups and Height
@@ -351,7 +455,7 @@ CommunityStructure <- community %>%
   rename(functional_group = species) %>% 
   select(-mean)
 
-write_csv(CommunityStructure, path = "data_cleaned/vegetation/THREE-D_CommunityStructure_2019_2020.csv", col_names = TRUE)
+write_csv(CommunityStructure, file = "data_cleaned/vegetation/THREE-D_CommunityStructure_2019_2021.csv", col_names = TRUE)
 
 
 # 
@@ -359,30 +463,3 @@ write_csv(CommunityStructure, path = "data_cleaned/vegetation/THREE-D_CommunityS
 #   # summarize cover from species that have been merged
 #   group_by(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID, warming, grazing, Nlevel, year, species) %>% 
 #   mutate(n = n()) %>% filter(n > 1) %>% View()
-
-
-# subplot level data
-CommunitySubplot <- community %>% 
-  filter(!species %in% c("Moss layer", "Vascular plant layer", "SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop")) %>% 
-  select(-scribe) %>%
-  
-  # make long table
-  pivot_longer(cols = `1`:`25`, names_to = "subplot", values_to = "presence") %>%
-  # remove non-presence in subplot
-  filter(presence == "1") %>% 
-  
-  # Unknown seedlings have sometimes counts, but not consistent. So make just presence.
-  mutate(presence = ifelse(species == "Unknown seedlings" & presence != "0", "s", presence),
-         presence = recode(presence, "df" = "fd", "1j" = "j")) %>% 
-  mutate(fertile = ifelse(presence %in% c("F", "f", "fd"), 1, 0),
-         dominant = ifelse(presence %in% c("d", "fd", "dj"), 1, 0),
-         juvenile = ifelse(presence %in% c("j", "dj"), 1, 0),
-         seedling = ifelse(presence %in% c("s", "3"), 1, 0)) %>% 
-  mutate(remark = if_else(presence %in% c("1?", "cf"), "species id uncertain", remark),
-         remark = if_else(presence %in% c("3"), "probably 3 leontodon seedlings", remark),
-         presence = if_else(presence %in% c("1", "1?", "cf", "3"), 1, 0)) %>% 
-  pivot_longer(cols = c(cover, presence:seedling), names_to = "variable", values_to = "value") %>% 
-  select(year, date, origSiteID:Nlevel, subplot, species, variable, value, remark, recorder) %>% 
-  bind_rows(subplot_missing)
-
-write_csv(CommunitySubplot, file = "data_cleaned/vegetation/THREE-D_CommunitySubplot_2019_2020.csv", col_names = TRUE)
