@@ -39,10 +39,12 @@ library("turfmapper")
 grid <- make_grid(ncol = 5)
 
 CommunitySubplot %>% 
-    mutate(Subplot = as.numeric(Subplot),
-           Year_Recorder = paste(Year, Recorder, sep = "")) %>% 
-    filter(Presence == 1,
-           Nlevel %in% c(1, 2, 3)) %>% filter(turfID %in% c("5 WN1I 86", "84 WN1M 161", "87 WN1N 164", "155 WN2M 198")) %>% distinct(Year, turfID, Nlevel)
+    mutate(subplot = as.numeric(subplot),
+           year_recorder = paste(year, recorder, sep = "")) %>% 
+    filter(variable == "presence",
+           destSiteID == "Vik") %>% 
+  left_join(cover) |> 
+  select(-scribe, -file) |> 
   arrange(destSiteID, destPlotID, turfID) %>% 
   group_by(destSiteID, destPlotID, turfID) %>% 
     nest() %>% 
@@ -50,8 +52,11 @@ CommunitySubplot %>%
       .x = .$data, 
       .y = glue::glue("Site {.$destSiteID}: plot {.$destPlotID}: turf {.$turfID}"),
       .f = ~make_turf_plot(
-        data = .x, year = Year_Recorder, species = Species, 
-        cover = Cover, subturf = Subplot, 
+        data = .x, 
+        year = year_recorder, 
+        species = species, 
+        cover = cover, 
+        subturf = subplot, 
         title = glue::glue(.y), 
         grid_long = grid)
     )} %>% 
