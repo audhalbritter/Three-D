@@ -68,6 +68,9 @@ microclimate <- temp_raw %>%
   mutate(date_time = ymd_hm(date_time)) %>% 
   mutate(loggerID = substr(file, nchar(file)-13, nchar(file)-6)) %>%
   
+  # remove duplicate data (due to always downloading all the data)
+  distinct(loggerID, date_time, time_zone, soil_temperature, ground_temperature, air_temperature, raw_soilmoisture, shake, error_flag) |> 
+  
   # join meta data on loggers
   left_join(metaTomst, by = "loggerID") %>% 
   select(-c(`Download_24_09-19`:Remark_17_10_21)) %>% 
@@ -78,17 +81,20 @@ microclimate <- temp_raw %>%
          date_time < EndDate_Time) %>% 
   
   # some data cleaning
+  # air
   mutate(air_temperature = case_when(
-    loggerID %in% c("94195252", "94195220",  "94195231") & air_temperature < -40 ~ NA_real_,
+    loggerID %in% c("94195252", "94195220",  "94195231", "94195237") & air_temperature < -40 ~ NA_real_,
     loggerID %in% c("94195208") & air_temperature < -20 ~ NA_real_,
     loggerID == "94195209" & date_time > "2020-08-12 00:00:00" & date_time < "2020-08-13 00:00:00" ~ NA_real_,
     TRUE ~ as.numeric(air_temperature)),
          
+    # ground
          ground_temperature = case_when(
            loggerID %in% c("94195208", "94195252") & ground_temperature < -40 ~ NA_real_,
            loggerID == "94195209" & date_time > "2020-08-12 00:00:00" & date_time < "2020-08-13 00:00:00" ~ NA_real_,
            TRUE ~ as.numeric(ground_temperature)),
          
+    #soil
          soil_temperature = case_when(loggerID %in% c("94195252", "94195236", "94195231") & soil_temperature < -40 ~ NA_real_,
            loggerID %in% c("94200499", "94195246", "94195201", "94195212", "94195218", "94200491") & soil_temperature > 25 ~ NA_real_,
            loggerID %in% c("94195271") & soil_temperature > 35 ~ NA_real_,
@@ -106,21 +112,31 @@ microclimate <- temp_raw %>%
            loggerID %in% c("94195235", "94195264") & date_time > "2019-11-01 01:00:00" & date_time < "2020-05-12 01:00:00" ~ NA_real_,
            TRUE ~ as.numeric(soil_temperature))) %>% 
   
+  # soil moisture
+  # very low soilmoisture value, probably when I downloaded the data
+  # 94195231 2022-05-30 11:15:00
+  # 94195271 2020-09-11 09:15:00
+  # 94195263 2020-09-07 11:45:00
+  mutate(raw_soilmoisture = case_when(loggerID == "94195231" & date_time == "2022-05-30 11:15:00" ~ NA_real_,
+                                      loggerID == "94195271" & date_time == "2020-09-11 09:15:00" ~ NA_real_,
+                                      loggerID == "94195263" & date_time == "2020-09-07 11:45:00" ~ NA_real_,
+                                      TRUE ~ as.numeric(raw_soilmoisture))) |> 
+  
   #join with meta data table
   left_join(metaTurfID, by = c("destSiteID", "destBlockID", "destPlotID")) %>% 
-  select(date_time, destSiteID, destBlockID, destPlotID, turfID, origPlotID, origBlockID, origSiteID, warming, Nlevel, grazing, soil_temperature:raw_soilmoisture, loggerID, shake, error_flag, InitialDate_Time:EndDate_Time, Remark, file)
+  select(date_time, destSiteID, destBlockID, destPlotID, turfID, origPlotID, origBlockID, origSiteID, warming, Nlevel, grazing, soil_temperature:raw_soilmoisture, loggerID, shake, error_flag, InitialDate_Time:EndDate_Time, Remark)
 
 # Soil moisture correction using function
 microclimate <- microclimate %>% 
   mutate(soilmoisture = soil.moist(rawsoilmoist = raw_soilmoisture, 
                                    soil_temp = soil_temperature, 
                                    soilclass = "loamy_sand_A")) %>% 
-  select(date_time:air_temperature, soilmoisture, loggerID:file)
+  select(date_time:air_temperature, soilmoisture, loggerID:Remark)
 
 #ggplot(microclimate, aes(x = soilmoisture, y = raw_soilmoisture)) + geom_point()
 
 # Save clean file
-write_csv(x = microclimate, file = "data_cleaned/climate/THREE-D_clean_microclimate_2019-2021.csv")
+write_csv(x = microclimate, file = "data_cleaned/climate/THREE-D_clean_microclimate_2019-2022.csv")
 
 
 
@@ -132,14 +148,14 @@ write_csv(x = microclimate, file = "data_cleaned/climate/THREE-D_clean_microclim
 
 # Checking data
 dd <- microclimate %>% 
-  #filter(destSiteID == "Joa")
-  filter(loggerID %in% c("94195271")) %>% 
-  filter(date_time > "2020-06-01 08:00:00" & date_time < "2020-07-30 08:00:00")
-ggplot(dd, aes(x = date_time, y = soil_temperature)) +
+  filter(destSiteID == "Vik")
+  #filter(loggerID %in% c("94195236")) #%>% 
+  #filter(date_time > "2020-06-01 08:00:00" & date_time < "2020-07-30 08:00:00")
+ggplot(dd, aes(x = date_time, y = soilmoisture)) +
   geom_line() +
-  geom_vline(xintercept = ymd_hms("2020-06-17 01:00:00"), colour = "pink") +
-  geom_vline(xintercept = ymd_hms("2020-06-26 01:00:00"), colour = "lightblue") +
-  facet_wrap(~ loggerID) +
+  #geom_vline(xintercept = ymd_hms("2020-06-17 01:00:00"), colour = "pink") +
+  #geom_vline(xintercept = ymd_hms("2020-06-26 01:00:00"), colour = "lightblue") +
+  facet_wrap(~ turfID) +
   theme(legend.position = "none")
 
 

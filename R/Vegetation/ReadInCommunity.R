@@ -48,13 +48,6 @@ metaComm_raw <- map_df(set_names(files), function(file) {
     map_df(~ read_xlsx(path = file, sheet = .x, n_max = 1, col_types = c("text", rep("text", 29))), .id = "sheet_name")
 }, .id = "file")
 
-# validate input
-rules <- validator(Date = is.Date(Date),
-                   Rec = is.character(Recorder),
-                   Scr = is.character(Scribe))
-out <- confront(metaComm, rules)
-summary(out)
-
 # need to break the workflow here, otherwise tedious to find problems
 metaComm <- metaComm_raw %>% 
   select(sheet_name, Date, origSiteID, origBlockID, origPlotID, turfID, destSiteID, destBlockID, destPlotID, Recorder, Scribe) %>% 
@@ -92,8 +85,16 @@ metaComm <- metaComm_raw %>%
   select(- c(origSiteID.x, origSiteID.y, origBlockID.x, origBlockID.y, origPlotID.x, origPlotID.y))
 
 
+# validate input
+rules <- validator(Date = is.Date(Date),
+                   Rec = is.character(Recorder),
+                   Scr = is.character(Scribe))
+out <- confront(metaComm, rules)
+summary(out)
+
+
 # Function to read in data
-comm <- map_df(set_names(files), function(file) {
+comm  <- map_df(set_names(files), function(file) {
   file %>% 
     excel_sheets() %>% 
     set_names() %>% 
@@ -108,6 +109,7 @@ comm <- map_df(set_names(files), function(file) {
 
 # Join data and meta
 community <- metaComm %>% 
+  # anti join looses 18 turfs with NA as date, but its ok they are duplicates. Probably occur because of joining 2019 and 2020 data differently
   left_join(comm, by = c("sheet_name", "Year")) %>% 
   select(origSiteID:origPlotID, destSiteID:turfID, warming:Nlevel, Date, Year, Species:Cover, Recorder, Scribe, Remark, file) %>% 
   
@@ -119,7 +121,7 @@ community <- metaComm %>%
   filter(Species != "Height / depth (cm)") %>% 
   
   # Remove white space after Species name
-  mutate(Species = str_trim(Species, side = "right")) %>% 
+  mutate(Species = str_trim(Species, side = "right")) %>%
   mutate(Recorder = recode(Recorder, "so" = "silje", "vv" = "vigdis", "lhv" = "linn", "kri" = "kari")) %>%
   
   # Fix wrong turfID
@@ -297,6 +299,10 @@ community <- metaComm %>%
   mutate(Remark = ifelse(Species == "Orchid sp" & origSiteID == "Lia" & year(Date) == 2019, "Fjellhvitkurle or Gronnkurle", Remark)) %>% 
   
   # Unknown species
+    
+  ### 2022 CORRECTIONS:
+  # unknown juvenile = I THINK UNKNOWN FORB
+    
   mutate(Species = ifelse(Species == "Unknown grass" & origSiteID == "Lia" & origBlockID == 8 & year(Date) == 2019, "Unknown graminoid1", Species),
          Species = ifelse(Species == "unknown graminoid" & origSiteID == "Lia" & origBlockID == 10 & year(Date) == 2019, "Unknown graminoid2", Species),
          Species = ifelse(Species == "unknown graminoid" & origSiteID == "Lia" & origBlockID == 6 & year(Date) == 2019, "Unknown graminoid3", Species),
@@ -310,12 +316,12 @@ community <- metaComm %>%
          
          Remark = ifelse(Species == "Unknown shrub, maybe salix" & origSiteID == "Lia" & origBlockID == 1 & year(Date) == 2019, "Maybe salix", Remark),
          # very likely S. herbaceae
-         Species = ifelse(Species == "Unknown shrub, maybe salix" & origSiteID == "Lia" & origBlockID == 1 & year(Date) == 2019, "Salix herbaceae", Species)) %>% 
-
-  # Remove rows, with species, but where subplot and cover is zero
+         Species = ifelse(Species == "Unknown shrub, maybe salix" & origSiteID == "Lia" & origBlockID == 1 & year(Date) == 2019, "Salix herbaceae", Species)) |> 
+  
+  # Remove rows, with species, but where subplot and cover is NA
   filter_at(vars("1":"Cover"), any_vars(!is.na(.))) %>% 
   #Replace all NA in subplots with 0
-  mutate_at(vars("1":"25"), ~replace_na(., 0)) %>% 
+  mutate(across("1":"25", ~ replace_na(.x, "0"))) |> 
   mutate(Cover = as.numeric(Cover)) %>% 
   
   rename(date = Date, year = Year, species = Species, cover = Cover, recorder = Recorder, scribe = Scribe, remark = Remark) %>% 
@@ -328,27 +334,32 @@ community <- metaComm %>%
   
   # remove duplicate species that differ in cover. Duplcated because species name was changed (11 cases with very low cover (1-6), no need in changing cover estimate).
   anti_join(duplicate_problem, by = c("year", "turfID", "species", "cover")) %>% 
+  
+  # remove duplicates
   group_by(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID, warming, grazing, Nlevel, year, species, cover, recorder, scribe, remark, file) %>% 
-  # remove 2 rows with same cover
-  slice(1)
+  #mutate(n = n()) |> filter(n > 1) |> View()
+  # remove 4 rows with same cover, cover stays the same, no fixing needed.
+  # subplot presence is fixed in subplot_missing
+  tidylog::slice(1)
 
 
 # validate input
 rules_comm <- validator(Sp = is.character(species),
                         Cov = is.numeric(cover),
-                        Y = is.numeric(Year),
+                        Y = is.numeric(year),
                         Warming = grepl("A|W", turfID),
                         Site1 = origSiteID %in% c("Lia","Joa"),
                         Site2 = destSiteID %in% c("Lia","Joa", "Vik"))
 out <- confront(community, rules_comm)
 summary(out)
 
+### NEEDS FIXING!!!
 # find duplicate species
 rule <- validator(is_unique(turfID, species, year))
 out <- confront(community, rule)
 # showing 7 columns of output for readability
 summary(out)
-violating(community, out)
+violating(community, out) |> View()
   
 #### COVER ####
 # Extract estimate of cover
@@ -372,10 +383,10 @@ cover <- community %>%
   tidylog::anti_join(remove_wrong_species, by = c("year", "turfID", "species"))
 
   
-#write_csv(cover, file = "data_cleaned/vegetation/THREE-D_Cover_2019-2021.csv", col_names = TRUE)
+write_csv(cover, file = "data_cleaned/vegetation/THREE-D_Cover_2019-2022.csv", col_names = TRUE)
 
 
-# subplot level data
+#### SUBPLOT PRECENSE ####
 CommunitySubplot <- community %>% 
   filter(!species %in% c("Moss layer", "Vascular plant layer", "SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop")) %>% 
   
@@ -398,7 +409,7 @@ CommunitySubplot <- community %>%
   ungroup() %>% 
   select(year, date, origSiteID:Nlevel, subplot, species, variable, value, remark, recorder) %>% 
   # fix errors
-  # ...
+  # add data of subplots that were removed due to duplicates
   bind_rows(subplot_missing) %>% 
   
   # fix wrong species
@@ -414,10 +425,13 @@ CommunitySubplot <- community %>%
   tidylog::anti_join(remove_wrong_species, by = c("year", "turfID", "species"))
 
 
+### SOME DUPLICATES!!! NEED FIXING
+#CommunitySubplot <- CommunitySubplot |> tidylog::distinct()
+
 ### NEED FIXING!!!
 ### filter(presence %in% c("2", "3", "4", "7")) %>% as.data.frame()
 
-#write_csv(CommunitySubplot, file = "data_cleaned/vegetation/THREE-D_CommunitySubplot_2019-2021.csv", col_names = TRUE)
+write_csv(CommunitySubplot, file = "data_cleaned/vegetation/THREE-D_CommunitySubplot_2019-2022.csv", col_names = TRUE)
 
 
 
