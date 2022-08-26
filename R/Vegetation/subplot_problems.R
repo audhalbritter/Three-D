@@ -63,7 +63,11 @@ subplot_missing = tribble(
   2019, "72 AN9N 72", "Carex saxatilis cf", "11", "fertile", 1,
   2019, "72 AN9N 72", "Carex saxatilis cf", "19", "fertile", 1,
   2019, "72 AN9N 72", "Carex saxatilis cf", "25", "fertile", 1,
-  2019, "72 AN9N 72", "Carex saxatilis cf", "18", "presence", 1
+  2019, "72 AN9N 72", "Carex saxatilis cf", "18", "presence", 1,
+  2019, "102 WN5I 171", "Poa pratensis", "21", "presence", 1,
+  2019, "104 AN5N 104", "Poa pratensis", "2", "presence", 1,
+  2019, "104 AN5N 104", "Poa pratensis", "10", "presence", 1
+  
 ) %>% 
   left_join(metaTurfID, by = "turfID")
 
@@ -79,43 +83,65 @@ fix_species = tribble(
   ~year, ~turfID, ~species, ~species_new,
   2019, "1 WN1M 84", "Antennaria alpina cf", "Antennaria sp",
   2020, "1 WN1M 84", "Antennaria dioica cf", "Antennaria sp",
+  2021, "1 WN1M 84", "Erigeron sp", "Erigeron uniflorus",
+  2021, "1 WN1M 84", "Luzula sp", "Luzula spicata cf",
+  2019, "1 WN1M 84", "Festuca ovina", "Nardus stricta",
+  2021, "1 WN1M 84", "Festuca ovina", "Nardus stricta",
+  2022, "3 WN1C 85", "Antennaria sp", "Antennaria alpina cf",
   2019, "5 WN1I 86", "Antennaria alpina cf", "Antennaria sp",
   2020, "5 WN1I 86", "Antennaria dioica cf", "Antennaria sp",
   2021, "8 WN1N 87", "Luzula sp", "Luzula spicata cf",
+  2022, "8 WN1N 87", "Luzula sp", "Luzula spicata cf",
+  2021, "10 WN6M 89", "Luzula sp", "Luzula spicata cf",
   2019, "13 WN6C 90", "Antennaria alpina cf", "Antennaria dioica",
   2021, "13 WN6C 90", "Antennaria dioica cf", "Antennaria dioica",
-  2019, "14 WN6I 92", "Luzula spicata cf", "Luzula sp",
+  2021, "14 WN6I 92", "Luzula sp", "Luzula spicata cf",
+  2021, "94 AN6I 94", "Festuca ovina", "Festuca rubra",
   2021, "15 WN6N 95", "Antennaria sp", "Antennaria alpina cf",
   2019, "15 WN6N 95", "Luzula spicata cf", "Luzula sp",
-  2019, "19 WN5I 97", "Antennaria dioica cf", "Antennaria sp",
-  2019, "21 WN5C 99", "Antennaria alpina cf", "Antennaria sp",
-  2019, "22 WN5M 102", "Antennaria alpina cf", "Antennaria sp",
+  2021, "19 WN5I 97", "Antennaria sp", "Antennaria dioica cf",
+  2021, "21 WN5C 99", "Antennaria sp", "Antennaria alpina cf",
+  2021, "22 WN5M 102", "Antennaria sp", "Antennaria alpina cf",
   2019, "24 WN5N 103", "Taraxacum sp.", "Leontodon autumnalis",
   2019, "26 WN3I 105", "Taraxacum sp.", "Leontodon autumnalis",
+  2019, "26 WN3I 105", "Luzula spicata cf", "Luzula sp",
+  2020, "26 WN3I 105", "Luzula multiflora cf", "Luzula sp",
   2021, "29 WN3C 106", "Antennaria sp", "Antennaria alpina cf",
   2019, "29 WN3C 106", "Taraxacum sp.", "Leontodon autumnalis",
   2019, "29 WN3C 106", "Luzula spicata cf", "Luzula spicata",
   2020, "29 WN3C 106", "Luzula spicata cf", "Luzula spicata",
   2021, "29 WN3C 106", "Luzula spicata cf", "Luzula spicata",
   2021, "30 WN3M 107", "Antennaria sp", "Antennaria alpina cf",
+  2022, "30 WN3M 107", "Antennaria dioica cf", "Antennaria alpina cf",
   2021, "30 WN3M 107", "Luzula sp", "Luzula multiflora cf",
+  2022, "30 WN3M 107", "Luzula sp", "Luzula multiflora cf",
   2019, "32 WN3N 112", "Luzula spicata cf", "Luzula sp",
   2021, "34 WN10I 114", "Antennaria sp", "Antennaria dioica cf",
   2021, "34 WN10I 114", "Luzula sp", "Luzula spicata cf",
+  2022, "34 WN10I 114", "Luzula sp", "Luzula spicata cf",
+  2022, "34 WN10I 114", "Potentilla erecta", "Potentilla crantzii",
   2019, "36 WN10M 115", "Taraxacum sp.", "Leontodon autumnalis",
   2021, "37 WN10C 116", "Antennaria sp", "Antennaria dioica cf",
   2019, "42 WN7I 123", "Antennaria alpina cf", "Antennaria sp",
   2019, "44 WN7M 125", "Taraxacum sp.", "Leontodon autumnalis",
   2021, "53 WN4C 133", "Antennaria sp", "Antennaria alpina cf",
   2019, "53 WN4C 133", "Taraxacum sp.", "Leontodon autumnalis",
+  2021, "53 WN4C 133", "Erigeron sp", "Erigeron uniflorus",
+  2021, "54 WN4I 134", "Erigeron sp", "Erigeron uniflorus",
   2019, "54 WN4I 134", "Salix reticulata", "Vaccinium uliginosum",
   2019, "54 WN4I 134", "Taraxacum sp.", "Leontodon autumnalis",
   2019, "61 WN8I 140", "Luzula spicata cf", "Luzula sp",
+  2019, "64 WN8N 143", "Luzula spicata cf", "Luzula sp",
   2021, "71 WN9N 151", "Luzula multiflora cf", "Luzula multiflora",
+  2019, "71 WN9N 151", "Luzula spicata cf", "Luzula multiflora",
   2019, "73 WN2M 153", "Leontodon autumnalis", "Taraxacum sp.",
   2019, "73 WN2M 153", "Luzula spicata cf", "Luzula spicata",
   2020, "73 WN2M 153", "Luzula multiflora cf", "Luzula spicata",
   2021, "73 WN2M 153", "Luzula sp", "Luzula spicata",
+  2022, "73 WN2M 153", "Luzula spicata cf", "Luzula spicata",
+  
+  2020, "154 AN2M 154", "Vaccinium uliginosum", "Vaccinium vitis-idaea",
+  
   2019, "4 AN1C 4", "Antennaria alpina cf", "Antennaria dioica",
   2020, "4 AN1C 4", "Antennaria dioica cf", "Antennaria dioica",
   2021, "4 AN1C 4", "Antennaria sp", "Antennaria dioica",
@@ -307,7 +333,7 @@ add_subplot = tribble(
 remove_subplot = tribble(
   ~year, ~turfID, ~species, ~subplot, ~variable,
   2019, "1 WN1M 84", "Taraxacum sp.", list(3, 4, 10, 21, 22), "presence",
-  2019, "1 WN1M 84", "Festuca ovina", list(1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 14, 15, 19, 20), "presence",
+  2019, "1 WN1M 84", "Nardus stricta", list(1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 14, 15, 19, 20), "presence",
   2019, "5 WN1I 86", "Taraxacum sp.", list(8, 9, 10, 15, 20), "presence",
   2019, "30 WN3M 107", "Luzula spicata cf", list(2, 7), "presence",
   2019, "20 AN5I 20", "Potentilla crantzii", list(1, 6, 7, 17, 22, 23), "presence",
@@ -329,7 +355,7 @@ remove_subplot = tribble(
 # 
 # cover %>% filter(turfID == "61 WN8I 140", species %in% c("Taraxacum sp.", "Leontodon autumnalis")) %>% as.data.frame()
 # community %>% filter(turfID == "73 WN2M 153", species %in% c("Luzula multiflora cf", "Luzula sp", "Luzula spicata cf")) %>% as.data.frame()
-# CommunitySubplot %>% filter(turfID == "9 AN6M 9", species %in% c("Festuca rubra"), variable == "presence") %>% as.data.frame()
+CommunitySubplot %>% filter(turfID == "154 AN2M 154", grepl("Vaccinium", species), variable == "fertile") %>% as.data.frame()
 # 
 # cover %>% filter(turfID == "3 WN1C 85") %>% distinct(species) %>% pn
 #   
