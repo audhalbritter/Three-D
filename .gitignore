@@ -36,6 +36,7 @@ vignettes/*.pdf
 *.sql
 *.xlsx
 *.docx
+*.txt
 *.xlsx#
 *.rar
 *.sqlite
@@ -55,6 +56,7 @@ vignettes/*.pdf
 *.html
 *.pdf
 *.jpeg
+*.TIF
 .my.cnf
 !.tex
 *.md
