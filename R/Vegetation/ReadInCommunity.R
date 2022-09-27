@@ -366,7 +366,7 @@ violating(community, out) |> View()
 cover <- community %>% 
   ungroup() %>% 
   select(origSiteID:species, cover:file) %>% 
-  filter(!species %in% c("Moss layer", "Vascular plant layer", "SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop", "Unknown seedlings")) %>% 
+  filter(!species %in% c("Moss layer", "Vascular plant layer", "SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop", "Unknown seedlings", "Wool")) %>% 
   
   # fix errors
   # fix wrong species
@@ -388,7 +388,7 @@ write_csv(cover, file = "data_cleaned/vegetation/THREE-D_Cover_2019-2022.csv", c
 
 #### SUBPLOT PRECENSE ####
 CommunitySubplot <- community %>% 
-  filter(!species %in% c("Moss layer", "Vascular plant layer", "SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop")) %>% 
+  filter(!species %in% c("Moss layer", "Vascular plant layer", "SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop", "Wool")) %>% 
   
   # make long table
   pivot_longer(cols = `1`:`25`, names_to = "subplot", values_to = "presence") %>% 
