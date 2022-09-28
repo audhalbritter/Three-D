@@ -12,7 +12,7 @@ source("R/Rgathering/create meta data.R")
 #          remote_path = "RawData/Vegetation")
 
 # 2020 data
-biomass20 <- read_excel(path = "data/biomass/THREE_D_Biomass_Grazing_2020_March_2021.xlsx", 
+biomass20 <- read_excel(path = "data/biomass/Three-D_raw_Biomass_2020_March_2021.xlsx", 
                           col_types = c("text", "numeric", "numeric", "text", "text", "numeric", "text", "numeric", "date", rep("numeric", 6), "text", rep("numeric", 4))) %>% 
   pivot_longer(cols = c(Graminoids_g:Litter_g, Lichen_g:Fungi_g), names_to = "fun_group", values_to = "value") %>% 
   filter(grazing %in% c("M", "I"),
@@ -23,7 +23,7 @@ biomass20 <- read_excel(path = "data/biomass/THREE_D_Biomass_Grazing_2020_March_
          area = 2500)
 
 # 2021 data
-biomass21_raw <- read_excel(path = "data/biomass/THREE_D_raw_Biomass_2021_12_09.xlsx",
+biomass21_raw <- read_excel(path = "data/biomass/Three-D_raw_Biomass_2021_12_09.xlsx",
            col_types = c("text", "numeric", "text", "text", "numeric", "numeric", "text", "numeric", "numeric", "text", "numeric", "date", rep("numeric", 9), "text",  "text", rep("numeric", 6))) %>% 
   pivot_longer(cols = c(Graminoids_g:Fungi_g), names_to = "fun_group", values_to = "value") %>% 
   filter(!is.na(value)) %>% 
@@ -70,10 +70,34 @@ biomass21 |>
   pivot_wider(names_from = corner, values_from = biomass_scaled) |> 
   mutate(p = corner / all * 100)
   
-                        
+              
+# 2022 data
+# Cut 1 Lia is missing due to late snowmelt
+biomass22 <- read_csv(file = "data/biomass/Three-D_raw_Biomass_2022-09-27.csv") |> 
+  mutate(Date = case_when(Date == "15-16.08.2022" ~ "15.08.2022",
+                          Date == "x" ~ "15.08.2022",
+                          TRUE ~ as.character(Date)),
+         Date = dmy(Date)) |> 
   
+  # Fix wrong values
+  mutate(Forbs_g = if_else(turfID == "78 WN2I 158", 1.4981, Forbs_g),
+         Litter_g = if_else(turfID == "61 WN8I 140", 0.604, Litter_g),
+         Bryophytes_g = if_else(turfID == "94 AN6I 94", 0.932, Bryophytes_g)) |> 
+  # remove empty rows
+  filter(!is.na(Date)) |> 
+  # make long table
+  pivot_longer(cols = c(Graminoids_g:Fungi_g), names_to = "fun_group", values_to = "value") |> 
+  filter(!is.na(value)) |> 
+  rename(date = Date, cut = Cut, remark = Remark, collector = Collector) |> 
+  mutate(year = year(date),
+         area = 2500) |> 
+  select(-"...24")
+
+# merge all files
 biomass <- biomass20 %>% 
-  bind_rows(biomass21 %>% select(-c(top:l_side))) %>% 
+  bind_rows(biomass21 %>% select(-c(top:l_side)),
+            biomass22) %>% 
+  # join Nitrogen in kg ha y
   left_join(NitrogenDictionary, by = "Nlevel") %>% 
   mutate(fun_group = tolower(fun_group),
          fun_group = str_remove(fun_group, "_g"),
@@ -81,7 +105,7 @@ biomass <- biomass20 %>%
   select(origSiteID, origBlockID, origPlotID, turfID, destSiteID, destBlockID, destPlotID, warming, Nlevel, Namount_kg_ha_y, grazing, cut, year, date, fun_group, biomass = value, unit, area_cm2 = area, collector, remark)
 
 
-write_csv(biomass, file = "data_cleaned/vegetation/THREE-D_clean_biomass_2020-2021.csv")
+write_csv(biomass, file = "data_cleaned/vegetation/Three-D_clean_biomass_2020-2022.csv")
 
 
 biomass %>% filter(is.na(turfID)) %>% distinct(year)
@@ -103,14 +127,14 @@ cutting_date <- biomass %>%
 # sum biomass up per plot
 biomass_sum <- biomass %>% 
   group_by(turfID, year, fun_group, origSiteID, warming, grazing, Nlevel) %>% 
-  summarise(sum = mean(value, na.rm = TRUE))
+  summarise(sum = mean(biomass, na.rm = TRUE))
 
 
 
 # check data
 biomass %>% 
   filter(cut == 1) %>% 
-  ggplot(aes(x = as.factor(Nlevel), y = value, fill = warming)) +
+  ggplot(aes(x = as.factor(Nlevel), y = biomass, fill = warming)) +
   geom_boxplot() +
   facet_grid(origSiteID ~ fun_group)
 
@@ -118,8 +142,8 @@ biomass %>%
 
 biomass %>% 
   mutate(warm.graz = paste(warming, grazing, sep = "_")) %>% 
-  filter(fun_group %in% c("Graminoids_g", "Forbs_g")) %>% 
-  ggplot(aes(x = as.factor(Nlevel), y = sum, fill = warm.graz)) +
+  filter(fun_group %in% c("graminoids", "forbs")) %>% 
+  ggplot(aes(x = as.factor(Nlevel), y = biomass, fill = warm.graz)) +
   geom_boxplot() +
   facet_grid(fun_group ~ origSiteID, scales = "free_y")
 
