@@ -17,10 +17,19 @@ biomass20 <- read_excel(path = "data/biomass/Three-D_raw_Biomass_2020_March_2021
   pivot_longer(cols = c(Graminoids_g:Litter_g, Lichen_g:Fungi_g), names_to = "fun_group", values_to = "value") %>% 
   filter(grazing %in% c("M", "I"),
          !is.na(value)) %>% 
-  rename(date = Date, cut = Cut, remark = Remark) %>% 
-  left_join(metaTurfID, by = c("destSiteID", "destBlockID", "destPlotID", "turfID", "warming", "Nlevel", "grazing")) %>% 
-  mutate(year = year(date),
-         area = 2500)
+  # fill in missing date
+  mutate(Date = as.character(Date),
+         Date = if_else(destSiteID == "Joa" & Cut == 4 & is.na(Date), "2020-09-09", Date),
+         Date = if_else(destSiteID == "Vik" & Cut == 4 & is.na(Date), "2020-09-10", Date),
+         Date = ymd(Date),
+         year = year(Date),
+         area = 2500) |> 
+  rename(date = Date, cut = Cut, remark = Remark) |> 
+  # add metadata
+  left_join(metaTurfID, by = c("destSiteID", "destBlockID", "destPlotID", "turfID",     
+                               "warming", "Nlevel", "grazing"))
+
+
 
 # 2021 data
 biomass21_raw <- read_excel(path = "data/biomass/Three-D_raw_Biomass_2021_12_09.xlsx",
@@ -125,11 +134,22 @@ cutting_date <- biomass %>%
 
 
 # sum biomass up per plot
-biomass_sum <- biomass %>% 
-  group_by(turfID, year, fun_group, origSiteID, warming, grazing, Nlevel) %>% 
-  summarise(sum = mean(biomass, na.rm = TRUE))
+productivity <- biomass %>% 
+  # average for controls
+  group_by(year, cut, fun_group, origSiteID, destSiteID, warming, grazing, Namount_kg_ha_y) %>% 
+  summarise(biomass = mean(biomass, na.rm = TRUE)) |> 
+  ungroup() |> 
+  # sum over time
+  group_by(year, fun_group, origSiteID, destSiteID, warming, grazing, Namount_kg_ha_y) %>% 
+  summarise(biomass = sum(biomass, na.rm = TRUE))
 
+biomass |> filter(is.na(date)) |> View()
 
+productivity |> 
+  filter(origSiteID == "Joa") |> 
+  ggplot(aes(x = log(Namount_kg_ha_y + 1), y = biomass, fill = fun_group)) +
+  geom_col() +
+  facet_grid(warming ~ year)
 
 # check data
 biomass %>% 
