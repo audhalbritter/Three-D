@@ -3,7 +3,12 @@
 #######################################################
 
 source("R/Load packages.R")
-source("R/Rgathering/create meta data.R")
+
+# make metadata and N dictionary
+metaTurfID <- create_threed_meta_data()
+
+NitrogenDictionary <- metaTurfID |> 
+  distinct(Nlevel, Namount_kg_ha_y)
 
 # Run this code if you need to download raw data from OSF
 # get_file(node = "pk4bg",
@@ -53,7 +58,9 @@ biomass21 <- biomass21_raw %>%
          area = case_when(remark == "corner" & !is.na(top) ~ (top * r_side - inner_l_side * inner_top),
                           remark == "corner" & is.na(top) ~ as.numeric(mean_area),
                           cut == 3 & grazing %in% c("C", "N") ~ (top * r_side - inner_l_side * inner_top),
-                          TRUE ~ 2500))
+                          TRUE ~ 2500)) |> 
+  # join Nitrogen in kg ha y
+  left_join(NitrogenDictionary, by = "Nlevel")
 
 
 
@@ -100,14 +107,13 @@ biomass22 <- read_csv(file = "data/biomass/Three-D_raw_Biomass_2022-09-27.csv") 
   rename(date = Date, cut = Cut, remark = Remark, collector = Collector) |> 
   mutate(year = year(date),
          area = 2500) |> 
-  select(-"...24")
+  # join Nitrogen in kg ha y
+  left_join(NitrogenDictionary, by = "Nlevel")
 
 # merge all files
 biomass <- biomass20 %>% 
   bind_rows(biomass21 %>% select(-c(top:l_side)),
             biomass22) %>% 
-  # join Nitrogen in kg ha y
-  left_join(NitrogenDictionary, by = "Nlevel") %>% 
   mutate(fun_group = tolower(fun_group),
          fun_group = str_remove(fun_group, "_g"),
          unit = "g") %>% 
