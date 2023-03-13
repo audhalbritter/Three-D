@@ -58,6 +58,7 @@ metaComm <- metaComm_raw %>%
                           Date == "44048" ~ "5.8.2020",
                           Date == "44049" ~ "6.8.2020",
                           TRUE ~ as.character(Date))) %>% 
+
   # make date
   mutate(Date = dmy(Date),
          Year = year(Date),
@@ -353,13 +354,100 @@ rules_comm <- validator(Sp = is.character(species),
 out <- confront(community, rules_comm)
 summary(out)
 
-### NEEDS FIXING!!!
 # find duplicate species
 rule <- validator(is_unique(turfID, species, year))
 out <- confront(community, rule)
 # showing 7 columns of output for readability
 summary(out)
 violating(community, out) |> View()
+
+# removing duplicates with different cover
+remove_duplicates = tribble(
+  ~year, ~turfID, ~species, ~cover,
+  2019, "89 WN6I 165", "Poa pratensis", 1,
+  2019, "92 WN6M 167", "Poa pratensis", 1,
+  2019, "95 WN6N 168", "Poa pratensis", 2,
+  2019, "96 AN6N 96", "Poa pratensis", 1,
+  2019, "101 AN5I 101", "Poa pratensis", 1,
+  2019, "106 WN3I 174", "Poa pratensis", 2,
+  2019, "109 AN3C 109", "Poa pratensis", 2,
+  2019, "117 AN10M 117", "Poa pratensis", 1,
+  2019, "121 AN7M 121", "Poa pratensis", 1,
+  2019, "124 AN7I 124", "Poa pratensis", 1,
+  2019, "127 AN7N 127", "Poa pratensis", 1,
+  2019, "132 WN4M 185", "Poa pratensis", 1,
+  2019, "134 WN4I 187", "Poa pratensis", 1,
+  2019, "135 WN4N 188", "Poa pratensis", 1,
+  2019, "138 WN8I 189", "Poa pratensis", 1,
+  2019, "141 WN8M 191", "Poa pratensis", 1,
+  2019, "152 AN9N 152", "Poa pratensis", 1,
+  2019, "8 WN1N 87", "Salix herbaceae", 1,
+  2021, "34 WN10I 114", "Carex atrata cf", 2,
+)
+
+community <- community |> 
+  tidylog::anti_join(remove_duplicates) |> 
+  mutate(`4` = case_when(year == 2019 & turfID == "89 WN6I 165" & species == "Poa pratensis" ~ "f",
+                         TRUE ~ `4`),
+         `19` = case_when(year == 2019 & turfID == "92 WN6M 167" & species == "Poa pratensis" ~ "1",
+                         TRUE ~ `19`),
+         `13` = case_when(year == 2019 & turfID == "95 WN6N 168" & species == "Poa pratensis" ~ "1",
+                         TRUE ~ `13`),
+         `2` = case_when(year == 2019 & turfID == "96 AN6N 96" & species == "Poa pratensis" ~ "1",
+                          TRUE ~ `2`),
+         `16` = case_when(year == 2019 & turfID == "101 AN5I 101" & species == "Poa pratensis" ~ "1",
+                          TRUE ~ `16`),
+         `1` = case_when(year == 2019 & turfID == "106 WN3I 174" & species == "Poa pratensis" ~ "1",
+                          TRUE ~ `1`),
+         `1` = case_when(year == 2019 & turfID == "109 AN3C 109" & species == "Poa pratensis" ~ "1",
+                          TRUE ~ `1`),
+         `2` = case_when(year == 2019 & turfID == "109 AN3C 109" & species == "Poa pratensis" ~ "f",
+                          TRUE ~ `2`),
+         `21` = case_when(year == 2019 & turfID == "121 AN7M 121" & species == "Poa pratensis" ~ "1",
+                          TRUE ~ `21`),
+         `13` = case_when(year == 2019 & turfID == "124 AN7I 124" & species == "Poa pratensis" ~ "f",
+                          TRUE ~ `13`),
+         `10` = case_when(year == 2019 & turfID == "127 AN7N 127" & species == "Poa pratensis" ~ "1",
+                          TRUE ~ `10`),
+         `20` = case_when(year == 2019 & turfID == "138 WN8I 189" & species == "Poa pratensis" ~ "1",
+                          TRUE ~ `20`),
+         `21` = case_when(year == 2019 & turfID == "138 WN8I 189" & species == "Poa pratensis" ~ "1",
+                          TRUE ~ `21`),
+         `10` = case_when(year == 2019 & turfID == "141 WN8M 191" & species == "Poa pratensis" ~ "1",
+                          TRUE ~ `10`),
+         `7` = case_when(year == 2019 & turfID == "152 AN9N 152" & species == "Poa pratensis" ~ "1",
+                          TRUE ~ `7`),
+         `8` = case_when(year == 2019 & turfID == "152 AN9N 152" & species == "Poa pratensis" ~ "1",
+                          TRUE ~ `8`),
+         `9` = case_when(year == 2019 & turfID == "152 AN9N 152" & species == "Poa pratensis" ~ "1",
+                          TRUE ~ `9`),
+         `4` = case_when(year == 2019 & turfID == "8 WN1N 87" & species == "Salix herbaceae" ~ "1",
+                          TRUE ~ `4`),
+         `5` = case_when(year == 2021 & turfID == "34 WN10I 114" & species == "Carex atrata cf" ~ "cf",
+                          TRUE ~ `5`),
+         ) |> 
+  # fix cover
+  mutate(cover = case_when(year == 2019 & turfID == "89 WN6I 165" & species == "Poa pratensis" ~ 13,
+                           year == 2019 & turfID == "92 WN6M 167" & species == "Poa pratensis" ~ 8,
+                           year == 2019 & turfID == "95 WN6N 168" & species == "Poa pratensis" ~ 5,
+                           year == 2019 & turfID == "96 AN6N 96" & species == "Poa pratensis" ~ 5,
+                           year == 2019 & turfID == "101 AN5I 101" & species == "Poa pratensis" ~ 4,
+                           year == 2019 & turfID == "106 WN3I 174" & species == "Poa pratensis" ~ 10,
+                           year == 2019 & turfID == "109 AN3C 109" & species == "Poa pratensis" ~ 5,
+                           year == 2019 & turfID == "117 AN10M 117" & species == "Poa pratensis" ~ 4,
+                           year == 2019 & turfID == "121 AN7M 121" & species == "Poa pratensis" ~ 5,
+                           year == 2019 & turfID == "124 AN7I 124" & species == "Poa pratensis" ~ 6,
+                           year == 2019 & turfID == "127 AN7N 127" & species == "Poa pratensis" ~ 9,
+                           year == 2019 & turfID == "132 WN4M 185" & species == "Poa pratensis" ~ 9,
+                           year == 2019 & turfID == "134 WN4I 187" & species == "Poa pratensis" ~ 5,
+                           year == 2019 & turfID == "135 WN4N 188" & species == "Poa pratensis" ~ 11,
+                           year == 2019 & turfID == "138 WN8I 189" & species == "Poa pratensis" ~ 5,
+                           year == 2019 & turfID == "141 WN8M 191" & species == "Poa pratensis" ~ 9,
+                           year == 2019 & turfID == "152 AN9N 152" & species == "Poa pratensis" ~ 17,
+                           year == 2019 & turfID == "8 WN1N 87" & species == "Salix herbaceae" ~ 6,
+                           year == 2021 & turfID == "34 WN10I 114" & species == "Carex atrata cf" ~ 6,
+                           TRUE ~ cover))
+
   
 #### COVER ####
 # Extract estimate of cover
@@ -422,14 +510,9 @@ CommunitySubplot <- community %>%
   # remove rows with subplot info (e.g. species that changed name)
   anti_join(remove_subplot, by = c("year", "turfID", "species", "subplot")) %>% 
   # remove species that have been replaced
-  tidylog::anti_join(remove_wrong_species, by = c("year", "turfID", "species"))
-
-
-### SOME DUPLICATES!!! NEED FIXING
-#CommunitySubplot <- CommunitySubplot |> tidylog::distinct()
-
-### NEED FIXING!!!
-### filter(presence %in% c("2", "3", "4", "7")) %>% as.data.frame()
+  tidylog::anti_join(remove_wrong_species, by = c("year", "turfID", "species")) |> 
+  # remove duplicates
+  tidylog::distinct()
 
 write_csv(CommunitySubplot, file = "data_cleaned/vegetation/THREE-D_CommunitySubplot_2019-2022.csv", col_names = TRUE)
 
