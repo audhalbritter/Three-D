@@ -9,6 +9,7 @@ library("writexl")
 library("dataDownloader")
 library(validate)
 library(usethis)
+library(dataDocumentation)
 
 
 # Stuff

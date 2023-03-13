@@ -3,11 +3,8 @@
 source("R/Load packages.R")
 source("R/Rgathering/DownloadCleanData.R")
 
-# data dictionary function
-source("R/Rgathering/make_data_dic.R")
-
 # get attribute table
-attribute_table <- read_csv(file = "data_cleaned/Three-D_data_dic.csv") %>%
+attribute_table <- read_csv(file = "data_cleaned/Three-D_description_table.csv") %>%
   mutate(TableID = as.character(TableID))
 
 #***********************************************************************************************
@@ -138,11 +135,11 @@ cflux_dic <- make_data_dictionary(data =  cflux,
 ### CLIMATE - TOMST
 
 # read in data
-climate <- read_csv("data_cleaned/climate/THREE-D_clean_microclimate_2019-2021.csv")
+microclimate <- read_csv("data_cleaned/climate/Three-D_clean_microclimate_2019-2022.csv")
 
-climate_dic <- make_data_dictionary(data =  climate,
-                                            description_table = attribute_table,
-                                            table_ID = NA_character_)
+microclimate_dic <- make_data_dictionary(data =  microclimate,
+                                         description_table = attribute_table,
+                                         table_ID = NA_character_)
 
 
 
@@ -161,6 +158,8 @@ climate_gridded_dic <- make_data_dictionary(data =  climate_gridded,
 
 #************************************************************************
 
+library(googlesheets4)
+
 ##merge all dics together to one xlsx, with each parameter as a single sheet
 
 # write_xlsx(list(site = site_dic,
@@ -177,3 +176,8 @@ climate_gridded_dic <- make_data_dictionary(data =  climate_gridded,
 #                 climate = climate_dic,
 #                 gridded_climate = climate_gridded_dic),
 #            path = "data_cleaned/data_dictionary.xlsx")
+
+
+ss <- gs4_create("Three-D_data_dictionary")
+sheet_write(data = microclimate_dic, ss = ss, sheet = "microclimate")
+

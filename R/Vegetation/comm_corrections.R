@@ -1,4 +1,4 @@
-### Community data corrections
+### Community data corrections (not about Carex!)
 # This script contains all changes that have been made to the community data (Cover and CommunitySubplot datasets)
 # The script is not merged with the code, it's just for documentation.
 
