@@ -204,7 +204,9 @@ microclimate <- microclimate %>%
                                   
                                   TRUE ~ as.numeric(soilmoisture)))
   
-
+# clean names
+microclimate <- microclimate |> 
+  rename(initiale_date_time = InitialDate_Time, end_date_time = EndDate_Time, remark = Remark)
 
 # Save clean file
 write_csv(x = microclimate, file = "data_cleaned/climate/THREE-D_clean_microclimate_2019-2022.csv")
@@ -217,7 +219,7 @@ write_csv(x = microclimate, file = "data_cleaned/climate/THREE-D_clean_microclim
 
 # Checking data
 dd <- microclimate %>% 
-  filter(destSiteID == "Vik")
+  filter(destSiteID == "Joa", warming == "A")
   #distinct(loggerID, turfID) |> print(n = Inf)
   #filter(!soilmoisture < 0)
   
