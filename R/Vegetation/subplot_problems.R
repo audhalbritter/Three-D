@@ -278,7 +278,7 @@ fix_species = tribble(
   2021, "25 AN3M 25", "Carex norvegica cf", "Carex bigelowii",
   2019, "25 AN3M 25", "Carex small bigelowii", "Carex norvegica cf",
   2020, "25 AN3M 25", "Carex sp", "Carex rupestris",
-  2022, "25 AN3M 25", "Carex dark green", "Carex atrata cf",
+  2020, "25 AN3M 25", "Carex dark green", "Carex atrata cf",
   2020, "27 AN3C 27", "Carex sp", "Carex rupestris",
   2019, "28 AN3I 28", "Carex wide", "Carex vaginata",
   2019, "28 AN3I 28", "Carex panicea cf", "Carex atrata cf",
@@ -310,6 +310,7 @@ fix_species = tribble(
   2019, "63 AN8N 63", "Carex norvegica cf", "Carex bigelowii",
   2019, "67 AN9M 67", "Carex saxatilis cf", "Carex vaginata",
   2019, "67 AN9M 67", "Carex norvegica cf", "Carex vaginata",
+  2019, "67 AN9M 67", "Carex thin", "Carex rupestris cf",
   2019, "68 AN9I 68", "Carex saxatilis cf", "Carex vaginata",
   2019, "70 AN9C 70", "Carex saxatilis cf", "Carex vaginata",
   2019, "72 AN9N 72", "Carex small bigelowii", "Carex bigelowii",
@@ -342,7 +343,7 @@ fix_species = tribble(
   2019, "21 WN5C 99", "Carex light green", "Carex vaginata",
   2019, "22 WN5M 102", "Carex small bigelowii", "Carex vaginata",
   2019, "26 WN3I 105", "Carex saxatilis cf", "Carex vaginata",
-  2019, "26 WN3I 105", "Carex dark green", "Carex sp",
+  2020, "26 WN3I 105", "Carex dark green", "Carex sp",
   2019, "29 WN3C 106", "Carex atrata cf", "Carex bigelowii",
   2019, "29 WN3C 106", "Carex saxatilis cf", "Carex vaginata",
   2019, "30 WN3M 107", "Carex atrata cf", "Carex bigelowii",
@@ -523,6 +524,7 @@ fix_cover = tribble(
   2019, "78 WN2I 158", "Carex bigelowii", 6,
   2019, "78 WN2I 158", "Carex capillaris", 3,
   2020, "78 WN2I 158", "Carex capillaris", 2,
+  2021, "80 WN2N 159", "Carex vaginata", 8,
   )
 
 
@@ -666,6 +668,7 @@ remove_wrong_species = tribble(
   2019, "75 AN2I 75", "Carex small bigelowii",
   2021, "75 AN2I 75", "Carex norvegica cf",
   2019, "79 AN2N 79", "Carex light green",
+  2021, "80 WN2N 159", "Carex saxatilis cf",
   
   2019, "3 WN1C 85", "Carex panicea cf",
   2020, "3 WN1C 85", "Carex sp",
@@ -818,6 +821,7 @@ add_subplot = tribble(
   2020, "74 WN2C 155", "Carex bigelowii", list(2, 11, 12, 15), "presence", 1, "vigdis",
   2019, "78 WN2I 158", "Carex capillaris", list(9), "presence", 1, "aud",
   2020, "78 WN2I 158", "Carex capillaris", list(20, 25), "presence", 1, "aud",
+  2021, "80 WN2N 159", "Carex vaginata", list(22), "presence", 1, "kari",
 
   
   ) %>% 
@@ -860,6 +864,6 @@ remove_subplot = tribble(
 # c("Luzula multiflora cf", "Luzula sp", "Luzula spicata cf")
 # c("Taraxacum sp.", "Leontodon autumnalis")
 # 
-cover %>% filter(turfID == "53 WN4C 133", grepl("Carex", species)) %>% as.data.frame()
+#cover %>% filter(turfID == "53 WN4C 133", grepl("Carex", species)) %>% as.data.frame()
 # community %>% filter(turfID == "73 WN2M 153", species %in% c("Luzula multiflora cf", "Luzula sp", "Luzula spicata cf")) %>% as.data.frame()
 #CommunitySubplot %>% filter(turfID == "66 WN9I 147", grepl("Luzula", species), variable == "fertile") |> as.data.frame()
