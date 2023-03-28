@@ -145,6 +145,8 @@ community <- metaComm %>%
                           "Cerastium cerastoies" = "Cerastium cerastoides",
                           "Cerstium cerasteoides" = "Cerastium cerastoides",
                           "Cerastium fontana" = "Cerastium fontanum",
+                          "Epilobium ana cf" = "Epilobium anagallidifolium cf",
+                          "Epilobium cf" = "Epilobium sp",
                           "Equiseum arvense" = "Equisetum arvense",
                           "Equisetum vaginatum" = "Equisetum variegatum",
                           "Galeopsis sp" = "Galeopsis tetrahit",
@@ -153,6 +155,7 @@ community <- metaComm %>%
                           "Gron or fjellkurle" = "Orchid sp",
                           "Hieraceum sp." = "Hieraceum sp",
                           "Hyperzia selago" = "Huperzia selago",
+                          "Juniper communis" = "Juniperus communis",
                           "Luzula multiflora" = "Luzula multiflora cf",
                           "Luzula spicata" = "Luzula spicata cf",
                           "Lycopodium sp" = "Lycopodium annotinum ssp alpestre cf",
@@ -165,7 +168,9 @@ community <- metaComm %>%
                           "Sagina saginoides" = "Sagina saginella",
                           "Snerote sp" = "Gentiana nivalis",
                           "Stellaria gramineae" = "Stellaria graminea",
-                          "Unknown euphrasia sp?" = "Euphrasia sp1",
+                          "Taraxacum sp." = "Taraxacum sp",
+                          "Unknown euphrasia sp?" = "Euphrasia sp",
+                          "unknown juvenile" = "Unknown juvenile",
                           "Vaccinium myrtilis" = "Vaccinium myrtillus",
                           "Veronica biflora" = "Viola biflora",
                           "Total Cover (%)" = "SumofCover")) %>% 
@@ -468,10 +473,32 @@ cover <- community %>%
   # add cover
   bind_rows(add_cover) %>% 
   # remove species that have been replaced
-  tidylog::anti_join(remove_wrong_species, by = c("year", "turfID", "species"))
+  tidylog::anti_join(remove_wrong_species, by = c("year", "turfID", "species")) |> 
+  # rename last carex
+  mutate(species = if_else(species == "Carex sp1", "Carex sp", species),
+         species = if_else(species == "Orchid sp", "Unknown orchid", species))
 
   
-write_csv(cover, file = "data_cleaned/vegetation/THREE-D_Cover_2019-2022.csv", col_names = TRUE)
+write_csv(cover, file = "data_cleaned/vegetation/Three-D_clean_cover_2019-2022.csv", col_names = TRUE)
+
+### make species list
+taxonomy <- read_csv("data/community/Three-D_Taxonomy_2019.csv") |> 
+  rename(species = Species, family = Family, functional_group = functionalGroup) |> 
+  separate(species, into = c("genus", "species"), sep = "\\s", extra = "merge") |> 
+  select(-species) |> 
+  distinct()
+
+species_list <- cover |> 
+  distinct(species) |> 
+  separate(species, into = c("genus", "species"), sep = "\\s", extra = "merge") |> 
+  left_join(taxonomy, by = "genus") |> 
+  mutate(functional_group = case_when(genus == "Unknown" & grepl("graminoid", species) ~ "graminoid",
+                                      genus == "Unknown" & grepl("herb", species) ~ "forb",
+                                      genus == "Unknown" & grepl("orchid", species) ~ "forb",
+                                      TRUE ~ functional_group))
+
+write_csv(species_list, file = "data_cleaned/vegetation/Three-D_clean_taxonomy.csv", col_names = TRUE)
+
 
 
 #### SUBPLOT PRECENSE ####
@@ -512,9 +539,12 @@ CommunitySubplot <- community %>%
   # remove species that have been replaced
   tidylog::anti_join(remove_wrong_species, by = c("year", "turfID", "species")) |> 
   # remove duplicates
-  tidylog::distinct()
+  tidylog::distinct() |> 
+  # rename last carex
+  mutate(species = if_else(species == "Carex sp1", "Carex sp", species),
+         species = if_else(species == "Orchid sp", "Unknown orchid", species))
 
-write_csv(CommunitySubplot, file = "data_cleaned/vegetation/THREE-D_CommunitySubplot_2019-2022.csv", col_names = TRUE)
+write_csv(CommunitySubplot, file = "data_cleaned/vegetation/Three-D_clean_community_subplot_2019-2022.csv", col_names = TRUE)
 
 
 
@@ -525,36 +555,56 @@ height <- community %>%
   select(-c(`5`:`25`)) %>% 
   pivot_longer(cols = `1`:`4`, names_to = "subplot", values_to = "height") %>% 
   mutate(height = as.numeric(height)) %>% 
-  group_by(turfID, year, species) %>% 
+  group_by(turfID, year, species, recorder) %>% 
   summarise(height = mean(height, na.rm = TRUE)) %>% 
-  rename("vegetation_layer" = "species")
+  rename("vegetation_layer" = "species") |> 
+  # add missing height (average from all years)
+  # all other NAs are real
+  mutate(height = case_when(turfID == "67 AN9M 67" & vegetation_layer == "Moss layer" & year == 2020 ~ 0.675,
+                            turfID == "67 AN9M 67" & vegetation_layer == "Vascular plant layer" & year == 2020 ~ 2.41,
+                            turfID == "152 AN9N 152" & vegetation_layer == "Moss layer" & year == 2020 ~ NA_real_,
+                            is.na(height) ~ NA_real_,
+                            TRUE ~ height))
 
-write_csv(height, file = "data_cleaned/vegetation/THREE-D_Height_2019_2020.csv", col_names = TRUE)
+write_csv(height, file = "data_cleaned/vegetation/Three-D_clean_height_2019_2020.csv", col_names = TRUE)
 
 
 # Cover from Functional Groups and Height
 CommunityStructure <- community %>% 
-  filter(species %in% c("SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop")) %>% 
+  filter(species %in% c("SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop", "Wool")) %>% 
   mutate(`24` = if_else(`24` == "Ratio > 1.5 is wrong", "0", `24`)) %>% 
   pivot_longer(cols = `1`:`25`, names_to = "subplot", values_to = "percentage") %>% 
-  
+  ungroup() |> 
   # make rows numeric
-  mutate(percentage = as.numeric(percentage)) %>% 
+  mutate(percentage = as.numeric(percentage),
+         percentage = case_when(is.na(percentage) ~ 0,
+                                percentage == 520 ~ 52,
+                                TRUE ~ percentage)) |> 
   # calculate mean cover per turf
-  group_by(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID, warming, grazing, Nlevel, date, year, species, cover) %>% 
+  group_by(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID, warming, grazing, Nlevel, date, year, species, cover, recorder) %>% 
   summarise(mean = mean(percentage)) %>% 
-  # fix whole plot vs. subplot cover estimate
-  # 2019 whole plot for sum of cover and vascular plant cover
-  # 2020 only sum of cover
-  mutate(cover = case_when(year == 2019 & !species %in% c("Vascular plants", "SumofCover") ~ mean,
-                           year == 2020 & !species %in% c("SumofCover") ~ mean)) %>% 
-  ungroup() %>% 
-  rename(functional_group = species) %>% 
-  select(-mean)
+  # In 2020 vascular plant cover was estimated per subplot, in the other years, only for the whole plot
+  # all years except 2020 whole plot for sum of cover and vascular plant cover
+  # 2020 no sum of cover, and subplot vascular plant cover
+  mutate(cover = case_when(year == 2020 & species == "Vascular plants" ~ mean,
+                           # sum of cover was not estimated for non controls in 2020
+                           year == 2020 & species == "SumofCover" & !Nlevel %in% c(1, 2, 3)  ~ NA_real_,
+                            species %in% c("SumofCover", "Vascular plants") ~ cover,
+                            !species %in% c("SumofCover", "Vascular plants") ~ mean)) |> 
+  # make NA if functional group is not there and then remove
+  mutate(cover = if_else(cover == 0 & species %in% c("Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop", "Wool"), NA_real_, cover)) |> 
+  filter(!is.na(cover)) |> 
+  ungroup()  |>  
+  select(date, year, origSiteID:Nlevel, functional_group = species, cover, recorder)
 
-write_csv(CommunityStructure, file = "data_cleaned/vegetation/THREE-D_CommunityStructure_2019_2021.csv", col_names = TRUE)
+write_csv(CommunityStructure, file = "data_cleaned/vegetation/Three-D_clean_community_structure_2019-2022.csv", col_names = TRUE)
 
 
+# CommunityStructure |> 
+#   filter(origSiteID == "Joa") |> 
+#   ggplot(aes(x = Nlevel, y = cover, fill = functional_group)) +
+#   geom_col() +
+#   facet_grid(grazing ~ warming)
 # 
 # community %>% 
 #   # summarize cover from species that have been merged
