@@ -21,9 +21,8 @@ grid <- make_grid(ncol = 5)
 
 x <- CommunitySubplot %>% 
   filter(variable == "presence",
-         # excluding carex for now!!!
-         ! grepl("Carex", species),
-         destSiteID == "Joa"
+         grepl("Carex", species),
+         turfID %in% c("67 AN9M 67"),
          ) %>%
   left_join(cover %>% select(year, turfID, species, cover)) %>% 
   mutate(subplot = as.numeric(subplot),
