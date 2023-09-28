@@ -61,6 +61,7 @@ vignettes/*.pdf
 *data/
 *data_cleaned/
 !data_cleaned/Three-D_description_table.csv
+!data/data/Three-D_Taxonomy_2019.csv
 
 # output files
 *.docx
