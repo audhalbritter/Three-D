@@ -35,7 +35,7 @@ climate_plan <- list(
                path = "data",
                remote_path = "RawData/Climate")
       
-      unzip(zipfile = "Three-D_raw_microclimate_2019-2022.zip", 
+      unzip(zipfile = "Three-D_raw_microclimate_2019-2022", 
             exdir = "data")
       
     },
@@ -52,7 +52,7 @@ climate_plan <- list(
   tar_target(
     name = climate_out,
     command = save_csv(climate_clean,
-                       name = "clean_microclimate_2019-2022_2019")
+                       name = "clean_microclimate_2019-2022")
   )
 
 )
