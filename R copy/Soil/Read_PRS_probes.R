@@ -32,7 +32,7 @@ prs_data <- metaTurfID %>%
   left_join(detection_limit, by = "elements") %>% 
   # remove values below detection limit
   filter(value > detection_limit) %>% 
-  left_join(NitrogenDictionary, by = "Nlevel") %>% 
+  #left_join(NitrogenDictionary, by = "Nlevel") %>% 
   select(origSiteID:turfID, Namount_kg_ha_y, burial_length, elements, value, detection_limit, burial_date, retrieval_date, Notes)
 
 write_csv(prs_data, file = "data_cleaned/soil/THREE-D_clean_nutrients_2021.csv")
