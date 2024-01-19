@@ -13,8 +13,8 @@ clean_biomass <- function(metaTurfID){
            !is.na(value)) %>% 
     # fill in missing date
     mutate(Date = as.character(Date),
-           Date = if_else(destSiteID == "Joa" & Cut == 4 & is.na(Date), "2020-09-09", Date),
-           Date = if_else(destSiteID == "Vik" & Cut == 4 & is.na(Date), "2020-09-10", Date),
+           Date = if_else(destSiteID == "Joasete" & Cut == 4 & is.na(Date), "2020-09-09", Date),
+           Date = if_else(destSiteID == "Vikesland" & Cut == 4 & is.na(Date), "2020-09-10", Date),
            Date = ymd(Date),
            year = year(Date),
            area = 2500) |> 

@@ -50,7 +50,8 @@ meta_plan <- list(
   # meta turfID
   tar_target(
     name = metaTurfID,
-    command = create_threed_meta_data()
+    command = create_threed_meta_data() |> 
+      distinct()
   )
   
   
