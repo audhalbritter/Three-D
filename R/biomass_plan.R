@@ -39,7 +39,7 @@ biomass_plan <- list(
   # save data
   tar_target(
     name = biomass_out,
-    command =  save_csv(climate_clean,
+    command = save_csv(biomass_clean,
                         name = "clean_biomass_2020-2022")
   )
   
