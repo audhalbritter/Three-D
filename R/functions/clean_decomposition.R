@@ -10,7 +10,7 @@ clean_decomposition <- function(decomp_raw, decom_meta_raw, metaTurfID){
     mutate(fall_burialdate = ymd(fall_burialdate),
            fall_recoverdate = ymd(fall_recoverdate),
            spring_burialdate = ymd(spring_burialdate),
-           destSiteID = recode(destSiteID, JOA = "Joa", VIK = "Vik", LIA = "Lia")) %>% 
+           destSiteID = recode(destSiteID, JOA = "Joasete", VIK = "Vikesland", LIA = "Liahovden")) %>% 
     pivot_longer(cols = c(fall_ID, spring_ID, fall_burialdate, fall_recoverdate, spring_burialdate), 
                  names_to = c("timing", ".value"), 
                  names_pattern = "(.*)_(.*)") %>% 
