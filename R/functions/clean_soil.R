@@ -22,7 +22,12 @@ clean_soil <- function(soil_raw){
            soil_organic_matter = (dry_weight_105_g - weight_550_g) / dry_weight_105_g,
            carbon_content = (weight_550_g - weight_950_g) / dry_weight_105_g) |> 
     mutate(destBlockID = as.numeric(destBlockID)) |> 
-    select(year, date, destSiteID, destBlockID, layer, sand_percent, silt_percent, clay_percent, pH, bulk_density_g_cm, soil_organic_matter, carbon_content, pore_water_content)
+    select(year, date, destSiteID, destBlockID, layer, sand_percent, silt_percent, clay_percent, pH, bulk_density_g_cm, soil_organic_matter, carbon_content, pore_water_content) |> 
+    # change site names
+    mutate(destSiteID = case_when(destSiteID == "Joa" ~ "Joasete",
+                                  destSiteID == "Lia" ~ "Liahovden",
+                                  destSiteID == "Vik" ~ "Vikesland",
+                                  TRUE ~ destSiteID))
   
 }
 
@@ -42,13 +47,20 @@ clean_soil_nutrients <- function(cn19_20_raw, cn22_raw, cn22_meta_raw, metaTurfI
            C_factor = `C factor`,
            date = Date) %>% 
     mutate(CN_ratio = C_percent / N_percent) |> 
-    select(year, destSiteID, destBlockID, sample_ID, layer, N_percent, C_percent, CN_ratio)
+    select(year, destSiteID, destBlockID, sample_ID, layer, N_percent, C_percent, CN_ratio) |> 
+    # change site names
+    mutate(destSiteID = case_when(destSiteID == "Joa" ~ "Joasete",
+                                  destSiteID == "Lia" ~ "Liahovden",
+                                  destSiteID == "Vik" ~ "Vikesland",
+                                  TRUE ~ destSiteID))
   
   
   cn19 <- cn19_20 |> 
     filter(year == 2019) |> 
     mutate(destBlockID = as.numeric(destBlockID)) |> 
-    left_join(metaTurfID) |> 
+    left_join(metaTurfID |> 
+                distinct(destSiteID, destBlockID, Nlevel, Namount_kg_ha_y), 
+              by = c("destSiteID", "destBlockID")) |> 
     select(year, destSiteID, destBlockID, Nlevel, Namount_kg_ha_y, sample_ID, N_percent:CN_ratio) |> 
     mutate(destBlockID = as.character(destBlockID))
   
@@ -67,8 +79,14 @@ clean_soil_nutrients <- function(cn19_20_raw, cn22_raw, cn22_meta_raw, metaTurfI
               by = c("Eppendorf_ID" = "Name")) |> 
     select(sample_ID = Eppendorf_ID, destSiteID = Site, destBlockID = Block, turfID, N_percent = `N%`, C_percent = `C%`, CN_ratio = `C/N ratio`) |> 
     mutate(destBlockID = as.numeric(str_remove(destBlockID, "B"))) |> 
+    # change site names
+    mutate(destSiteID = case_when(destSiteID == "Joa" ~ "Joasete",
+                                  destSiteID == "Lia" ~ "Liahovden",
+                                  destSiteID == "Vik" ~ "Vikesland",
+                                  TRUE ~ destSiteID)) |> 
     left_join(metaTurfID, by = c("destSiteID", "destBlockID", "turfID")) |> 
-    mutate(destBlockID = as.character(destBlockID))
+    mutate(destBlockID = as.character(destBlockID),
+           year = 2022)
   
   cn <- bind_rows(cn19, cn20, cn22) |> 
     pivot_longer(cols = c(N_percent, C_percent, CN_ratio),
@@ -88,7 +106,12 @@ clean_soil_nutrients <- function(cn19_20_raw, cn22_raw, cn22_meta_raw, metaTurfI
   
   # sample IDs and meta data
   meta <- prs_meta_raw %>% 
-    filter(turfID != "blank")
+    filter(turfID != "blank") |> 
+    # change site names
+    mutate(destSiteID = case_when(destSiteID == "Joa" ~ "Joasete",
+                                  destSiteID == "Lia" ~ "Liahovden",
+                                  destSiteID == "Vik" ~ "Vikesland",
+                                  TRUE ~ destSiteID))
   
   prs_data <- metaTurfID %>% 
     inner_join(meta, by = c("destSiteID", "destBlockID", "turfID")) %>% 

@@ -15,6 +15,10 @@ clean_roots <- function(root_productivity_raw, root_traits_raw, metaTurfID){
            volum_m3 = as.numeric(volum_m3),
            rotvekt_for_g = as.numeric(rotvekt_for_g),
            rotvekt_etter_g = as.numeric(rotvekt_etter_g)) |> 
+    mutate(destSiteID = case_when(destSiteID == "Joa" ~ "Joasete",
+                                  destSiteID == "Lia" ~ "Liahovden",
+                                  destSiteID == "Vik" ~ "Vikesland",
+                                  TRUE ~ destSiteID)) |> 
     left_join(metaTurfID, by = c("destSiteID", "destBlockID", "origPlotID")) |> 
     rename(root_biomass_wet_g = rotvekt_for_g,
            root_biomass_dry_g = rotvekt_etter_g,
@@ -39,7 +43,11 @@ clean_roots <- function(root_productivity_raw, root_traits_raw, metaTurfID){
            avg_diam_mm = as.numeric(avg_diam_mm)) |> 
     mutate(soil_vol_m3 = case_when(origPlotID == 45 ~ 0.000093,
                                    origPlotID == 28 ~ 0.000101,
-                                   TRUE ~ soil_vol_m3))
+                                   TRUE ~ soil_vol_m3)) |> 
+    mutate(destSiteID = case_when(destSiteID == "Joa" ~ "Joasete",
+                                  destSiteID == "Lia" ~ "Liahovden",
+                                  destSiteID == "Vik" ~ "Vikesland",
+                                  TRUE ~ destSiteID))
   
   
   roots_clean <- clean_root_trait |> 
