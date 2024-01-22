@@ -2,9 +2,19 @@
 
 root_plan <- list(
   
-  # download data
+  # download data 2021
   tar_target(
-    name = root_productivity_download,
+    name = root_productivity21_download,
+    command = get_file(node = "pk4bg",
+                       file = "ThreeD_rootingrowthcores_2021.xlsx",
+                       path = "data",
+                       remote_path = "RawData/Vegetation"),
+    format = "file"
+  ),
+  
+  # download data 2022
+  tar_target(
+    name = root_productivity22_download,
     command = get_file(node = "pk4bg",
                        file = "Three-D_raw_root_productivity_2022.xlsx",
                        path = "data",
@@ -23,8 +33,13 @@ root_plan <- list(
   
   # import data
   tar_target(
-    name = root_productivity_raw,
-    command = read_excel(root_productivity_download, skip = 1)
+    name = root_productivity21_raw,
+    command = read_excel(root_productivity21_download)
+  ),
+  
+  tar_target(
+    name = root_productivity22_raw,
+    command = read_excel(root_productivity22_download, skip = 1)
   ),
   
   tar_target(
@@ -35,7 +50,7 @@ root_plan <- list(
   # clean data
   tar_target(
     name = roots_clean,
-    command = clean_roots(root_productivity_raw, root_traits_raw, metaTurfID)
+    command = clean_roots(root_productivity21_raw, decom_meta_raw, root_productivity22_raw, root_traits_raw, metaTurfID)
   )
   
   
