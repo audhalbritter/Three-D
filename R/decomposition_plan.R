@@ -32,14 +32,13 @@ decomposition_plan <- list(
   tar_target(
     name = tbi_index,
     command = calc_TBI_index(decomp_clean)
+  ),
+  
+  # save data
+  tar_target(
+    name = decomposition_out,
+    command = save_csv(decomp_clean,
+                       name = "decomposition_2021-2022")
   )
-  
-  # # save data
-  # tar_target(
-  #   name = reflectance_out,
-  #   command = save_csv(decomp_clean,
-  #                      name = "decomposition_fall_2021")
-  # )
-  
   
 )

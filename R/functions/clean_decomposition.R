@@ -6,12 +6,13 @@ clean_decomposition <- function(decomp_raw, decom_meta_raw, metaTurfID){
   string_and_label <- mean(c(0.09177, 0.10385, 0.11177, 0.09002, 0.07527))
   
   meta <- decom_meta_raw %>% 
-    select(destSiteID = site, destBlockID = blockID, turfID = plotID, fall_ID = tb.ID.fall21, fall_burialdate = tb.fall21.dateburied, fall_recoverdate = tb.fall21.dateretrieved, spring_ID = tb.ID.spring22, spring_burialdate = tb.spring22.dateburied, comment) %>% 
+    select(destSiteID = site, destBlockID = blockID, turfID = plotID, fall_ID = tb.ID.fall21, fall_burialdate = tb.fall21.dateburied, fall_recoverdate = tb.fall21.dateretrieved, spring_ID = tb.ID.spring22, spring_burialdate = tb.spring22.dateburied, spring_recoverdate = tb.spring22.dateretrieved, comment) %>% 
     mutate(fall_burialdate = ymd(fall_burialdate),
            fall_recoverdate = ymd(fall_recoverdate),
            spring_burialdate = ymd(spring_burialdate),
+           spring_recoverdate = ymd(spring_recoverdate),
            destSiteID = recode(destSiteID, JOA = "Joasete", VIK = "Vikesland", LIA = "Liahovden")) %>% 
-    pivot_longer(cols = c(fall_ID, spring_ID, fall_burialdate, fall_recoverdate, spring_burialdate), 
+    pivot_longer(cols = c(fall_ID, spring_ID, fall_burialdate, fall_recoverdate, spring_burialdate, spring_recoverdate), 
                  names_to = c("timing", ".value"), 
                  names_pattern = "(.*)_(.*)") %>% 
     select(destSiteID:turfID, teabag_ID = ID, timing, burial_date = burialdate, recover_date = recoverdate)
