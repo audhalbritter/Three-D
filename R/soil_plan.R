@@ -24,10 +24,11 @@ soil_plan <- list(
     command = clean_soil(soil_raw)
   ),
   
-  # save data
+  # save data (remove som, will be added to soil nutrient data)
   tar_target(
     name = soil_out,
-    command = save_csv(soil_clean,
+    command = save_csv(soil_clean |> 
+                         filter(!variable %in% c("soil_organic_matter", "carbon_content")),
                        name = "clean_soil_characteristics_2019-2020")
   ),
   
@@ -36,6 +37,15 @@ soil_plan <- list(
     name = cn19_20_download,
     command = get_file(node = "pk4bg",
                        file = "ThreeD_2019_2020_CN_resultater.xlsx",
+                       path = "data",
+                       remote_path = "RawData/Soil"),
+    format = "file"
+  ),
+  
+  tar_target(
+    name = som21_download,
+    command = get_file(node = "pk4bg",
+                       file = "ThreeD_soilcores_2021.csv",
                        path = "data",
                        remote_path = "RawData/Soil"),
     format = "file"
@@ -63,6 +73,11 @@ soil_plan <- list(
   tar_target(
     name = cn19_20_raw,
     command = read_excel(cn19_20_download)
+  ),
+  
+  tar_target(
+    name = som21_raw,
+    command = read_csv2(som21_download)
   ),
   
   tar_target(
@@ -107,7 +122,7 @@ soil_plan <- list(
   # clean soil nutrients
   tar_target(
     name = cn_clean,
-    command = clean_soil_nutrients(cn19_20_raw, cn22_raw, cn22_meta_raw, metaTurfID, prs_raw, prs_meta_raw)
+    command = clean_soil_nutrients(cn19_20_raw, cn22_raw, cn22_meta_raw, metaTurfID, som21_raw, soil_clean, prs_raw, prs_meta_raw)
   ),
   
   # save data
