@@ -8,7 +8,13 @@ clean_productivity <- function(productivity_raw){
            biomass = if_else(area_cm == 625, biomass*625/900, biomass)) |> 
     rename(productivity = biomass) |> 
     mutate(duration = date_out - date_in) |> 
-    select(date_in, date_out, duration, siteID:productivity, remark)
+    rename(destSiteID = siteID) |> 
+    # change site names
+    mutate(destSiteID = case_when(destSiteID == "Joa" ~ "Joasete",
+                                  destSiteID == "Lia" ~ "Liahovden",
+                                  destSiteID == "Vik" ~ "Vikesland",
+                                  TRUE ~ destSiteID)) |> 
+    select(date_in, date_out, duration, destSiteID:plot_nr, area_cm2 = area_cm, productivity, remark)
   
 }
 
