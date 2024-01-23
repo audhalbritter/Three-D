@@ -1,24 +1,30 @@
 # clean biomass data
 
-clean_biomass <- function(metaTurfID){
+clean_biomass <- function(metaTurfID, biomass20_download, biomass21_download, biomass22_download){
   
   NitrogenDictionary <- metaTurfID |> 
     distinct(Nlevel, Namount_kg_ha_y)
   
   # 2020 data
-  biomass20 <- read_excel(path = "data/Three-D_raw_Biomass_2020_March_2021.xlsx", 
+  biomass20 <- read_excel(path = biomass20_download, 
                           col_types = c("text", "numeric", "numeric", "text", "text", "numeric", "text", "numeric", "date", rep("numeric", 6), "text", rep("numeric", 4))) %>% 
     pivot_longer(cols = c(Graminoids_g:Litter_g, Lichen_g:Fungi_g), names_to = "fun_group", values_to = "value") %>% 
     filter(grazing %in% c("M", "I"),
            !is.na(value)) %>% 
     # fill in missing date
     mutate(Date = as.character(Date),
-           Date = if_else(destSiteID == "Joasete" & Cut == 4 & is.na(Date), "2020-09-09", Date),
-           Date = if_else(destSiteID == "Vikesland" & Cut == 4 & is.na(Date), "2020-09-10", Date),
+           Date = if_else(destSiteID == "Joa" & Cut == 4 & is.na(Date), "2020-09-09", Date),
+           Date = if_else(destSiteID == "Vik" & Cut == 4 & is.na(Date), "2020-09-10", Date),
            Date = ymd(Date),
            year = year(Date),
+           year = if_else(year == 2010, 2020, year),
            area = 2500) |> 
     rename(date = Date, cut = Cut, remark = Remark) |> 
+    # change site names
+    mutate(destSiteID = case_when(destSiteID == "Joa" ~ "Joasete",
+                                  destSiteID == "Lia" ~ "Liahovden",
+                                  destSiteID == "Vik" ~ "Vikesland",
+                                  TRUE ~ destSiteID)) |>
     # add metadata
     left_join(metaTurfID, by = c("destSiteID", "destBlockID", "destPlotID", "turfID",     
                                  "warming", "Nlevel", "grazing"))
@@ -26,7 +32,7 @@ clean_biomass <- function(metaTurfID){
   
   
   # 2021 data
-  biomass21_raw <- read_excel(path = "data/Three-D_raw_Biomass_2021_12_09.xlsx",
+  biomass21_raw <- read_excel(path = biomass21_download,
                               col_types = c("text", "numeric", "text", "text", "numeric", "numeric", "text", "numeric", "numeric", "text", "numeric", "date", rep("numeric", 9), "text",  "text", rep("numeric", 6))) %>% 
     pivot_longer(cols = c(Graminoids_g:Fungi_g), names_to = "fun_group", values_to = "value") %>% 
     filter(!is.na(value)) %>% 
@@ -52,33 +58,39 @@ clean_biomass <- function(metaTurfID){
     left_join(NitrogenDictionary, by = "Nlevel")
   
   
+  # remove biomass from control and natural grazing in 2021.
+  # control plots only one corner was cut and does not represent whole plot (tested with M and I plots)
+  # natural grazed plots only show how much biomass was left after grazing. but since there are no control plots, data is not very useful.
+  biomass21 <- biomass21 |> 
+    filter(!(year == 2021 & grazing %in% c("C", "N")))
+  
   
   ### Check area scaling is correct
   # Scaling of the plot biomass just from the corner is not great!!!
   # I only get 54% of the biomass!!!
-  # biomass21 |> 
+  # biomass21 |>
   #   mutate(corner = if_else(is.na(top), "all", "corner")) |>
-  #   select(origSiteID, turfID, corner, fun_group, area, value, remark) |> 
-  #   group_by(origSiteID, turfID, corner, area) |> 
-  #   summarise(biomass = sum(value)) |> 
-  #   ungroup() |> 
-  #   group_by(turfID) |> 
-  #   mutate(n = n()) |> 
+  #   select(origSiteID, turfID, corner, fun_group, area, value, remark) |>
+  #   group_by(origSiteID, turfID, corner, area) |>
+  #   summarise(biomass = sum(value)) |>
+  #   ungroup() |>
+  #   group_by(turfID) |>
+  #   mutate(n = n()) |>
   #   filter(n > 1,
-  #          !turfID %in% c("107 WN3M 175", "73 WN2M 153")) |> 
+  #          !turfID %in% c("107 WN3M 175", "73 WN2M 153")) |>
   #   # calculate total biomass for larger plot
-  #   mutate(biomass = if_else(corner == "all", sum(biomass), biomass)) |> 
+  #   mutate(biomass = if_else(corner == "all", sum(biomass), biomass)) |>
   #   # calculate area in m2 and scale biomass to m2
   #   mutate(area_m2 = area / 10000,
-  #          biomass_scaled = biomass / area_m2) |> 
-  #   select(-area, -area_m2, -biomass, -n) |> 
-  #   pivot_wider(names_from = corner, values_from = biomass_scaled) |> 
+  #          biomass_scaled = biomass / area_m2) |>
+  #   select(-area, -area_m2, -biomass, -n) |>
+  #   pivot_wider(names_from = corner, values_from = biomass_scaled) |>
   #   mutate(p = corner / all * 100)
   
   
   # 2022 data
   # Cut 1 Lia is missing due to late snowmelt
-  biomass22 <- read_csv(file = "data/Three-D_raw_Biomass_2022-09-27.csv") |> 
+  biomass22 <- read_csv(file = biomass22_download) |> 
     mutate(Date = case_when(Date == "15-16.08.2022" ~ "15.08.2022",
                             Date == "x" ~ "15.08.2022",
                             TRUE ~ as.character(Date)),
@@ -106,6 +118,14 @@ clean_biomass <- function(metaTurfID){
     mutate(fun_group = tolower(fun_group),
            fun_group = str_remove(fun_group, "_g"),
            unit = "g") %>% 
+    # change site names
+    mutate(origSiteID = case_when(origSiteID == "Joa" ~ "Joasete",
+                                  origSiteID == "Lia" ~ "Liahovden",
+                                  TRUE ~ origSiteID),
+           destSiteID = case_when(destSiteID == "Joa" ~ "Joasete",
+                                  destSiteID == "Lia" ~ "Liahovden",
+                                  destSiteID == "Vik" ~ "Vikesland",
+                                  TRUE ~ destSiteID)) |> 
     select(origSiteID, origBlockID, origPlotID, turfID, destSiteID, destBlockID, destPlotID, warming, Nlevel, Namount_kg_ha_y, grazing, cut, year, date, fun_group, biomass = value, unit, area_cm2 = area, collector, remark)
   
 }

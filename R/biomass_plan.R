@@ -33,7 +33,7 @@ biomass_plan <- list(
   # import and clean data
   tar_target(
     name = biomass_clean,
-    command = clean_biomass(metaTurfID)
+    command = clean_biomass(metaTurfID, biomass20_download, biomass21_download, biomass22_download)
   ),
   
   # save data
