@@ -10,6 +10,7 @@ library("dataDownloader")
 library(validate)
 library(usethis)
 library(dataDocumentation)
+library(janitor)
 
 
 # Stuff
