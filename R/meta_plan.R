@@ -44,7 +44,7 @@ meta_plan <- list(
   tar_target(
     name = plot_out,
     command = save_csv(plot_clean, 
-                       name = "soil_depth_2019")
+                       name = "slope_aspect_soil_depth_2019")
   ),
   
   # meta turfID
