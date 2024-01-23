@@ -6,6 +6,14 @@ clean_plot <- function(plot_raw, metaTurfID){
   plot_clean <- plot_raw %>% 
     # remove rows with data after transplant, duplicate
     filter(remark != "after transplant" | is.na(remark)) %>% 
+    # change site names
+    mutate(origSiteID = case_when(origSiteID == "Joa" ~ "Joasete",
+                                  origSiteID == "Lia" ~ "Liahovden",
+                                  TRUE ~ origSiteID),
+           destSiteID = case_when(destSiteID == "Joa" ~ "Joasete",
+                                  destSiteID == "Lia" ~ "Liahovden",
+                                  destSiteID == "Vik" ~ "Vikesland",
+                                  TRUE ~ destSiteID)) |> 
     left_join(metaTurfID, by = c("origSiteID", "origBlockID", "origPlotID", "destSiteID", "destPlotID", "destBlockID", "turfID")) %>% 
     # calculate mean soil depth
     mutate(soil_depth_cm = (soil_depth1 + soil_depth2 + soil_depth3 + soil_depth4) / 4,
