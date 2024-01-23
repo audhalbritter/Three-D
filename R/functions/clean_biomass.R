@@ -126,6 +126,6 @@ clean_biomass <- function(metaTurfID, biomass20_download, biomass21_download, bi
                                   destSiteID == "Lia" ~ "Liahovden",
                                   destSiteID == "Vik" ~ "Vikesland",
                                   TRUE ~ destSiteID)) |> 
-    select(origSiteID, origBlockID, origPlotID, turfID, destSiteID, destBlockID, destPlotID, warming, Nlevel, Namount_kg_ha_y, grazing, cut, year, date, fun_group, biomass = value, unit, area_cm2 = area, collector, remark)
+    select(year, date, origSiteID, origBlockID, origPlotID, turfID, destSiteID, destBlockID, destPlotID, warming, Nlevel, Namount_kg_ha_y, grazing, cut, fun_group, biomass = value, unit, area_cm2 = area, collector, remark)
   
 }
