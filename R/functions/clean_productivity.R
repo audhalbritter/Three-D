@@ -6,7 +6,8 @@ clean_productivity <- function(productivity_raw){
     # scale biomass that was cut on smaller square
     mutate(area_cm = if_else(area_cm == 625, 900, area_cm),
            biomass = if_else(area_cm == 625, biomass*625/900, biomass)) |> 
-    rename(productivity = biomass) |> 
+    # biomass per cm2
+    mutate(productivity = biomass/area_cm) |> 
     mutate(duration = date_out - date_in) |> 
     rename(destSiteID = siteID) |> 
     # change site names
