@@ -80,7 +80,7 @@ calc_TBI_index <- function(decomp_clean){
            S = 1 - (fraction_decomposed_green / Hydrolysable_fraction_green),
            predicted_labile_fraction_red = Hydrolysable_fraction_red * (1 - S),
            k = log(predicted_labile_fraction_red / (fraction_remaining_red - (1 - predicted_labile_fraction_red))) / incubation_time) |> 
-    select(year:Namount_kg_ha_y, teabag_ID, timing, incubation_time, k, S, burial_date, recover_date, comment_2_red, comment_2_green) |> 
+    select(year:Namount_kg_ha_y, teabag_ID, timing, incubation_time, k, S, burial_date, recover_date, fraction_remaining_green, fraction_remaining_red, comment_2_red, comment_2_green) |> 
     mutate(flag = if_else(grepl("big hole", comment_2_green)|grepl("big hole", comment_2_red), "hole in teabags", NA_character_)) |> 
     select(-comment_2_green, -comment_2_red)
   
