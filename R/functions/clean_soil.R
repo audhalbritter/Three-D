@@ -12,9 +12,9 @@ clean_soil <- function(soil_raw){
     # calculate soil core volume, stone volume and bulk density
     mutate(core_volume = height_soil_core_cm * (soil_core_diameter/2)^2 * pi,
            stone_volume = stone_weight_g * stone_density,
-           bulk_density_g_cm = (dry_weight_soil_g - stone_weight_g) / (core_volume - stone_volume),
+           bulk_density_g_cm = (dry_weight_soil_g - stone_weight_g) / (core_volume - stone_volume)) |> 
            # remove unrealistic samples with very high stone weight
-           bulk_density_g_cm = if_else(bulk_density_g_cm > 1.8 | bulk_density_g_cm < 0, NA_real_, bulk_density_g_cm)) %>% 
+    mutate(bulk_density_g_cm = if_else(bulk_density_g_cm > 1.8 | bulk_density_g_cm < 0, NA_real_, bulk_density_g_cm)) %>% 
     # calculate soil organic matter
     mutate(pore_water_content = (wet_weight_soil_g - dry_weight_soil_g) / wet_weight_soil_g,
            weight_550_g = dry_weight_550_plus_vial_g - vial_weight_g,
@@ -166,12 +166,12 @@ clean_soil_nutrients <- function(cn19_20_raw, cn22_raw, cn22_meta_raw, metaTurfI
     select(origSiteID:turfID, Namount_kg_ha_y, burial_date = `Burial Date`, retrieval_date = `Retrieval Date`, `NO3-N`:Cd, Notes) %>% 
     mutate(burial_date = ymd(burial_date),
            retrieval_date = ymd(retrieval_date),
-           burial_length = retrieval_date - burial_date) %>% 
+           duration = retrieval_date - burial_date) %>% 
     pivot_longer(cols = `NO3-N`:Cd, names_to = "variable", values_to = "value") %>% 
     left_join(detection_limit, by = "variable") %>% 
     # remove values below detection limit
     filter(value > detection_limit) %>% 
-    select(origSiteID:turfID, Namount_kg_ha_y, burial_length, variable, value, detection_limit, burial_date, retrieval_date, Notes) |> 
+    select(origSiteID:turfID, Namount_kg_ha_y, duration, variable, value, detection_limit, burial_date, retrieval_date, Notes) |> 
     mutate(destBlockID = as.character(destBlockID))
   
   nutrient_data <- bind_rows(cn, som, prs_data)
