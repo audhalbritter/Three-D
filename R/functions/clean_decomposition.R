@@ -56,8 +56,10 @@ clean_decomposition <- function(decomp_raw, decom_meta_raw, metaTurfID){
     inner_join(decomposition, by = c("teabag_ID")) %>% 
     # remove 29 tea bag without post burial weight
     tidylog::filter(!is.na(post_burial_weight_g)) %>% 
-    mutate(incubation_time = as.numeric(recover_date - burial_date)) |>
-    select(origSiteID:Namount_kg_ha_y, teabag_ID, timing, tea_type, incubation_time, burial_depth_cm = tb_depth_cm, burial_date, preburial_weight_g, recover_date, post_burial_weight_g, comment_2)
+    mutate(incubation_time = as.numeric(recover_date - burial_date),
+           year = year(recover_date),
+           timing = recode(timing, "fall" = "growing season", "spring" = "year")) |>
+    select(year, origSiteID:Namount_kg_ha_y, teabag_ID, timing, tea_type, incubation_time, burial_depth_cm = tb_depth_cm, burial_date, preburial_weight_g, recover_date, post_burial_weight_g, comment_2)
   
 }
 
@@ -77,7 +79,10 @@ calc_TBI_index <- function(decomp_clean){
            fraction_remaining_red = post_burial_weight_g_red/preburial_weight_g_red,
            S = 1 - (fraction_decomposed_green / Hydrolysable_fraction_green),
            predicted_labile_fraction_red = Hydrolysable_fraction_red * (1 - S),
-           k = log(predicted_labile_fraction_red / (fraction_remaining_red - (1 - predicted_labile_fraction_red))) / incubation_time)
+           k = log(predicted_labile_fraction_red / (fraction_remaining_red - (1 - predicted_labile_fraction_red))) / incubation_time) |> 
+    select(year:Namount_kg_ha_y, teabag_ID, timing, incubation_time, k, S, burial_date, recover_date, comment_2_red, comment_2_green) |> 
+    mutate(flag = if_else(grepl("big hole", comment_2_green)|grepl("big hole", comment_2_red), "hole in teabags", NA_character_)) |> 
+    select(-comment_2_green, -comment_2_red)
   
 }
 
