@@ -172,7 +172,8 @@ clean_soil_nutrients <- function(cn19_20_raw, cn22_raw, cn22_meta_raw, metaTurfI
     # remove values below detection limit
     filter(value > detection_limit) %>% 
     select(origSiteID:turfID, Namount_kg_ha_y, duration, variable, value, detection_limit, burial_date, retrieval_date, Notes) |> 
-    mutate(destBlockID = as.character(destBlockID))
+    mutate(destBlockID = as.character(destBlockID),
+           year = 2021)
   
   nutrient_data <- bind_rows(cn, som, prs_data)
   
