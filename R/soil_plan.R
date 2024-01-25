@@ -24,11 +24,16 @@ soil_plan <- list(
     command = clean_soil(soil_raw)
   ),
   
+  tar_target(
+    name = soil_character,
+    command = soil_clean |> 
+      filter(!variable %in% c("soil_organic_matter", "carbon_content"))
+  ),
+  
   # save data (remove som, will be added to soil nutrient data)
   tar_target(
     name = soil_out,
-    command = save_csv(soil_clean |> 
-                         filter(!variable %in% c("soil_organic_matter", "carbon_content")),
+    command = save_csv(soil_character,
                        name = "clean_soil_characteristics_2019-2020")
   ),
   
