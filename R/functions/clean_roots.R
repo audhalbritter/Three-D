@@ -93,7 +93,7 @@ clean_roots <- function(root_productivity21_raw, decom_meta_raw, root_productivi
            year = 2022) |> 
     pivot_longer(cols = c(root_productivity_g_cm3_d, root_biomass_g_cm3, specific_root_length, root_tissue_density, root_dry_matter_content),
                           names_to = "variable", values_to = "value") |> 
-             select(year, origSiteID, origBlockID, origPlotID, destSiteID, destBlockID, destPlotID, turfID, warming:Nlevel, Namount_kg_ha_y, sampleID = prove_id, variable, value) |>
+             select(year, origSiteID, origBlockID, origPlotID, destSiteID, destBlockID, destPlotID, turfID, warming:Nlevel, Namount_kg_ha_y, sampleID = prove_id, days_buried, variable, value) |> 
     bind_rows(clean_root_biomass21)
   
 }
