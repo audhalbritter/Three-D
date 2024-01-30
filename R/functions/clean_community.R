@@ -1,90 +1,5 @@
 # clean community
 
-
-import_community <- function(metaTurfID){
-  
-  #### COMMUNITY DATA ####
-  ### Read in files
-  files <- dir(path = "data/community", pattern = "\\.xlsx$", full.names = TRUE, recursive = TRUE)
-  
-  #Function to read in meta data
-  metaComm_raw <- map_df(set_names(files), function(file) {
-    print(file)
-    file %>% 
-      excel_sheets() %>% 
-      set_names() %>% 
-      # exclude sheet to check data and taxonomy file
-      discard(. %in% c("CHECK", "taxonomy")) %>% 
-      map_df(~ read_xlsx(path = file, sheet = .x, n_max = 1, col_types = c("text", rep("text", 29))), .id = "sheet_name")
-  }, .id = "file")
-  
-  # need to break the workflow here, otherwise tedious to find problems
-  metaComm <- metaComm_raw %>% 
-    select(sheet_name, Date, origSiteID, origBlockID, origPlotID, turfID, destSiteID, destBlockID, destPlotID, Recorder, Scribe) %>% 
-    # fix wrong dates
-    mutate(Date = case_when(Date == "44025" ~ "13.7.2020",
-                            Date == "44046" ~ "3.8.2020",
-                            Date == "44047" ~ "5.8.2020",
-                            Date == "44048" ~ "5.8.2020",
-                            Date == "44049" ~ "6.8.2020",
-                            TRUE ~ as.character(Date))) %>% 
-    
-    # make date
-    mutate(Date = dmy(Date),
-           Year = year(Date),
-           origBlockID = as.numeric(origBlockID),
-           destBlockID = as.numeric(destBlockID),
-           origPlotID = as.numeric(origPlotID),
-           destPlotID = as.numeric(destPlotID),
-           turfID = gsub("_", " ", turfID)) %>% 
-    
-    # Fix mistake in PlotID
-    mutate(origPlotID = ifelse(Date == "2019-07-02" & origPlotID == 83 & Recorder == "silje", 84, origPlotID)) %>% 
-    
-    # join for 2019 data
-    left_join(metaTurfID %>% select(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID), by = c("origSiteID", "origBlockID", "origPlotID")) %>% 
-    mutate(destSiteID = coalesce(destSiteID.x, destSiteID.y),
-           destBlockID = coalesce(destBlockID.x, destBlockID.y),
-           destPlotID = coalesce(destPlotID.x, destPlotID.y),
-           turfID = coalesce(turfID.x, turfID.y)) %>% 
-    select(- c(destSiteID.x, destSiteID.y, destBlockID.x, destBlockID.y, destPlotID.x, destPlotID.y, turfID.x, turfID.y)) %>% 
-    # join for 2020 data
-    left_join(metaTurfID, by = c("destSiteID", "destBlockID", "destPlotID", "turfID")) %>% 
-    mutate(origSiteID = coalesce(origSiteID.x, origSiteID.y),
-           origBlockID = coalesce(origBlockID.x, origBlockID.y),
-           origPlotID = coalesce(origPlotID.x, origPlotID.y)) %>% 
-    select(- c(origSiteID.x, origSiteID.y, origBlockID.x, origBlockID.y, origPlotID.x, origPlotID.y))
-  
-  
-  # validate input
-  # rules <- validator(Date = is.Date(Date),
-  #                    Rec = is.character(Recorder),
-  #                    Scr = is.character(Scribe))
-  # out <- confront(metaComm, rules)
-  # summary(out)
-  
-  
-  # Function to read in data
-  comm  <- map_df(set_names(files), function(file) {
-    file %>% 
-      excel_sheets() %>% 
-      set_names() %>% 
-      discard(. == "CHECK") %>% 
-      map_df(~ read_xlsx(path = file, sheet = .x, skip = 2, n_max = 61, col_types = "text"), .id = "sheet_name")
-  }, .id = "file") %>% 
-    select(file:Remark) %>% 
-    rename("Cover" = `%`) %>% 
-    mutate(Year = as.numeric(stri_extract_last_regex(file, "\\d{4}")))
-  
-  # Join data and meta
-  community <- metaComm %>% 
-    # anti join looses 18 turfs with NA as date, but its ok they are duplicates. Probably occur because of joining 2019 and 2020 data differently
-    left_join(comm, by = c("sheet_name", "Year")) %>% 
-    select(origSiteID:origPlotID, destSiteID:turfID, warming:Nlevel, Date, Year, Species:Cover, Recorder, Scribe, Remark, file)
-  
-}
-
-
 #### COVER ####
 clean_community <- function(community_raw){
   
@@ -170,7 +85,7 @@ clean_community <- function(community_raw){
     # Carex hell
     mutate(Species = ifelse(Species == "Carex sp3" & origSiteID == "Lia" & year(Date) == 2019 & Recorder == "so", "Carex small bigelowii", Species),
            Species = ifelse(Species == "Carex sp3" & origSiteID == "Lia" & year(Date) == 2019 & Recorder == "aud", "Carex wide v shaped dark", Species),
-           Species = ifelse(Species == "Carex sp3" & origSiteID == "Joa" & year(Date) == 2019 & Recorder == "aud", "Carex vaginata", Species)) %>% 
+           Species = ifelse(Species == "Carex sp3" & origSiteID == "Joasete" & year(Date) == 2019 & Recorder == "aud", "Carex vaginata", Species)) %>% 
     mutate(Species = recode(Species,
                             "Carex cap wide" = "Carex capillaris wide",
                             "Carex brei capillaris" = "Carex capillaris wide",
@@ -292,29 +207,29 @@ clean_community <- function(community_raw){
     )) %>% 
     
     # Fix special cases
-    mutate(Species = ifelse(Species == "Euphrasia sp." & origSiteID == "Lia" & year(Date) == 2019, "Euphrasia wettsteinii", Species),
-           Species = ifelse(Species == "Euphrasia sp." & origSiteID == "Joa" & year(Date) == 2019, "Euphrasia stricta", Species)) %>%
-    mutate(Remark = ifelse(Species == "Orchid sp" & origSiteID == "Lia" & year(Date) == 2019, "Fjellhvitkurle or Gronnkurle", Remark)) %>% 
+    mutate(Species = ifelse(Species == "Euphrasia sp." & origSiteID == "Liahovden" & year(Date) == 2019, "Euphrasia wettsteinii", Species),
+           Species = ifelse(Species == "Euphrasia sp." & origSiteID == "Joasete" & year(Date) == 2019, "Euphrasia stricta", Species)) %>%
+    mutate(Remark = ifelse(Species == "Orchid sp" & origSiteID == "Liahovden" & year(Date) == 2019, "Fjellhvitkurle or Gronnkurle", Remark)) %>% 
     
     # Unknown species
     
     ### 2022 CORRECTIONS:
     # unknown juvenile = I THINK UNKNOWN FORB
     
-    mutate(Species = ifelse(Species == "Unknown grass" & origSiteID == "Lia" & origBlockID == 8 & year(Date) == 2019, "Unknown graminoid1", Species),
-           Species = ifelse(Species == "unknown graminoid" & origSiteID == "Lia" & origBlockID == 10 & year(Date) == 2019, "Unknown graminoid2", Species),
-           Species = ifelse(Species == "unknown graminoid" & origSiteID == "Lia" & origBlockID == 6 & year(Date) == 2019, "Unknown graminoid3", Species),
-           Species = ifelse(Species == "unknown poaceae" & origSiteID == "Lia" & origBlockID == 5 & year(Date) == 2019, "Unknown graminoid4", Species),
+    mutate(Species = ifelse(Species == "Unknown grass" & origSiteID == "Liahovden" & origBlockID == 8 & year(Date) == 2019, "Unknown graminoid1", Species),
+           Species = ifelse(Species == "unknown graminoid" & origSiteID == "Liahovden" & origBlockID == 10 & year(Date) == 2019, "Unknown graminoid2", Species),
+           Species = ifelse(Species == "unknown graminoid" & origSiteID == "Liahovden" & origBlockID == 6 & year(Date) == 2019, "Unknown graminoid3", Species),
+           Species = ifelse(Species == "unknown poaceae" & origSiteID == "Liahovden" & origBlockID == 5 & year(Date) == 2019, "Unknown graminoid4", Species),
            
-           Species = ifelse(Species == "unknown herb" & origSiteID == "Lia" & origBlockID == 1 & year(Date) == 2019, "Ranunculus acris", Species), # was called Unknown herb1 before, but likely to be R. acris
-           Species = ifelse(Species == "unknown herb" & origSiteID == "Lia" & origBlockID == 3 & year(Date) == 2019, "Unknown herb2", Species),
-           Species = ifelse(Species == "unknown herb" & origSiteID == "Lia" & origBlockID == 5 & year(Date) == 2019, "Unknown herb3", Species),
-           Species = ifelse(Species == "unknown herb" & origSiteID == "Lia" & origBlockID == 9 & year(Date) == 2019, "Unknown herb4", Species),
-           Species = ifelse(Species == "Unknown herb" & origSiteID == "Lia" & origBlockID == 3 & year(Date) == 2019, "Unknown herb5", Species),
+           Species = ifelse(Species == "unknown herb" & origSiteID == "Liahovden" & origBlockID == 1 & year(Date) == 2019, "Ranunculus acris", Species), # was called Unknown herb1 before, but likely to be R. acris
+           Species = ifelse(Species == "unknown herb" & origSiteID == "Liahovden" & origBlockID == 3 & year(Date) == 2019, "Unknown herb2", Species),
+           Species = ifelse(Species == "unknown herb" & origSiteID == "Liahovden" & origBlockID == 5 & year(Date) == 2019, "Unknown herb3", Species),
+           Species = ifelse(Species == "unknown herb" & origSiteID == "Liahovden" & origBlockID == 9 & year(Date) == 2019, "Unknown herb4", Species),
+           Species = ifelse(Species == "Unknown herb" & origSiteID == "Liahovden" & origBlockID == 3 & year(Date) == 2019, "Unknown herb5", Species),
            
-           Remark = ifelse(Species == "Unknown shrub, maybe salix" & origSiteID == "Lia" & origBlockID == 1 & year(Date) == 2019, "Maybe salix", Remark),
+           Remark = ifelse(Species == "Unknown shrub, maybe salix" & origSiteID == "Liahovden" & origBlockID == 1 & year(Date) == 2019, "Maybe salix", Remark),
            # very likely S. herbaceae
-           Species = ifelse(Species == "Unknown shrub, maybe salix" & origSiteID == "Lia" & origBlockID == 1 & year(Date) == 2019, "Salix herbaceae", Species)) |> 
+           Species = ifelse(Species == "Unknown shrub, maybe salix" & origSiteID == "Liahovden" & origBlockID == 1 & year(Date) == 2019, "Salix herbaceae", Species)) |> 
     
     # Remove rows, with species, but where subplot and cover is NA
     filter_at(vars("1":"Cover"), any_vars(!is.na(.))) %>% 
@@ -1091,8 +1006,6 @@ clean_cover <- function(community_clean, metaTurfID){
     left_join(metaTurfID)
   
 }
-
-
 
 #### SUBPLOT DATA PRECENSE/ABSENCE AND FUNCTIONAL GROUP COVER ####
 clean_comm_structure <- function(community_clean, metaTurfID){
