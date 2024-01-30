@@ -1,0 +1,1769 @@
+# clean community
+
+
+import_community <- function(metaTurfID){
+  
+  #### COMMUNITY DATA ####
+  ### Read in files
+  files <- dir(path = "data/community", pattern = "\\.xlsx$", full.names = TRUE, recursive = TRUE)
+  
+  #Function to read in meta data
+  metaComm_raw <- map_df(set_names(files), function(file) {
+    print(file)
+    file %>% 
+      excel_sheets() %>% 
+      set_names() %>% 
+      # exclude sheet to check data and taxonomy file
+      discard(. %in% c("CHECK", "taxonomy")) %>% 
+      map_df(~ read_xlsx(path = file, sheet = .x, n_max = 1, col_types = c("text", rep("text", 29))), .id = "sheet_name")
+  }, .id = "file")
+  
+  # need to break the workflow here, otherwise tedious to find problems
+  metaComm <- metaComm_raw %>% 
+    select(sheet_name, Date, origSiteID, origBlockID, origPlotID, turfID, destSiteID, destBlockID, destPlotID, Recorder, Scribe) %>% 
+    # fix wrong dates
+    mutate(Date = case_when(Date == "44025" ~ "13.7.2020",
+                            Date == "44046" ~ "3.8.2020",
+                            Date == "44047" ~ "5.8.2020",
+                            Date == "44048" ~ "5.8.2020",
+                            Date == "44049" ~ "6.8.2020",
+                            TRUE ~ as.character(Date))) %>% 
+    
+    # make date
+    mutate(Date = dmy(Date),
+           Year = year(Date),
+           origBlockID = as.numeric(origBlockID),
+           destBlockID = as.numeric(destBlockID),
+           origPlotID = as.numeric(origPlotID),
+           destPlotID = as.numeric(destPlotID),
+           turfID = gsub("_", " ", turfID)) %>% 
+    
+    # Fix mistake in PlotID
+    mutate(origPlotID = ifelse(Date == "2019-07-02" & origPlotID == 83 & Recorder == "silje", 84, origPlotID)) %>% 
+    
+    # join for 2019 data
+    left_join(metaTurfID %>% select(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID), by = c("origSiteID", "origBlockID", "origPlotID")) %>% 
+    mutate(destSiteID = coalesce(destSiteID.x, destSiteID.y),
+           destBlockID = coalesce(destBlockID.x, destBlockID.y),
+           destPlotID = coalesce(destPlotID.x, destPlotID.y),
+           turfID = coalesce(turfID.x, turfID.y)) %>% 
+    select(- c(destSiteID.x, destSiteID.y, destBlockID.x, destBlockID.y, destPlotID.x, destPlotID.y, turfID.x, turfID.y)) %>% 
+    # join for 2020 data
+    left_join(metaTurfID, by = c("destSiteID", "destBlockID", "destPlotID", "turfID")) %>% 
+    mutate(origSiteID = coalesce(origSiteID.x, origSiteID.y),
+           origBlockID = coalesce(origBlockID.x, origBlockID.y),
+           origPlotID = coalesce(origPlotID.x, origPlotID.y)) %>% 
+    select(- c(origSiteID.x, origSiteID.y, origBlockID.x, origBlockID.y, origPlotID.x, origPlotID.y))
+  
+  
+  # validate input
+  # rules <- validator(Date = is.Date(Date),
+  #                    Rec = is.character(Recorder),
+  #                    Scr = is.character(Scribe))
+  # out <- confront(metaComm, rules)
+  # summary(out)
+  
+  
+  # Function to read in data
+  comm  <- map_df(set_names(files), function(file) {
+    file %>% 
+      excel_sheets() %>% 
+      set_names() %>% 
+      discard(. == "CHECK") %>% 
+      map_df(~ read_xlsx(path = file, sheet = .x, skip = 2, n_max = 61, col_types = "text"), .id = "sheet_name")
+  }, .id = "file") %>% 
+    select(file:Remark) %>% 
+    rename("Cover" = `%`) %>% 
+    mutate(Year = as.numeric(stri_extract_last_regex(file, "\\d{4}")))
+  
+  # Join data and meta
+  community <- metaComm %>% 
+    # anti join looses 18 turfs with NA as date, but its ok they are duplicates. Probably occur because of joining 2019 and 2020 data differently
+    left_join(comm, by = c("sheet_name", "Year")) %>% 
+    select(origSiteID:origPlotID, destSiteID:turfID, warming:Nlevel, Date, Year, Species:Cover, Recorder, Scribe, Remark, file)
+  
+}
+
+
+#### COVER ####
+clean_community <- function(community_raw){
+  
+  # MERGING SPECIES
+  # Problems regarding merging of species and then there are multiple entries at the subplot level and cover
+  # "duplicate_problem" and "subpot_missing" are fixing these problems before community is created.
+  duplicate_problem = tibble::tribble(
+    ~year, ~turfID, ~species, ~cover,
+    2019, "51 WN4M 132", "Carex light green", 6,
+    2019, "51 WN4M 132", "Carex atrata cf", 1,
+    2019, "77 AN2C 77", "Carex saxatilis cf", 1,
+    2019, "67 AN9M 67", "Carex saxatilis cf", 1,
+    2019, "48 AN7N 48", "Carex wide", 2,
+    2019, "42 WN7I 123", "Carex saxatilis cf", 2,
+    2019, "60 AN8M 60", "Carex norvegica cf", 1,
+    2019, "68 AN9I 68", "Carex saxatilis cf", 1,
+    2019, "72 AN9N 72", "Carex saxatilis cf", 2,
+    2019, "89 WN6I 165", "Carex saxatilis cf", 1
+  )
+  
+  community <- community_raw |> 
+    # Remove rows, without species, subplot and cover is zero
+    filter_at(vars("Species", "1":"Cover"), any_vars(!is.na(.))) %>% 
+    
+    # Remove species NA, are all rows where Ratio > 1.5 is wrong
+    filter(!is.na(Species)) %>% 
+    filter(Species != "Height / depth (cm)") %>% 
+    
+    # Remove white space after Species name
+    mutate(Species = str_trim(Species, side = "right")) %>%
+    mutate(Recorder = recode(Recorder, "so" = "silje", "vv" = "vigdis", "lhv" = "linn", "kri" = "kari")) %>%
+    
+    # Fix wrong turfID
+    mutate(turfID = case_when(turfID == "87 WN1M 164" ~ "87 WN1N 164",
+                              TRUE ~ turfID)) %>% 
+    
+    # Fix wrong species names
+    mutate(Species = recode(Species, 
+                            "Agrostis sp 1" = "Agrostis mertensii",
+                            "Alchemilla sp." = "Alchemilla sp",
+                            "Anntenaria alpina" = "Antennaria alpina cf",
+                            "Antennaria alpina" = "Antennaria alpina cf",
+                            "Antennaria dioica" = "Antennaria dioica cf",
+                            "Bryophyes" = "Bryophytes", 
+                            "Carex sp 1" = "Carex sp1",
+                            "Carex sp 2" = "Carex sp2",
+                            "Carex sp 3" = "Carex sp3",
+                            "cerastium alpinum cf" = "Cerastium cerastoides",
+                            "Cerastium cerasteoides" = "Cerastium cerastoides",
+                            "Cerastium cerastoies" = "Cerastium cerastoides",
+                            "Cerstium cerasteoides" = "Cerastium cerastoides",
+                            "Cerastium fontana" = "Cerastium fontanum",
+                            "Epilobium ana cf" = "Epilobium anagallidifolium cf",
+                            "Epilobium cf" = "Epilobium sp",
+                            "Equiseum arvense" = "Equisetum arvense",
+                            "Equisetum vaginatum" = "Equisetum variegatum",
+                            "Galeopsis sp" = "Galeopsis tetrahit",
+                            "Galeopsis tetrait" = "Galeopsis tetrahit",
+                            "Gentiana nivalus" = "Gentiana nivalis",
+                            "Gron or fjellkurle" = "Orchid sp",
+                            "Hieraceum sp." = "Hieraceum sp",
+                            "Hyperzia selago" = "Huperzia selago",
+                            "Juniper communis" = "Juniperus communis",
+                            "Luzula multiflora" = "Luzula multiflora cf",
+                            "Luzula spicata" = "Luzula spicata cf",
+                            "Lycopodium sp" = "Lycopodium annotinum ssp alpestre cf",
+                            "Lycopodium" = "Lycopodium annotinum ssp alpestre cf",
+                            "Omalothrca supina" = "Omalotheca supina",
+                            "Pyrola" = "Pyrola sp",
+                            "Poa alpigena" = "Poa pratensis", # did not distinguish in later years
+                            "Ranunculus" = "Ranunculus",
+                            "Rubus idaes" = "Rubus idaeus",
+                            "Sagina saginoides" = "Sagina saginella",
+                            "Snerote sp" = "Gentiana nivalis",
+                            "Stellaria gramineae" = "Stellaria graminea",
+                            "Taraxacum sp." = "Taraxacum sp",
+                            "Unknown euphrasia sp?" = "Euphrasia sp",
+                            "unknown juvenile" = "Unknown juvenile",
+                            "Vaccinium myrtilis" = "Vaccinium myrtillus",
+                            "Veronica biflora" = "Viola biflora",
+                            "Total Cover (%)" = "SumofCover")) %>% 
+    
+    # Carex hell
+    mutate(Species = ifelse(Species == "Carex sp3" & origSiteID == "Lia" & year(Date) == 2019 & Recorder == "so", "Carex small bigelowii", Species),
+           Species = ifelse(Species == "Carex sp3" & origSiteID == "Lia" & year(Date) == 2019 & Recorder == "aud", "Carex wide v shaped dark", Species),
+           Species = ifelse(Species == "Carex sp3" & origSiteID == "Joa" & year(Date) == 2019 & Recorder == "aud", "Carex vaginata", Species)) %>% 
+    mutate(Species = recode(Species,
+                            "Carex cap wide" = "Carex capillaris wide",
+                            "Carex brei capillaris" = "Carex capillaris wide",
+                            "Carex wide capillaris" = "Carex capillaris wide",
+                            
+                            # Carex atrata cf
+                            "Carex m dgreen yellow wide" = "Carex atrata cf",
+                            "Carex m wide green yellow" = "Carex atrata cf",
+                            "Carex m yellow dgreen wide" = "Carex atrata cf",
+                            "Carex m yellow dgreen wide" = "Carex atrata cf",
+                            "Carex wide darkgreen yellow" = "Carex atrata cf",
+                            "Carex wide m yellow dark green" = "Carex atrata cf",
+                            "Carex yellow dark green m wide" = "Carex atrata cf",
+                            "Carex atrata" = "Carex atrata cf", # PROBLEM CREATES A DUPLICATE
+                            "Carex wide v dark green yellowish" = "Carex atrata cf",
+                            "Carex v dgreen wide" = "Carex atrata cf",
+                            "Carex v dgreen yellow" = "Carex atrata cf",
+                            "Carex v dgreen yellow wide" = "Carex atrata cf",
+                            "Carex v yellow d.green wide" = "Carex atrata cf",
+                            "Carex v dark yellow wide" = "Carex atrata cf",
+                            "Carex v green yellow wide" = "Carex atrata cf",
+                            
+                            # Carex small bigellowii
+                            "Carex sp1" = "Carex small bigelowii",
+                            "Carex small bigelowii v" = "Carex small bigelowii",
+                            
+                            # Carex saxatilis
+                            "Carex saxatile" = "Carex saxatilis cf",
+                            "Carex saxatile very small" = "Carex saxatilis cf",
+                            "Carex saxifraga" = "Carex saxatilis cf",
+                            "Carex light yellow m wide" = "Carex saxatilis cf",
+                            "Carex lightgreen m" = "Carex saxatilis cf",
+                            "Carex m lightgreen wide" = "Carex saxatilis cf",
+                            "Carex m lightgreen wide, ca 3 mm" = "Carex saxatilis cf",
+                            "Carex m yellow" = "Carex saxatilis cf",
+                            "Carex m yellow very wide" = "Carex saxatilis cf",
+                            "Carex m yellow wide" = "Carex saxatilis cf",
+                            "Carex wide yellow m shape" = "Carex saxatilis cf",
+                            "Carex v yellow wide" = "Carex saxatilis cf",
+                            "Carex yellow m" = "Carex saxatilis cf",
+                            "Carex yellow wide" = "Carex saxatilis cf",
+                            "Carex sp4" = "Carex saxatilis cf",
+                            "Carex m wide bigel flower but leafs are not" = "Carex saxatilis cf",
+                            "Carex m yellowish soft wide, bigel flower" = "Carex saxatilis cf",
+                            "Carex with fl from plot 67" = "Carex saxatilis cf",
+                            
+                            
+                            # Carex brunnescens cf
+                            "Carex sp2" = "Carex brunnescens cf",
+                            "Carex Carex sp2 dark m" = "Carex brunnescens cf",
+                            "Carex sp2 dark v thin" = "Carex brunnescens cf",
+                            "Carex sp2" = "Carex brunnescens cf",
+                            "Carex sp2 dark m" = "Carex brunnescens cf",
+                            "Carex sp2 dark v thin" = "Carex brunnescens cf",
+                            
+                            # Carex canescense cf
+                            "Carex canescens" = "Carex canescens cf",
+                            "Carex canescense cf" = "Carex canescens cf",
+                            "carex cannescence cf" = "Carex canescens cf",
+                            
+                            # Carex pilulifera cf
+                            "Carex pilulifera" = "Carex pilulifera cf",
+                            
+                            # Carex norvegica cf
+                            "Carex norwegica" = "Carex norvegica cf",
+                            "Carex norvegica" = "Carex norvegica cf",
+                            "Carex dark v thin" = "Carex norvegica cf",
+                            "Carex v dark thin" = "Carex norvegica cf",
+                            "Carex v darkgreen thin" = "Carex norvegica cf",
+                            "Carex v dgreen thin" = "Carex norvegica cf",
+                            "Carex v thin dgreen" = "Carex norvegica cf",
+                            "Carex v green" = "Carex norvegica cf",
+                            "Carex m dark thin" = "Carex norvegica cf",
+                            "Carex m green thin" = "Carex norvegica cf",
+                            
+                            # Carex panicea cf
+                            "Carex blueish" = "Carex panicea cf",
+                            "Carex blue green" = "Carex panicea cf",
+                            "Carex blue green thin bigelowii like" = "Carex panicea cf",
+                            "Carex blue green v" = "Carex panicea cf",
+                            "Carex bluegreen thin" = "Carex panicea cf",
+                            "Carex thin bluegreen v short flowering stalk darkbrown fl" = "Carex panicea cf",
+                            "Carex v bluegreen" = "Carex panicea cf",
+                            "Carex v blue" = "Carex panicea cf",
+                            "Carex sp5" = "Carex panicea cf",
+                            "Carex m bluegreen wide" = "Carex panicea cf",
+                            "Carex v blueish wide" = "Carex panicea cf",
+                            "Carex blue" = "Carex panicea cf",
+                            
+                            # Unknown stuff
+                            "Carex wide m" = "Carex wide",
+                            "Carex wide v" = "Carex wide",
+                            "Carex wide m dark" = "Carex wide",
+                            "Carex m dark green wide" = "Carex wide",
+                            "Carex m wide" = "Carex wide",
+                            "Carex wide v shaped dark" = "Carex wide",
+                            
+                            "Carex v thin" = "Carex thin",
+                            "Carex v thin leaf" = "Carex thin",
+                            "Carex thin" = "Carex thin",
+                            
+                            "Carex bigelowii light green" = "Carex light green",
+                            "Carex light green m rough thin leaves" = "Carex light green",
+                            "Carex m yellowish thin" = "Carex light green",
+                            "Carex m yellow thin" = "Carex light green",
+                            "Carex v lightgreen" = "Carex light green",
+                            "Carex thin light green pointy" = "Carex light green",
+                            "Carex thin vaginatum like" = "Carex light green",
+                            "Carex thin vaginata like" = "Carex light green",
+                            "Carex flava?" = "Carex light green",
+                            
+                            "Carex v dark green soft leaf bigelowii tip" = "Carex dark green",
+                            "Carex thin m darkgreen point all out" = "Carex dark green",
+                            
+                            "Carex vissen" = "Carex sp",
+                            "Carex sp beitet" = "Carex sp",
+                            "Carex nbr" = "Carex sp"
+                            
+    )) %>% 
+    
+    # Fix special cases
+    mutate(Species = ifelse(Species == "Euphrasia sp." & origSiteID == "Lia" & year(Date) == 2019, "Euphrasia wettsteinii", Species),
+           Species = ifelse(Species == "Euphrasia sp." & origSiteID == "Joa" & year(Date) == 2019, "Euphrasia stricta", Species)) %>%
+    mutate(Remark = ifelse(Species == "Orchid sp" & origSiteID == "Lia" & year(Date) == 2019, "Fjellhvitkurle or Gronnkurle", Remark)) %>% 
+    
+    # Unknown species
+    
+    ### 2022 CORRECTIONS:
+    # unknown juvenile = I THINK UNKNOWN FORB
+    
+    mutate(Species = ifelse(Species == "Unknown grass" & origSiteID == "Lia" & origBlockID == 8 & year(Date) == 2019, "Unknown graminoid1", Species),
+           Species = ifelse(Species == "unknown graminoid" & origSiteID == "Lia" & origBlockID == 10 & year(Date) == 2019, "Unknown graminoid2", Species),
+           Species = ifelse(Species == "unknown graminoid" & origSiteID == "Lia" & origBlockID == 6 & year(Date) == 2019, "Unknown graminoid3", Species),
+           Species = ifelse(Species == "unknown poaceae" & origSiteID == "Lia" & origBlockID == 5 & year(Date) == 2019, "Unknown graminoid4", Species),
+           
+           Species = ifelse(Species == "unknown herb" & origSiteID == "Lia" & origBlockID == 1 & year(Date) == 2019, "Ranunculus acris", Species), # was called Unknown herb1 before, but likely to be R. acris
+           Species = ifelse(Species == "unknown herb" & origSiteID == "Lia" & origBlockID == 3 & year(Date) == 2019, "Unknown herb2", Species),
+           Species = ifelse(Species == "unknown herb" & origSiteID == "Lia" & origBlockID == 5 & year(Date) == 2019, "Unknown herb3", Species),
+           Species = ifelse(Species == "unknown herb" & origSiteID == "Lia" & origBlockID == 9 & year(Date) == 2019, "Unknown herb4", Species),
+           Species = ifelse(Species == "Unknown herb" & origSiteID == "Lia" & origBlockID == 3 & year(Date) == 2019, "Unknown herb5", Species),
+           
+           Remark = ifelse(Species == "Unknown shrub, maybe salix" & origSiteID == "Lia" & origBlockID == 1 & year(Date) == 2019, "Maybe salix", Remark),
+           # very likely S. herbaceae
+           Species = ifelse(Species == "Unknown shrub, maybe salix" & origSiteID == "Lia" & origBlockID == 1 & year(Date) == 2019, "Salix herbaceae", Species)) |> 
+    
+    # Remove rows, with species, but where subplot and cover is NA
+    filter_at(vars("1":"Cover"), any_vars(!is.na(.))) %>% 
+    #Replace all NA in subplots with 0
+    mutate(across("1":"25", ~ replace_na(.x, "0"))) |> 
+    mutate(Cover = as.numeric(Cover)) %>% 
+    
+    rename(date = Date, year = Year, species = Species, cover = Cover, recorder = Recorder, scribe = Scribe, remark = Remark) %>% 
+    
+    # # check for subplot level data
+    # community %>%
+    # # summarize cover from species that have been merged
+    # group_by(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID, warming, grazing, Nlevel, year, species) %>%
+    # mutate(n = n()) %>% filter(n > 1) %>% View()
+    
+    # remove duplicate species that differ in cover. Duplcated because species name was changed (11 cases with very low cover (1-6), no need in changing cover estimate).
+    anti_join(duplicate_problem, by = c("year", "turfID", "species", "cover")) %>% 
+    
+    # remove duplicates
+    group_by(origSiteID, origBlockID, origPlotID, destSiteID, destPlotID, destBlockID, turfID, warming, grazing, Nlevel, year, species, cover, recorder, scribe, remark, file) %>% 
+    #mutate(n = n()) |> filter(n > 1) |> View()
+    # remove 4 rows with same cover, cover stays the same, no fixing needed.
+    # subplot presence is fixed in subplot_missing
+    tidylog::slice(1)
+  
+  
+  # validate input
+  # rules_comm <- validator(Sp = is.character(species),
+  #                         Cov = is.numeric(cover),
+  #                         Y = is.numeric(year),
+  #                         Warming = grepl("A|W", turfID),
+  #                         Site1 = origSiteID %in% c("Lia","Joa"),
+  #                         Site2 = destSiteID %in% c("Lia","Joa", "Vik"))
+  # out <- confront(community, rules_comm)
+  # summary(out)
+  
+  # find duplicate species
+  # rule <- validator(is_unique(turfID, species, year))
+  # out <- confront(community, rule)
+  # # showing 7 columns of output for readability
+  # summary(out)
+  # violating(community, out) |> View()
+  
+  # removing duplicates with different cover
+  remove_duplicates = tibble::tribble(
+    ~year, ~turfID, ~species, ~cover,
+    2019, "89 WN6I 165", "Poa pratensis", 1,
+    2019, "92 WN6M 167", "Poa pratensis", 1,
+    2019, "95 WN6N 168", "Poa pratensis", 2,
+    2019, "96 AN6N 96", "Poa pratensis", 1,
+    2019, "101 AN5I 101", "Poa pratensis", 1,
+    2019, "106 WN3I 174", "Poa pratensis", 2,
+    2019, "109 AN3C 109", "Poa pratensis", 2,
+    2019, "117 AN10M 117", "Poa pratensis", 1,
+    2019, "121 AN7M 121", "Poa pratensis", 1,
+    2019, "124 AN7I 124", "Poa pratensis", 1,
+    2019, "127 AN7N 127", "Poa pratensis", 1,
+    2019, "132 WN4M 185", "Poa pratensis", 1,
+    2019, "134 WN4I 187", "Poa pratensis", 1,
+    2019, "135 WN4N 188", "Poa pratensis", 1,
+    2019, "138 WN8I 189", "Poa pratensis", 1,
+    2019, "141 WN8M 191", "Poa pratensis", 1,
+    2019, "152 AN9N 152", "Poa pratensis", 1,
+    2019, "8 WN1N 87", "Salix herbaceae", 1,
+    2021, "34 WN10I 114", "Carex atrata cf", 2,
+  )
+  
+  community <- community |> 
+    tidylog::anti_join(remove_duplicates) |> 
+    mutate(`4` = case_when(year == 2019 & turfID == "89 WN6I 165" & species == "Poa pratensis" ~ "f",
+                           TRUE ~ `4`),
+           `19` = case_when(year == 2019 & turfID == "92 WN6M 167" & species == "Poa pratensis" ~ "1",
+                            TRUE ~ `19`),
+           `13` = case_when(year == 2019 & turfID == "95 WN6N 168" & species == "Poa pratensis" ~ "1",
+                            TRUE ~ `13`),
+           `2` = case_when(year == 2019 & turfID == "96 AN6N 96" & species == "Poa pratensis" ~ "1",
+                           TRUE ~ `2`),
+           `16` = case_when(year == 2019 & turfID == "101 AN5I 101" & species == "Poa pratensis" ~ "1",
+                            TRUE ~ `16`),
+           `1` = case_when(year == 2019 & turfID == "106 WN3I 174" & species == "Poa pratensis" ~ "1",
+                           TRUE ~ `1`),
+           `1` = case_when(year == 2019 & turfID == "109 AN3C 109" & species == "Poa pratensis" ~ "1",
+                           TRUE ~ `1`),
+           `2` = case_when(year == 2019 & turfID == "109 AN3C 109" & species == "Poa pratensis" ~ "f",
+                           TRUE ~ `2`),
+           `21` = case_when(year == 2019 & turfID == "121 AN7M 121" & species == "Poa pratensis" ~ "1",
+                            TRUE ~ `21`),
+           `13` = case_when(year == 2019 & turfID == "124 AN7I 124" & species == "Poa pratensis" ~ "f",
+                            TRUE ~ `13`),
+           `10` = case_when(year == 2019 & turfID == "127 AN7N 127" & species == "Poa pratensis" ~ "1",
+                            TRUE ~ `10`),
+           `20` = case_when(year == 2019 & turfID == "138 WN8I 189" & species == "Poa pratensis" ~ "1",
+                            TRUE ~ `20`),
+           `21` = case_when(year == 2019 & turfID == "138 WN8I 189" & species == "Poa pratensis" ~ "1",
+                            TRUE ~ `21`),
+           `10` = case_when(year == 2019 & turfID == "141 WN8M 191" & species == "Poa pratensis" ~ "1",
+                            TRUE ~ `10`),
+           `7` = case_when(year == 2019 & turfID == "152 AN9N 152" & species == "Poa pratensis" ~ "1",
+                           TRUE ~ `7`),
+           `8` = case_when(year == 2019 & turfID == "152 AN9N 152" & species == "Poa pratensis" ~ "1",
+                           TRUE ~ `8`),
+           `9` = case_when(year == 2019 & turfID == "152 AN9N 152" & species == "Poa pratensis" ~ "1",
+                           TRUE ~ `9`),
+           `4` = case_when(year == 2019 & turfID == "8 WN1N 87" & species == "Salix herbaceae" ~ "1",
+                           TRUE ~ `4`),
+           `5` = case_when(year == 2021 & turfID == "34 WN10I 114" & species == "Carex atrata cf" ~ "cf",
+                           TRUE ~ `5`),
+    ) |> 
+    # fix cover
+    mutate(cover = case_when(year == 2019 & turfID == "89 WN6I 165" & species == "Poa pratensis" ~ 13,
+                             year == 2019 & turfID == "92 WN6M 167" & species == "Poa pratensis" ~ 8,
+                             year == 2019 & turfID == "95 WN6N 168" & species == "Poa pratensis" ~ 5,
+                             year == 2019 & turfID == "96 AN6N 96" & species == "Poa pratensis" ~ 5,
+                             year == 2019 & turfID == "101 AN5I 101" & species == "Poa pratensis" ~ 4,
+                             year == 2019 & turfID == "106 WN3I 174" & species == "Poa pratensis" ~ 10,
+                             year == 2019 & turfID == "109 AN3C 109" & species == "Poa pratensis" ~ 5,
+                             year == 2019 & turfID == "117 AN10M 117" & species == "Poa pratensis" ~ 4,
+                             year == 2019 & turfID == "121 AN7M 121" & species == "Poa pratensis" ~ 5,
+                             year == 2019 & turfID == "124 AN7I 124" & species == "Poa pratensis" ~ 6,
+                             year == 2019 & turfID == "127 AN7N 127" & species == "Poa pratensis" ~ 9,
+                             year == 2019 & turfID == "132 WN4M 185" & species == "Poa pratensis" ~ 9,
+                             year == 2019 & turfID == "134 WN4I 187" & species == "Poa pratensis" ~ 5,
+                             year == 2019 & turfID == "135 WN4N 188" & species == "Poa pratensis" ~ 11,
+                             year == 2019 & turfID == "138 WN8I 189" & species == "Poa pratensis" ~ 5,
+                             year == 2019 & turfID == "141 WN8M 191" & species == "Poa pratensis" ~ 9,
+                             year == 2019 & turfID == "152 AN9N 152" & species == "Poa pratensis" ~ 17,
+                             year == 2019 & turfID == "8 WN1N 87" & species == "Salix herbaceae" ~ 6,
+                             year == 2021 & turfID == "34 WN10I 114" & species == "Carex atrata cf" ~ 6,
+                             TRUE ~ cover))
+  
+}
+
+
+# make cover data
+clean_cover <- function(community_clean, metaTurfID){
+  
+  ### FIX MISIDENTIFICAITONS OR WRONG ENTRIES IN THE DATA
+  # The following data frames fix misidentification of species, change species names, or problems in the data
+  # All these changes need to be done in community data frame when producing cover and CommunitySubplot
+  
+  ## Changes species names
+  # Fixes misidentification, or change uncertainties in species names containing cf to species or vice versa according to data in other years of pictures
+  fix_species = tibble::tribble(
+    ~year, ~turfID, ~species, ~species_new,
+    2019, "1 WN1M 84", "Antennaria alpina cf", "Antennaria sp",
+    2020, "1 WN1M 84", "Antennaria dioica cf", "Antennaria sp",
+    2021, "1 WN1M 84", "Erigeron sp", "Erigeron uniflorus",
+    2021, "1 WN1M 84", "Luzula sp", "Luzula spicata cf",
+    2019, "1 WN1M 84", "Festuca ovina", "Nardus stricta",
+    2021, "1 WN1M 84", "Festuca ovina", "Nardus stricta",
+    2022, "3 WN1C 85", "Antennaria sp", "Antennaria alpina cf",
+    2019, "5 WN1I 86", "Antennaria alpina cf", "Antennaria sp",
+    2020, "5 WN1I 86", "Antennaria dioica cf", "Antennaria sp",
+    2021, "8 WN1N 87", "Luzula sp", "Luzula spicata cf",
+    2022, "8 WN1N 87", "Luzula sp", "Luzula spicata cf",
+    2021, "10 WN6M 89", "Luzula sp", "Luzula spicata cf",
+    2019, "13 WN6C 90", "Antennaria alpina cf", "Antennaria dioica",
+    2021, "13 WN6C 90", "Antennaria dioica cf", "Antennaria dioica",
+    2021, "14 WN6I 92", "Luzula sp", "Luzula spicata cf",
+    2021, "94 AN6I 94", "Festuca ovina", "Festuca rubra",
+    2021, "15 WN6N 95", "Antennaria sp", "Antennaria alpina cf",
+    2019, "15 WN6N 95", "Luzula spicata cf", "Luzula sp",
+    2021, "19 WN5I 97", "Antennaria sp", "Antennaria dioica cf",
+    2021, "21 WN5C 99", "Antennaria sp", "Antennaria alpina cf",
+    2021, "22 WN5M 102", "Antennaria sp", "Antennaria alpina cf",
+    2019, "24 WN5N 103", "Taraxacum sp.", "Leontodon autumnalis",
+    2019, "26 WN3I 105", "Taraxacum sp.", "Leontodon autumnalis",
+    2019, "26 WN3I 105", "Luzula spicata cf", "Luzula sp",
+    2020, "26 WN3I 105", "Luzula multiflora cf", "Luzula sp",
+    2021, "29 WN3C 106", "Antennaria sp", "Antennaria alpina cf",
+    2019, "29 WN3C 106", "Taraxacum sp.", "Leontodon autumnalis",
+    2019, "29 WN3C 106", "Luzula spicata cf", "Luzula spicata",
+    2020, "29 WN3C 106", "Luzula spicata cf", "Luzula spicata",
+    2021, "29 WN3C 106", "Luzula spicata cf", "Luzula spicata",
+    2021, "30 WN3M 107", "Antennaria sp", "Antennaria alpina cf",
+    2022, "30 WN3M 107", "Antennaria dioica cf", "Antennaria alpina cf",
+    2021, "30 WN3M 107", "Luzula sp", "Luzula multiflora cf",
+    2022, "30 WN3M 107", "Luzula sp", "Luzula multiflora cf",
+    2019, "32 WN3N 112", "Luzula spicata cf", "Luzula sp",
+    2021, "34 WN10I 114", "Antennaria sp", "Antennaria dioica cf",
+    2021, "34 WN10I 114", "Luzula sp", "Luzula spicata cf",
+    2022, "34 WN10I 114", "Luzula sp", "Luzula spicata cf",
+    2022, "34 WN10I 114", "Potentilla erecta", "Potentilla crantzii",
+    2019, "36 WN10M 115", "Taraxacum sp.", "Leontodon autumnalis",
+    2021, "37 WN10C 116", "Antennaria sp", "Antennaria dioica cf",
+    2019, "42 WN7I 123", "Antennaria alpina cf", "Antennaria sp",
+    2019, "44 WN7M 125", "Taraxacum sp.", "Leontodon autumnalis",
+    2021, "53 WN4C 133", "Antennaria sp", "Antennaria alpina cf",
+    2019, "53 WN4C 133", "Taraxacum sp.", "Leontodon autumnalis",
+    2021, "53 WN4C 133", "Erigeron sp", "Erigeron uniflorus",
+    2021, "54 WN4I 134", "Erigeron sp", "Erigeron uniflorus",
+    2019, "54 WN4I 134", "Salix reticulata", "Vaccinium uliginosum",
+    2019, "54 WN4I 134", "Taraxacum sp.", "Leontodon autumnalis",
+    2019, "61 WN8I 140", "Luzula spicata cf", "Luzula sp",
+    2019, "64 WN8N 143", "Luzula spicata cf", "Luzula sp",
+    2021, "71 WN9N 151", "Luzula multiflora cf", "Luzula multiflora",
+    2019, "71 WN9N 151", "Luzula spicata cf", "Luzula multiflora",
+    2019, "73 WN2M 153", "Leontodon autumnalis", "Taraxacum sp.",
+    2019, "73 WN2M 153", "Luzula spicata cf", "Luzula spicata",
+    2020, "73 WN2M 153", "Luzula multiflora cf", "Luzula spicata",
+    2021, "73 WN2M 153", "Luzula sp", "Luzula spicata",
+    2022, "73 WN2M 153", "Luzula spicata cf", "Luzula spicata",
+    
+    2020, "154 AN2M 154", "Vaccinium uliginosum", "Vaccinium vitis-idaea",
+    2019, "139 AN8I 139", "Carex small bigelowii", "Carex pilulifera cf",
+    2019, "142 AN8C 142", "Carex small bigelowii", "Carex pilulifera cf",
+    2021, "144 AN8N 144", "Carex pilulifera cf", "Carex bigelowii",
+    2019, "146 AN9I 146", "Carex small bigelowii", "Carex pilulifera cf",
+    2019, "149 AN9C 149", "Carex small bigelowii", "Carex bigelowii",
+    2019, "152 AN9N 152", "Carex small bigelowii", "Carex brunnescens cf",
+    2019, "156 AN2C 156", "Carex small bigelowii", "Carex pilulifera cf",
+    2022, "156 AN2C 156", "Carex sp", "Carex pilulifera cf",
+    2021, "156 AN2C 156", "Carex bigelowii cf", "Carex bigelowii",
+    2021, "157 AN2I 157", "Carex pilulifera cf", "Carex bigelowii",
+    2022, "157 AN2I 157", "Carex sp", "Carex brunnescens cf",
+    2019, "138 WN8I 189", "Carex small bigelowii", "Carex bigelowii",
+    2019, "141 WN8M 191", "Carex small bigelowii", "Carex bigelowii",
+    2019, "145 WN9M 193", "Carex small bigelowii", "Carex pilulifera cf",
+    2021, "145 WN9M 193", "Carex sp", "Carex pilulifera cf",
+    2022, "145 WN9M 193", "Carex sp", "Carex bigelowii",
+    2019, "147 WN9C 194", "Carex small bigelowii", "Carex bigelowii",
+    2019, "151 WN9N 196", "Carex small bigelowii", "Carex bigelowii",
+    2021, "153 WN2I 197", "Carex sp", "Carex bigelowii",
+    
+    2022, "2 AN1M 2", "Orchid sp", "Coeloglossum viride",
+    2019, "4 AN1C 4", "Antennaria alpina cf", "Antennaria dioica",
+    2020, "4 AN1C 4", "Antennaria dioica cf", "Antennaria dioica",
+    2021, "4 AN1C 4", "Antennaria sp", "Antennaria dioica",
+    2022, "4 AN1C 4", "Antennaria alpina cf", "Antennaria dioica",
+    2021, "6 AN1I 6", "Antennaria sp", "Antennaria alpina cf",
+    2021, "7 AN1N 7", "Antennaria sp", "Antennaria alpina cf",
+    2019, "9 AN6M 9", "Achillea millefolium", "Alchemilla alpina",
+    2021, "9 AN6M 9", "Antennaria dioica cf", "Antennaria alpina cf",
+    2022, "9 AN6M 9", "Antennaria sp", "Antennaria alpina cf",
+    2019, "9 AN6M 9", "Avenella flexuosa", "Festuca rubra",
+    2019, "9 AN6M 9", "Leontodon autumnalis", "Taraxacum sp.",
+    2019, "11 AN6I 11", "Antennaria alpina cf", "Antennaria sp",
+    2019, "11 AN6I 11", "Antennaria dioica cf", "Antennaria sp",
+    2019, "11 AN6I 11", "Taraxacum sp.", "Leontodon autumnalis",
+    2022, "11 AN6I 11", "Luzula sp.", "Luzula spicata cf",
+    2019, "16 AN6N 16", "Astragalus alpina", "Oxytropa laponica",
+    2019, "16 AN6N 16", "Antennaria alpina cf", "Antennaria sp",
+    2022, "16 AN6N 16", "Antennaria dioica cf", "Antennaria sp",
+    2019, "17 AN5M 17", "Antennaria dioica cf", "Antennaria dioica",
+    2021, "17 AN5M 17", "Antennaria dioica cf", "Antennaria dioica",
+    2022, "17 AN5M 17", "Antennaria sp", "Antennaria dioica",
+    2019, "18 AN5C 18", "Antennaria dioica cf", "Antennaria dioica",
+    2021, "18 AN5C 18", "Antennaria dioica cf", "Antennaria dioica",
+    2022, "18 AN5C 18", "Antennaria sp", "Antennaria dioica",
+    2019, "23 AN5N 23", "Antennaria dioica cf", "Antennaria dioica",
+    2021, "23 AN5N 23", "Antennaria dioica cf", "Antennaria dioica",
+    2019, "27 AN3C 27", "Deschampsia cespitosa", "Deschampsia alpina",
+    2020, "27 AN3C 27", "Deschampsia cespitosa", "Deschampsia alpina",
+    2019, "27 AN3C 27", "Taraxacum sp.", "Leontodon autumnalis",
+    2019, "27 AN3C 27", "Luzula multiflora", "Luzula multiflora cf",
+    2020, "27 AN3C 27", "Luzula spicata cf", "Luzula spicata",
+    2021, "27 AN3C 27", "Luzula spicata cf", "Luzula spicata",
+    2021, "27 AN3C 27", "Luzula sp", "Luzula spicata",
+    2022, "27 AN3C 27", "Luzula spicata cf", "Luzula spicata",
+    2019, "28 AN3I 28", "Antennaria alpina cf", "Antennaria sp",
+    2019, "28 AN3I 28", "Antennaria dioica cf", "Antennaria sp",
+    2020, "28 AN3I 28", "Antennaria dioica cf", "Antennaria sp",
+    2022, "28 AN3I 28", "Antennaria alpina cf", "Antennaria sp",
+    2021, "28 AN3I 28", "Luzula sp", "Luzula spicata cf",
+    2019, "31 AN3N 31", "Deschampsia cespitosa", "Deschampsia alpina",
+    2020, "31 AN3N 31", "Deschampsia cespitosa", "Deschampsia alpina",
+    2019, "31 AN3N 31", "Luzula spicata cf", "Luzula sp",
+    2020, "31 AN3N 31", "Luzula spicata cf", "Luzula sp",
+    2020, "31 AN3N 31", "Luzula multiflora cf", "Luzula sp",
+    2021, "31 AN3N 31", "Luzula spicata cf", "Luzula sp",
+    2022, "31 AN3N 31", "Antennaria sp", "Antennaria dioica cf",
+    2019, "33 AN10I 33", "Antennaria alpina cf", "Antennaria sp",
+    2019, "33 AN10I 33", "Taraxacum sp.", "Leontodon autumnalis",
+    2021, "33 AN10I 33", "Luzula sp", "Luzula spicata cf",
+    2022, "33 AN10I 33", "Antennaria alpina cf", "Antennaria sp",
+    2019, "35 AN10C 35", "Antennaria alpina cf", "Antennaria sp",
+    2019, "38 AN10M 38", "Avenella flexuosa", "Festuca ovina",
+    2019, "38 AN10M 38", "Luzula spicata cf", "Luzula spicata",
+    2021, "38 AN10M 38", "Luzula sp", "Luzula spicata",
+    2019, "38 AN10M 38", "Taraxacum sp.", "Leontodon autumnalis",
+    2022, "38 AN10M 38", "Luzula spicata cf", "Luzula spicata",
+    2019, "39 AN10N 39", "Deschampsia cespitosa", "Deschampsia alpina",
+    2019, "45 AN7I 45", "Antennaria alpina cf", "Antennaria alpina",
+    2021, "45 AN7I 45", "Antennaria sp", "Antennaria alpina",
+    2022, "45 AN7I 45", "Antennaria sp", "Antennaria alpina",
+    2019, "45 AN7I 45", "Deschampsia cespitosa", "Deschampsia alpina",
+    2019, "45 AN7I 45", "Taraxacum sp.", "Leontodon autumnalis",
+    2019, "46 AN7M 46", "Antennaria alpina cf", "Antennaria sp",
+    2022, "46 AN7M 46", "Antennaria sp", "Antennaria dioica cf",
+    2022, "46 AN7M 46", "Luzula sp", "Luzula spicata cf",
+    2019, "49 AN4I 49", "Antennaria dioica cf", "Antennaria sp",
+    2021, "49 AN4I 49", "Antennaria alpina cf", "Antennaria sp",
+    2022, "49 AN4I 49", "Antennaria alpina cf", "Antennaria sp",
+    2019, "50 AN4M 50", "Taraxacum sp.", "Leontodon autumnalis",
+    2019, "52 AN4C 52", "Antennaria dioica cf", "Antennaria alpina",
+    2021, "52 AN4C 52", "Antennaria alpina cf", "Antennaria alpina",
+    2021, "52 AN4C 52", "Luzula sp", "Luzula spicata",
+    2022, "52 AN4C 52", "Antennaria alpina cf", "Antennaria alpina",
+    2019, "52 AN4C 52", "Luzula spicata cf", "Luzula spicata",
+    2019, "52 AN4C 52", "Viola biflora", "Viola palustris",
+    2019, "58 AN8I 58", "Taraxacum sp.", "Leontodon autumnalis",
+    2019, "63 AN8N 63", "Taraxacum sp.", "Leontodon autumnalis",
+    2022, "63 AN8N 63", "Antennaria sp", "Antennaria alpina cf",
+    2019, "68 AN9I 68", "Luzula spicata cf", "Luzula spicata",
+    2021, "68 AN9I 68", "Luzula sp", "Luzula spicata",
+    2022, "68 AN9I 68", "Luzula sp", "Luzula spicata",
+    2022, "68 AN9I 68", "Luzula spicata cf", "Luzula spicata",
+    2019, "70 AN9C 70", "Taraxacum sp.", "Leontodon autumnalis",
+    2020, "75 AN2I 75", "Luzula spicata cf", "Luzula sp",
+    2021, "76 AN2M 76", "Luzula spicata cf", "Luzula sp",
+    2021, "79 AN2N 79", "Antennaria dioica cf", "Antennaria alpina cf",
+    
+    2019, "2 AN1M 2", "Carex brunnescens cf", "Carex vaginata",
+    2021, "4 AN1C 4", "Carex norvegica cf", "Carex bigelowii",
+    2019, "4 AN1C 4", "Carex small bigelowii", "Carex vaginata",
+    2019, "4 AN1C 4", "Carex wide", "Carex atrata cf",
+    2019, "9 AN6M 9", "Carex saxatilis cf", "Carex vaginata",
+    2019, "11 AN6I 11", "Carex saxatilis cf", "Carex vaginata",
+    2019, "11 AN6I 11", "Carex atrata cf", "Carex bigelowii",
+    2019, "12 AN6C 12", "Carex atrata cf", "Carex bigelowii",
+    2019, "12 AN6C 12", "Carex sp", "Carex vaginata",
+    2021, "12 AN6C 12", "Carex pilulifera cf", "Carex vaginata",
+    2022, "16 AN6N 16", "Carex atrata cf", "Carex bigelowii",
+    2019, "17 AN5M 17", "Carex light green", "Carex vaginata",
+    2019, "17 AN5M 17", "Carex panicea cf", "Carex bigelowii",
+    2019, "18 AN5C 18", "Carex small bigelowii", "Carex bigelowii",
+    2019, "18 AN5C 18", "Carex saxatilis cf", "Carex vaginata",
+    2019, "20 AN5I 20", "Carex saxatilis cf", "Carex vaginata",
+    2021, "20 AN5I 20", "Carex norvegica cf", "Carex vaginata",
+    2021, "25 AN3M 25", "Carex norvegica cf", "Carex bigelowii",
+    2019, "25 AN3M 25", "Carex small bigelowii", "Carex norvegica cf",
+    2020, "25 AN3M 25", "Carex sp", "Carex rupestris",
+    2020, "25 AN3M 25", "Carex dark green", "Carex atrata cf",
+    2020, "27 AN3C 27", "Carex sp", "Carex rupestris",
+    2019, "28 AN3I 28", "Carex wide", "Carex vaginata",
+    2019, "28 AN3I 28", "Carex panicea cf", "Carex atrata cf",
+    2019, "28 AN3I 28", "Carex capillaris wide", "Carex rupestris",
+    2020, "28 AN3I 28", "Carex sp", "Carex rupestris",
+    2020, "28 AN3I 28", "Carex dark green", "Carex norvegica cf",
+    2019, "31 AN3N 31", "Carex saxatilis cf", "Carex vaginata",
+    2019, "31 AN3N 31", "Carex capillaris wide", "Carex bigelowii",
+    2020, "31 AN3N 31", "Carex dark green", "Carex norvegica cf",
+    2021, "35 AN10C 35", "Carex norvegica cf", "Carex bigelowii",
+    2019, "38 AN10M 38", "Carex saxatilis cf", "Carex vaginata",
+    2019, "39 AN10N 39", "Carex capillaris wide", "Carex bigelowii",
+    2019, "45 AN7I 45", "Carex saxatilis cf", "Carex vaginata",
+    2019, "48 AN7N 48", "Carex atrata cf", "Carex bigelowii",
+    2019, "48 AN7N 48", "Carex wide", "Carex vaginata",
+    2021, "48 AN7N 48", "Carex norvegica cf", "Carex bigelowii",
+    2019, "49 AN4I 49", "Carex saxatilis cf", "Carex vaginata",
+    2021, "50 AN4M 50", "Carex rupestris", "Carex capillaris",
+    2019, "52 AN4C 52", "Carex saxatilis cf", "Carex vaginata",
+    2019, "52 AN4C 52", "Carex atrata cf", "Carex bigelowii",
+    2021, "52 AN4C 52", "Carex bigelowii cf", "Carex bigelowii", 
+    2019, "55 AN4N 55", "Carex saxatilis cf", "Carex vaginata",
+    2021, "55 AN4N 55", "Carex capillaris cf", "Carex capillaris",
+    2021, "55 AN4N 55", "Carex panicea cf", "Carex bigelowii",
+    2019, "57 AN8C 57", "Carex saxatilis cf", "Carex vaginata",
+    2019, "60 AN8M 60", "Carex wide", "Carex vaginata",
+    2019, "60 AN8M 60", "Carex panicea cf", "Carex bigelowii",
+    2019, "63 AN8N 63", "Carex saxatilis cf", "Carex vaginata",
+    2019, "63 AN8N 63", "Carex norvegica cf", "Carex bigelowii",
+    2019, "67 AN9M 67", "Carex saxatilis cf", "Carex vaginata",
+    2019, "67 AN9M 67", "Carex norvegica cf", "Carex vaginata",
+    2019, "67 AN9M 67", "Carex thin", "Carex rupestris cf",
+    2019, "68 AN9I 68", "Carex saxatilis cf", "Carex vaginata",
+    2019, "70 AN9C 70", "Carex saxatilis cf", "Carex vaginata",
+    2019, "72 AN9N 72", "Carex small bigelowii", "Carex bigelowii",
+    2019, "75 AN2I 75", "Carex saxatilis cf", "Carex vaginata",
+    2019, "76 AN2M 76", "Carex small bigelowii", "Carex vaginata",
+    2019, "76 AN2M 76", "Carex atrata cf", "Carex bigelowii",
+    2020, "76 AN2M 76", "Carex sp", "Carex sp1",
+    2019, "77 AN2C 77", "Carex saxatilis cf", "Carex vaginata",
+    2021, "77 AN2C 77", "Carex capillaris cf", "Carex capillaris",
+    2019, "77 AN2C 77", "Carex small bigelowii", "Carex sp",
+    2019, "79 AN2N 79", "Carex atrata cf", "Carex bigelowii",
+    2019, "79 AN2N 79", "Carex small bigelowii", "Carex vaginata",
+    
+    2019, "1 WN1M 84", "Carex saxatilis cf", "Carex vaginata",
+    2020, "1 WN1M 84", "Carex dark green", "Carex vaginata",
+    2019, "3 WN1C 85", "Carex small bigelowii", "Carex vaginata",
+    2019, "3 WN1C 85", "Carex atrata cf", "Carex bigelowii",
+    2019, "5 WN1I 86", "Carex saxatilis cf", "Carex vaginata",
+    2019, "5 WN1I 86", "Carex atrata cf", "Carex bigelowii",
+    2019, "8 WN1N 87", "Carex small bigelowii", "Carex vaginata",
+    2020, "8 WN1N 87", "Carex sp", "Carex rupestris",
+    2021, "8 WN1N 87", "Carex dark green", "Carex norvegica cf",
+    2019, "10 WN6M 89", "Carex atrata cf", "Carex vaginata",
+    2019, "10 WN6M 89", "Carex small bigelowii", "Carex bigelowii",
+    2019, "13 WN6C 90", "Carex atrata cf", "Carex bigelowii",
+    2019, "13 WN6C 90", "Carex saxatilis cf", "Carex vaginata",
+    2019, "14 WN6I 92", "Carex saxatilis cf", "Carex vaginata",
+    2021, "14 WN6I 92", "Carex dark green", "Carex norvegica cf",
+    2019, "19 WN5I 97", "Carex small bigelowii", "Carex vaginata",
+    2019, "21 WN5C 99", "Carex light green", "Carex vaginata",
+    2019, "22 WN5M 102", "Carex small bigelowii", "Carex vaginata",
+    2019, "26 WN3I 105", "Carex saxatilis cf", "Carex vaginata",
+    2020, "26 WN3I 105", "Carex dark green", "Carex sp",
+    2019, "29 WN3C 106", "Carex atrata cf", "Carex bigelowii",
+    2019, "29 WN3C 106", "Carex saxatilis cf", "Carex vaginata",
+    2019, "30 WN3M 107", "Carex atrata cf", "Carex bigelowii",
+    2019, "30 WN3M 107", "Carex saxatilis cf", "Carex vaginata",
+    2020, "30 WN3M 107", "Carex thin", "Carex rupestris",
+    2019, "32 WN3N 112", "Carex atrata cf", "Carex bigelowii",
+    2019, "32 WN3N 112", "Carex saxatilis cf", "Carex vaginata",
+    2020, "32 WN3N 112", "Carex dark green", "Carex sp",
+    2019, "34 WN10I 114", "Carex saxatilis cf", "Carex vaginata",
+    2019, "34 WN10I 114", "Carex atrata cf", "Carex bigelowii",
+    2021, "34 WN10I 114", "Carex atrata cf", "Carex bigelowii",
+    2021, "36 WN10M 115", "Carex atrata cf", "Carex bigelowii",
+    2019, "36 WN10M 115", "Carex saxatilis cf", "Carex vaginata",
+    2019, "37 WN10C 116", "Carex saxatilis cf", "Carex vaginata",
+    2019, "37 WN10C 116", "Carex wide", "Carex bigelowii",
+    2021, "37 WN10C 116", "Carex atrata cf", "Carex bigelowii",
+    2019, "40 WN10N 119", "Carex brunnescens cf", "Carex bigelowii",
+    2019, "41 WN7C 122", "Carex light green", "Carex vaginata",
+    2019, "41 WN7C 122", "Carex small bigelowii", "Carex norvegica cf",
+    2019, "42 WN7I 123", "Carex saxatilis cf", "Carex vaginata",
+    2021, "42 WN7I 123", "Carex norvegica cf", "Carex vaginata",
+    2021, "44 WN7M 125", "Carex atrata cf", "Carex bigelowii",
+    2019, "47 WN7N 128", "Carex panicea cf", "Carex bigelowii",
+    2019, "47 WN7N 128", "Carex light green", "Carex vaginata",
+    2021, "47 WN7N 128", "Carex norvegica cf", "Carex vaginata",
+    2019, "47 WN7N 128", "Carex small bigelowii", "Carex rupestris",
+    2019, "51 WN4M 132", "Carex light green", "Carex vaginata",
+    2019, "51 WN4M 132", "Carex atrata cf", "Carex bigelowii",
+    2019, "53 WN4C 133", "Carex saxatilis cf", "Carex vaginata",
+    2019, "54 WN4I 134", "Carex brunnescens cf", "Carex capillaris",
+    2021, "56 WN4N 135", "Carex norvegica cf", "Carex vaginata",
+    2019, "59 WN8C 138", "Carex atrata cf", "Carex vaginata",
+    2021, "59 WN8C 138", "Carex norvegica cf", "Carex vaginata",
+    2019, "61 WN8I 140", "Carex brunnescens cf", "Carex capillaris",
+    2021, "61 WN8I 140", "Carex norvegica cf", "Carex pilulifera cf",
+    2021, "64 WN8N 143", "Carex norvegica cf", "Carex bigelowii",
+    2019, "71 WN9N 151", "Carex small bigelowii", "Carex vaginata",
+    2019, "74 WN2C 155", "Carex brunnescens cf", "Carex capillaris",
+    2019, "74 WN2C 155", "Carex sp3", "Carex norvegica cf",
+    2020, "74 WN2C 155", "Carex norvegica cf", "Carex pilulifera cf",
+    2020, "74 WN2C 155", "Carex thin", "Carex sp1",
+    2019, "78 WN2I 158", "Carex small bigelowii", "Carex capillaris",
+    2021, "78 WN2I 158", "Carex vaginata cf", "Carex vaginata",
+    2019, "80 WN2N 159", "Carex light green", "Carex capillaris",
+    2019, "80 WN2N 159", "Carex small bigelowii", "Carex norvegica cf",
+    2020, "80 WN2N 159", "Carex dark green", "Carex sp",
+  )
+  
+  
+  
+  ## Fixes cover of species
+  # This needs doing if species were merged, added or removed according to other years or pictures
+  fix_cover = tibble::tribble(
+    ~year, ~turfID, ~species, ~cover_new,
+    2020, "83 AN1I 83", "Agrostis capillaris",  34,
+    2020, "83 AN1I 83", "Festuca rubra",  16,
+    2019, "1 WN1M 84", "Taraxacum sp.", 3,
+    2019, "1 WN1M 84", "Festuca ovina",  4,
+    2019, "1 WN1M 84", "Festuca rubra",  16,
+    2019, "5 WN1I 86", "Festuca rubra",  15,
+    2019, "13 WN6C 90", "Avenella flexuosa", 2,
+    2019, "14 WN6I 92", "Leontodon autumnalis", 3,
+    2019, "21 WN5C 99", "Leontodon autumnalis", 6,
+    2019, "30 WN3M 107", "Luzula spicata cf", 1,
+    2019, "36 WN10M 115", "Leontodon autumnalis", 6,
+    2019, "36 WN10M 115", "Agrostis capillaris", 12,
+    2019, "59 WN8C 1385", "Leontodon autumnalis", 17,
+    2019, "59 WN8C 1385", "Taraxacum sp.", 8,
+    2019, "61 WN8I 140", "Leontodon autumnalis", 4,
+    2019, "9 AN6M 9", "Festuca rubra", 2,
+    2019, "11 AN6I 11", "Leontodon autumnalis", 4,
+    2019, "16 AN6N 16", "Leontodon autumnalis", 2,
+    2019, "20 AN5I 20", "Festuca rubra", 17,
+    2019, "20 AN5I 20", "Potentilla crantzii", 3,
+    2019, "38 AN10M 38", "Leontodon autumnalis", 4,
+    2019, "50 AN4M 50", "Leontodon autumnalis", 6,
+    2019, "52 AN4C 52", "Antennaria alpina", 4,
+    2019, "58 AN8I 58", "Leontodon autumnalis", 4,
+    2019, "63 AN8N 63", "Leontodon autumnalis", 3,
+    2019, "139 AN8I 139", "Carex bigelowii", 8,
+    2019, "139 AN8I 139", "Carex pilulifera cf", 4,
+    2019, "142 AN8C 142", "Carex pilulifera cf", 10,
+    2021, "160 AN2N 160", "Carex bigelowii", 4,
+    2021, "160 AN2N 160", "Carex pilulifera cf", 10,
+    2019, "155 WN2M 198", "Carex bigelowii", 3,
+    2022, "157 AN2I 157", "Carex brunnescens cf", 3,
+    
+    2019, "157 AN2I 157", "Carex vaginata", 6,
+    2021, "157 AN2I 157", "Carex capillaris", 4,
+    2022, "157 AN2I 157", "Carex capillaris", 7,
+    
+    2020, "2 AN1M 2", "Carex bigelowii", 6,
+    2021, "2 AN1M 2", "Carex bigelowii", 5,
+    2022, "2 AN1M 2", "Carex atrata cf", 2,
+    2019, "7 AN1N 7", "Carex vaginata", 8,
+    2020, "7 AN1N 7", "Carex bigelowii", 6,
+    2019, "11 AN6I 11", "Carex vaginata", 3,
+    2019, "11 AN6I 11", "Carex bigelowii", 5,
+    2019, "12 AN6C 12", "Carex bigelowii", 4,
+    2019, "17 AN5M 17", "Carex vaginata", 5,
+    2019, "17 AN5M 17", "Carex bigelowii", 2,
+    2019, "18 AN5C 18", "Carex vaginata", 6,
+    2019, "23 AN5N 23", "Carex vaginata", 5,
+    2021, "23 AN5N 23", "Carex vaginata", 7,
+    2019, "23 AN5N 23", "Carex bigelowii", 3,
+    2021, "23 AN5N 23", "Carex bigelowii", 2,
+    2019, "27 AN3C 27", "Carex vaginata", 7,
+    2020, "27 AN3C 27", "Carex bigelowii", 7,
+    2021, "27 AN3C 27", "Carex vaginata", 5,
+    2019, "28 AN3I 28", "Carex bigelowii", 4,
+    2021, "28 AN3I 28", "Carex vaginata", 6,
+    2021, "28 AN3I 28", "Carex norvegica cf", 5,
+    2021, "31 AN3N 31", "Carex norvegica cf", 2,
+    2021, "31 AN3N 31", "Carex vaginata", 4,
+    2021, "31 AN3N 31", "Carex bigelowii", 4,
+    2019, "33 AN10I 33", "Carex vaginata", 7,
+    2021, "33 AN10I 33", "Carex norvegica cf", 8,
+    2019, "35 AN10C 35", "Carex capillaris", 27,
+    2021, "38 AN10M 38", "Carex bigelowii", 6,
+    2021, "38 AN10M 38", "Carex norvegica cf", 5,
+    2021, "39 AN10N 39", "Carex bigelowii", 8,
+    2019, "43 AN7C 43", "Carex capillaris", 8,
+    2019, "46 AN7M 46", "Carex capillaris", 8,
+    2019, "48 AN7N 48", "Carex bigelowii", 7,
+    2019, "50 AN4M 50", "Carex vaginata", 10,
+    2019, "55 AN4N 55", "Carex capillaris", 16,
+    2021, "57 AN8C 57", "Carex vaginata", 4,
+    2021, "57 AN8C 57", "Carex norvegica cf", 6,
+    2019, "58 AN8I 58", "Carex bigelowii", 6,
+    2019, "58 AN8I 58", "Carex vaginata", 7,
+    2019, "67 AN9M 67", "Carex bigelowii", 9,
+    2019, "67 AN9M 67", "Carex capillaris", 4,
+    2019, "68 AN9I 68", "Carex bigelowii", 3,
+    2019, "72 AN9N 72", "Carex bigelowii", 8,
+    2019, "72 AN9N 72", "Carex vaginata", 5,
+    2019, "72 AN9N 72", "Carex capillaris", 3,
+    2021, "72 AN9N 72", "Carex bigelowii", 20,
+    2021, "72 AN9N 72", "Carex vaginata", 7,
+    2019, "75 AN2I 75", "Carex vaginata", 6,
+    2019, "75 AN2I 75", "Carex bigelowii", 11,
+    2019, "79 AN2N 79", "Carex vaginata", 5,
+    2021, "79 AN2N 79", "Carex vaginata", 6,
+    2021, "79 AN2N 79", "Carex norvegica cf", 4,
+    
+    2019, "3 WN1C 85", "Carex bigelowii", 4,
+    2020, "3 WN1C 85", "Carex vaginata", 12,
+    2020, "5 WN1I 86", "Carex vaginata", 15,
+    2020, "8 WN1N 87", "Carex capillaris", 6,
+    2019, "13 WN6C 90", "Carex vaginata", 2,
+    2019, "15 WN6N 95", "Carex vaginata", 3,
+    2019, "22 WN5M 102", "Carex bigelowii", 7,
+    2019, "24 WN5N 103", "Carex vaginata", 5,
+    2019, "26 WN3I 105", "Carex bigelowii", 10,
+    2019, "26 WN3I 105", "Carex capillaris", 5,
+    2021, "26 WN3I 105", "Carex norvegica cf", 10,
+    2020, "30 WN3M 107", "Carex bigelowii", 8,
+    2019, "34 WN10I 114", "Carex capillaris", 4,
+    2019, "36 WN10M 115", "Carex capillaris", 4,
+    2019, "37 WN10C 116", "Carex capillaris", 6,
+    2019, "41 WN7C 122", "Carex capillaris", 8,
+    2019, "41 WN7C 122", "Carex vaginata", 12,
+    2019, "44 WN7M 125", "Carex vaginata", 10,
+    2021, "44 WN7M 125", "Carex vaginata", 10,
+    2019, "47 WN7N 128", "Carex vaginata", 4,
+    2021, "51 WN4M 132", "Carex bigelowii", 6,
+    2019, "53 WN4C 133", "Carex bigelowii", 3,
+    2021, "53 WN4C 133", "Carex norvegica cf", 1,
+    2021, "53 WN4C 133", "Carex bigelowii", 4,
+    2019, "56 WN4N 135", "Carex bigelowii", 5,
+    2019, "56 WN4N 135", "Carex vaginata", 6,
+    2019, "62 WN8M 141", "Carex bigelowii", 10,
+    2021, "62 WN8M 141", "Carex bigelowii", 16,
+    2019, "66 WN9I 147", "Carex bigelowii", 14,
+    2019, "69 WN9C 150", "Carex vagninata", 5,
+    2019, "73 WN2M 153", "Carex bigelowii", 10,
+    2020, "73 WN2M 153", "Carex bigelowii", 4,
+    2020, "74 WN2C 155", "Carex bigelowii", 10,
+    2019, "78 WN2I 158", "Carex bigelowii", 6,
+    2019, "78 WN2I 158", "Carex capillaris", 3,
+    2020, "78 WN2I 158", "Carex capillaris", 2,
+    2021, "80 WN2N 159", "Carex vaginata", 8,
+  )
+  
+  
+  ## Adds cover for new species
+  # This needs doing if species was missing, or species was split into 2 species according to other years or pictures
+  add_cover = tribble(
+    ~year, ~turfID, ~species, ~cover,
+    2019, "1 WN1M 84", "Leontodon autumnalis", 1,
+    2019, "5 WN1I 86", "Leontodon autumnalis",  1,
+    2019, "30 WN3M 107", "Luzula multiflora cf", 1,
+    2019, "36 WN10M 115", "Taraxacum sp.", 1,
+    2019, "53 WN4C 133", "Taraxacum sp.", 1,
+    2019, "54 WN4I 134", "Taraxacum sp.", 2,
+    2019, "11 AN6I 11", "Taraxacum sp.", 2,
+    2019, "15 WN6N 95", "Leontodon autumnalis", 2,
+    2019, "16 AN6N 16", "Taraxacum sp.", 6,
+    2019, "20 AN5I 20", "Geranium sylvaticum", 5,
+    2019, "20 AN5I 20", "Taraxacum sp.", 4,
+    2019, "23 AN5N 23", "Antennaria sp", 2,
+    2019, "38 AN10M 38", "Taraxacum sp.", 2,
+    2019, "43 AN7C 43", "Taraxacum sp.", 1,
+    2019, "45 AN7I 45", "Festuca ovina", 1,
+    2019, "45 AN7I 45", "Taraxacum sp.", 1,
+    2019, "46 AN7M 46", "Taraxacum sp.", 2,
+    2019, "50 AN4M 50", "Taraxacum sp.", 8,
+    2019, "57 AN8C 57", "Taraxacum sp.", 4,
+    2019, "58 AN8I 58", "Taraxacum sp.", 8,
+    2019, "63 AN8N 63", "Taraxacum sp.", 5,
+    2019, "142 AN8C 142", "Carex bigelowii", 5,
+    2019, "160 AN2N 160", "Carex pilulifera cf", 3,
+    2020, "160 AN2N 160", "Carex pilulifera cf", 3,
+    2022, "160 AN2N 160", "Carex pilulifera cf", 3,
+    
+    2020, "2 AN1M 2", "Carex atrata cf", 2,
+    2019, "4 AN1C 4", "Carex vaginata", 5,
+    2020, "4 AN1C 4", "Carex atrata cf", 2,
+    2019, "6 AN1I 6", "Carex atrata cf", 4,
+    2021, "6 AN1I 6", "Carex atrata cf", 4,
+    2019, "6 AN1I 6", "Carex vaginata", 8,
+    2019, "7 AN1N 7", "Carex atrata cf", 5,
+    2021, "7 AN1N 7", "Carex atrata cf", 5,
+    2021, "17 AN5M 17", "Carex bigelowii", 2,
+    2022, "20 AN5I 20", "Carex vaginata", 3,
+    2021, "23 AN5N 23", "Carex atrata cf", 2,
+    2021, "28 AN3I 28", "Carex bigelowii", 3,
+    2019, "35 AN10C 35", "Carex vaginata", 4,
+    2019, "39 AN10N 39", "Carex vaginata", 1,
+    2021, "39 AN10N 39", "Carex vaginata", 3,
+    2019, "43 AN7C 43", "Carex vaginata", 12,
+    2019, "46 AN7M 46", "Carex bigelowii", 4,
+    2021, "46 AN7M 46", "Carex bigelowii", 5,
+    2019, "46 AN7M 46", "Carex vaginata", 5,
+    2021, "75 AN2I 75", "Carex bigelowii", 4,
+    2021, "79 AN2N 79", "Carex capillaris", 2,
+    
+    2019, "8 WN1N 87", "Carex rupestris", 4,
+    2021, "26 WN3I 105", "Carex bigelowii", 10,
+    2019, "34 WN10I 114", "Carex vaginata", 2,
+    2019, "34 WN10I 114", "Carex rupestris", 2,
+    2019, "36 WN10M 115", "Carex bigelowii", 4,
+    2019, "37 WN10C 116", "Carex rupestris", 10,
+    2019, "41 WN7C 122", "Carex rupestris", 4,
+    2019, "44 WN7M 125", "Carex bigelowii", 2,
+    2021, "53 WN4C 133", "Carex vaginata", 6,
+    2019, "62 WN8M 141", "Carex vaginata", 4,
+    2019, "66 WN9I 147", "Carex vaginata", 4,
+    2019, "73 WN2M 153", "Carex vaginata", 8,
+    2022, "74 WN2C 155", "Carex pilulifera cf", 3,
+    2019, "78 WN2I 158", "Carex vaginata", 6,
+    
+  )  %>% 
+    # needs joining with metadata, because these are new entries
+    left_join(metaTurfID, by = "turfID")
+  # need to add 5 WN1I 86 Leo aut in cover dataset. Full record.
+  
+  
+  
+  ## Remove species using anti_join
+  # This is needed for species that were misidentified and only some of the subplots are change to another species
+  remove_wrong_species = tibble::tribble(
+    ~year, ~turfID, ~species,
+    2020, "83 AN1I 83", "Phleum alpinum",
+    2020, "83 AN1I 83", "Avenella flexuosa",
+    2019, "5 WN1I 86", "Festuca ovina",
+    2019, "13 WN6C 90", "Festuca rubra",
+    2019, "21 WN5C 99", "Taraxacum sp.",
+    2019, "36 WN10M 115", "Phleum alpinum",
+    2019, "20 AN5I 20", "Avenella flexuosa",
+    2019, "52 AN4C 52", "Antennaria alpina cf",
+    2019, "155 WN2M 198", "Carex small bigelowii",
+    2019, "153 WN2I 197", "Carex small bigelowii",
+    2019, "154 AN2M 154", "Carex small bigelowii",
+    2022, "157 AN2I 157", "Carex canescens cf",
+    2019, "143 WN8N 192", "Carex small bigelowii",
+    
+    2019, "2 AN1M 2", "Carex panicea cf",
+    2019, "2 AN1M 2", "Carex small bigelowii",
+    2019, "4 AN1C 4", "Carex saxatilis cf",
+    2019, "4 AN1C 4", "Carex capillaris wide",
+    2019, "4 AN1C 4", "Carex brunnescens cf",
+    2019, "6 AN1I 6", "Carex capillaris wide",
+    2019, "7 AN1N 7", "Carex saxatilis cf",
+    2019, "7 AN1N 7", "Carex panicea cf",
+    2020, "7 AN1N 7", "Carex dark green",
+    2021, "9 AN6M 9", "Carex rupestris",
+    2022, "9 AN6M 9", "Carex rupestris",
+    2019, "11 AN6I 11", "Carex light green",
+    2019, "11 AN6I 11", "Carex small bigelowii",
+    2019, "12 AN6C 12", "Carex small bigelowii",
+    2019, "17 AN5M 17", "Carex brunnescens cf",
+    2019, "17 AN5M 17", "Carex small bigelowii",
+    2019, "18 AN5C 18", "Carex capillaris wide",
+    2019, "23 AN5N 23", "Carex saxatilis cf",
+    2019, "23 AN5N 23", "Carex small bigelowii",
+    2021, "23 AN5N 23", "Carex norvegica cf",
+    2019, "27 AN3C 27", "Carex saxatilis cf",
+    2019, "27 AN3C 27", "Carex light green",
+    2020, "27 AN3C 27", "Carex dark green",
+    2021, "27 AN3C 27", "Carex norvegica cf",
+    2019, "28 AN3I 28", "Carex small bigelowii",
+    2019, "33 AN10I 33", "Carex saxatilis cf",
+    2021, "33 AN10I 33", "Carex capillaris cf",
+    2021, "39 AN10N 39", "Carex norvegica cf",
+    2019, "48 AN7N 48", "Carex norvegica cf",
+    2019, "48 AN7N 48", "Carex panicea cf",
+    2019, "50 AN4M 50", "Carex saxatilis cf",
+    2019, "55 AN4N 55", "Carex thin",
+    2019, "58 AN8I 58", "Carex atrata cf",
+    2019, "58 AN8I 58", "Carex saxatilis cf",
+    2019, "58 AN8I 58", "Carex panicea cf",
+    2019, "67 AN9M 67", "Carex small bigelowii",
+    2019, "67 AN9M 67", "Carex panicea cf",
+    2019, "67 AN9M 67", "Carex capillaris wide",
+    2019, "68 AN9I 68", "Carex small bigelowii",
+    2019, "72 AN9N 72", "Carex atrata cf",
+    2019, "72 AN9N 72", "Carex saxatilis cf",
+    2019, "72 AN9N 72", "Carex thin",
+    2021, "72 AN9N 72", "Carex norvegica cf",
+    2019, "75 AN2I 75", "Carex atrata cf",
+    2019, "75 AN2I 75", "Carex dark green",
+    2019, "75 AN2I 75", "Carex small bigelowii",
+    2021, "75 AN2I 75", "Carex norvegica cf",
+    2019, "79 AN2N 79", "Carex light green",
+    2021, "80 WN2N 159", "Carex saxatilis cf",
+    
+    2019, "3 WN1C 85", "Carex panicea cf",
+    2020, "3 WN1C 85", "Carex sp",
+    2020, "5 WN1I 86", "Carex dark green",
+    2020, "5 WN1I 86", "Carex sp",
+    2019, "13 WN6C 90", "Carex capillaris wide",
+    2019, "15 WN6N 95", "Carex saxatilis cf",
+    2019, "22 WN5M 102", "Carex atrata cf",
+    2019, "24 WN5N 103", "Carex saxatilis cf",
+    2020, "30 WN3M 107", "Carex dark green",
+    2019, "32 WN3N 112", "Carex panicea cf",
+    2019, "44 WN7M 125", "Carex saxatilis cf",
+    2021, "44 WN7M 125", "Carex norvegica cf",
+    2019, "47 WN7N 128", "Carex saxatilis cf",
+    2021, "51 WN4M 132", "Carex atrata cf",
+    2019, "53 WN4C 133", "Carex small bigelowii",
+    2019, "56 WN4N 135", "Carex small bigelowii",
+    2019, "56 WN4N 135", "Carex dark green",
+    2021, "62 WN8M 141", "Carex norvegica cf",
+    2019, "69 WN9C 150", "Carex small bigelowii",
+    2020, "73 WN2M 153", "Carex small bigelowii",
+    2020, "74 WN2C 155", "Carex sp",
+    2019, "78 WN2I 158", "Carex thin",
+    2020, "78 WN2I 158", "Carex thin",
+    
+    
+  )
+  
+  cover_clean <- community_clean %>% 
+    ungroup() %>% 
+    select(origSiteID:species, cover:file) %>% 
+    filter(!species %in% c("Moss layer", "Vascular plant layer", "SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop", "Unknown seedlings", "Wool")) %>% 
+    
+    # fix errors
+    # fix wrong species
+    left_join(fix_species, by = c("year", "turfID", "species")) %>% 
+    mutate(species = if_else(!is.na(species_new), species_new, species)) %>%
+    select(-species_new) %>% 
+    # fix wrong cover
+    left_join(fix_cover, by = c("year", "turfID", "species")) %>% 
+    mutate(cover = if_else(!is.na(cover_new), cover_new, cover)) %>%
+    select(-cover_new) %>% 
+    # add cover
+    bind_rows(add_cover |> select(-Namount_kg_ha_y)) %>% 
+    # remove species that have been replaced
+    tidylog::anti_join(remove_wrong_species, by = c("year", "turfID", "species")) |> 
+    # rename last carex
+    mutate(species = if_else(species == "Carex sp1", "Carex sp", species),
+           species = if_else(species == "Orchid sp", "Unknown orchid", species)) |> 
+    # add N amount variable
+    left_join(metaTurfID)
+  
+}
+
+
+
+#### SUBPLOT DATA PRECENSE/ABSENCE AND FUNCTIONAL GROUP COVER ####
+clean_comm_structure <- function(community_clean, metaTurfID){
+  
+  
+  ### FIX MISIDENTIFICAITONS OR WRONG ENTRIES IN THE DATA
+  # The following data frames fix misidentification of species, change species names, or problems in the data
+  # All these changes need to be done in community data frame when producing cover and CommunitySubplot
+  
+  ## Changes species names
+  # Fixes misidentification, or change uncertainties in species names containing cf to species or vice versa according to data in other years of pictures
+  fix_species = tibble::tribble(
+    ~year, ~turfID, ~species, ~species_new,
+    2019, "1 WN1M 84", "Antennaria alpina cf", "Antennaria sp",
+    2020, "1 WN1M 84", "Antennaria dioica cf", "Antennaria sp",
+    2021, "1 WN1M 84", "Erigeron sp", "Erigeron uniflorus",
+    2021, "1 WN1M 84", "Luzula sp", "Luzula spicata cf",
+    2019, "1 WN1M 84", "Festuca ovina", "Nardus stricta",
+    2021, "1 WN1M 84", "Festuca ovina", "Nardus stricta",
+    2022, "3 WN1C 85", "Antennaria sp", "Antennaria alpina cf",
+    2019, "5 WN1I 86", "Antennaria alpina cf", "Antennaria sp",
+    2020, "5 WN1I 86", "Antennaria dioica cf", "Antennaria sp",
+    2021, "8 WN1N 87", "Luzula sp", "Luzula spicata cf",
+    2022, "8 WN1N 87", "Luzula sp", "Luzula spicata cf",
+    2021, "10 WN6M 89", "Luzula sp", "Luzula spicata cf",
+    2019, "13 WN6C 90", "Antennaria alpina cf", "Antennaria dioica",
+    2021, "13 WN6C 90", "Antennaria dioica cf", "Antennaria dioica",
+    2021, "14 WN6I 92", "Luzula sp", "Luzula spicata cf",
+    2021, "94 AN6I 94", "Festuca ovina", "Festuca rubra",
+    2021, "15 WN6N 95", "Antennaria sp", "Antennaria alpina cf",
+    2019, "15 WN6N 95", "Luzula spicata cf", "Luzula sp",
+    2021, "19 WN5I 97", "Antennaria sp", "Antennaria dioica cf",
+    2021, "21 WN5C 99", "Antennaria sp", "Antennaria alpina cf",
+    2021, "22 WN5M 102", "Antennaria sp", "Antennaria alpina cf",
+    2019, "24 WN5N 103", "Taraxacum sp.", "Leontodon autumnalis",
+    2019, "26 WN3I 105", "Taraxacum sp.", "Leontodon autumnalis",
+    2019, "26 WN3I 105", "Luzula spicata cf", "Luzula sp",
+    2020, "26 WN3I 105", "Luzula multiflora cf", "Luzula sp",
+    2021, "29 WN3C 106", "Antennaria sp", "Antennaria alpina cf",
+    2019, "29 WN3C 106", "Taraxacum sp.", "Leontodon autumnalis",
+    2019, "29 WN3C 106", "Luzula spicata cf", "Luzula spicata",
+    2020, "29 WN3C 106", "Luzula spicata cf", "Luzula spicata",
+    2021, "29 WN3C 106", "Luzula spicata cf", "Luzula spicata",
+    2021, "30 WN3M 107", "Antennaria sp", "Antennaria alpina cf",
+    2022, "30 WN3M 107", "Antennaria dioica cf", "Antennaria alpina cf",
+    2021, "30 WN3M 107", "Luzula sp", "Luzula multiflora cf",
+    2022, "30 WN3M 107", "Luzula sp", "Luzula multiflora cf",
+    2019, "32 WN3N 112", "Luzula spicata cf", "Luzula sp",
+    2021, "34 WN10I 114", "Antennaria sp", "Antennaria dioica cf",
+    2021, "34 WN10I 114", "Luzula sp", "Luzula spicata cf",
+    2022, "34 WN10I 114", "Luzula sp", "Luzula spicata cf",
+    2022, "34 WN10I 114", "Potentilla erecta", "Potentilla crantzii",
+    2019, "36 WN10M 115", "Taraxacum sp.", "Leontodon autumnalis",
+    2021, "37 WN10C 116", "Antennaria sp", "Antennaria dioica cf",
+    2019, "42 WN7I 123", "Antennaria alpina cf", "Antennaria sp",
+    2019, "44 WN7M 125", "Taraxacum sp.", "Leontodon autumnalis",
+    2021, "53 WN4C 133", "Antennaria sp", "Antennaria alpina cf",
+    2019, "53 WN4C 133", "Taraxacum sp.", "Leontodon autumnalis",
+    2021, "53 WN4C 133", "Erigeron sp", "Erigeron uniflorus",
+    2021, "54 WN4I 134", "Erigeron sp", "Erigeron uniflorus",
+    2019, "54 WN4I 134", "Salix reticulata", "Vaccinium uliginosum",
+    2019, "54 WN4I 134", "Taraxacum sp.", "Leontodon autumnalis",
+    2019, "61 WN8I 140", "Luzula spicata cf", "Luzula sp",
+    2019, "64 WN8N 143", "Luzula spicata cf", "Luzula sp",
+    2021, "71 WN9N 151", "Luzula multiflora cf", "Luzula multiflora",
+    2019, "71 WN9N 151", "Luzula spicata cf", "Luzula multiflora",
+    2019, "73 WN2M 153", "Leontodon autumnalis", "Taraxacum sp.",
+    2019, "73 WN2M 153", "Luzula spicata cf", "Luzula spicata",
+    2020, "73 WN2M 153", "Luzula multiflora cf", "Luzula spicata",
+    2021, "73 WN2M 153", "Luzula sp", "Luzula spicata",
+    2022, "73 WN2M 153", "Luzula spicata cf", "Luzula spicata",
+    
+    2020, "154 AN2M 154", "Vaccinium uliginosum", "Vaccinium vitis-idaea",
+    2019, "139 AN8I 139", "Carex small bigelowii", "Carex pilulifera cf",
+    2019, "142 AN8C 142", "Carex small bigelowii", "Carex pilulifera cf",
+    2021, "144 AN8N 144", "Carex pilulifera cf", "Carex bigelowii",
+    2019, "146 AN9I 146", "Carex small bigelowii", "Carex pilulifera cf",
+    2019, "149 AN9C 149", "Carex small bigelowii", "Carex bigelowii",
+    2019, "152 AN9N 152", "Carex small bigelowii", "Carex brunnescens cf",
+    2019, "156 AN2C 156", "Carex small bigelowii", "Carex pilulifera cf",
+    2022, "156 AN2C 156", "Carex sp", "Carex pilulifera cf",
+    2021, "156 AN2C 156", "Carex bigelowii cf", "Carex bigelowii",
+    2021, "157 AN2I 157", "Carex pilulifera cf", "Carex bigelowii",
+    2022, "157 AN2I 157", "Carex sp", "Carex brunnescens cf",
+    2019, "138 WN8I 189", "Carex small bigelowii", "Carex bigelowii",
+    2019, "141 WN8M 191", "Carex small bigelowii", "Carex bigelowii",
+    2019, "145 WN9M 193", "Carex small bigelowii", "Carex pilulifera cf",
+    2021, "145 WN9M 193", "Carex sp", "Carex pilulifera cf",
+    2022, "145 WN9M 193", "Carex sp", "Carex bigelowii",
+    2019, "147 WN9C 194", "Carex small bigelowii", "Carex bigelowii",
+    2019, "151 WN9N 196", "Carex small bigelowii", "Carex bigelowii",
+    2021, "153 WN2I 197", "Carex sp", "Carex bigelowii",
+    
+    2022, "2 AN1M 2", "Orchid sp", "Coeloglossum viride",
+    2019, "4 AN1C 4", "Antennaria alpina cf", "Antennaria dioica",
+    2020, "4 AN1C 4", "Antennaria dioica cf", "Antennaria dioica",
+    2021, "4 AN1C 4", "Antennaria sp", "Antennaria dioica",
+    2022, "4 AN1C 4", "Antennaria alpina cf", "Antennaria dioica",
+    2021, "6 AN1I 6", "Antennaria sp", "Antennaria alpina cf",
+    2021, "7 AN1N 7", "Antennaria sp", "Antennaria alpina cf",
+    2019, "9 AN6M 9", "Achillea millefolium", "Alchemilla alpina",
+    2021, "9 AN6M 9", "Antennaria dioica cf", "Antennaria alpina cf",
+    2022, "9 AN6M 9", "Antennaria sp", "Antennaria alpina cf",
+    2019, "9 AN6M 9", "Avenella flexuosa", "Festuca rubra",
+    2019, "9 AN6M 9", "Leontodon autumnalis", "Taraxacum sp.",
+    2019, "11 AN6I 11", "Antennaria alpina cf", "Antennaria sp",
+    2019, "11 AN6I 11", "Antennaria dioica cf", "Antennaria sp",
+    2019, "11 AN6I 11", "Taraxacum sp.", "Leontodon autumnalis",
+    2022, "11 AN6I 11", "Luzula sp.", "Luzula spicata cf",
+    2019, "16 AN6N 16", "Astragalus alpina", "Oxytropa laponica",
+    2019, "16 AN6N 16", "Antennaria alpina cf", "Antennaria sp",
+    2022, "16 AN6N 16", "Antennaria dioica cf", "Antennaria sp",
+    2019, "17 AN5M 17", "Antennaria dioica cf", "Antennaria dioica",
+    2021, "17 AN5M 17", "Antennaria dioica cf", "Antennaria dioica",
+    2022, "17 AN5M 17", "Antennaria sp", "Antennaria dioica",
+    2019, "18 AN5C 18", "Antennaria dioica cf", "Antennaria dioica",
+    2021, "18 AN5C 18", "Antennaria dioica cf", "Antennaria dioica",
+    2022, "18 AN5C 18", "Antennaria sp", "Antennaria dioica",
+    2019, "23 AN5N 23", "Antennaria dioica cf", "Antennaria dioica",
+    2021, "23 AN5N 23", "Antennaria dioica cf", "Antennaria dioica",
+    2019, "27 AN3C 27", "Deschampsia cespitosa", "Deschampsia alpina",
+    2020, "27 AN3C 27", "Deschampsia cespitosa", "Deschampsia alpina",
+    2019, "27 AN3C 27", "Taraxacum sp.", "Leontodon autumnalis",
+    2019, "27 AN3C 27", "Luzula multiflora", "Luzula multiflora cf",
+    2020, "27 AN3C 27", "Luzula spicata cf", "Luzula spicata",
+    2021, "27 AN3C 27", "Luzula spicata cf", "Luzula spicata",
+    2021, "27 AN3C 27", "Luzula sp", "Luzula spicata",
+    2022, "27 AN3C 27", "Luzula spicata cf", "Luzula spicata",
+    2019, "28 AN3I 28", "Antennaria alpina cf", "Antennaria sp",
+    2019, "28 AN3I 28", "Antennaria dioica cf", "Antennaria sp",
+    2020, "28 AN3I 28", "Antennaria dioica cf", "Antennaria sp",
+    2022, "28 AN3I 28", "Antennaria alpina cf", "Antennaria sp",
+    2021, "28 AN3I 28", "Luzula sp", "Luzula spicata cf",
+    2019, "31 AN3N 31", "Deschampsia cespitosa", "Deschampsia alpina",
+    2020, "31 AN3N 31", "Deschampsia cespitosa", "Deschampsia alpina",
+    2019, "31 AN3N 31", "Luzula spicata cf", "Luzula sp",
+    2020, "31 AN3N 31", "Luzula spicata cf", "Luzula sp",
+    2020, "31 AN3N 31", "Luzula multiflora cf", "Luzula sp",
+    2021, "31 AN3N 31", "Luzula spicata cf", "Luzula sp",
+    2022, "31 AN3N 31", "Antennaria sp", "Antennaria dioica cf",
+    2019, "33 AN10I 33", "Antennaria alpina cf", "Antennaria sp",
+    2019, "33 AN10I 33", "Taraxacum sp.", "Leontodon autumnalis",
+    2021, "33 AN10I 33", "Luzula sp", "Luzula spicata cf",
+    2022, "33 AN10I 33", "Antennaria alpina cf", "Antennaria sp",
+    2019, "35 AN10C 35", "Antennaria alpina cf", "Antennaria sp",
+    2019, "38 AN10M 38", "Avenella flexuosa", "Festuca ovina",
+    2019, "38 AN10M 38", "Luzula spicata cf", "Luzula spicata",
+    2021, "38 AN10M 38", "Luzula sp", "Luzula spicata",
+    2019, "38 AN10M 38", "Taraxacum sp.", "Leontodon autumnalis",
+    2022, "38 AN10M 38", "Luzula spicata cf", "Luzula spicata",
+    2019, "39 AN10N 39", "Deschampsia cespitosa", "Deschampsia alpina",
+    2019, "45 AN7I 45", "Antennaria alpina cf", "Antennaria alpina",
+    2021, "45 AN7I 45", "Antennaria sp", "Antennaria alpina",
+    2022, "45 AN7I 45", "Antennaria sp", "Antennaria alpina",
+    2019, "45 AN7I 45", "Deschampsia cespitosa", "Deschampsia alpina",
+    2019, "45 AN7I 45", "Taraxacum sp.", "Leontodon autumnalis",
+    2019, "46 AN7M 46", "Antennaria alpina cf", "Antennaria sp",
+    2022, "46 AN7M 46", "Antennaria sp", "Antennaria dioica cf",
+    2022, "46 AN7M 46", "Luzula sp", "Luzula spicata cf",
+    2019, "49 AN4I 49", "Antennaria dioica cf", "Antennaria sp",
+    2021, "49 AN4I 49", "Antennaria alpina cf", "Antennaria sp",
+    2022, "49 AN4I 49", "Antennaria alpina cf", "Antennaria sp",
+    2019, "50 AN4M 50", "Taraxacum sp.", "Leontodon autumnalis",
+    2019, "52 AN4C 52", "Antennaria dioica cf", "Antennaria alpina",
+    2021, "52 AN4C 52", "Antennaria alpina cf", "Antennaria alpina",
+    2021, "52 AN4C 52", "Luzula sp", "Luzula spicata",
+    2022, "52 AN4C 52", "Antennaria alpina cf", "Antennaria alpina",
+    2019, "52 AN4C 52", "Luzula spicata cf", "Luzula spicata",
+    2019, "52 AN4C 52", "Viola biflora", "Viola palustris",
+    2019, "58 AN8I 58", "Taraxacum sp.", "Leontodon autumnalis",
+    2019, "63 AN8N 63", "Taraxacum sp.", "Leontodon autumnalis",
+    2022, "63 AN8N 63", "Antennaria sp", "Antennaria alpina cf",
+    2019, "68 AN9I 68", "Luzula spicata cf", "Luzula spicata",
+    2021, "68 AN9I 68", "Luzula sp", "Luzula spicata",
+    2022, "68 AN9I 68", "Luzula sp", "Luzula spicata",
+    2022, "68 AN9I 68", "Luzula spicata cf", "Luzula spicata",
+    2019, "70 AN9C 70", "Taraxacum sp.", "Leontodon autumnalis",
+    2020, "75 AN2I 75", "Luzula spicata cf", "Luzula sp",
+    2021, "76 AN2M 76", "Luzula spicata cf", "Luzula sp",
+    2021, "79 AN2N 79", "Antennaria dioica cf", "Antennaria alpina cf",
+    
+    2019, "2 AN1M 2", "Carex brunnescens cf", "Carex vaginata",
+    2021, "4 AN1C 4", "Carex norvegica cf", "Carex bigelowii",
+    2019, "4 AN1C 4", "Carex small bigelowii", "Carex vaginata",
+    2019, "4 AN1C 4", "Carex wide", "Carex atrata cf",
+    2019, "9 AN6M 9", "Carex saxatilis cf", "Carex vaginata",
+    2019, "11 AN6I 11", "Carex saxatilis cf", "Carex vaginata",
+    2019, "11 AN6I 11", "Carex atrata cf", "Carex bigelowii",
+    2019, "12 AN6C 12", "Carex atrata cf", "Carex bigelowii",
+    2019, "12 AN6C 12", "Carex sp", "Carex vaginata",
+    2021, "12 AN6C 12", "Carex pilulifera cf", "Carex vaginata",
+    2022, "16 AN6N 16", "Carex atrata cf", "Carex bigelowii",
+    2019, "17 AN5M 17", "Carex light green", "Carex vaginata",
+    2019, "17 AN5M 17", "Carex panicea cf", "Carex bigelowii",
+    2019, "18 AN5C 18", "Carex small bigelowii", "Carex bigelowii",
+    2019, "18 AN5C 18", "Carex saxatilis cf", "Carex vaginata",
+    2019, "20 AN5I 20", "Carex saxatilis cf", "Carex vaginata",
+    2021, "20 AN5I 20", "Carex norvegica cf", "Carex vaginata",
+    2021, "25 AN3M 25", "Carex norvegica cf", "Carex bigelowii",
+    2019, "25 AN3M 25", "Carex small bigelowii", "Carex norvegica cf",
+    2020, "25 AN3M 25", "Carex sp", "Carex rupestris",
+    2020, "25 AN3M 25", "Carex dark green", "Carex atrata cf",
+    2020, "27 AN3C 27", "Carex sp", "Carex rupestris",
+    2019, "28 AN3I 28", "Carex wide", "Carex vaginata",
+    2019, "28 AN3I 28", "Carex panicea cf", "Carex atrata cf",
+    2019, "28 AN3I 28", "Carex capillaris wide", "Carex rupestris",
+    2020, "28 AN3I 28", "Carex sp", "Carex rupestris",
+    2020, "28 AN3I 28", "Carex dark green", "Carex norvegica cf",
+    2019, "31 AN3N 31", "Carex saxatilis cf", "Carex vaginata",
+    2019, "31 AN3N 31", "Carex capillaris wide", "Carex bigelowii",
+    2020, "31 AN3N 31", "Carex dark green", "Carex norvegica cf",
+    2021, "35 AN10C 35", "Carex norvegica cf", "Carex bigelowii",
+    2019, "38 AN10M 38", "Carex saxatilis cf", "Carex vaginata",
+    2019, "39 AN10N 39", "Carex capillaris wide", "Carex bigelowii",
+    2019, "45 AN7I 45", "Carex saxatilis cf", "Carex vaginata",
+    2019, "48 AN7N 48", "Carex atrata cf", "Carex bigelowii",
+    2019, "48 AN7N 48", "Carex wide", "Carex vaginata",
+    2021, "48 AN7N 48", "Carex norvegica cf", "Carex bigelowii",
+    2019, "49 AN4I 49", "Carex saxatilis cf", "Carex vaginata",
+    2021, "50 AN4M 50", "Carex rupestris", "Carex capillaris",
+    2019, "52 AN4C 52", "Carex saxatilis cf", "Carex vaginata",
+    2019, "52 AN4C 52", "Carex atrata cf", "Carex bigelowii",
+    2021, "52 AN4C 52", "Carex bigelowii cf", "Carex bigelowii", 
+    2019, "55 AN4N 55", "Carex saxatilis cf", "Carex vaginata",
+    2021, "55 AN4N 55", "Carex capillaris cf", "Carex capillaris",
+    2021, "55 AN4N 55", "Carex panicea cf", "Carex bigelowii",
+    2019, "57 AN8C 57", "Carex saxatilis cf", "Carex vaginata",
+    2019, "60 AN8M 60", "Carex wide", "Carex vaginata",
+    2019, "60 AN8M 60", "Carex panicea cf", "Carex bigelowii",
+    2019, "63 AN8N 63", "Carex saxatilis cf", "Carex vaginata",
+    2019, "63 AN8N 63", "Carex norvegica cf", "Carex bigelowii",
+    2019, "67 AN9M 67", "Carex saxatilis cf", "Carex vaginata",
+    2019, "67 AN9M 67", "Carex norvegica cf", "Carex vaginata",
+    2019, "67 AN9M 67", "Carex thin", "Carex rupestris cf",
+    2019, "68 AN9I 68", "Carex saxatilis cf", "Carex vaginata",
+    2019, "70 AN9C 70", "Carex saxatilis cf", "Carex vaginata",
+    2019, "72 AN9N 72", "Carex small bigelowii", "Carex bigelowii",
+    2019, "75 AN2I 75", "Carex saxatilis cf", "Carex vaginata",
+    2019, "76 AN2M 76", "Carex small bigelowii", "Carex vaginata",
+    2019, "76 AN2M 76", "Carex atrata cf", "Carex bigelowii",
+    2020, "76 AN2M 76", "Carex sp", "Carex sp1",
+    2019, "77 AN2C 77", "Carex saxatilis cf", "Carex vaginata",
+    2021, "77 AN2C 77", "Carex capillaris cf", "Carex capillaris",
+    2019, "77 AN2C 77", "Carex small bigelowii", "Carex sp",
+    2019, "79 AN2N 79", "Carex atrata cf", "Carex bigelowii",
+    2019, "79 AN2N 79", "Carex small bigelowii", "Carex vaginata",
+    
+    2019, "1 WN1M 84", "Carex saxatilis cf", "Carex vaginata",
+    2020, "1 WN1M 84", "Carex dark green", "Carex vaginata",
+    2019, "3 WN1C 85", "Carex small bigelowii", "Carex vaginata",
+    2019, "3 WN1C 85", "Carex atrata cf", "Carex bigelowii",
+    2019, "5 WN1I 86", "Carex saxatilis cf", "Carex vaginata",
+    2019, "5 WN1I 86", "Carex atrata cf", "Carex bigelowii",
+    2019, "8 WN1N 87", "Carex small bigelowii", "Carex vaginata",
+    2020, "8 WN1N 87", "Carex sp", "Carex rupestris",
+    2021, "8 WN1N 87", "Carex dark green", "Carex norvegica cf",
+    2019, "10 WN6M 89", "Carex atrata cf", "Carex vaginata",
+    2019, "10 WN6M 89", "Carex small bigelowii", "Carex bigelowii",
+    2019, "13 WN6C 90", "Carex atrata cf", "Carex bigelowii",
+    2019, "13 WN6C 90", "Carex saxatilis cf", "Carex vaginata",
+    2019, "14 WN6I 92", "Carex saxatilis cf", "Carex vaginata",
+    2021, "14 WN6I 92", "Carex dark green", "Carex norvegica cf",
+    2019, "19 WN5I 97", "Carex small bigelowii", "Carex vaginata",
+    2019, "21 WN5C 99", "Carex light green", "Carex vaginata",
+    2019, "22 WN5M 102", "Carex small bigelowii", "Carex vaginata",
+    2019, "26 WN3I 105", "Carex saxatilis cf", "Carex vaginata",
+    2020, "26 WN3I 105", "Carex dark green", "Carex sp",
+    2019, "29 WN3C 106", "Carex atrata cf", "Carex bigelowii",
+    2019, "29 WN3C 106", "Carex saxatilis cf", "Carex vaginata",
+    2019, "30 WN3M 107", "Carex atrata cf", "Carex bigelowii",
+    2019, "30 WN3M 107", "Carex saxatilis cf", "Carex vaginata",
+    2020, "30 WN3M 107", "Carex thin", "Carex rupestris",
+    2019, "32 WN3N 112", "Carex atrata cf", "Carex bigelowii",
+    2019, "32 WN3N 112", "Carex saxatilis cf", "Carex vaginata",
+    2020, "32 WN3N 112", "Carex dark green", "Carex sp",
+    2019, "34 WN10I 114", "Carex saxatilis cf", "Carex vaginata",
+    2019, "34 WN10I 114", "Carex atrata cf", "Carex bigelowii",
+    2021, "34 WN10I 114", "Carex atrata cf", "Carex bigelowii",
+    2021, "36 WN10M 115", "Carex atrata cf", "Carex bigelowii",
+    2019, "36 WN10M 115", "Carex saxatilis cf", "Carex vaginata",
+    2019, "37 WN10C 116", "Carex saxatilis cf", "Carex vaginata",
+    2019, "37 WN10C 116", "Carex wide", "Carex bigelowii",
+    2021, "37 WN10C 116", "Carex atrata cf", "Carex bigelowii",
+    2019, "40 WN10N 119", "Carex brunnescens cf", "Carex bigelowii",
+    2019, "41 WN7C 122", "Carex light green", "Carex vaginata",
+    2019, "41 WN7C 122", "Carex small bigelowii", "Carex norvegica cf",
+    2019, "42 WN7I 123", "Carex saxatilis cf", "Carex vaginata",
+    2021, "42 WN7I 123", "Carex norvegica cf", "Carex vaginata",
+    2021, "44 WN7M 125", "Carex atrata cf", "Carex bigelowii",
+    2019, "47 WN7N 128", "Carex panicea cf", "Carex bigelowii",
+    2019, "47 WN7N 128", "Carex light green", "Carex vaginata",
+    2021, "47 WN7N 128", "Carex norvegica cf", "Carex vaginata",
+    2019, "47 WN7N 128", "Carex small bigelowii", "Carex rupestris",
+    2019, "51 WN4M 132", "Carex light green", "Carex vaginata",
+    2019, "51 WN4M 132", "Carex atrata cf", "Carex bigelowii",
+    2019, "53 WN4C 133", "Carex saxatilis cf", "Carex vaginata",
+    2019, "54 WN4I 134", "Carex brunnescens cf", "Carex capillaris",
+    2021, "56 WN4N 135", "Carex norvegica cf", "Carex vaginata",
+    2019, "59 WN8C 138", "Carex atrata cf", "Carex vaginata",
+    2021, "59 WN8C 138", "Carex norvegica cf", "Carex vaginata",
+    2019, "61 WN8I 140", "Carex brunnescens cf", "Carex capillaris",
+    2021, "61 WN8I 140", "Carex norvegica cf", "Carex pilulifera cf",
+    2021, "64 WN8N 143", "Carex norvegica cf", "Carex bigelowii",
+    2019, "71 WN9N 151", "Carex small bigelowii", "Carex vaginata",
+    2019, "74 WN2C 155", "Carex brunnescens cf", "Carex capillaris",
+    2019, "74 WN2C 155", "Carex sp3", "Carex norvegica cf",
+    2020, "74 WN2C 155", "Carex norvegica cf", "Carex pilulifera cf",
+    2020, "74 WN2C 155", "Carex thin", "Carex sp1",
+    2019, "78 WN2I 158", "Carex small bigelowii", "Carex capillaris",
+    2021, "78 WN2I 158", "Carex vaginata cf", "Carex vaginata",
+    2019, "80 WN2N 159", "Carex light green", "Carex capillaris",
+    2019, "80 WN2N 159", "Carex small bigelowii", "Carex norvegica cf",
+    2020, "80 WN2N 159", "Carex dark green", "Carex sp",
+  )
+  
+  ## Remove species using anti_join
+  # This is needed for species that were misidentified and only some of the subplots are change to another species
+  remove_wrong_species = tibble::tribble(
+    ~year, ~turfID, ~species,
+    2020, "83 AN1I 83", "Phleum alpinum",
+    2020, "83 AN1I 83", "Avenella flexuosa",
+    2019, "5 WN1I 86", "Festuca ovina",
+    2019, "13 WN6C 90", "Festuca rubra",
+    2019, "21 WN5C 99", "Taraxacum sp.",
+    2019, "36 WN10M 115", "Phleum alpinum",
+    2019, "20 AN5I 20", "Avenella flexuosa",
+    2019, "52 AN4C 52", "Antennaria alpina cf",
+    2019, "155 WN2M 198", "Carex small bigelowii",
+    2019, "153 WN2I 197", "Carex small bigelowii",
+    2019, "154 AN2M 154", "Carex small bigelowii",
+    2022, "157 AN2I 157", "Carex canescens cf",
+    2019, "143 WN8N 192", "Carex small bigelowii",
+    
+    2019, "2 AN1M 2", "Carex panicea cf",
+    2019, "2 AN1M 2", "Carex small bigelowii",
+    2019, "4 AN1C 4", "Carex saxatilis cf",
+    2019, "4 AN1C 4", "Carex capillaris wide",
+    2019, "4 AN1C 4", "Carex brunnescens cf",
+    2019, "6 AN1I 6", "Carex capillaris wide",
+    2019, "7 AN1N 7", "Carex saxatilis cf",
+    2019, "7 AN1N 7", "Carex panicea cf",
+    2020, "7 AN1N 7", "Carex dark green",
+    2021, "9 AN6M 9", "Carex rupestris",
+    2022, "9 AN6M 9", "Carex rupestris",
+    2019, "11 AN6I 11", "Carex light green",
+    2019, "11 AN6I 11", "Carex small bigelowii",
+    2019, "12 AN6C 12", "Carex small bigelowii",
+    2019, "17 AN5M 17", "Carex brunnescens cf",
+    2019, "17 AN5M 17", "Carex small bigelowii",
+    2019, "18 AN5C 18", "Carex capillaris wide",
+    2019, "23 AN5N 23", "Carex saxatilis cf",
+    2019, "23 AN5N 23", "Carex small bigelowii",
+    2021, "23 AN5N 23", "Carex norvegica cf",
+    2019, "27 AN3C 27", "Carex saxatilis cf",
+    2019, "27 AN3C 27", "Carex light green",
+    2020, "27 AN3C 27", "Carex dark green",
+    2021, "27 AN3C 27", "Carex norvegica cf",
+    2019, "28 AN3I 28", "Carex small bigelowii",
+    2019, "33 AN10I 33", "Carex saxatilis cf",
+    2021, "33 AN10I 33", "Carex capillaris cf",
+    2021, "39 AN10N 39", "Carex norvegica cf",
+    2019, "48 AN7N 48", "Carex norvegica cf",
+    2019, "48 AN7N 48", "Carex panicea cf",
+    2019, "50 AN4M 50", "Carex saxatilis cf",
+    2019, "55 AN4N 55", "Carex thin",
+    2019, "58 AN8I 58", "Carex atrata cf",
+    2019, "58 AN8I 58", "Carex saxatilis cf",
+    2019, "58 AN8I 58", "Carex panicea cf",
+    2019, "67 AN9M 67", "Carex small bigelowii",
+    2019, "67 AN9M 67", "Carex panicea cf",
+    2019, "67 AN9M 67", "Carex capillaris wide",
+    2019, "68 AN9I 68", "Carex small bigelowii",
+    2019, "72 AN9N 72", "Carex atrata cf",
+    2019, "72 AN9N 72", "Carex saxatilis cf",
+    2019, "72 AN9N 72", "Carex thin",
+    2021, "72 AN9N 72", "Carex norvegica cf",
+    2019, "75 AN2I 75", "Carex atrata cf",
+    2019, "75 AN2I 75", "Carex dark green",
+    2019, "75 AN2I 75", "Carex small bigelowii",
+    2021, "75 AN2I 75", "Carex norvegica cf",
+    2019, "79 AN2N 79", "Carex light green",
+    2021, "80 WN2N 159", "Carex saxatilis cf",
+    
+    2019, "3 WN1C 85", "Carex panicea cf",
+    2020, "3 WN1C 85", "Carex sp",
+    2020, "5 WN1I 86", "Carex dark green",
+    2020, "5 WN1I 86", "Carex sp",
+    2019, "13 WN6C 90", "Carex capillaris wide",
+    2019, "15 WN6N 95", "Carex saxatilis cf",
+    2019, "22 WN5M 102", "Carex atrata cf",
+    2019, "24 WN5N 103", "Carex saxatilis cf",
+    2020, "30 WN3M 107", "Carex dark green",
+    2019, "32 WN3N 112", "Carex panicea cf",
+    2019, "44 WN7M 125", "Carex saxatilis cf",
+    2021, "44 WN7M 125", "Carex norvegica cf",
+    2019, "47 WN7N 128", "Carex saxatilis cf",
+    2021, "51 WN4M 132", "Carex atrata cf",
+    2019, "53 WN4C 133", "Carex small bigelowii",
+    2019, "56 WN4N 135", "Carex small bigelowii",
+    2019, "56 WN4N 135", "Carex dark green",
+    2021, "62 WN8M 141", "Carex norvegica cf",
+    2019, "69 WN9C 150", "Carex small bigelowii",
+    2020, "73 WN2M 153", "Carex small bigelowii",
+    2020, "74 WN2C 155", "Carex sp",
+    2019, "78 WN2I 158", "Carex thin",
+    2020, "78 WN2I 158", "Carex thin"
+    
+  )
+  
+  
+  # Impute presence in subplot for species that have been removed by removing duplicate entries (Merging species)
+  subplot_missing = tibble::tribble(
+    ~year, ~turfID, ~species, ~subplot, ~variable, ~value, ~recorder,
+    2019, "77 AN2C 77", "Carex saxatilis cf", list(15), "fertile", 1, "silje",
+    2019, "80 WN2N 159", "Carex small bigelowii", list(21), "presence", 1, "silje",
+    2019, "42 WN7I 123", "Carex saxatilis cf", list(8, 9, 13, 15), "presence", 1, "aud",
+    2019, "48 AN7N 48", "Carex wide", list(23, 24), "presence", 1, "aud",
+    2019, "51 WN4M 132", "Carex light green", list(1, 2, 3, 4, 5, 6, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 24), "presence", 1, "aud",
+    2019, "51 WN4M 132", "Carex atrata cf", list(12), "presence", 1, "aud",
+    2019, "51 WN4M 132", "Carex atrata cf", list(10, 22), "fertile", 1, "aud",
+    2019, "51 WN4M 132", "Carex atrata cf", list(14), "juvenile", 1, "aud",
+    2019, "54 WN4I 134", "Carex sp", list(18), "presence", 1,  "silje",
+    2019, "60 AN8M 60", "Carex norvegica cf", list(16), "fertile", 1, "aud",
+    2019, "67 AN9M 67", "Carex saxatilis cf", list(17), "fertile", 1, "aud",
+    2019, "67 AN9M 67", "Carex saxatilis cf", list(21), "presence", 1, "aud",
+    2019, "68 AN9I 68", "Carex saxatilis cf", list(17), "fertile", 1, "silje",
+    2019, "72 AN9N 72", "Carex saxatilis cf", list(9, 11, 19, 25), "fertile", 1, "aud",
+    2019, "72 AN9N 72", "Carex saxatilis cf", list(18), "presence", 1, "aud",
+    2019, "102 WN5I 171", "Poa pratensis", list(21), "presence", 1, "vigdis",
+    2019, "104 AN5N 104", "Poa pratensis", list(2, 10), "presence", 1, "vigdis",
+    2020, "2 AN1M 2", "Carex atrata cf", list(4, 5, 9, 10), "presence", 1, "vigdis",
+    2020, "4 AN1C 4", "Carex atrata cf", list(4, 5, 10), "presence", 1, "vigdis",
+    2019, "6 AN1I 6", "Carex atrata cf", list(10, 15), "presence", 1, "linn",
+    2021, "6 AN1I 6", "Carex atrata cf", list(10, 15), "presence", 1, "silje",
+    2019, "6 AN1I 6", "Carex vaginata", list(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25), "presence", 1, "linn",
+    2019, "7 AN1N 7", "Carex atrata cf", list(4, 5, 7, 9, 12), "presence", 1, "silje",
+    2021, "7 AN1N 7", "Carex atrata cf", list(4, 5, 7, 11, 12), "presence", 1, "silje",
+    2021, "17 AN5M 17", "Carex bigelowii", list(5, 9, 10), "presence", 1, "kari",
+    2022, "20 AN5I 20", "Carex vaginata", list(1, 2, 3, 6, 11, 19, 20), "presence", 1, "susanne",
+    2021, "28 AN3I 28", "Carex bigelowii", list(6, 9, 10, 23), "presence", 1, "aud",
+    2019, "35 AN10C 35", "Carex vaginata", list(18, 19), "presence", 1, "linn",
+    2019, "39 AN10N 39", "Carex vaginata", list(8, 14), "presence", 1, "aud",
+    2021, "39 AN10N 39", "Carex vaginata", list(11, 24), "presence", 1, "aud",
+    2019, "43 AN7C 43", "Carex vaginata", list(1, 3, 8, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25), "presence", 1, "linn",
+    2019, "46 AN7M 46", "Carex bigelowii", list(4, 5, 6, 9), "presence", 1, "linn",
+    2019, "46 AN7M 46", "Carex vaginata", list(2, 4, 5, 10 ,12, 16, 19), "presence", 1, "linn",
+    2021, "75 AN2I 75", "Carex bigelowii", list(1, 7, 8, 9, 16, 19, 20, 24, 25), "presence", 1, "aud",
+    2021, "79 AN2N 79", "Carex capillaris", list(3, 4, 7, 8, 12, 18), "presence", 1, "silje",
+    
+    2019, "8 WN1N 87", "Carex rupestris", list(4, 10, 11, 13, 15, 18, 21, 22, 24), "presence", 1, "aud",
+    2019, "34 WN10I 114", "Carex vaginata", list(15, 16, 17, 20), "presence", 1, "aud",
+    2019, "34 WN10I 114", "Carex rupestris", list(10, 13, 14, 15, 19), "presence", 1, "aud",
+    2019, "36 WN10M 115", "Carex bigelowii", list(1, 17, 18, 24), "presence", 1, "silje",
+    2019, "37 WN10C 116", "Carex rupestris", list(2, 3, 4, 5, 7, 9, 12, 13, 14, 16, 20, 23, 24), "presence", 1, "aud",
+    2019, "41 WN7C 122", "Carex rupestris", list(5, 11), "presence", 1, "linn",
+    2019, "44 WN7M 125", "Carex bigelowii", list(13, 18), "presence", 1, "silje",
+    2021, "53 WN4C 133", "Carex bigelowii", list(7, 11, 12, 13), "presence", 1, "aud",
+    2021, "53 WN4C 133", "Carex vaginata", list(1, 2, 6, 7, 24, 25), "presence", 1, "aud",
+    2019, "62 WN8M 141", "Carex vaginata", list(2, 3, 4, 7, 8, 9, 10, 14), "presence", 1, "linn",
+    2019, "66 WN9I 147", "Carex vaginata", list(11, 16, 21), "presence", 1, "linn",
+    2019, "73 WN2M 153", "Carex vaginata", list(1, 2, 3, 9, 10, 17, 18, 22), "presence", 1, "linn",
+    2022, "74 WN2C 155", "Carex pilulifera cf", list(7, 12, 25), "presence", 1, "vigdis",
+    2019, "78 WN2I 158", "Carex vaginata", list(2, 3, 6, 7, 8, 11, 14, 17, 18, 22, 23, 24), "presence", 1, "aud") |>  
+    unchop(subplot) |>  
+    mutate(subplot = unlist(subplot),
+           subplot = as.character(subplot)) |> 
+    left_join(metaTurfID, by = "turfID")
+  
+  
+  ## Adds presence in new subplots
+  # This is needed in cases where species names were changed or species were split into 2 and presence in some subplots need to be added to the dataset
+  # list for subplot is created and then made into a long table
+  # also needs more info like recorder, because this is needed for the maps
+  add_subplot = tibble::tribble(
+    ~year, ~turfID, ~species, ~subplot, ~variable, ~value, ~recorder,
+    2020, "83 AN1I 83", "Festuca rubra", list(4, 5, 9, 12, 15, 18, 19, 20, 21, 22, 23, 24, 25), "presence", 1, "aud",
+    2019, "1 WN1M 84", "Leontodon autumnalis", list(3, 4, 10, 21, 22), "presence", 1, "silje",
+    2019, "1 WN1M 84", "Festuca rubra", list(5, 6, 7), "presence", 1, "silje",
+    2019, "5 WN1I 86", "Festuca rubra", list(1, 16, 17, 18, 20), "presence", 1, "silje",
+    2019, "5 WN1I 86", "Leontodon autumnalis", list(8, 9, 10, 15, 20), "presence", 1, "silje",
+    2019, "13 WN6C 90", "Avenella flexuosa", list(3, 7, 16), "presence", 1, "aud",
+    2019, "14 WN6I 92", "Leontodon autumnalis", list(3, 4, 7, 8, 9, 11, 18, 19, 23), "presence", 1, "silje",
+    2019, "21 WN5C 99", "Leontodon autumnalis", list(2, 6), "presence", 1, "linn",
+    2019, "30 WN3M 107", "Luzula multiflora cf", list(2, 7), "presence", 1, "aud",
+    2019, "36 WN10M 115", "Taraxacum sp.", list(7, 23, 24), "presence", 1, "silje",
+    2019, "36 WN10M 115", "Agrostis capillaris", list(3, 5, 23), "presence", 1, "silje",
+    2019, "53 WN4C 133", "Taraxacum sp.", list(2, 18, 22), "presence", 1, "silje",
+    2019, "54 WN4I 134", "Taraxacum sp.", list(11, 12, 13, 16, 21), "presence", 1, "silje",
+    2019, "59 WN8C 138", "Taraxacum sp.", list(3, 7, 13, 14, 17, 18, 19, 22), "presence", 1, "linn",
+    2019, "61 WN8I 140", "Leontodon autumnalis", list(5, 11, 16, 17, 21, 22, 25), "presence", 1, "silje",
+    2019, "9 AN6M 9", "Festuca rubra", list(19, 24), "presence", 1, "linn",
+    2019, "9 AN6M 9", "Festuca rubra", list(24), "fertile", 1, "linn",
+    2019, "11 AN6I 11", "Taraxacum sp.", list(3, 8, 9), "presence", 1, "silje",
+    2019, "15 WN6N 95", "Leontodon autumnalis", list(7, 8, 22, 23), "presence", 1, "silje",
+    2019, "16 AN6N 16", "Taraxacum sp.", list(2, 3, 4, 5, 6, 7, 12, 14, 16, 22, 23, 24), "presence", 1, "linn",
+    2019, "20 AN5I 20", "Festuca rubra", list(2, 5, 7, 9, 10, 13, 14, 18, 19, 25), "presence", 1, "linn",
+    2019, "20 AN5I 20", "Geranium sylvaticum", list(1, 6, 7, 17, 22, 23), "presence", 1, "linn",
+    2019, "20 AN5I 20", "Taraxacum sp.", list(14, 15, 19, 20), "presence", 1, "linn",
+    2019, "23 AN5N 23", "Antennaria sp", list(14, 15, 18, 22, 23), "presence", 1, "silje",
+    2019, "38 AN10M 38", "Taraxacum sp.", list(8, 9), "presence", 1, "silje",
+    2019, "43 AN7C 43", "Taraxacum sp.", list(21), "presence", 1, "linn",
+    2019, "45 AN7I 45", "Festuca ovina", list(4), "presence", 1, "silje",
+    2019, "45 AN7I 45", "Taraxacum sp.", list(1, 6), "presence", 1, "silje",
+    2019, "46 AN7M 46", "Taraxacum sp.", list(10, 12, 14, 15), "presence", 1, "linn",
+    2019, "50 AN4M 50", "Taraxacum sp.", list(2, 3, 8, 9, 10, 13, 14, 15, 19), "presence", 1, "silje",
+    2019, "52 AN4C 52", "Antennaria alpina", list(19), "presence", 1, "aud",
+    2019, "57 AN8C 57", "Taraxacum sp.", list(2, 3, 8, 9, 14, 25), "presence", 1, "linn",
+    2019, "58 AN8I 58", "Taraxacum sp.", list(1, 2, 3, 4, 5, 6, 7, 11, 12, 16, 18, 23), "presence", 1, "silje",
+    2019, "63 AN8N 63", "Taraxacum sp.", list(13, 14, 15, 16, 17, 19, 20, 22, 25), "presence", 1, "silje",
+    2019, "139 AN8I 139", "Carex pilulifera cf", list(1, 2, 3, 15, 17, 21, 22, 23), "presence", 1, "aud",
+    2021, "139 AN8I 139", "Carex bigelowii", list(1, 2, 3, 6, 7, 8, 24, 25), "presence", 1, "kari",
+    2019, "142 AN8C 142", "Carex bigelowii", list(4, 6, 7, 10), "presence", 1, "silje",
+    2019, "154 AN2M 154", "Carex bigelowii", list(16, 21), "presence", 1, "silje",
+    2019, "155 WN2M 198", "Carex bigelowii", list(1, 13), "presence", 1, "aud",
+    2022, "157 AN2I 157", "Carex brunnescens cf", list(25), "presence", 1, "vigdis",
+    2019, "160 AN2N 160", "Carex pilulifera cf", list(4, 8, 12), "presence", 1, "silje",
+    2020, "160 AN2N 160", "Carex pilulifera cf", list(7, 8, 13), "presence", 1, "vigdis",
+    2022, "160 AN2N 160", "Carex pilulifera cf", list(1, 2, 14, 15, 17, 18), "presence", 1, "vigdis",
+    2022, "160 AN2N 160", "Carex bigelowii", list(3, 8, 17), "presence", 1, "aud",
+    2019, "143 WN8N 192", "Carex bigelowii", list(19, 24), "presence", 1, "aud",
+    
+    2019, "2 AN1M 2", "Carex vaginata", list(5, 7, 11, 14, 16, 21, 24), "presence", 1, "aud",
+    2020, "2 AN1M 2", "Carex atrata cf", list(4, 5, 9, 10), "presence", 1, "vigdis",
+    2021, "2 AN1M 2", "Carex atrata cf", list(8, 9, 10, 13, 14), "presence", 1, "silje",
+    2019, "4 AN1C 4", "Carex vaginata", list(11, 12, 13), "presence", 1, "aud",
+    2019, "4 AN1C 4", "Carex capillaris", list(4, 6, 9, 24, 25), "presence", 1, "aud",
+    2019, "7 AN1N 7", "Carex vaginata", list(1, 2, 3, 5, 11, 16, 20, 21, 24, 25), "presence", 1, "silje",
+    2020, "7 AN1N 7", "Carex bigelowii", list(2, 3, 9), "presence", 1, "aud",
+    2019, "11 AN6I 11", "Carex vaginata", list(2, 5, 8, 10), "presence", 1, "silje",
+    2019, "11 AN6I 11", "Carex bigelowii", list(3, 9), "presence", 1, "silje",
+    2019, "12 AN6C 12", "Carex vaginata", list(19), "presence", 1, "silje",
+    2019, "17 AN5M 17", "Carex vaginata", list(2, 3, 4, 7, 9), "presence", 1, "aud",
+    2019, "18 AN5C 18", "Carex vaginata", list(1, 8, 9, 13, 14, 18, 19, 20), "presence", 1, "aud",
+    2019, "23 AN5N 23", "Carex vaginata", list(7, 8, 9, 10, 14, 15, 16, 20, 21, 22), "presence", 1, "silje",
+    2019, "23 AN5N 23", "Carex bigelowii", list(20), "presence", 1, "silje",
+    2021, "23 AN5N 23", "Carex vaginata", list(1, 3, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 22, 25), "presence", 1, "silje",
+    2021, "23 AN5N 23", "Carex atrata cf", list(3, 4, 8), "presence", 1, "silje",
+    2019, "27 AN3C 27", "Carex vaginata", list(3, 4, 9, 11, 12, 15, 16, 17, 19, 25), "presence", 1, "silje",
+    2020, "27 AN3C 27", "Carex bigelowii", list(3, 12, 17, 18, 22), "presence", 1, "aud",
+    2021, "27 AN3C 27", "Carex vaginata", list(2, 3, 4, 5, 8, 9, 10, 11, 12, 15, 16, 17), "presence", 1, "aud",
+    2019, "28 AN3I 28", "Carex bigelowii", list(7, 14, 19, 21, 22, 23), "presence", 1, "aud",
+    2021, "28 AN3I 28", "Carex vaginata", list(1, 5, 16, 19, 20, 21, 25), "presence", 1, "aud",
+    2021, "31 AN3N 31", "Carex vaginata", list(1, 3, 19, 20, 23), "presence", 1, "aud",
+    2021, "31 AN3N 31", "Carex bigelowii", list(2, 4, 9, 14, 15), "presence", 1, "aud",
+    2019, "33 AN10I 33", "Carex vaginata", list(1, 3, 4, 5, 6, 7, 8, 9, 10, 13, 14, 15, 18, 19), "presence", 1, "silje",
+    2021, "33 AN10I 33", "Carex capillaris", list(21), "presence", 1, "aud",
+    2021, "38 AN10M 38", "Carex bigelowii", list(2, 6, 7, 8, 10, 12, 13, 17, 18, 19, 21, 22, 23, 24), "presence", 1, "aud",
+    2021, "39 AN10N 39", "Carex bigelowii", list(2, 5, 10, 11, 14, 15, 16, 19, 20, 21, 22, 23), "presence", 1, "aud",
+    2019, "48 AN7N 48", "Carex bigelowii", list(4, 5, 20), "presence", 1, "aud",
+    2019, "50 AN4M 50", "Carex vaginata", list(1, 6, 17), "presence", 1, "silje",
+    2019, "53 WN4C 133", "Carex vaginata", list(1, 2, 6, 7, 8, 11, 12, 13, 18, 19, 23), "presence", 1, "aud",
+    2019, "53 WN4C 133", "Carex bigelowii", list(4, 5, 10, 15, 19, 20), "presence", 1, "aud",
+    
+    
+    2019, "55 AN4N 55", "Carex capillaris", list(4, 5, 6, 8, 9, 10, 11, 12, 13, 19, 21, 25), "presence", 1, "linn",
+    2021, "57 AN8C 57", "Carex vaginata", list(1, 2, 6, 7, 11, 12, 25), "presence", 1, "kari",
+    2019, "58 AN8I 58", "Carex vaginata", list(2, 5, 9, 10, 13, 14, 15, 16, 17, 18, 19, 22), "presence", 1, "silje",
+    2019, "58 AN8I 58", "Carex bigelowii", list(3, 8, 17, 21, 22), "presence", 1, "silje",
+    2019, "67 AN9M 67", "Carex bigelowii", list(4, 5, 6, 7, 8, 11, 15, 18, 19, 20, 23), "presence", 1, "aud",
+    2019, "67 AN9M 67", "Carex capillaris", list(11, 12, 17, 18, 20, 22), "presence", 1, "aud",
+    2019, "68 AN9I 68", "Carex bigelowii", list(4), "presence", 1, "silje",
+    2019, "72 AN9N 72", "Carex bigelowii", list(5, 14, 20), "presence", 1, "aud",
+    2019, "72 AN9N 72", "Carex vaginata", list(2, 3, 4, 23, 24), "presence", 1, "aud",
+    2019, "72 AN9N 72", "Carex capillaris", list(3, 9, 18, 21, 22, 23), "presence", 1, "aud",
+    2021, "72 AN9N 72", "Carex vaginata", list(9, 11, 12, 22, 23, 24), "presence", 1, "aud",
+    2021, "72 AN9N 72", "Carex bigelowii", list(1, 2, 5, 9, 10, 16, 17, 20, 21), "presence", 1, "aud",
+    2019, "75 AN2I 75", "Carex bigelowii", list(1, 2, 9, 19), "presence", 1, "silje",
+    2021, "75 AN2I 75", "Carex vaginata", list(5, 6, 7, 10, 22), "presence", 1, "aud",
+    2019, "79 AN2N 79", "Carex vaginata", list(1, 2), "presence", 1, "aud",
+    
+    2020, "3 WN1C 85", "Carex vaginata", list(7, 9, 10, 13, 14, 16, 18, 19, 20, 22, 24), "presence", 1, "aud",
+    2020, "5 WN1I 86", "Carex vaginata", list(1, 2, 4, 5, 6, 8, 9, 10, 11, 16, 19, 22), "presence", 1, "vigdis",
+    2019, "13 WN6C 90", "Carex vaginata", list(6), "presence", 1, "aud",
+    2019, "15 WN6N 95", "Carex vaginata", list(15, 21, 22), "presence", 1, "silje",
+    2019, "22 WN5M 102", "Carex bigelowii", list(2, 3, 4, 5, 6, 9, 11, 14, 21, 23, 25), "presence", 1, "aud",
+    2019, "24 WN5N 103", "Carex vaginata", list(2, 3, 4, 5, 6, 7, 9, 10, 11, 13, 14, 15, 17, 18, 19, 21, 22, 25), "presence", 1, "silje",
+    2019, "26 WN3I 105", "Carex bigelowii", list(4, 7, 9, 11, 15, 20), "presence", 1, "silje",
+    2020, "30 WN3M 107", "Carex bigelowii", list(2, 3, 12, 17), "presence", 1, "aud",
+    2019, "44 WN7M 125", "Carex vaginata", list(2, 3, 6, 7, 8, 10, 11, 12, 13, 14, 16, 17, 19, 21, 22, 24, 25), "presence", 1, "silje",
+    2021, "44 WN7M 125", "Carex vaginata", list(2, 4, 5, 6, 8, 12, 13, 15, 21, 22, 25), "presence", 1, "silje",
+    2019, "47 WN7N 128", "Carex vaginata", list(19, 20, 25), "presence", 1, "linn",
+    2021, "51 WN4M 132", "Carex bigelowii", list(3, 4, 5, 8, 9, 10, 18, 19, 20), "presence", 1, "silje",
+    2019, "53 WN4C 133", "Carex bigelowii", list(6, 16), "presence", 1, "silje",
+    2019, "53 WN4C 133", "Carex bigelowii", list(25), "presence", 1, "aud",
+    2019, "53 WN4C 133", "Carex vaginata", list(15, 20, 25), "presence", 1, "aud",
+    
+    2021, "62 WN8M 141", "Carex bigelowii", list(5, 7, 8, 9, 10, 13, 15, 17, 18, 19, 21, 25), "presence", 1, "aud",
+    2019, "69 WN9C 150", "Carex vaginata", list(12, 23), "presence", 1, "aud",
+    2020, "73 WN2M 153", "Carex bigelowii", list(10), "presence", 1, "aud",
+    2020, "74 WN2C 155", "Carex bigelowii", list(2, 11, 12, 15), "presence", 1, "vigdis",
+    2019, "78 WN2I 158", "Carex capillaris", list(9), "presence", 1, "aud",
+    2020, "78 WN2I 158", "Carex capillaris", list(20, 25), "presence", 1, "aud",
+    2021, "80 WN2N 159", "Carex vaginata", list(22), "presence", 1, "kari",
+    
+    
+  ) %>% 
+    unchop(subplot) %>% 
+    mutate(subplot = unlist(subplot),
+           subplot = as.character(subplot)) %>% 
+    left_join(metaTurfID, by = "turfID")
+  
+  
+  # Removes presence data in subplots
+  # This is needed for misidentified species, or wrong entries in the data
+  remove_subplot = tibble::tribble(
+    ~year, ~turfID, ~species, ~subplot, ~variable,
+    2019, "1 WN1M 84", "Taraxacum sp.", list(3, 4, 10, 21, 22), "presence",
+    2019, "1 WN1M 84", "Nardus stricta", list(1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 14, 15, 19, 20), "presence",
+    2019, "5 WN1I 86", "Taraxacum sp.", list(8, 9, 10, 15, 20), "presence",
+    2019, "30 WN3M 107", "Luzula spicata cf", list(2, 7), "presence",
+    2019, "20 AN5I 20", "Potentilla crantzii", list(1, 6, 7, 17, 22, 23), "presence",
+    2019, "23 AN5N 23", "Antennaria dioica", list(14, 15, 18, 22, 23), "presence",
+    2021, "23 AN5N 23", "Carex bigelowii", list(13, 4, 8), "presence",
+    2021, "28 AN3I 28", "Carex norvegica cf", list(1, 3, 4, 5, 6, 7, 8, 9, 10, 19, 20), "presence",
+    2021, "31 AN3N 31", "Carex norvegica cf", list(1, 2, 3, 4, 9, 14, 15, 19, 20, 23), "presence",
+    2021, "38 AN10M 38", "Carex norvegica cf", list(2, 6, 7, 8, 10, 12, 13, 17, 18, 19, 21, 22, 23, 24), "presence",
+    2019, "46 AN7M 46", "Carex capillaris", list(4, 5, 10), "presence",
+    2021, "79 AN2N 79", "Carex norvegica cf", list(3, 4, 7, 8, 12, 18), "presence",
+    2019, "34 WN10I 114", "Carex capillaris", list(10, 13, 14, 15, 16, 17, 19, 20), "presence",
+    2019, "37 WN10C 116", "Carex capillaris", list(2, 3, 4, 5, 7, 9, 12, 13, 14, 16, 20, 23, 24), "presence",
+    2021, "53 WN4C 133", "Carex norvegica cf", list(1, 2, 6, 7, 11, 12, 13, 24, 25), "presence",
+    2019, "73 WN2M 153", "Carex bigelowii", list(10, 17, 18, 22), "presence",
+    2019, "78 WN2I 158", "Carex bigelowii", list(2, 6, 7, 8, 14, 23, 24), "presence",
+    
+  ) %>% 
+    unchop(subplot) %>% 
+    mutate(subplot = unlist(subplot),
+           subplot = as.character(subplot))
+  
+  
+  comm_structure <- community_clean %>% 
+    filter(!species %in% c("Moss layer", "Vascular plant layer", "SumofCover", "Vascular plants", "Bryophytes", "Lichen", "Litter", "Bare soil", "Bare rock", "Poop", "Wool")) %>% 
+    
+    # make long table
+    pivot_longer(cols = `1`:`25`, names_to = "subplot", values_to = "presence") %>% 
+    # remove non-presence in subplot
+    filter(presence != "0") %>% 
+    
+    # Unknown seedlings have sometimes counts, but not consistent. So make just presence.
+    tidylog::mutate(presence = ifelse(species == "Unknown seedlings", "s", presence),
+                    presence = recode(presence, "fd" = "df", "1j" = "j", "1f" = "f", "F" = "f")) %>% 
+    mutate(fertile = ifelse(presence %in% c("f", "fd"), 1, 0),
+           dominant = ifelse(presence %in% c("d", "fd", "dj"), 1, 0),
+           juvenile = ifelse(presence %in% c("j", "dj"), 1, 0),
+           seedling = ifelse(presence %in% c("s", "3"), 1, 0)) %>%
+    mutate(remark = if_else(presence %in% c("1?", "cf", "j?"), paste(remark, "species id uncertain"), remark),
+           remark = if_else(presence %in% c("3"), "probably 3 leontodon seedlings", remark),
+           presence = 1) %>%  
+    pivot_longer(cols = c(presence:seedling), names_to = "variable", values_to = "value") %>% 
+    ungroup() %>% 
+    select(year, date, origSiteID:Nlevel, subplot, species, variable, value, remark, recorder) %>% 
+    # fix errors
+    # add data of subplots that were removed due to duplicates
+    bind_rows(subplot_missing) %>% 
+    
+    # fix wrong species
+    left_join(fix_species, by = c("year", "turfID", "species")) %>% 
+    mutate(species = if_else(!is.na(species_new), species_new, species)) %>%
+    select(-species_new) %>% 
+    
+    # add rows with subplot info
+    bind_rows(add_subplot) %>% 
+    # remove rows with subplot info (e.g. species that changed name)
+    anti_join(remove_subplot, by = c("year", "turfID", "species", "subplot")) %>% 
+    # remove species that have been replaced
+    tidylog::anti_join(remove_wrong_species, by = c("year", "turfID", "species")) |> 
+    # remove duplicates
+    tidylog::distinct() |> 
+    # rename last carex
+    mutate(species = if_else(species == "Carex sp1", "Carex sp", species),
+           species = if_else(species == "Orchid sp", "Unknown orchid", species))
+  
+  
+}

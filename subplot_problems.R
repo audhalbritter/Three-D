@@ -1,11 +1,11 @@
 ### THIS SCRIPT FIXES PROBLEMS IN THE COMMUNITY DATA ###
 
-
 # MERGING SPECIES
 # Problems regarding merging of species and then there are multiple entries at the subplot level and cover
 # "duplicate_problem" and "subpot_missing" are fixing these problems before community is created.
+tar_load(metaTurfID)
 
-duplicate_problem = tribble(
+duplicate_problem = tibble::tribble(
   ~year, ~turfID, ~species, ~cover,
   2019, "51 WN4M 132", "Carex light green", 6,
   2019, "51 WN4M 132", "Carex atrata cf", 1,
@@ -19,9 +19,8 @@ duplicate_problem = tribble(
   2019, "89 WN6I 165", "Carex saxatilis cf", 1
   )
 
-
 # Impute presence in subplot for species that have been removed by removing duplicate entries (Merging species)
-subplot_missing = tribble(
+subplot_missing = tibble::tribble(
   ~year, ~turfID, ~species, ~subplot, ~variable, ~value, ~recorder,
   2019, "77 AN2C 77", "Carex saxatilis cf", list(15), "fertile", 1, "silje",
   2019, "80 WN2N 159", "Carex small bigelowii", list(21), "presence", 1, "silje",
@@ -72,12 +71,10 @@ subplot_missing = tribble(
   2019, "66 WN9I 147", "Carex vaginata", list(11, 16, 21), "presence", 1, "linn",
   2019, "73 WN2M 153", "Carex vaginata", list(1, 2, 3, 9, 10, 17, 18, 22), "presence", 1, "linn",
   2022, "74 WN2C 155", "Carex pilulifera cf", list(7, 12, 25), "presence", 1, "vigdis",
-  2019, "78 WN2I 158", "Carex vaginata", list(2, 3, 6, 7, 8, 11, 14, 17, 18, 22, 23, 24), "presence", 1, "aud",
-
-) %>% 
-  unchop(subplot) %>% 
+  2019, "78 WN2I 158", "Carex vaginata", list(2, 3, 6, 7, 8, 11, 14, 17, 18, 22, 23, 24), "presence", 1, "aud") |>  
+  unchop(subplot) |>  
   mutate(subplot = unlist(subplot),
-         subplot = as.character(subplot)) %>% 
+         subplot = as.character(subplot)) |> 
   left_join(metaTurfID, by = "turfID")
 
 
@@ -88,7 +85,7 @@ subplot_missing = tribble(
 
 ## Changes species names
 # Fixes misidentification, or change uncertainties in species names containing cf to species or vice versa according to data in other years of pictures
-fix_species = tribble(
+fix_species = tibble::tribble(
   ~year, ~turfID, ~species, ~species_new,
   2019, "1 WN1M 84", "Antennaria alpina cf", "Antennaria sp",
   2020, "1 WN1M 84", "Antennaria dioica cf", "Antennaria sp",
@@ -396,7 +393,7 @@ fix_species = tribble(
 
 ## Fixes cover of species
 # This needs doing if species were merged, added or removed according to other years or pictures
-fix_cover = tribble(
+fix_cover = tibble::tribble(
   ~year, ~turfID, ~species, ~cover_new,
   2020, "83 AN1I 83", "Agrostis capillaris",  34,
   2020, "83 AN1I 83", "Festuca rubra",  16,
@@ -604,7 +601,7 @@ add_cover = tribble(
 
 ## Remove species using anti_join
 # This is needed for species that were misidentified and only some of the subplots are change to another species
-remove_wrong_species = tribble(
+remove_wrong_species = tibble::tribble(
   ~year, ~turfID, ~species,
   2020, "83 AN1I 83", "Phleum alpinum",
   2020, "83 AN1I 83", "Avenella flexuosa",
@@ -702,7 +699,7 @@ remove_wrong_species = tribble(
 # This is needed in cases where species names were changed or species were split into 2 and presence in some subplots need to be added to the dataset
 # list for subplot is created and then made into a long table
 # also needs more info like recorder, because this is needed for the maps
-add_subplot = tribble(
+add_subplot = tibble::tribble(
   ~year, ~turfID, ~species, ~subplot, ~variable, ~value, ~recorder,
   2020, "83 AN1I 83", "Festuca rubra", list(4, 5, 9, 12, 15, 18, 19, 20, 21, 22, 23, 24, 25), "presence", 1, "aud",
   2019, "1 WN1M 84", "Leontodon autumnalis", list(3, 4, 10, 21, 22), "presence", 1, "silje",
@@ -832,7 +829,7 @@ add_subplot = tribble(
 
 # Removes presence data in subplots
 # This is needed for misidentified species, or wrong entries in the data
-remove_subplot = tribble(
+remove_subplot = tibble::tribble(
   ~year, ~turfID, ~species, ~subplot, ~variable,
   2019, "1 WN1M 84", "Taraxacum sp.", list(3, 4, 10, 21, 22), "presence",
   2019, "1 WN1M 84", "Nardus stricta", list(1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 14, 15, 19, 20), "presence",
@@ -867,3 +864,4 @@ remove_subplot = tribble(
 #cover %>% filter(turfID == "53 WN4C 133", grepl("Carex", species)) %>% as.data.frame()
 # community %>% filter(turfID == "73 WN2M 153", species %in% c("Luzula multiflora cf", "Luzula sp", "Luzula spicata cf")) %>% as.data.frame()
 #CommunitySubplot %>% filter(turfID == "66 WN9I 147", grepl("Luzula", species), variable == "fertile") |> as.data.frame()
+

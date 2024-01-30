@@ -2,7 +2,7 @@
 # This script contains all changes that have been made to the community data (Cover and CommunitySubplot datasets)
 # The script is not merged with the code, it's just for documentation.
 
-comm_corrections = tribble(
+comm_corrections = tibble::tribble(
   ~year, ~turfID, ~correction,
   2020, "83 AN1I 83", "Change Avenella flexuosa to Festuca rubra. Change cover, delete Ave fle; Change Phleum alp to Agrsotis cap, and change cover, delete Phl alp",
   2019, "1 WN1M 84", "Change Antennaria alp cf to sp; Change Festuca ovina in some subplots to rubra; adjust cover in both species; Add some subplots to Leo and remove from Tar sp, adjust cover; Change ovina to Nardus",
