@@ -31,19 +31,43 @@ data_dic_plan <- list(
   ),
   
   # climate data dic
-  tar_target(
-    name = climate_dic,
-    command = make_data_dictionary(data =  climate_clean,
-                                   description_table = attribute_table,
-                                   table_ID = NA_character_)
-  ),
+  # tar_target(
+  #   name = climate_dic,
+  #   command = make_data_dictionary(data =  climate_clean,
+  #                                  description_table = attribute_table,
+  #                                  table_ID = NA_character_)
+  # ),
   
   # biomass data dic
   tar_target(
     name = biomass_dic,
     command = make_data_dictionary(data = biomass_clean,
                                    description_table = attribute_table,
-                                   table_ID = NA_character_)
+                                   table_ID = "biomass")
+  ),
+  
+  # productivity data dic
+  tar_target(
+    name = productivity_dic,
+    command = make_data_dictionary(data = productivity_clean,
+                                   description_table = attribute_table,
+                                   table_ID = "productivity")
+  ),
+
+  # reflectance data dic
+  tar_target(
+    name = ndvi_dic,
+    command = make_data_dictionary(data = ndvi_clean,
+                                   description_table = attribute_table,
+                                   table_ID = "reflectance")
+  ),
+  
+  # root data dic
+  tar_target(
+    name = root_dic,
+    command = make_data_dictionary(data = roots_clean,
+                                   description_table = attribute_table,
+                                   table_ID = "roots")
   ),
   
   # cover data dic
@@ -53,46 +77,47 @@ data_dic_plan <- list(
                                    description_table = attribute_table,
                                    table_ID = NA_character_)
   ),
-  
+
   # subplot presence data dic
   tar_target(
     name = presence_dic,
     command = make_data_dictionary(data = subplot_presence_clean,
                                    description_table = attribute_table,
-                                   table_ID = NA_character_)
+                                   table_ID = "subplot")
   ),
-  
+
   # community structure data dic
   tar_target(
     name = comm_structure_dic,
     command = make_data_dictionary(data = comm_structure_clean,
                                    description_table = attribute_table,
-                                   table_ID = NA_character_)
+                                   table_ID = "comm_structure")
   ),
   
-  # community structure data dic
+  # soil characterdata dic
   tar_target(
-    name = height_dic,
-    command = make_data_dictionary(data = height_clean,
+    name = soil_char_dic,
+    command = make_data_dictionary(data = soil_character,
                                    description_table = attribute_table,
-                                   table_ID = NA_character_)
-  ),
-  
-  # reflectance data dic
-  tar_target(
-    name = ndvi_dic,
-    command = make_data_dictionary(data = ndvi_clean,
-                                   description_table = attribute_table,
-                                   table_ID = NA_character_)
+                                   table_ID = "soil_char")
   ),
   
   # root data dic
   tar_target(
-    name = root_dic,
-    command = make_data_dictionary(data = roots_clean,
+    name = nutrient_dic,
+    command = make_data_dictionary(data = cn_clean,
                                    description_table = attribute_table,
-                                   table_ID = NA_character_)
+                                   table_ID = "nutrient")
   ),
+  
+  # decomposition data dic
+  tar_target(
+    name = decompose_dic,
+    command = make_data_dictionary(data = tbi_index,
+                                   description_table = attribute_table,
+                                   table_ID = "decomposition")
+  ),
+
   
   
   
@@ -101,18 +126,18 @@ data_dic_plan <- list(
     name = threeD_dic,
     command = write_xlsx(list(site = site_dic,
                               plot = plot_dic,
-                              climate = climate_dic,
-                              biomass = biomass_dic,
+                              #biomass = biomass_dic,
+                              productivity = productivity_dic,
+                              ndvi = ndvi_dic,
+                              root = root_dic,
                               comm_cover = cover_dic,
                               subplot_presence_dic = presence_dic,
                               comm_structure = comm_structure_dic,
-                              height = height_dic,
-                              ndvi = ndvi_dic#,
-                                # soil= soil_dic,
-                                # soil_nutrients = prs_dic,
-                                # decomposition = decompose_dic,
+                              soil_char = soil_char_dic,
+                              nutrients = nutrient_dic,
+                              decomposition = decompose_dic#,
                                 # cflux = cflux_dic,
-                                # gridded_climate = climate_gridded_dic
+                              #climate = climate_dic
                               ),
                            path = "data_cleaned/Three-D_data_dictionary.xlsx"),
     format = "file"
