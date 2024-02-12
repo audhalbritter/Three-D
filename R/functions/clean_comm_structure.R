@@ -667,7 +667,8 @@ clean_comm_structure <- function(community_clean, metaTurfID){
     tidylog::distinct() |> 
     # rename last carex
     mutate(species = if_else(species == "Carex sp1", "Carex sp", species),
-           species = if_else(species == "Orchid sp", "Unknown orchid", species))
+           species = if_else(species == "Orchid sp", "Unknown orchid", species)) |> 
+    select(year:Nlevel, Namount_kg_ha_y, subplot:recorder)
   
   
 }

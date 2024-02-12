@@ -119,7 +119,8 @@ community_plan <- list(
   # bind height and functional group cover
   tar_target(
     name =  comm_structure_clean,
-    command =  bind_rows(structure_clean, height_clean)
+    command =  bind_rows(structure_clean, height_clean) |> 
+      select(year, date, origSiteID:Nlevel, Namount_kg_ha_y, variable:recorder)
   ),
   
   # save data

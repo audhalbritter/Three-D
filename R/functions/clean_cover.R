@@ -638,6 +638,7 @@ clean_cover <- function(community_clean, metaTurfID){
     mutate(species = if_else(species == "Carex sp1", "Carex sp", species),
            species = if_else(species == "Orchid sp", "Unknown orchid", species)) |> 
     # add N amount variable
-    left_join(metaTurfID)
+    left_join(metaTurfID) |> 
+    select(year, date, origSiteID:Nlevel, Namount_kg_ha_y, species:file)
   
 }
