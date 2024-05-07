@@ -25,7 +25,7 @@ tar_source()
 #Combine target plans
 combined_plan <- c(
   meta_plan,
-  climate_plan,
+  #climate_plan,
   biomass_plan,
   productivity_plan,
   community_plan,

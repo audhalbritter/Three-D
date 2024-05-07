@@ -36,7 +36,7 @@ clean_climate <- function(metaTurfID, metaTomst){
     }, .id = "file")
   )
   
-  temp_clean <- temp_raw %>% 
+  temp_raw2 <- temp_raw %>% 
     # remove empty row
     select(-X10) |> 
     # rename column names
@@ -52,7 +52,7 @@ clean_climate <- function(metaTurfID, metaTomst){
     filter(!(file == "data/climate/2022_autumn_Joa/data_94195255_0.csv" & date_time < "2022-05-01 00:00:00")) |>
     
     # remove duplicate data (due to always downloading all the data)
-    tidylog::distinct(loggerID, date_time, time_zone, soil_temperature, ground_temperature, air_temperature, raw_soilmoisture, shake, error_flag) |> 
+    tidylog::distinct(loggerID, date_time, time_zone, soil_temperature, ground_temperature, air_temperature, raw_soilmoisture, shake, error_flag) |>
     
     # join meta data on loggers
     left_join(metaTomst, by = "loggerID") %>% 
@@ -61,7 +61,13 @@ clean_climate <- function(metaTurfID, metaTomst){
     # Remove data before initial date time
     tidylog::filter(date_time > InitialDate_Time,
                     is.na(EndDate_Time) |
-                      date_time < EndDate_Time) %>% 
+                      date_time < EndDate_Time)
+  
+  temp_clean <- temp_raw2 |> 
+    # remove duplicates with strange values
+    group_by(destSiteID, destBlockID, destPlotID, date_time) |> 
+    mutate(n = n()) |> 
+    tidylog::filter(n < 2) |> 
     
     # some data cleaning
     # air
@@ -107,7 +113,7 @@ clean_climate <- function(metaTurfID, metaTomst){
                                      soil_temp = soil_temperature, 
                                      soilclass = "loamy_sand_A")) %>% 
     
-    select(date_time:air_temperature, soilmoisture, loggerID:Remark) |> 
+    select(date_time:air_temperature, soilmoisture, loggerID:Remark, raw_soilmoisture) |> 
     
     # soil moisture cleaning
     mutate(soilmoisture = case_when(soilmoisture < 0 ~ NA_real_,

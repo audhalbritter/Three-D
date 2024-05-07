@@ -34,6 +34,58 @@ roots_clean |>
   summarise(mean = mean(days),
             se = sd(days)/sqrt(n()))
 
+# community
+cover_clean |> 
+  group_by(year, origSiteID, warming, grazing, Namount_kg_ha_y, turfID) |> 
+  summarise(n = n()) |> 
+  group_by(origSiteID) |> 
+  summarise(mean = mean(n), 
+            se = sd(n)/sqrt(n()),
+            min = min(n), 
+            max = max(n))
+
+cover_clean |> 
+  filter(grepl("Unknown", species))
+13*100/8966
+cover_clean |> 
+  filter(grepl(" sp", species))
+557*100/8966
+
+subplot_presence_clean |> 
+  filter(variable == "dominant", value == 1)
+  group_by(year, origSiteID, turfID, variable) |> 
+  summarise(mean = mean(value))
+fertile: 7947*100/83978
+fertile: 1049*100/83970
+juvenile: 782*100/83971
+seedling: 264*100/83970
+
+comm_structure_clean |> 
+  group_by(origSiteID, variable, functional_group) |> 
+  summarise(mean = mean(value, na.rm = TRUE),
+            se = sd(value, na.rm = TRUE)/sqrt(n()),
+            min = min(value, na.rm = TRUE),
+            max = max(value, na.rm = TRUE)) |> 
+  arrange(variable, functional_group) |> 
+  print(n = Inf)
+library(broom)
+comm_structure_clean |> 
+  filter(!functional_group %in% c("wool")) |> 
+  group_by(functional_group) |> 
+  nest() |> 
+  mutate(model = map(data, ~lm(value ~ origSiteID, data = .)),
+         result = map(model, tidy),
+         anova = map(model, car::Anova),
+         anova_tidy = map(anova, tidy)) |> 
+  unnest(anova_tidy)
+dd <- comm_structure_clean |> 
+  filter(!functional_group %in% c("lichen"))
+fit <- lm(value ~ origSiteID, data = dd)
+anova(fit)
+ggplot(comm_structure_clean, aes(x = origSiteID, y = value)) +
+  geom_boxplot() +
+  facet_wrap( ~ functional_group, scales = "free")
+
 # soil
 soil_character |> 
   group_by(variable, destSiteID) |> 
