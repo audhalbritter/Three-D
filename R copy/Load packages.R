@@ -11,6 +11,8 @@ library(validate)
 library(usethis)
 library(dataDocumentation)
 library(janitor)
+library(data.table)
+
 
 
 # Stuff

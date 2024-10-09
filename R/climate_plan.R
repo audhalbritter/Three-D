@@ -42,10 +42,39 @@ climate_plan <- list(
     format = "file"
   ),
   
-  # import and clean data
+  # import data
+  tar_target(
+    name = temp_raw,
+    command = import_climate_temp()
+  ),
+  
+  # clean data
+  # step1
+  tar_target(
+    name = temp1,
+    command = clean1_climate_temp(temp_raw)
+  ),
+  
+  # step2
+  tar_target(
+    name = temp2,
+    command = clean2_climate_temp(temp1, metaTomst)
+  ),
+
+  # clean air and ground temp
+  tar_target(
+    name = temp3,
+    command = clean_air_ground_soil_temp(temp2)
+  ),
+
+  tar_target(
+    name = temp4,
+    command = clean_climate_moisture(temp3)
+  ),
+
   tar_target(
     name = climate_clean,
-    command = clean_climate(metaTurfID, metaTomst)
+    command = final_climate_cleaning(temp4, metaTurfID)
   ),
 
   # save clean plot data
