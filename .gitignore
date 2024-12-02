@@ -5,8 +5,20 @@
 # Session Data files
 .RData
 
+# User-specific files
+.Ruserdata
+
 # Example code in package build process
 *-Ex.R
+
+# Output files from R CMD build
+/*.tar.gz
+
+# Output files from R CMD check
+/*.Rcheck/
+
+# Output files from target
+_targets/
 
 # RStudio files
 .Rproj.user/
@@ -17,14 +29,17 @@ vignettes/*.pdf
 
 # OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
 .httr-oauth
-.Rproj.user
 
-#markdown cache
+# knitr and R markdown default cache directories
 *_cache/
+/cache/
 
-#drake cache
-.drake/
+# Temporary files created by R markdown
+*.utf8.md
+*.knit.md
 
+# R Environment Variables
+.Renviron
 
 #data
 *.xls
@@ -35,7 +50,7 @@ vignettes/*.pdf
 *.jpg
 *.sql
 *.xlsx
-*.docx
+*.txt
 *.xlsx#
 *.rar
 *.sqlite
@@ -43,6 +58,26 @@ vignettes/*.pdf
 *.RData.Tmp1
 *.rds
 *.bib
+*data/
+*data_cleaned/
+!data_cleaned/Three-D_description_table.csv
+!data/data/Three-D_Taxonomy_2019.csv
+
+# output files
+*.docx
+*.tex
+*.log
+*.pdf
+
+# output files
+*.jpeg
+*.jpg
+*.png
+*.html
+*.TIF
+.my.cnf
+!.tex
+*.md
 
 #rasters & shapefiles
 *.bil
@@ -50,14 +85,13 @@ vignettes/*.pdf
 *.hdr
 *.prj
 
-#figures & output
-*.png
+# markdown
 *.html
-*.pdf
-*.jpeg
-.my.cnf
-!.tex
+*.log
 *.md
+
+*.DS_Store
+
 !Pics/ExperimentalDesign.jpg
 !Pics/ProposalFigure_small.jpg
 !Pics/Subblots.jpg
@@ -67,4 +101,3 @@ vignettes/*.pdf
 !README_files/figure-gfm/site-figure-1.png
 !bibi.bib
 
-*.DS_Store

@@ -1,0 +1,48 @@
+---
+title: "Check traits"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library("tidyverse")
+library("turfmapper")
+
+CommunitySubplot <- read_csv(file = "data_cleaned/vegetation/THREE-D_CommunitySubplot_2019-2022.csv")
+cover <- read_csv(file = "data_cleaned/vegetation/THREE-D_Cover_2019-2022.csv")
+```
+
+## Check turfs
+
+```{r many_plots, eval = TRUE, fig.height=11, fig.width = 5, warning=FALSE}
+
+#set up subturf grid
+grid <- make_grid(ncol = 5)
+
+x <- CommunitySubplot %>% 
+  filter(variable == "presence",
+         grepl("Carex", species),
+         turfID %in% c("67 AN9M 67"),
+         ) %>%
+  left_join(cover %>% select(year, turfID, species, cover)) %>% 
+  mutate(subplot = as.numeric(subplot),
+         year_recorder = paste(year, recorder, sep = "_")) %>% 
+  select(-year) %>% 
+  arrange(destSiteID, destPlotID, turfID) %>% 
+  group_by(destSiteID, destPlotID, turfID) %>% 
+  nest() %>% 
+    {map2(
+      .x = .$data, 
+      .y = glue::glue("Site {.$destSiteID}: plot {.$destPlotID}: turf {.$turfID}"),
+      .f = ~make_turf_plot(
+      data = .x, 
+      year = year_recorder, 
+      species = species, 
+      cover = cover, 
+      subturf = subplot, 
+      title = glue::glue(.y), 
+      grid_long = grid)
+    )} %>% 
+  walk(print)
+
+```
