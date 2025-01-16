@@ -1,11 +1,13 @@
-soilR_chamber <- read_csv("data/c-flux/summer_2021/Three-D_soilR-chambers-size.csv") |>
+clean_cflux2021 <- function(soilRchambersize_download, cflux2021_download, cfluxrecord2021_download) {
+
+soilR_chamber <- read_csv(soilRchambersize_download) |>
   mutate(
     soil_chamber_vol = pi * (soil_collar_cm/2)^2 * depth_above_cm * 0.001, # vol in liter
     type = "soilR"
   )
 
 # Unzip files
-zipFile <- "data/c-flux/summer_2021/Three-D_cflux_2021.zip"
+zipFile <- cflux2021_download
 if(file.exists(zipFile)){
   outDir <- "data/c-flux/summer_2021"
   unzip(zipFile, exdir = outDir)
@@ -14,8 +16,7 @@ if(file.exists(zipFile)){
 #importing fluxes data
 location <- "data/c-flux/summer_2021" #location of datafiles
 
-conc_raw <-
-  dir_ls(location, regexp = "*CO2*") %>% 
+conc_raw <- dir_ls(location, regexp = "*CO2*") %>% 
   map_dfr(read_csv,  na = c("#N/A", "Over")) %>% 
   rename( #rename the column to get something more practical without space
     CO2 = "CO2 (ppm)",
@@ -32,7 +33,7 @@ conc_raw <-
 
 #import the record file from the field
 
-record <- read_csv("data/c-flux/summer_2021/Three-D_field-record_2021.csv", na = c(""), col_types = "cctDfc") %>% 
+record <- read_csv(cfluxrecord2021_download, na = c(""), col_types = "cctDfc") %>% 
   drop_na(starting_time) %>% #delete row without starting time (meaning no measurement was done)
   mutate(
     start = ymd_hms(paste(date, starting_time)) #converting the date as posixct, pasting date and starting time together
@@ -49,7 +50,7 @@ conc <- flux_match(
   conc_col = "CO2"
   )
 
-str(conc)
+# str(conc)
 
 # fitting fluxes
 
@@ -62,10 +63,10 @@ slopes_exp_2021 <- flux_fitting(
 slopes_exp_2021_flag <- flux_quality(
   slopes_exp_2021,
   error = 400, # the gas analyser was off but the slope is ok
-  force_ok_id = c(
+  force_ok = c(
     198 # looks ok despite b above threshold
   ),
-  weird_fluxes_id = c(
+  force_discard = c(
     402, # slope is off
     403, # slope is off
     409, # slope is off
@@ -98,7 +99,7 @@ slopes_exp_2021_flag <- slopes_exp_2021_flag %>%
   )
 
 
-str(slopes_exp_2021_flag)
+# str(slopes_exp_2021_flag)
 
 
 #PAR: same + NA for soilR and ER
@@ -176,7 +177,7 @@ slopes_2021 <- left_join(slopes_exp_2021_flag, soilR_chamber) |>
     )
   )
 
-str(slopes_2021)
+# str(slopes_2021)
 
 fluxes2021 <- flux_calc(
   slopes_2021,
@@ -207,7 +208,7 @@ fluxes2021 <- fluxes2021 |>
     )
   )
 
-str(fluxes2021)
+# str(fluxes2021)
 
 
   
@@ -337,7 +338,7 @@ old_fluxes2021 <- old_fluxes2021 |>
     old_tempair = "temp_airavg"
   )
 
-str(old_fluxes2021)
+# str(old_fluxes2021)
 
 all_fluxes <- full_join(
   fluxes2021,
@@ -349,22 +350,22 @@ all_fluxes <- full_join(
     )
 )
 
-str(all_fluxes)
+# str(all_fluxes)
 
 ggplot(all_fluxes, aes(old_flux, flux, label = f_fluxID)) +
 geom_point() +
 geom_text() +
 geom_abline(slope = 1)
 
-str(fluxes2021)
+# str(fluxes2021)
 
-write_csv(fluxes2021, "data_cleaned/c-flux/Three-D_c-flux_2021_cleaned.csv")
+# write_csv(fluxes2021, "data_cleaned/c-flux/Three-D_c-flux_2021_cleaned.csv")
 
-flux <- read_csv("data_cleaned/c-flux/Three-D_c-flux_2021_cleaned.csv")
+# flux <- read_csv("data_cleaned/c-flux/Three-D_c-flux_2021_cleaned.csv")
 
 
 #adding meta data
-flux <- left_join(flux, metaTurfID, by = "turfID")
+flux <- left_join(fluxes2021, metaTurfID, by = "turfID")
 
 #LRC
 lrc_flux <- flux %>% 
@@ -376,44 +377,44 @@ lrc_flux <- flux %>%
     | type == "LRC5"
     )
 
-#graph each light response curves
-ggplot(lrc_flux, aes(x = PAR, y = flux, color = turfID)) +
-  geom_point(size = 0.1) +
-  facet_wrap(vars(campaign)) +
-  # geom_smooth(method = "lm", se = FALSE)
-  geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE)
+#plot each light response curves
+# ggplot(lrc_flux, aes(x = PAR, y = flux, color = turfID)) +
+#   geom_point(size = 0.1) +
+#   facet_wrap(vars(campaign)) +
+#   # geom_smooth(method = "lm", se = FALSE)
+#   geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE)
 
 #grouping per treatment instead of turf
-lrc_flux %>% mutate(
-  warming = str_replace_all(warming, c(
-    "W" = "Transplant",
-    "A" = "Ambient"
-  ))) %>% 
-ggplot(aes(x = PAR, y = flux, color = warming)) +
-  geom_point(size = 0.1) +
-  facet_wrap(vars(campaign)) +
-  # geom_smooth(method = "lm", se = FALSE)
-  geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE) +
-  labs(
-    title = "Light response curves (Three-D, 2021)",
-    # caption = bquote(~CO[2]~'Flux standardized at PAR = 300 mol/'*m^2*'/s for NEE and PAR = 0 mol/'*m^2*'/s for ER, and soil temperature = 15 °C'),
-    color = "Warming",
-    x = bquote("PAR [mol/"*m^2*"/s]"),
-    y = bquote(~CO[2]~'flux [mmol/'*m^2*'/h]')
-  ) +
-  scale_fill_manual(values = c(
-    "Ambient" = "#1e90ff",
-    "Transplant" = "#ff0800"
-  ))
-  ggsave("lrc.png", height = 10, width = 13, units = "cm")
+# lrc_flux %>% mutate(
+#   warming = str_replace_all(warming, c(
+#     "W" = "Transplant",
+#     "A" = "Ambient"
+#   ))) %>% 
+# ggplot(aes(x = PAR, y = flux, color = warming)) +
+#   geom_point(size = 0.1) +
+#   facet_wrap(vars(campaign)) +
+#   # geom_smooth(method = "lm", se = FALSE)
+#   geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE) +
+#   labs(
+#     title = "Light response curves (Three-D, 2021)",
+#     # caption = bquote(~CO[2]~'Flux standardized at PAR = 300 mol/'*m^2*'/s for NEE and PAR = 0 mol/'*m^2*'/s for ER, and soil temperature = 15 °C'),
+#     color = "Warming",
+#     x = bquote("PAR [mol/"*m^2*"/s]"),
+#     y = bquote(~CO[2]~'flux [mmol/'*m^2*'/h]')
+#   ) +
+#   scale_fill_manual(values = c(
+#     "Ambient" = "#1e90ff",
+#     "Transplant" = "#ff0800"
+#   ))
+#   ggsave("lrc.png", height = 10, width = 13, units = "cm")
 
-ggplot(lrc_flux, aes(x = PAR, y = flux, color = warming)) +
-  geom_point(size = 0.1) +
-  # facet_wrap(vars(campaign)) +
-  # geom_smooth(method = "lm", se = FALSE)
-  geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE)
+# ggplot(lrc_flux, aes(x = PAR, y = flux, color = warming)) +
+#   geom_point(size = 0.1) +
+#   # facet_wrap(vars(campaign)) +
+#   # geom_smooth(method = "lm", se = FALSE)
+#   geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE)
 
-#extract the equation and correct all the NEE fluxes for PAR = 1000 micromol/s/m2
+#extract the equation and correct all the NEE fluxes for PAR = 300 micromol/s/m2
 
 coefficients_lrc <- lrc_flux %>%
   group_by(warming, campaign) %>% 
@@ -463,25 +464,25 @@ flux_corrected_PAR <- flux %>%
 
 #we can do the same for soil temperature
 #let's have a look
-filter(flux_corrected_PAR,
-       type == "ER" |
-         type == "NEE") %>% 
-ggplot(aes(x = temp_soil, y = PAR_corrected_flux
-                           , color = type
-                           )) +
-  geom_point() +
-  geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE) +
-  facet_wrap(vars(campaign))
+# filter(flux_corrected_PAR,
+#        type == "ER" |
+#          type == "NEE") %>% 
+# ggplot(aes(x = temp_soil, y = PAR_corrected_flux
+#                            , color = type
+#                            )) +
+#   geom_point() +
+#   geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE) +
+#   facet_wrap(vars(campaign))
 
-filter(flux_corrected_PAR,
-       type == "ER" |
-         type == "NEE") %>%
-  ggplot(aes(x = temp_soil, y = PAR_corrected_flux
-             # , color = type
-             )) +
-  geom_point() +
-  geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE, fullrange = TRUE) +
-  facet_grid(vars(warming), vars(campaign))
+# filter(flux_corrected_PAR,
+#        type == "ER" |
+#          type == "NEE") %>%
+#   ggplot(aes(x = temp_soil, y = PAR_corrected_flux
+#              # , color = type
+#              )) +
+#   geom_point() +
+#   geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE, fullrange = TRUE) +
+#   facet_grid(vars(warming), vars(campaign))
 
 coefficients_soiltemp <- filter(flux_corrected_PAR, 
                                 type == "ER" |
@@ -535,25 +536,25 @@ flux_corrected <- flux_corrected_PAR %>%
 #   geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE, aes(x = PARavg, y = corrected_flux, color = warming))
   # geom_line() +
   # facet_grid(vars(campaign), vars(type), scales = "free")
-flux_corrected %>% 
-  filter( #removing LRC now that we used them
-        type == "NEE"
-        | type == "ER"
-      ) %>%
-  ggplot(aes(x = flux, y = corrected_flux, color = warming)) +
-  geom_point() +
-  geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE) +
-  facet_grid(vars(type), vars(campaign))
+# flux_corrected %>% 
+#   filter( #removing LRC now that we used them
+#         type == "NEE"
+#         | type == "ER"
+#       ) %>%
+#   ggplot(aes(x = flux, y = corrected_flux, color = warming)) +
+#   geom_point() +
+#   geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE) +
+#   facet_grid(vars(type), vars(campaign))
 
-flux_corrected_PAR %>% 
-  filter( #removing LRC now that we used them
-        type == "NEE"
-        | type == "ER"
-      ) %>%
-  ggplot(aes(x = flux, y = PAR_corrected_flux, color = warming)) +
-  geom_point() +
-  geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE) +
-  facet_grid(vars(type), vars(campaign))
+# flux_corrected_PAR %>% 
+#   filter( #removing LRC now that we used them
+#         type == "NEE"
+#         | type == "ER"
+#       ) %>%
+#   ggplot(aes(x = flux, y = PAR_corrected_flux, color = warming)) +
+#   geom_point() +
+#   geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE) +
+#   facet_grid(vars(type), vars(campaign))
 
 # write_csv(flux_corrected, "data_cleaned/c-flux/Three-D_c-flux_2021.csv")
 
@@ -597,13 +598,13 @@ fluxes2021 <- flux_corrected_PAR |>
   ) |>
   select(!c(origin, a, b, f_fluxID, f_slope_calc, chamber_volume, tube_volume))
   
-str(fluxes2021)
+# str(fluxes2021)
 
 # let's just plot it to check
-fluxes2021 |>
-  # filter # let's keep the LRC just to see if how they look like
-  ggplot(aes(x = type, y = flux)) +
-  geom_violin()
+# fluxes2021 |>
+#   ggplot(aes(x = type, y = flux)) +
+#   geom_violin()
 
+fluxes2021
 
-write_csv(fluxes2021, "data_cleaned/c-flux/Three-D_c-flux_2021.csv")
+}

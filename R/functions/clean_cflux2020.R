@@ -1,5 +1,7 @@
+clean_cflux2020 <- function(cflux2020_download, cfluxrecord2020_download) {
+  
 # Unzip files
-zipFile <- "data/C-Flux/summer_2020/Three-D_cflux_2020.zip"
+zipFile <- cflux2020_download
 if(file.exists(zipFile)){
   outDir <- "data/C-Flux/summer_2020"
   unzip(zipFile, exdir = outDir)
@@ -53,7 +55,7 @@ conc_raw <- fluxes %>%
 
 #import the record file
 
-record2020 <- read_csv("data/C-Flux/summer_2020/Three-D_field-record_2020.csv", na = c(""), col_types = "ccntDfc") %>% 
+record2020 <- read_csv(cfluxrecord2020_download, na = c(""), col_types = "ccntDfc") %>% 
   drop_na(starting_time) %>% #delete row without starting time (meaning no measurement was done)
   mutate(
     start = ymd_hms(paste(date, starting_time)) #converting the date as posixct, pasting date and starting time together
@@ -80,13 +82,13 @@ slopes_exp_2020 <- flux_fitting(
 slopes_exp_2020_flag <- flux_quality(
   slopes_df = slopes_exp_2020,
   error = 150, #there were some calibration issues, leading to the instrument being off in absolute values
-  weird_fluxes_id = c(
+  force_discard = c(
     55, # slope going opposite direction as flux
     118 # influence from disturbance at the start
   )
   )
 
-str(slopes_exp_2020_flag)
+# str(slopes_exp_2020_flag)
 
 # we keep flux plot as comments because it takes quite long to run
 # flux_plot(
@@ -118,42 +120,42 @@ fluxes2020 <- flux_calc(
   )
 )
 
-str(fluxes2020)
+# str(fluxes2020)
 
 # let's just compare with what was done previously
 
 
 
-old_fluxes2020 <- read_csv("data_cleaned/c-flux/Three-D_c-flux_2020_version_2022-02-09.csv")
+# old_fluxes2020 <- read_csv("data_cleaned/c-flux/Three-D_c-flux_2020_version_2022-02-09.csv")
 
-old_fluxes2020 <- old_fluxes2020 |>
-  rename(
-    old_flux = "flux",
-    old_PAR = "PARavg",
-    old_tempair = "temp_airavg"
-  )
+# old_fluxes2020 <- old_fluxes2020 |>
+#   rename(
+#     old_flux = "flux",
+#     old_PAR = "PARavg",
+#     old_tempair = "temp_airavg"
+#   )
 
-str(old_fluxes2020)
+# str(old_fluxes2020)
 
-all_fluxes <- full_join(
-  fluxes2020,
-  old_fluxes2020,
-  by = c( # we do not use datetime because the cut might be different
-    "plot_ID" = "turfID",
-    "type",
-    "campaign",
-    "replicate"
-  )
-)
+# all_fluxes <- full_join(
+#   fluxes2020,
+#   old_fluxes2020,
+#   by = c( # we do not use datetime because the cut might be different
+#     "plot_ID" = "turfID",
+#     "type",
+#     "campaign",
+#     "replicate"
+#   )
+# )
 
-str(all_fluxes)
+# str(all_fluxes)
 
-ggplot(all_fluxes, aes(old_flux, flux, label = f_fluxID)) +
-geom_point() +
-geom_text() +
-geom_abline(slope = 1)
+# ggplot(all_fluxes, aes(old_flux, flux, label = f_fluxID)) +
+# geom_point() +
+# geom_text() +
+# geom_abline(slope = 1)
 
-count(fluxes2020, type)
+# count(fluxes2020, type)
 
 # calculating GEP
 
@@ -168,12 +170,13 @@ fluxes2020gep <- fluxes2020 |>
   ) |>
   select(!c(f_fluxID, f_flag_match, f_slope_calc, chamber_volume, tube_volume))
 
-str(fluxes2020gep)
+# str(fluxes2020gep)
 
 # let's just plot it to check
-fluxes2020gep |>
-  # filter # let's keep the LRC just to see if how they look like
-  ggplot(aes(x = type, y = flux)) +
-  geom_violin()
+# fluxes2020gep |>
+#   ggplot(aes(x = type, y = flux)) +
+#   geom_violin()
 
-write_csv(fluxes2020gep, "data_cleaned/c-flux/Three-D_c-flux_2020.csv")
+fluxes2020gep
+
+}
