@@ -43,7 +43,7 @@ cflux_plan <- list(
   ),
   tar_target(
     name = cflux2021_clean,
-    command = clean_cflux2021(soilRchambersize_download, cflux2021_download, cfluxrecord2021_download)
+    command = clean_cflux2021(soilRchambersize_download, cflux2021_download, cfluxrecord2021_download, metaTurfID)
   ),
   tar_target(
     name = cflux2021_out,
