@@ -1,4 +1,4 @@
-clean_cflux2020 <- function(cflux2020_download, cfluxrecord2020_download) {
+clean_cflux2020 <- function(cflux2020_download, cfluxrecord2020_download, metaTurfID) {
   
 # Unzip files
 zipFile <- cflux2020_download
@@ -60,7 +60,7 @@ record2020 <- read_csv(cfluxrecord2020_download, na = c(""), col_types = "ccntDf
   mutate(
     start = ymd_hms(paste(date, starting_time)) #converting the date as posixct, pasting date and starting time together
   ) %>% 
-  rename(plot_ID = turf_ID) |>
+  rename(turfID = turf_ID) |>
   distinct(start, .keep_all = TRUE) # some replicates were also marked as LRC and that is not correct
 
 # matching
@@ -107,7 +107,7 @@ fluxes2020 <- flux_calc(
   conc_unit = "ppm",
   flux_unit = "mmol",
   cols_keep = c(
-    "plot_ID",
+    "turfID",
     "type",
     "replicate",
     "campaign",
@@ -141,7 +141,7 @@ fluxes2020 <- flux_calc(
 #   fluxes2020,
 #   old_fluxes2020,
 #   by = c( # we do not use datetime because the cut might be different
-#     "plot_ID" = "turfID",
+#     "turfID" = "turfID",
 #     "type",
 #     "campaign",
 #     "replicate"
@@ -161,7 +161,7 @@ fluxes2020 <- flux_calc(
 
 fluxes2020gep <- fluxes2020 |>
   flux_gep(
-    id_cols = c("plot_ID", "campaign", "replicate"),
+    id_cols = c("turfID", "campaign", "replicate"),
     flux_col = "flux",
     type_col = "type",
     datetime_col = "datetime",
@@ -177,6 +177,6 @@ fluxes2020gep <- fluxes2020 |>
 #   ggplot(aes(x = type, y = flux)) +
 #   geom_violin()
 
-fluxes2020gep
+fluxes2020gep <- left_join(fluxes2020gep, metaTurfID, by = "turfID")
 
 }
