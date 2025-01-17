@@ -180,7 +180,7 @@ fluxes2020gep <- fluxes2020 |>
 
 fluxes2020gep <- left_join(fluxes2020gep, metaTurfID, by = "turfID") |>
   rename(
-    date_time = "datetime",
+    # date_time = "datetime",
     comments = "remarks"
   )
 
