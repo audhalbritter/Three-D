@@ -52,7 +52,7 @@ cflux_plan <- list(
   ),
   tar_target(
     name = cflux2020_clean,
-    command = clean_cflux2020(cflux2020_download, cfluxrecord2020_download)
+    command = clean_cflux2020(cflux2020_download, cfluxrecord2020_download, metaTurfID)
   ),
   tar_target(
     name = cflux2020_out,
