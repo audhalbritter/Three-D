@@ -23,12 +23,12 @@ conc_raw <- dir_ls(location, regexp = "*CO2*") %>%
     temp_air = "Temp_air ('C)",
     temp_soil = "Temp_soil ('C)",
     PAR = "PAR (umolsm2)",
-    datetime = "Date/Time"
+    date_time = "Date/Time"
     ) %>%  
   mutate(
-    datetime = dmy_hms(datetime)
+    date_time = dmy_hms(date_time)
   ) %>%
-  select(datetime, CO2, PAR, temp_air, temp_soil)
+  select(date_time, CO2, PAR, temp_air, temp_soil)
 
 
 #import the record file from the field
@@ -47,7 +47,8 @@ record <- read_csv(cfluxrecord2021_download, na = c(""), col_types = "cctDfc") %
 conc <- flux_match(
   conc_raw,
   record,
-  conc_col = "CO2"
+  conc_col = "CO2",
+    datetime_col = "date_time"
   )
 
 # str(conc)
@@ -605,6 +606,10 @@ fluxes2021 <- flux_corrected_PAR |>
 #   ggplot(aes(x = type, y = flux)) +
 #   geom_violin()
 
-fluxes2021
+fluxes2021 <- fluxes2021 |>
+  rename(
+    date_time = "datetime"
+  )
 
+fluxes2021
 }
