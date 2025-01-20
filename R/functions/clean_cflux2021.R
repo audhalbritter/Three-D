@@ -265,10 +265,13 @@ fluxes2021 <- left_join(fluxes2021, PAR_ER) %>%
     comments = case_when(
       is.na(PAR) == TRUE
       # & type == ("ER" | "NEE")
-      ~ paste0(comments,  ";", " PAR 3h period average"),
+      ~ case_when(
+        is.na(comments) ~ "PAR 3h period average",
+        !is.na(comments) ~ paste0(comments,  " /", " PAR 3h period average")
+      ),
       TRUE ~ comments
     ),
-    comments = str_replace_all(comments, "NA; ", ""),
+    # comments = str_replace_all(comments, "NA / ", ""),
     PAR = case_when(
       is.na(PAR) == TRUE
       & type == "ER"
@@ -322,10 +325,13 @@ fluxes2021 <- left_join(fluxes2021, soiltemp_ER) %>%
       is.na(temp_soil) == TRUE
       # & type != "SoilR"
       # & type == ("ER" | "NEE")
-      ~ paste0(comments,  ";", " soil temp 3h period average"),
+      ~ case_when(
+        is.na(comments) ~ "soil temp 3h period average",
+        !is.na(comments) ~ paste0(comments,  " /", " soil temp 3h period average")
+      ),
       TRUE ~ comments
     ),
-    comments = str_replace_all(comments, "NA; ", ""),
+    # comments = str_replace_all(comments, "NA / ", ""),
     temp_soil = case_when(
       is.na(temp_soil) == TRUE
       & type == "ER"
@@ -609,7 +615,8 @@ fluxes2021 <- flux_corrected_PAR |>
       "origPlotID",
       "destSiteID",
       "destPlotID",
-      "destBlockID"
+      "destBlockID",
+      "Namount_kg_ha_y"
       )
   ) |>
   select(!c(origin, a, b, f_fluxID, f_slope_calc, chamber_volume, tube_volume))

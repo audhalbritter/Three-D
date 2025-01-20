@@ -118,10 +118,6 @@ data_dic_plan <- list(
                                    table_ID = "decomposition")
   ),
   # cflx data dic
-  tar_target(
-    name = join_cflux,
-    command = full_join(cflux2021_clean, cflux2020_clean)
-  ),
   # tar_target(
   #   name = cflux2020_dic,
   #   command = make_data_dictionary(data = cflux2020_clean,
