@@ -10,7 +10,7 @@ clean_cflux2021 <- function(soilRchambersize_download, cflux2021_download, cflux
 
 soilR_chamber <- read_csv(soilRchambersize_download) |>
   mutate(
-    soil_chamber_area = pi * (0.075 ^2), # are in m2
+    soil_chamber_area = pi * (0.05 ^2), # are in m2
     soil_chamber_vol = soil_chamber_area * depth_above_cm * 10, # vol in L
     type = "SoilR"
   ) |>
