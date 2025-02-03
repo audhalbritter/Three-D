@@ -1,7 +1,7 @@
 # prep soil temp data
 
 # read in data and template files
-climate <- read_csv("data_cleaned/Three-D_clean_microclimate_2019-2022.csv")
+climate <- read_csv("data_cleaned/Three-D_clean_microclimate_temp_2019-2022.csv")
 site <- read_csv("data_cleaned/site/THREE-D_metaSite.csv") |> 
   distinct(destSiteID, latitude_N, longitude_E, elevation_m_asl) |> 
   select(Site_id = destSiteID, Elevation = elevation_m_asl, Latitude = latitude_N, Longitude = longitude_E)

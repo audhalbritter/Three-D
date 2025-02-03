@@ -294,7 +294,8 @@ clean_community <- function(community_raw){
     2019, "141 WN8M 191", "Poa pratensis", 1,
     2019, "152 AN9N 152", "Poa pratensis", 1,
     2019, "8 WN1N 87", "Salix herbaceae", 1,
-    2021, "34 WN10I 114", "Carex atrata cf", 2,
+    2021, "34 WN10I 114", "Carex atrata cf", 2
+    #2022, "68 AN9I 68", "Luzula spicata", 1,
   )
   
   community <- community |> 

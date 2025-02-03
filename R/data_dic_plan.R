@@ -31,12 +31,12 @@ data_dic_plan <- list(
   ),
   
   # climate data dic
-  # tar_target(
-  #   name = climate_dic,
-  #   command = make_data_dictionary(data =  climate_clean,
-  #                                  description_table = attribute_table,
-  #                                  table_ID = NA_character_)
-  # ),
+  tar_target(
+    name = climate_dic,
+    command = make_data_dictionary(data = climate_clean,
+                                   description_table = attribute_table,
+                                   table_ID = NA_character_)
+  ),
   
   # biomass data dic
   tar_target(
