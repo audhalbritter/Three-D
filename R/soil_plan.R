@@ -66,6 +66,15 @@ soil_plan <- list(
   ),
   
   tar_target(
+    name = cn22_2_download,
+    command = get_file(node = "pk4bg",
+                       file = "ThreeD_CNP_2022.xlsx",
+                       path = "data",
+                       remote_path = "RawData/Soil"),
+    format = "file"
+  ),
+  
+  tar_target(
     name = cn22_meta_download,
     command = get_file(node = "pk4bg",
                        file = "THREE-D_soil_CN_sample_2022.xlsx",
@@ -93,6 +102,11 @@ soil_plan <- list(
   tar_target(
     name = cn22_meta_raw,
     command = read_excel(cn22_meta_download)
+  ),
+  
+  tar_target(
+    name = cn22_2_meta_raw,
+    command = read_excel(cn22_2_download, sheet = "Sheet1")
   ),
   
   # PRS probes
@@ -127,7 +141,7 @@ soil_plan <- list(
   # clean soil nutrients
   tar_target(
     name = cn_clean,
-    command = clean_soil_nutrients(cn19_20_raw, cn22_raw, cn22_meta_raw, metaTurfID, som21_raw, soil_clean, prs_raw, prs_meta_raw)
+    command = clean_soil_nutrients(cn19_20_raw, cn22_raw, cn22_meta_raw, cn22_2_meta_raw, metaTurfID, som21_raw, soil_clean, prs_raw, prs_meta_raw)
   ),
   
   # save data
