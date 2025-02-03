@@ -104,7 +104,7 @@ three_d <- read_csv("data/C-Flux/summer_2020/Three-D_field-record_2020.csv", na 
 #matching fluxes
 
 
-co2_threed <- match.flux(combined,three_d)
+co2_threed <- match.flux2(combined,three_d)
 
 
 
@@ -175,17 +175,81 @@ ggplot(co2_threed_cut, aes(x=datetime, y=CO2, color = cut)) +
   ggsave("threed.png", height = 40, width = 100, units = "cm")
 
 #calculation of flux
+# flux_threed <- filter(co2_threed_cut, cut == "keep") %>% #cut out the discarded parts
+#   flux.calc() %>% 
+#   rename(
+#     turfID = plot_ID, #because in Three-D they are turfs but the function uses plots
+#     fluxID = ID, #ID is already in use in the Three-D project
+#     date_time = datetime,
+#     remark = remarks
+#   )
+
+#we will use a better function than the previous one
+# flux.calc2 <- function(co2conc, # dataset of CO2 concentration versus time (output of match.flux)
+#                        chamber_volume = 24.5, # volume of the flux chamber in L, default for Three-D chamber (25x24.5x40cm)
+#                        tube_volume = 0.075, # volume of the tubing in L, default for summer 2020 setup
+#                        atm_pressure = 1, # atmoshperic pressure, assumed 1 atm
+#                        plot_area = 0.0625 # area of the plot in m^2, default for Three-D
+# )
+# {
+#   R = 0.082057 #gas constant, in L*atm*K^(-1)*mol^(-1)
+#   vol = chamber_volume + tube_volume
+#   # co2conc <- co2_cut
+#   slopes <- co2conc %>% 
+#     group_by(ID) %>% 
+#     mutate(
+#       time = difftime(datetime[1:length(datetime)],datetime[1] , units = "secs")
+#     ) %>% 
+#     select(ID, time, CO2) %>%
+#     do({model = lm(CO2 ~ time, data=.)    # create your model
+#     data.frame(tidy(model),              # get coefficient info
+#                glance(model))}) %>%          # get model info
+#     filter(term == "time") %>% 
+#     rename(slope = estimate) %>% 
+#     select(ID, slope, p.value, r.squared, adj.r.squared, nobs) %>% 
+#     ungroup()
+#   
+#   means <- co2conc %>% 
+#     group_by(ID) %>% 
+#     summarise(
+#       PARavg = mean(PAR, na.rm = TRUE), #mean value of PAR for each flux
+#       temp_airavg = mean(temp_air, na.rm = TRUE)  #mean value of temp_air for each flux
+#       + 273.15 #transforming in kelvin for calculation
+#     ) %>% 
+#     ungroup()
+#   
+#   fluxes_final <- left_join(slopes, means, by = "ID") %>% 
+#     left_join(
+#       co2conc,
+#       by = "ID"
+#     ) %>% 
+#     select(ID, slope, p.value, r.squared, adj.r.squared, nobs, PARavg, temp_airavg, plot_ID, type, campaign, remarks, start_window) %>% 
+#     distinct() %>% 
+#     rename(
+#       datetime = start_window
+#     ) %>% 
+#     mutate(
+#       flux = (slope * atm_pressure * vol)/(R * temp_airavg * plot_area) #gives flux in micromol/s/m^2
+#       *3600 #secs to hours
+#       /1000 #micromol to mmol
+#     ) %>% #flux is now in mmol/m^2/h, which is more common
+#     arrange(datetime) %>% 
+#     select(!slope)
+#   
+#   return(fluxes_final)
+#   
+# }
+
 flux_threed <- filter(co2_threed_cut, cut == "keep") %>% #cut out the discarded parts
-  flux.calc() %>% 
-  rename(
-    turfID = plot_ID, #because in Three-D they are turfs but the function uses plots
-    fluxID = ID, #ID is already in use in the Three-D project
-    date_time = datetime,
-    remark = remarks
-  )
+    flux.calc2() %>%
+    rename(
+      turfID = plot_ID, #because in Three-D they are turfs but the function uses plots
+      fluxID = ID, #ID is already in use in the Three-D project
+      comments = remarks
+    )
 
 # count(flux_threed)
-write_csv(flux_threed, "data/C-Flux/summer_2020/Three-D_c-flux_2020.csv")
+write_csv(flux_threed, "data_cleaned/c-flux/Three-D_c-flux_2020.csv")
 
 #make a freq hist about length of fluxes
 ggplot(flux_threed, aes(nobs)) +
