@@ -9,7 +9,21 @@ library(tarchetypes)
 
 # Set target options:
 tar_option_set(
-  packages = c("dataDownloader", "dataDocumentation", "tidyverse", "readxl", "lubridate", "writexl", "tibble", "stringi", "janitor"))
+  packages = c(
+    "dataDownloader",
+    "dataDocumentation",
+    "tidyverse",
+    "readxl",
+    "lubridate",
+    "writexl",
+    "tibble",
+    "stringi",
+    "janitor",
+    "fluxible",
+    "fs",
+    "slider",
+    "generics"
+    ))
 
 # tar_make_clustermq() configuration (okay to leave alone):
 options(clustermq.scheduler = "multicore")
@@ -33,5 +47,6 @@ combined_plan <- c(
   root_plan,
   soil_plan,
   decomposition_plan,
-  data_dic_plan
+  data_dic_plan,
+  cflux_plan
 )
