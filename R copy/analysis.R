@@ -1,64 +1,36 @@
 ### analysis
 
-# productivity
 
-productivity_clean |> group_by(destSiteID, treatment, plot_nr) |> summarise(sum = sum(productivity)) |> group_by(destSiteID, treatment) |> summarise(mean(sum), sd(sum)/sqrt(n()))
 
-dd <- productivity_clean |> 
-  group_by(destSiteID, date_out, treatment, plot_nr) |> 
-  summarise(sum = sum(productivity))
-fit <- lm(sum ~ destSiteID, dd |> filter(treatment == "Cage"))
-fit <- lm(sum ~ destSiteID, dd |> filter(treatment == "Control"))
-summary(fit)
 
-fit <- lm(sum ~ destSiteID*treatment, dd)
-summary(fit)
+# biomass
+biomass_clean |> 
+  group_by(year, grazing) |> 
+  summarise(sum = sum(biomass))
 
-dd |> 
-  mutate(destSiteID = factor(destSiteID, levels = c("Vikesland", "Joasete", "Liahovden"))) |> 
-  group_by(destSiteID, treatment, date_out) |> 
-  summarise(mean = mean(sum),
-            se = sd(sum)/sqrt(n())) |> 
-  ggplot(aes(x = date_out, y = mean, colour = treatment,
-             ymin = mean - se, ymax = mean + se)) +
-  geom_point() +
-  geom_errorbar() +
-  labs(x = "", y = bquote(Productivity~(g~cm^-2~y^-1))) +
-  facet_wrap(~ destSiteID) +
-  theme_bw()
+bio <- biomass_clean |> 
+  group_by(year, turfID, origSiteID, destSiteID, destBlockID, destPlotID, warming, grazing, Namount_kg_ha_y) |> 
+  summarise(biomass = sum(biomass)) |>
+  mutate(grazing_num = case_when(grazing == "C" ~ 0,
+                                 grazing == "M" ~ 2,
+                                 grazing == "I" ~4))
 
-# roots
-roots_clean |> 
-  mutate(days = as.numeric(as.character(days_buried))) |> 
-  group_by(year) |> 
-  summarise(mean = mean(days),
-            se = sd(days)/sqrt(n()))
+library(broom)
+bio |> 
+  group_by(year, origSiteID) |> 
+  nest() |> 
+  mutate(fit = map(data, ~lm(data = ., biomass ~ warming*Namount_kg_ha_y*grazing_num)),
+         result = map(fit, tidy)) |> 
+  unnest(result) |> 
+  filter(p.value <= 0.05)
+  
+  
+  
 
-# community
-cover_clean |> 
-  group_by(year, origSiteID, warming, grazing, Namount_kg_ha_y, turfID) |> 
-  summarise(n = n()) |> 
-  group_by(origSiteID) |> 
-  summarise(mean = mean(n), 
-            se = sd(n)/sqrt(n()),
-            min = min(n), 
-            max = max(n))
 
-cover_clean |> 
-  filter(grepl("Unknown", species))
-13*100/8966
-cover_clean |> 
-  filter(grepl(" sp", species))
-557*100/8966
 
-subplot_presence_clean |> 
-  filter(variable == "dominant", value == 1)
-  group_by(year, origSiteID, turfID, variable) |> 
-  summarise(mean = mean(value))
-fertile: 7947*100/83978
-fertile: 1049*100/83970
-juvenile: 782*100/83971
-seedling: 264*100/83970
+
+
 
 comm_structure_clean |> 
   group_by(origSiteID, variable, functional_group) |> 
