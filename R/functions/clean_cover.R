@@ -639,6 +639,11 @@ clean_cover <- function(community_clean, metaTurfID){
            species = if_else(species == "Orchid sp", "Unknown orchid", species)) |> 
     # add N amount variable
     left_join(metaTurfID) |> 
-    select(year, date, origSiteID:Nlevel, Namount_kg_ha_y, species:file)
+    select(year, date, origSiteID:Nlevel, Namount_kg_ha_y, species:file) |> 
+    # remove duplicates
+    tidylog:: distinct() |> 
+    tidylog::mutate(cover = if_else(year == 2019 & turfID == "11 AN6I 11" & species == "Antennaria sp", 4, cover),
+                    cover = if_else(year == 2019 & turfID == "28 AN3I 28" & species == "Antennaria sp", 2, cover))
   
 }
+
