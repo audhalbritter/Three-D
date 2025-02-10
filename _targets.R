@@ -55,6 +55,6 @@ combined_plan <- c(
   decomposition_plan,
   data_dic_plan,
   analysis_plan,
-  figure_plan,
-  cflux_plan
+  figure_plan
+  #cflux_plan
 )
