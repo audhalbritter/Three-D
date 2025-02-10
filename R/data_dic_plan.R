@@ -130,12 +130,12 @@ data_dic_plan <- list(
   #                                  description_table = attribute_table,
   #                                  table_ID = "cflux2021")
   # ),
-  tar_target(
-    name = cflux_dic,
-    command = make_data_dictionary(data = join_cflux,
-                                   description_table = attribute_table,
-                                   table_ID = "cflux")
-  ),
+  # tar_target(
+  #   name = cflux_dic,
+  #   command = make_data_dictionary(data = join_cflux,
+  #                                  description_table = attribute_table,
+  #                                  table_ID = "cflux")
+  # ),
   
   
   # merge data dictionaries
@@ -152,8 +152,8 @@ data_dic_plan <- list(
                               comm_structure = comm_structure_dic,
                               soil_char = soil_char_dic,
                               nutrients = nutrient_dic,
-                              decomposition = decompose_dic,
-                              cflux = cflux_dic
+                              decomposition = decompose_dic
+                              #cflux = cflux_dic
                               # cflux2020 = cflux2020_dic,
                               # cflux2021 = cflux2021_dic
                               #climate = climate_dic
