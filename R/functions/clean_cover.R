@@ -656,16 +656,3 @@ clean_cover <- function(community_clean, metaTurfID){
   
 }
 
-# cover_clean |>
-#   group_by(year, origSiteID, origBlockID, origPlotID, destSiteID, destBlockID, destPlotID, turfID, warming, grazing, Nlevel, species) |>
-#   mutate(n = n()) |>
-#   filter(n > 1) |> as.data.frame()
-# 
-# cover_clean |> 
-#   filter(turfID == "71 WN9N 151", year == 2019, species == "Pyrola sp")
-
-
-# dd <- cover_clean |> 
-#   group_by(year, origSiteID, origBlockID, origPlotID, destSiteID, destBlockID, destPlotID, turfID, warming, grazing, Nlevel, species) |> 
-#   tidylog::slice(1) |> 
-#   mutate(cover = if_else(year == 2019 & turfID == "1 WN1M 84" & species == "Nardus stricta", 18, cover))
