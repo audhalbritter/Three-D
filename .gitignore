@@ -101,3 +101,5 @@ vignettes/*.pdf
 !README_files/figure-gfm/site-figure-1.png
 !bibi.bib
 
+# drafts and old ideas
+/stuff_to_ignore
