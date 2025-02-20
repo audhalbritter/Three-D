@@ -47,7 +47,9 @@ record <- read_csv(cfluxrecord2021_download, na = c(""), col_types = "cctDfc") %
 conc <- flux_match(
   conc_raw,
   record,
-  conc_col = "CO2"
+  datetime,
+  start,
+  CO2
   )
 
 # str(conc)
@@ -55,13 +57,16 @@ conc <- flux_match(
 # fitting fluxes
 
 slopes_exp_2021 <- flux_fitting(
-  conc_df = conc,
+  conc,
+  CO2,
+  datetime,
   fit_type = "exp",
   end_cut = 30
 )
 
 slopes_exp_2021_flag <- flux_quality(
   slopes_exp_2021,
+  CO2,
   error = 400, # the gas analyser was off but the slope is ok
   force_ok = c(
     198 # looks ok despite b above threshold
@@ -79,6 +84,8 @@ slopes_exp_2021_flag <- flux_quality(
 # flux_plot is time consuming so we keep it as comments to avoid running accidentally
 # flux_plot(
 #   slopes_exp_2021_flag,
+#   CO2,
+#   datetime,
 #   print_plot = "FALSE",
 #   output = "pdf",
 #   f_plotname = "plot_2021",
@@ -122,7 +129,7 @@ slopes_exp_2021_flag <- slopes_exp_2021_flag |>
 
 plot_PAR <- function(slope_df, filter, filename, scale){
 plot <- filter(slope_df, type == ((filter))) %>%
-  ggplot(aes(x = f_datetime)) +
+  ggplot(aes(x = datetime)) +
     geom_point(size = 0.2, aes(group = f_fluxID, y = PAR, color = f_cut)) +
     scale_x_datetime(date_breaks = "1 min", minor_breaks = "10 sec", date_labels = "%e/%m \n %H:%M") +
     do.call(facet_wrap_paginate,
