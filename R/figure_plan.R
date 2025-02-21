@@ -66,6 +66,40 @@ figure_plan <- list(
       facet_wrap(~ destSiteID) +
       theme_bw()
     
+  ),
+  
+  tar_target(
+    name = biomass_figure,
+    command = {
+      
+      biomass_clean |> 
+        # calculate area in m2 and scale biomass to m2
+        mutate(area_m2 = area_cm2 / 10000,
+               biomass_scaled = biomass / area_m2
+        ) |> 
+        # prettify
+        mutate(origSiteID = recode(origSiteID, "Liahovden" = "Alpine", "Joasete" = "Sub-alpine"),
+               origSiteID = factor(origSiteID, levels = c("Alpine", "Sub-alpine")),
+               grazing = factor(grazing, levels = c("C", "M", "I")),
+               grazing = recode(grazing, "C" = "Control", "M" = "Medium", "I" = "Intensive"),
+               warming = recode(warming, "A" = "Ambient", "W" = "Warming")) |> 
+        # filter only 2022. Filter for only one cut at peak growing season.
+        filter(year == 2022,
+               grazing == "Control" & cut == 3|
+                 grazing %in% c("Medium", "Intensive") & cut == 4) |>
+        mutate(warm_site = paste(origSiteID, warming, sep = " "),
+               fun_group = factor(fun_group, levels = c("shrub", "graminoids", "cyperaceae", "forbs", "legumes", "bryophytes", "litter"))) |>
+        ggplot(aes(x = factor(Namount_kg_ha_y), y = biomass_scaled, fill = fun_group)) +
+        geom_col(position = "fill") +
+        scale_fill_manual(values = c("darkgreen", "limegreen", "lawngreen", "plum4", "plum2", "orange", "peru"), name = "") +
+        labs(y = "Proportional functional group composition",
+             x = bquote(Nitrogen~(kg~ha^-1~y^-1))) +
+        facet_grid(origSiteID * warming ~ grazing) +
+        theme_bw() +
+        theme(legend.position = "top",
+              text = element_text(size = 12))
+      
+    }
   )
   
   

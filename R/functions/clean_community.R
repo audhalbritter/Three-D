@@ -43,6 +43,7 @@ clean_community <- function(community_raw){
                             "Anntenaria alpina" = "Antennaria alpina cf",
                             "Antennaria alpina" = "Antennaria alpina cf",
                             "Antennaria dioica" = "Antennaria dioica cf",
+                            "Anthoxanthum odoratum" = "Anthoxanthum alpinum",
                             "Bryophyes" = "Bryophytes", 
                             "Carex sp 1" = "Carex sp1",
                             "Carex sp 2" = "Carex sp2",
