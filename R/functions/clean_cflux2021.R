@@ -2,7 +2,8 @@ clean_cflux2021 <- function(soilRchambersize_download, cflux2021_download, cflux
 
 soilR_chamber <- read_csv(soilRchambersize_download) |>
   mutate(
-    soil_chamber_vol = pi * (soil_collar_cm/2)^2 * depth_above_cm * 0.001, # vol in liter
+    soil_chamber_area = pi * (soil_collar_cm/2)^2 * 0.0001, # area in m2
+    soil_chamber_vol = soil_chamber_area * depth_above_cm * 10, # vol in liter
     type = "soilR"
   )
 
@@ -49,7 +50,9 @@ conc <- flux_match(
   record,
   datetime,
   start,
-  CO2
+  CO2,
+  startcrop = 0,
+  measurement_length = 180
   )
 
 # str(conc)
@@ -181,6 +184,10 @@ slopes_2021 <- left_join(slopes_exp_2021_flag, soilR_chamber) |>
     chamber_vol = case_when(
       type == "soilR" ~ soil_chamber_vol,
       type != "soilR" ~ 24.5
+    ),
+    plot_area = case_when(
+      type == "soilR" ~ soil_chamber_area,
+      type != "soilR" ~ 0.0625
     )
   )
 
@@ -188,12 +195,14 @@ slopes_2021 <- left_join(slopes_exp_2021_flag, soilR_chamber) |>
 
 fluxes2021 <- flux_calc(
   slopes_2021,
-  slope_col = "f_slope_corr",
+  f_slope_corr,
+  datetime,
+  temp_air,
+  chamber_vol,
+  atm_pressure = 1,
+  plot_area,
   conc_unit = "ppm",
   flux_unit = "mmol",
-  cut_col = "f_cut",
-  keep_arg = "keep",
-  chamber_volume = "chamber_vol",
   cols_keep = c(
     "turfID",
     "type",
@@ -204,7 +213,8 @@ fluxes2021 <- flux_calc(
   cols_ave = c(
     "PAR",
     "temp_soil"
-  )
+  ),
+  tube_volume = 0.075
 )
 
 fluxes2021 <- fluxes2021 |>
@@ -359,7 +369,7 @@ all_fluxes <- full_join(
 
 # str(all_fluxes)
 
-ggplot(all_fluxes, aes(old_flux, flux, label = f_fluxID)) +
+ggplot(all_fluxes, aes(old_flux, f_flux, label = f_fluxID)) +
 geom_point() +
 geom_text() +
 geom_abline(slope = 1)
@@ -426,7 +436,7 @@ lrc_flux <- flux %>%
 coefficients_lrc <- lrc_flux %>%
   group_by(warming, campaign) %>% 
   nest %>% 
-  mutate(lm = map(data, ~ lm(flux ~ PAR + I(PAR^2), data = .x)),
+  mutate(lm = map(data, ~ lm(f_flux ~ PAR + I(PAR^2), data = .x)),
          table = map(lm, tidy),
          table = map(table, select, term, estimate),
          table = map(table, pivot_wider, names_from = term, values_from = estimate)
@@ -451,8 +461,8 @@ flux_corrected_PAR <- flux %>%
   mutate(
     PAR_corrected_flux = 
       case_when( #we correct only the NEE
-        type == "NEE" ~ flux + a * (PARfix^2 - PAR^2) + b * (PARfix - PAR),
-        type == "ER" ~ flux + a * (PARnull^2 - PAR^2) + b * (PARnull - PAR),
+        type == "NEE" ~ f_flux + a * (PARfix^2 - PAR^2) + b * (PARfix - PAR),
+        type == "ER" ~ f_flux + a * (PARnull^2 - PAR^2) + b * (PARnull - PAR),
         type %in% c(
           "SoilR",
           "LRC1",
@@ -460,7 +470,7 @@ flux_corrected_PAR <- flux %>%
           "LRC3",
           "LRC4",
           "LRC5"
-        ) ~ flux
+        ) ~ f_flux
       )
     # delta_flux = flux - corrected_flux
   )# %>% 
@@ -518,7 +528,7 @@ flux_corrected <- flux_corrected_PAR %>%
     corrected_flux =
       PAR_corrected_flux + c * (soiltempfix^2 - temp_soil^2) + d * (soiltempfix - temp_soil),
       
-    delta_flux = flux - corrected_flux
+    delta_flux = f_flux - corrected_flux
   ) %>% 
   select(!c(origin, a, b, origin2, c, d))
 
@@ -572,26 +582,24 @@ flux_corrected %>% filter(type == "ER") %>%
 
 # now we can calculate GEP
 
-str(flux_corrected_PAR)
+# str(flux_corrected_PAR)
 # View(flux_corrected_PAR)
 
 fluxes2021 <- flux_corrected_PAR |>
-  select(!flux) |> # we need to remove the flux col because there is a flux col created by flux_gep
+  # select(!flux) |> # we need to remove the flux col because there is a flux col created by flux_gep
   flux_gep(
+    type,
+    datetime,
+    PAR_corrected_flux,
     id_cols = c("turfID", "campaign"),
-    flux_col = "PAR_corrected_flux",
-    type_col = "type",
-    datetime_col = "datetime",
-    par_col = "PAR",
     cols_keep = c(
       "temp_soil",
       "comments",
       "f_quality_flag",
-      "atm_pressure",
       "plot_area",
-      "temp_air_ave",
-      "volume_setup",
-      "model",
+      "f_temp_air_ave",
+      "f_volume_setup",
+      "f_model",
       "origSiteID",
       "origBlockID",
       "warming",
@@ -602,15 +610,14 @@ fluxes2021 <- flux_corrected_PAR |>
       "destPlotID",
       "destBlockID"
       )
-  ) |>
-  select(!c(origin, a, b, f_fluxID, f_slope_calc, chamber_volume, tube_volume))
+  ) 
   
 # str(fluxes2021)
 
 # let's just plot it to check
-# fluxes2021 |>
-#   ggplot(aes(x = type, y = flux)) +
-#   geom_violin()
+fluxes2021 |>
+  ggplot(aes(x = type, y = f_flux)) +
+  geom_violin()
 
 fluxes2021
 
