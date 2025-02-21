@@ -18,12 +18,11 @@ clean_roots <- function(root_productivity21_raw, decom_meta_raw, root_productivi
     mutate(recover_date_2021 = ymd(recover_date_2021),
            burial_date = ymd(burial_date),
            days_buried = recover_date_2021 - burial_date,
-           root_biomass_g_cm3 = root_biomass_dry_g/volume_cm3, 
-           root_productivity_g_cm3_d = root_biomass_g_cm3/as.numeric(as.character(days_buried)),
+           root_productivity_g_cm3_y = root_biomass_dry_g/volume_cm3,
+           period = "growing season",
+           variable = "root_productivity_g_cm3_y",
            year = 2021) |> 
-    pivot_longer(cols = c(root_productivity_g_cm3_d, root_biomass_g_cm3),
-                 names_to = "variable", values_to = "value") |> 
-    select(year, origSiteID:turfID, Namount_kg_ha_y, burial_date, recover_date = recover_date_2021, days_buried, variable, value, volume_cm3)
+    select(year, origSiteID:turfID, Namount_kg_ha_y, days_buried, period, variable, value = root_productivity_g_cm3_y, volume_cm3, burial_date, recover_date = recover_date_2021)
   
   # roots 2022
   # get dates
@@ -55,9 +54,9 @@ clean_roots <- function(root_productivity21_raw, decom_meta_raw, root_productivi
     rename(root_biomass_wet_g = rotvekt_for_g,
            root_biomass_dry_g = rotvekt_etter_g) |> 
     mutate(days_buried = recover_date - burial_date,
-           root_biomass_g_cm3 = root_biomass_dry_g/volume_cm3, 
-           root_productivity_g_cm3_d = root_biomass_g_cm3/as.numeric(as.character(days_buried))) |> 
-    select(origPlotID:origBlockID, destSiteID, destBlockID, warming:Namount_kg_ha_y, prove_id, burial_date, recover_date, days_buried, root_productivity_g_cm3_d, root_biomass_g_cm3, root_biomass_dry_g, root_biomass_wet_g, volume_cm3)
+           root_productivity_g_cm3_y = root_biomass_dry_g/volume_cm3,
+           period = "annual") |> 
+    select(origPlotID:origBlockID, destSiteID, destBlockID, warming:Namount_kg_ha_y, prove_id, burial_date, recover_date, days_buried, period, root_productivity_g_cm3_y, root_biomass_dry_g, root_biomass_wet_g, volume_cm3)
   
   
   clean_root_trait <- root_traits_raw |> 
@@ -91,9 +90,9 @@ clean_roots <- function(root_productivity21_raw, decom_meta_raw, root_productivi
            # mg per g
            root_dry_matter_content = root_biomass_dry_g*1000/root_biomass_wet_g,
            year = 2022) |> 
-    pivot_longer(cols = c(root_productivity_g_cm3_d, root_biomass_g_cm3, specific_root_length, root_tissue_density, root_dry_matter_content),
+    pivot_longer(cols = c(root_productivity_g_cm3_y, specific_root_length, root_tissue_density, root_dry_matter_content),
                           names_to = "variable", values_to = "value") |> 
-             select(year, origSiteID, origBlockID, origPlotID, destSiteID, destBlockID, destPlotID, turfID, warming:Nlevel, Namount_kg_ha_y, sampleID = prove_id, days_buried, variable, value) |> 
+             select(year, origSiteID, origBlockID, origPlotID, destSiteID, destBlockID, destPlotID, turfID, warming:Nlevel, Namount_kg_ha_y, sampleID = prove_id, days_buried, period, variable, value, volume_cm3, burial_date, recover_date) |> 
     bind_rows(clean_root_biomass21)
   
 }

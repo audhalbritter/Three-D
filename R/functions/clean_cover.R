@@ -639,6 +639,20 @@ clean_cover <- function(community_clean, metaTurfID){
            species = if_else(species == "Orchid sp", "Unknown orchid", species)) |> 
     # add N amount variable
     left_join(metaTurfID) |> 
-    select(year, date, origSiteID:Nlevel, Namount_kg_ha_y, species:file)
+    select(year, date, origSiteID:Nlevel, Namount_kg_ha_y, species:file) |> 
+    # remove duplicates
+    tidylog:: distinct() |> 
+    tidylog::mutate(cover = if_else(year == 2019 & turfID == "11 AN6I 11" & species == "Antennaria sp", 4, cover),
+                    cover = if_else(year == 2019 & turfID == "28 AN3I 28" & species == "Antennaria sp", 2, cover)) |> 
+    # remove other duplicates
+    ungroup() |> 
+  group_by(year, origSiteID, origBlockID, origPlotID, destSiteID, destBlockID, destPlotID, turfID, warming, grazing, Nlevel, species) |> 
+    tidylog::slice(1) |> 
+    mutate(cover = if_else(year == 2019 & turfID == "1 WN1M 84" & species == "Nardus stricta", 18, cover),
+           cover = if_else(year == 2019 & turfID == "34 WN10I 114" & species == "Carex vaginata", 4, cover),
+           cover = if_else(year == 2019 & turfID == "4 AN1C 4" & species == "Carex vaginata", 8, cover),
+           cover = if_else(year == 2019 & turfID == "60 AN8M 60" & species == "Carex bigelowii", 4, cover),
+           cover = if_else(year == 2022 & turfID == "68 AN9I 68" & species == "Luzula sp", 7, cover))
   
 }
+

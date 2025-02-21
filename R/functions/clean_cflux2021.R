@@ -1,11 +1,20 @@
 clean_cflux2021 <- function(soilRchambersize_download, cflux2021_download, cfluxrecord2021_download, metaTurfID) {
 
+# just for debugging
+# library(tidyverse)
+# library(fluxible)
+# library(fs)
+#   soilRchambersize_download <- "data/c-flux/summer_2021/Three-D_soilR-chambers-size.csv"
+#   cflux2021_download <- "data/c-flux/summer_2021/Three-D_cflux_2021.zip"
+#   cfluxrecord2021_download <- "data/c-flux/summer_2021/Three-D_field-record_2021.csv"
+
 soilR_chamber <- read_csv(soilRchambersize_download) |>
   mutate(
-    soil_chamber_area = pi * (soil_collar_cm/2)^2 * 0.0001, # area in m2
-    soil_chamber_vol = soil_chamber_area * depth_above_cm * 10, # vol in liter
-    type = "soilR"
-  )
+    soil_chamber_area = pi * (0.05 ^2), # are in m2
+    soil_chamber_vol = soil_chamber_area * depth_above_cm * 10, # vol in L
+    type = "SoilR"
+  ) |>
+  select(!comments)
 
 # Unzip files
 zipFile <- cflux2021_download
@@ -24,12 +33,12 @@ conc_raw <- dir_ls(location, regexp = "*CO2*") %>%
     temp_air = "Temp_air ('C)",
     temp_soil = "Temp_soil ('C)",
     PAR = "PAR (umolsm2)",
-    datetime = "Date/Time"
+    date_time = "Date/Time"
     ) %>%  
   mutate(
-    datetime = dmy_hms(datetime)
+    date_time = dmy_hms(date_time)
   ) %>%
-  select(datetime, CO2, PAR, temp_air, temp_soil)
+  select(date_time, CO2, PAR, temp_air, temp_soil)
 
 
 #import the record file from the field
@@ -48,7 +57,7 @@ record <- read_csv(cfluxrecord2021_download, na = c(""), col_types = "cctDfc") %
 conc <- flux_match(
   conc_raw,
   record,
-  datetime,
+  date_time,
   start,
   CO2,
   startcrop = 0,
@@ -182,12 +191,12 @@ plot <- filter(slope_df, type == ((filter))) %>%
 slopes_2021 <- left_join(slopes_exp_2021_flag, soilR_chamber) |>
   mutate(
     chamber_vol = case_when(
-      type == "soilR" ~ soil_chamber_vol,
-      type != "soilR" ~ 24.5
+      type == "SoilR" ~ soil_chamber_vol,
+      type != "SoilR" ~ 24.5
     ),
     plot_area = case_when(
-      type == "soilR" ~ soil_chamber_area,
-      type != "soilR" ~ 0.0625
+      type == "SoilR" ~ soil_chamber_area,
+      type != "SoilR" ~ 0.0625
     )
   )
 
@@ -266,10 +275,13 @@ fluxes2021 <- left_join(fluxes2021, PAR_ER) %>%
     comments = case_when(
       is.na(PAR) == TRUE
       # & type == ("ER" | "NEE")
-      ~ paste0(comments,  ";", " PAR 3h period average"),
+      ~ case_when(
+        is.na(comments) ~ "PAR 3h period average",
+        !is.na(comments) ~ paste0(comments,  " /", " PAR 3h period average")
+      ),
       TRUE ~ comments
     ),
-    comments = str_replace_all(comments, "NA; ", ""),
+    # comments = str_replace_all(comments, "NA / ", ""),
     PAR = case_when(
       is.na(PAR) == TRUE
       & type == "ER"
@@ -323,10 +335,13 @@ fluxes2021 <- left_join(fluxes2021, soiltemp_ER) %>%
       is.na(temp_soil) == TRUE
       # & type != "SoilR"
       # & type == ("ER" | "NEE")
-      ~ paste0(comments,  ";", " soil temp 3h period average"),
+      ~ case_when(
+        is.na(comments) ~ "soil temp 3h period average",
+        !is.na(comments) ~ paste0(comments,  " /", " soil temp 3h period average")
+      ),
       TRUE ~ comments
     ),
-    comments = str_replace_all(comments, "NA; ", ""),
+    # comments = str_replace_all(comments, "NA / ", ""),
     temp_soil = case_when(
       is.na(temp_soil) == TRUE
       & type == "ER"
@@ -343,36 +358,37 @@ fluxes2021 <- left_join(fluxes2021, soiltemp_ER) %>%
 
 # let's compare
 
-old_fluxes2021 <- read_csv("data_cleaned/c-flux/Three-D_c-flux_2021_cleaned_old.csv") |>
-  mutate(
-    campaign = as_factor(campaign)
-  )
+# old_fluxes2021 <- read_csv("data_cleaned/c-flux/Three-D_c-flux_2021_cleaned_old.csv") |>
+#   mutate(
+#     campaign = as_factor(campaign)
+#   )
 
-old_fluxes2021 <- old_fluxes2021 |>
-  rename(
-    old_flux = "flux",
-    old_PAR = "PARavg",
-    old_tempair = "temp_airavg"
-  )
+# old_fluxes2021 <- old_fluxes2021 |>
+#   rename(
+#     old_flux = "flux",
+#     old_PAR = "PARavg",
+#     old_tempair = "temp_airavg"
+#   )
 
 # str(old_fluxes2021)
 
-all_fluxes <- full_join(
-  fluxes2021,
-  old_fluxes2021,
-  by = c( # we do not use datetime because the cut might be different
-    "turfID",
-    "type",
-    "campaign"
-    )
-)
+# all_fluxes <- full_join(
+#   fluxes2021,
+#   old_fluxes2021,
+#   by = c( # we do not use datetime because the cut might be different
+#     "turfID",
+#     "type",
+#     "campaign"
+#     )
+# )
 
 # str(all_fluxes)
 
-ggplot(all_fluxes, aes(old_flux, f_flux, label = f_fluxID)) +
-geom_point() +
-geom_text() +
-geom_abline(slope = 1)
+# ggplot(all_fluxes, aes(old_flux, flux, label = f_fluxID)) +
+# geom_point() +
+# geom_text() +
+# geom_abline(slope = 1)
+
 
 # str(fluxes2021)
 
@@ -608,7 +624,8 @@ fluxes2021 <- flux_corrected_PAR |>
       "origPlotID",
       "destSiteID",
       "destPlotID",
-      "destBlockID"
+      "destBlockID",
+      "Namount_kg_ha_y"
       )
   ) 
   
@@ -619,6 +636,10 @@ fluxes2021 |>
   ggplot(aes(x = type, y = f_flux)) +
   geom_violin()
 
-fluxes2021
+# fluxes2021 <- fluxes2021 |>
+#   rename(
+#     date_time = "datetime"
+#   )
 
+fluxes2021
 }

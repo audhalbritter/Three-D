@@ -22,7 +22,13 @@ tar_option_set(
     "fluxible",
     "fs",
     "slider",
-    "generics"
+    "generics",
+    "data.table", 
+    "broom", 
+    "glue", 
+    "vegan", 
+    "ggvegan", 
+    "patchwork"
     ))
 
 # tar_make_clustermq() configuration (okay to leave alone):
@@ -39,7 +45,7 @@ tar_source()
 #Combine target plans
 combined_plan <- c(
   meta_plan,
-  #climate_plan,
+  climate_plan,
   biomass_plan,
   productivity_plan,
   community_plan,
@@ -48,5 +54,7 @@ combined_plan <- c(
   soil_plan,
   decomposition_plan,
   data_dic_plan,
-  cflux_plan
+  analysis_plan,
+  figure_plan
+  #cflux_plan
 )

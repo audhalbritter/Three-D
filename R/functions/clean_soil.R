@@ -33,7 +33,7 @@ clean_soil <- function(soil_raw){
 }
 
 
-clean_soil_nutrients <- function(cn19_20_raw, cn22_raw, cn22_meta_raw, metaTurfID, som21_raw, soil_clean, prs_raw, prs_meta_raw){
+clean_soil_nutrients <- function(cn19_20_raw, cn22_raw, cn22_meta_raw, cn22_2_meta_raw, metaTurfID, som21_raw, soil_clean, prs_raw, prs_meta_raw){
   
   # 2019 data
   cn19_20 <- cn19_20_raw %>% 
@@ -84,9 +84,14 @@ clean_soil_nutrients <- function(cn19_20_raw, cn22_raw, cn22_meta_raw, metaTurfI
                                   destSiteID == "Lia" ~ "Liahovden",
                                   destSiteID == "Vik" ~ "Vikesland",
                                   TRUE ~ destSiteID)) |> 
+    tidylog::left_join(cn22_2_meta_raw |> 
+                         select(turfID, soil_depth_cm = `depth_1 (cm)`)) |> 
     left_join(metaTurfID, by = c("destSiteID", "destBlockID", "turfID")) |> 
     mutate(destBlockID = as.character(destBlockID),
            year = 2022)
+  
+  
+    
   
   cn <- bind_rows(cn19, cn20, cn22) |> 
     pivot_longer(cols = c(N_percent, C_percent, CN_ratio),

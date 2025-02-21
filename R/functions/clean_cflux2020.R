@@ -1,4 +1,4 @@
-clean_cflux2020 <- function(cflux2020_download, cfluxrecord2020_download) {
+clean_cflux2020 <- function(cflux2020_download, cfluxrecord2020_download, metaTurfID) {
   
 # Unzip files
 zipFile <- cflux2020_download
@@ -14,10 +14,10 @@ fluxes <- dir_ls(location, regexp = "*CO2*") %>%
   rename(conc = "CO2 (ppm)") %>%  #rename the column to get something more practical without space
   mutate(
     date = dmy(Date), #convert date in POSIXct
-    datetime = as_datetime(paste(date, Time))  #paste date and time in one column
+    date_time = as_datetime(paste(date, Time))  #paste date and time in one column
     ) %>%
   drop_na(conc) |>
-  select(datetime, conc)
+  select(date_time, conc)
 
 #import date/time and PAR columns from PAR file
 PAR <- list.files(path = location, pattern = "*PAR*", full.names = TRUE) %>% 
@@ -25,31 +25,31 @@ PAR <- list.files(path = location, pattern = "*PAR*", full.names = TRUE) %>%
   rename(date = V2, time = V3, PAR = V4) %>% 
   mutate(
     PAR = as.numeric(as.character(.$PAR)), #removing any text from the PAR column (again, the logger...)
-    datetime = paste(date, time),
-    datetime = ymd_hms(datetime)
+    date_time = paste(date, time),
+    date_time = ymd_hms(date_time)
     ) %>% 
   drop_na(PAR) |>
-  select(datetime, PAR)
+  select(date_time, PAR)
 
 
 #import date/time and value column from iButton file
 
 temp_air <- dir_ls(location, regexp = "*temp*") %>%
-  map_dfr(read_csv,  na = c("#N/A"), skip = 20, col_names = c("datetime", "unit", "temp_value", "temp_dec"), col_types = "ccnn") %>%
+  map_dfr(read_csv,  na = c("#N/A"), skip = 20, col_names = c("date_time", "unit", "temp_value", "temp_dec"), col_types = "ccnn") %>%
   mutate(temp_dec = replace_na(temp_dec,0),
     temp_air = temp_value + temp_dec/1000, #because stupid iButtons use comma as delimiter AND as decimal point
-    datetime = dmy_hms(datetime)
+    date_time = dmy_hms(date_time)
     ) %>% 
   drop_na(temp_air) |>
-  select(datetime, temp_air)
+  select(date_time, temp_air)
 
 
 #join the df
 
 
 conc_raw <- fluxes %>% 
-  left_join(PAR, by = "datetime") %>% 
-  left_join(temp_air, by = "datetime")
+  left_join(PAR, by = "date_time") %>% 
+  left_join(temp_air, by = "date_time")
 
 
 
@@ -60,7 +60,7 @@ record2020 <- read_csv(cfluxrecord2020_download, na = c(""), col_types = "ccntDf
   mutate(
     start = ymd_hms(paste(date, starting_time)) #converting the date as posixct, pasting date and starting time together
   ) %>% 
-  rename(plot_ID = turf_ID) |>
+  rename(turfID = turf_ID) |>
   distinct(start, .keep_all = TRUE) # some replicates were also marked as LRC and that is not correct
 
 # matching
@@ -68,7 +68,7 @@ record2020 <- read_csv(cfluxrecord2020_download, na = c(""), col_types = "ccntDf
 conc2020 <- flux_match(
   conc_raw,
   record2020,
-  datetime,
+  date_time,
   start,
   conc,
   startcrop = 0,
@@ -119,7 +119,7 @@ fluxes2020 <- flux_calc(
   conc_unit = "ppm",
   flux_unit = "mmol",
   cols_keep = c(
-    "plot_ID",
+    "turfID",
     "type",
     "replicate",
     "campaign",
@@ -154,7 +154,7 @@ fluxes2020 <- flux_calc(
 #   fluxes2020,
 #   old_fluxes2020,
 #   by = c( # we do not use datetime because the cut might be different
-#     "plot_ID" = "turfID",
+#     "turfID" = "turfID",
 #     "type",
 #     "campaign",
 #     "replicate"
@@ -176,15 +176,22 @@ fluxes2020gep <- fluxes2020 |>
   flux_gep(
     type,
     datetime,
-    id_cols = c("plot_ID", "campaign", "replicate"),
+    id_cols = c("turfID", "campaign", "replicate"),
     cols_keep = c("remarks", "f_quality_flag", "f_temp_air_ave", "f_volume_setup", "f_model")
   ) 
+
 # str(fluxes2020gep)
 
 # let's just plot it to check
 fluxes2020gep |>
   ggplot(aes(x = type, y = flux)) +
   geom_violin()
+
+fluxes2020gep <- left_join(fluxes2020gep, metaTurfID, by = "turfID") |>
+  rename(
+    # date_time = "datetime",
+    comments = "remarks"
+  )
 
 fluxes2020gep
 
