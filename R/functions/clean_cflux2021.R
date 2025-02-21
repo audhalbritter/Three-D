@@ -71,7 +71,7 @@ conc <- flux_match(
 slopes_exp_2021 <- flux_fitting(
   conc,
   CO2,
-  datetime,
+  date_time,
   fit_type = "exp",
   end_cut = 30
 )
@@ -97,7 +97,7 @@ slopes_exp_2021_flag <- flux_quality(
 # flux_plot(
 #   slopes_exp_2021_flag,
 #   CO2,
-#   datetime,
+#   date_time,
 #   print_plot = "FALSE",
 #   output = "pdf",
 #   f_plotname = "plot_2021",
@@ -141,9 +141,9 @@ slopes_exp_2021_flag <- slopes_exp_2021_flag |>
 
 plot_PAR <- function(slope_df, filter, filename, scale){
 plot <- filter(slope_df, type == ((filter))) %>%
-  ggplot(aes(x = datetime)) +
+  ggplot(aes(x = date_time)) +
     geom_point(size = 0.2, aes(group = f_fluxID, y = PAR, color = f_cut)) +
-    scale_x_datetime(date_breaks = "1 min", minor_breaks = "10 sec", date_labels = "%e/%m \n %H:%M") +
+    scale_x_date_time(date_breaks = "1 min", minor_breaks = "10 sec", date_labels = "%e/%m \n %H:%M") +
     do.call(facet_wrap_paginate,
       args = c(facets = ~f_fluxID, ncol = 5, nrow = 3, scales = ((scale)))
     ) +
@@ -205,7 +205,7 @@ slopes_2021 <- left_join(slopes_exp_2021_flag, soilR_chamber) |>
 fluxes2021 <- flux_calc(
   slopes_2021,
   f_slope_corr,
-  datetime,
+  date_time,
   temp_air,
   chamber_vol,
   atm_pressure = 1,
@@ -244,11 +244,11 @@ roll_period <- 3
 PAR_ER <- filter(fluxes2021, type == "ER") %>%
   slide_period_dfr(
     # .,
-    .$datetime,
+    .$date_time,
     "hour",
     .every = roll_period,
     ~data.frame(
-      datetime = max(.x$datetime),
+      date_time = max(.x$date_time),
       PAR_roll_ER = mean(.x$PAR, na.rm = TRUE)
     )
   )
@@ -256,11 +256,11 @@ PAR_ER <- filter(fluxes2021, type == "ER") %>%
 PAR_NEE <- filter(fluxes2021, type == "NEE") %>%
   slide_period_dfr(
     # .,
-    .$datetime,
+    .$date_time,
     "hour",
     .every = roll_period,
     ~data.frame(
-      datetime = max(.x$datetime),
+      date_time = max(.x$date_time),
       PAR_roll_NEE = mean(.x$PAR, na.rm = TRUE)
     )
   )
@@ -303,11 +303,11 @@ fluxes2021 <- left_join(fluxes2021, PAR_ER) %>%
 soiltemp_ER <- filter(fluxes2021, type == "ER") %>%
   slide_period_dfr(
     # .,
-    .$datetime,
+    .$date_time,
     "hour",
     .every = roll_period,
     ~data.frame(
-      datetime = max(.x$datetime),
+      date_time = max(.x$date_time),
       soiltemp_roll_ER = mean(.x$temp_soil, na.rm = TRUE)
     )
   )
@@ -315,11 +315,11 @@ soiltemp_ER <- filter(fluxes2021, type == "ER") %>%
 soiltemp_NEE <- filter(fluxes2021, type == "NEE") %>%
   slide_period_dfr(
     # .,
-    .$datetime,
+    .$date_time,
     "hour",
     .every = roll_period,
     ~data.frame(
-      datetime = max(.x$datetime),
+      date_time = max(.x$date_time),
       soiltemp_roll_NEE = mean(.x$temp_soil, na.rm = TRUE)
     )
   )
@@ -605,7 +605,7 @@ fluxes2021 <- flux_corrected_PAR |>
   # select(!flux) |> # we need to remove the flux col because there is a flux col created by flux_gep
   flux_gep(
     type,
-    datetime,
+    date_time,
     PAR_corrected_flux,
     id_cols = c("turfID", "campaign"),
     cols_keep = c(

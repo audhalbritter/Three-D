@@ -79,7 +79,7 @@ conc2020 <- flux_match(
 slopes_exp_2020 <- flux_fitting(
     conc2020,
     conc,
-    datetime,
+    date_time,
     fit_type = "exp"
     # start_cut = 20,
     # end_cut = 60
@@ -111,7 +111,7 @@ slopes_exp_2020_flag <- flux_quality(
 fluxes2020 <- flux_calc(
   slopes_exp_2020_flag,
   f_slope_corr,
-  datetime,
+  date_time,
   temp_air,
   chamber_volume = 24.5,
   atm_pressure = 1,
@@ -153,7 +153,7 @@ fluxes2020 <- flux_calc(
 # all_fluxes <- full_join(
 #   fluxes2020,
 #   old_fluxes2020,
-#   by = c( # we do not use datetime because the cut might be different
+#   by = c( # we do not use date_time because the cut might be different
 #     "turfID" = "turfID",
 #     "type",
 #     "campaign",
@@ -175,7 +175,7 @@ fluxes2020 <- flux_calc(
 fluxes2020gep <- fluxes2020 |>
   flux_gep(
     type,
-    datetime,
+    date_time,
     id_cols = c("turfID", "campaign", "replicate"),
     cols_keep = c("remarks", "f_quality_flag", "f_temp_air_ave", "f_volume_setup", "f_model")
   ) 
@@ -189,7 +189,7 @@ fluxes2020gep |>
 
 fluxes2020gep <- left_join(fluxes2020gep, metaTurfID, by = "turfID") |>
   rename(
-    # date_time = "datetime",
+    # date_time = "date_time",
     comments = "remarks"
   )
 
