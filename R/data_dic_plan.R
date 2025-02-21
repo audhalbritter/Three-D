@@ -143,7 +143,7 @@ data_dic_plan <- list(
     name = threeD_dic,
     command = write_xlsx(list(site = site_dic,
                               plot = plot_dic,
-                              #biomass = biomass_dic,
+                              biomass = biomass_dic,
                               productivity = productivity_dic,
                               ndvi = ndvi_dic,
                               root = root_dic,
@@ -154,8 +154,6 @@ data_dic_plan <- list(
                               nutrients = nutrient_dic,
                               decomposition = decompose_dic
                               #cflux = cflux_dic
-                              # cflux2020 = cflux2020_dic,
-                              # cflux2021 = cflux2021_dic
                               #climate = climate_dic
                               ),
                            path = "data_cleaned/Three-D_data_dictionary.xlsx"),
