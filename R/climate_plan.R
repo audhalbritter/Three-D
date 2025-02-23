@@ -42,6 +42,22 @@ climate_plan <- list(
     format = "file"
   ),
   
+  # download extra loggers fixed by Tomst
+  tar_target(
+    name = metaTomst_download,
+    command = {
+      get_file(node = "pk4bg",
+                       file = "Fixed_by_tomst.zip",
+                       path = "data",
+                       remote_path = "RawData/Climate")
+      
+      unzip(zipfile = "Fixed_by_tomst", 
+            exdir = "data")
+      },
+    format = "file"
+  ),
+  
+  
   # import data
   tar_target(
     name = temp_raw,
