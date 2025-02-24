@@ -68,20 +68,26 @@ record2020 <- read_csv(cfluxrecord2020_download, na = c(""), col_types = "ccntDf
 conc2020 <- flux_match(
   conc_raw,
   record2020,
-  measurement_length = 120, # 2020 was 2 minutes
-    datetime_col = "date_time"
+  date_time,
+  start,
+  conc,
+  startcrop = 0,
+  measurement_length = 120 # 2020 was 2 minutes
   # startcrop = 20
   )
 
 slopes_exp_2020 <- flux_fitting(
-    conc_df = conc2020,
+    conc2020,
+    conc,
+    date_time,
     fit_type = "exp"
     # start_cut = 20,
     # end_cut = 60
     )
 
 slopes_exp_2020_flag <- flux_quality(
-  slopes_df = slopes_exp_2020,
+  slopes_exp_2020,
+  conc,
   error = 150, #there were some calibration issues, leading to the instrument being off in absolute values
   force_discard = c(
     55, # slope going opposite direction as flux
@@ -104,7 +110,12 @@ slopes_exp_2020_flag <- flux_quality(
 
 fluxes2020 <- flux_calc(
   slopes_exp_2020_flag,
-  slope_col = "f_slope_corr",
+  f_slope_corr,
+  date_time,
+  temp_air,
+  chamber_volume = 24.5,
+  atm_pressure = 1,
+  plot_area = 0.0625,
   conc_unit = "ppm",
   flux_unit = "mmol",
   cols_keep = c(
@@ -118,7 +129,8 @@ fluxes2020 <- flux_calc(
   ),
   cols_ave = c(
     "PAR"
-  )
+  ),
+  tube_volume = 0.075
 )
 
 # str(fluxes2020)
@@ -141,7 +153,7 @@ fluxes2020 <- flux_calc(
 # all_fluxes <- full_join(
 #   fluxes2020,
 #   old_fluxes2020,
-#   by = c( # we do not use datetime because the cut might be different
+#   by = c( # we do not use date_time because the cut might be different
 #     "turfID" = "turfID",
 #     "type",
 #     "campaign",
@@ -162,25 +174,22 @@ fluxes2020 <- flux_calc(
 
 fluxes2020gep <- fluxes2020 |>
   flux_gep(
+    type,
+    date_time,
     id_cols = c("turfID", "campaign", "replicate"),
-    flux_col = "flux",
-    type_col = "type",
-    datetime_col = "datetime",
-    par_col = "PAR",
-    cols_keep = c("remarks", "f_quality_flag", "atm_pressure", "plot_area", "temp_air_ave", "volume_setup", "model")
-  ) |>
-  select(!c(f_fluxID, f_flag_match, f_slope_calc, chamber_volume, tube_volume))
+    cols_keep = c("remarks", "f_quality_flag", "f_temp_air_ave", "f_volume_setup", "f_model")
+  ) 
 
 # str(fluxes2020gep)
 
 # let's just plot it to check
-# fluxes2020gep |>
-#   ggplot(aes(x = type, y = flux)) +
-#   geom_violin()
+fluxes2020gep |>
+  ggplot(aes(x = type, y = flux)) +
+  geom_violin()
 
 fluxes2020gep <- left_join(fluxes2020gep, metaTurfID, by = "turfID") |>
   rename(
-    # date_time = "datetime",
+    # date_time = "date_time",
     comments = "remarks"
   )
 

@@ -12,6 +12,17 @@ library(usethis)
 library(dataDocumentation)
 library(janitor)
 library(data.table)
+library(fluxible)
+library(fs)
+library(tibble)
+library(slider)
+library(generics)
+library(data.table)
+library(broom)
+library(glue)
+library(vegan)
+library(ggvegan)
+library(patchwork)
 
 
 
