@@ -44,7 +44,7 @@ climate_plan <- list(
   
   # download extra loggers fixed by Tomst
   tar_target(
-    name = metaTomst_download,
+    name = fixed_tomst_download,
     command = {
       get_file(node = "pk4bg",
                        file = "Fixed_by_tomst.zip",

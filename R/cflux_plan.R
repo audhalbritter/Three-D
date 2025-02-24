@@ -45,11 +45,7 @@ cflux_plan <- list(
     name = cflux2021_clean,
     command = clean_cflux2021(soilRchambersize_download, cflux2021_download, cfluxrecord2021_download, metaTurfID)
   ),
-  # tar_target(
-  #   name = cflux2021_out,
-  #   command = save_csv(cflux2021_clean,
-  #                      name = "c-flux_2021")
-  # ),
+ 
   tar_target(
     name = cflux2020_clean,
     command = clean_cflux2020(cflux2020_download, cfluxrecord2020_download, metaTurfID)
@@ -63,9 +59,5 @@ cflux_plan <- list(
     command = save_csv(join_cflux,
                        name = "c-flux")
   )
-  # tar_target(
-  #   name = cflux2020_out,
-  #   command = save_csv(cflux2020_clean,
-  #                      name = "c-flux_2020")
-  # )
+
 )
