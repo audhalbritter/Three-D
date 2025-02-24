@@ -117,25 +117,13 @@ data_dic_plan <- list(
                                    description_table = attribute_table,
                                    table_ID = "decomposition")
   ),
-  # cflx data dic
-  # tar_target(
-  #   name = cflux2020_dic,
-  #   command = make_data_dictionary(data = cflux2020_clean,
-  #                                  description_table = attribute_table,
-  #                                  table_ID = "cflux2020")
-  # ),
-  # tar_target(
-  #   name = cflux2021_dic,
-  #   command = make_data_dictionary(data = cflux2021_clean,
-  #                                  description_table = attribute_table,
-  #                                  table_ID = "cflux2021")
-  # ),
-  # tar_target(
-  #   name = cflux_dic,
-  #   command = make_data_dictionary(data = join_cflux,
-  #                                  description_table = attribute_table,
-  #                                  table_ID = "cflux")
-  # ),
+
+  tar_target(
+    name = cflux_dic,
+    command = make_data_dictionary(data = join_cflux,
+                                   description_table = attribute_table,
+                                   table_ID = "cflux")
+  ),
   
   
   # merge data dictionaries
@@ -152,9 +140,9 @@ data_dic_plan <- list(
                               comm_structure = comm_structure_dic,
                               soil_char = soil_char_dic,
                               nutrients = nutrient_dic,
-                              decomposition = decompose_dic
-                              #cflux = cflux_dic
-                              #climate = climate_dic
+                              decomposition = decompose_dic,
+                              cflux = cflux_dic,
+                              climate = climate_dic
                               ),
                            path = "data_cleaned/Three-D_data_dictionary.xlsx"),
     format = "file"
