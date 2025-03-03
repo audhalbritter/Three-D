@@ -35,12 +35,28 @@ climate_plan <- list(
                path = "data",
                remote_path = "RawData/Climate")
       
-      unzip(zipfile = "Three-D_raw_microclimate_2019-2022", 
+      unzip(zipfile = "data/Three-D_raw_microclimate_2019-2022.zip", 
             exdir = "data")
       
     },
     format = "file"
   ),
+  
+  # download extra loggers fixed by Tomst
+  tar_target(
+    name = fixed_tomst_download,
+    command = {
+      get_file(node = "pk4bg",
+                       file = "Fixed_by_tomst.zip",
+                       path = "data",
+                       remote_path = "RawData/Climate")
+      
+      unzip(zipfile = "data/Fixed_by_tomst.zip", 
+            exdir = "data")
+      },
+    format = "file"
+  ),
+  
   
   # import data
   tar_target(
