@@ -26,29 +26,29 @@ analysis_plan <- list(
   
   # summer temp
   # remove 2019 because data starts in August
-  tar_target(
-    name = summer_temp,
-    command = {
+  # tar_target(
+  #   name = summer_temp,
+  #   command = {
       
-      dat <- daily_temp |>
-        mutate(month = month(date),
-               year = year(date)) %>%
-        filter(month %in% c(5, 6, 7, 8, 9),
-               year %in% c(2020, 2021),
-               # only controls
-               Nlevel %in% c(1, 2, 3),
-               grazing == "Control")
+  #     dat <- daily_temp |>
+  #       mutate(month = month(date),
+  #              year = year(date)) %>%
+  #       filter(month %in% c(5, 6, 7, 8, 9),
+  #              year %in% c(2020, 2021),
+  #              # only controls
+  #              Nlevel %in% c(1, 2, 3),
+  #              grazing == "Control")
       
-      dat %>%
-        group_by(origSiteID, variable, warming) %>%
-        summarise(mean = mean(value),
-                  se = sd(value)/sqrt(n())) |>
-        pivot_wider(names_from = warming, values_from = c(mean, se)) |>
-        mutate(diff = round((mean_Warming - mean_Ambient), 2),
-               se_diff = round((sqrt(se_Warming^2+se_Ambient^2)), 3))
+  #     dat %>%
+  #       group_by(origSiteID, variable, warming) %>%
+  #       summarise(mean = mean(value),
+  #                 se = sd(value)/sqrt(n())) |>
+  #       pivot_wider(names_from = warming, values_from = c(mean, se)) |>
+  #       mutate(diff = round((mean_Warming - mean_Ambient), 2),
+  #              se_diff = round((sqrt(se_Warming^2+se_Ambient^2)), 3))
       
-    }
-  ),
+  #   }
+  # ),
   
   # plot level data
   tar_target(
