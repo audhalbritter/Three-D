@@ -53,8 +53,8 @@ combined_plan <- c(
   root_plan,
   soil_plan,
   decomposition_plan,
-  # data_dic_plan,
-  # analysis_plan,
-  # figure_plan,
+  data_dic_plan,
+  analysis_plan,
+  figure_plan,
   cflux_plan
 )
