@@ -636,6 +636,7 @@ clean_cover <- function(community_clean, metaTurfID){
     tidylog::anti_join(remove_wrong_species, by = c("year", "turfID", "species")) |> 
     # rename last carex
     mutate(species = if_else(species == "Carex sp1", "Carex sp", species),
+           species = if_else(species == "Taraxacum sp.", "Taraxacum sp", species),
            species = if_else(species == "Orchid sp", "Unknown orchid", species)) |> 
     # add N amount variable
     left_join(metaTurfID) |> 
@@ -652,7 +653,8 @@ clean_cover <- function(community_clean, metaTurfID){
            cover = if_else(year == 2019 & turfID == "34 WN10I 114" & species == "Carex vaginata", 4, cover),
            cover = if_else(year == 2019 & turfID == "4 AN1C 4" & species == "Carex vaginata", 8, cover),
            cover = if_else(year == 2019 & turfID == "60 AN8M 60" & species == "Carex bigelowii", 4, cover),
-           cover = if_else(year == 2022 & turfID == "68 AN9I 68" & species == "Luzula sp", 7, cover))
+           cover = if_else(year == 2022 & turfID == "68 AN9I 68" & species == "Luzula sp", 7, cover)) |> 
+    ungroup()
   
 }
 
