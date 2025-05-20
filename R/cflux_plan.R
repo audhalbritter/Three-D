@@ -1,8 +1,8 @@
 # cflux plan
 
-cflux_plan <- list(
+cflux_plan2 <- list(
   tar_target(
-    name = cflux2020_download,
+    name = cflux2020_download2,
     command = get_file(node = "pk4bg",
                        file = "Three-D_cflux_2020.zip",
                        path = "data/C-Flux/summer_2020",
@@ -10,7 +10,7 @@ cflux_plan <- list(
     format = "file"
   ),
   tar_target(
-    name = cfluxrecord2020_download,
+    name = cfluxrecord2020_download2,
     command = get_file(node = "pk4bg",
                        file = "Three-D_field-record_2020.csv",
                        path = "data/C-Flux/summer_2020",
@@ -18,7 +18,7 @@ cflux_plan <- list(
     format = "file"
   ),
   tar_target(
-    name = cflux2021_download,
+    name = cflux2021_download2,
     command = get_file(node = "pk4bg",
                        file = "Three-D_cflux_2021.zip",
                        path = "data/c-flux/summer_2021",
@@ -26,7 +26,7 @@ cflux_plan <- list(
     format = "file"
   ),
   tar_target(
-    name = cfluxrecord2021_download,
+    name = cfluxrecord2021_download2,
     command = get_file(node = "pk4bg",
                        file = "Three-D_field-record_2021.csv",
                        path = "data/c-flux/summer_2021",
@@ -34,7 +34,7 @@ cflux_plan <- list(
     format = "file"
   ),
   tar_target(
-    name = soilRchambersize_download,
+    name = soilRchambersize_download2,
     command = get_file(node = "pk4bg",
                        file = "Three-D_soilR-chambers-size.csv",
                        path = "data/c-flux/summer_2021",
@@ -42,8 +42,8 @@ cflux_plan <- list(
     format = "file"
   ),
   tar_target(
-    name = cflux2021_clean,
-    command = clean_cflux2021(soilRchambersize_download, cflux2021_download, cfluxrecord2021_download, metaTurfID)
+    name = cflux2021_clean2,
+    command = clean_cflux2021(soilRchambersize_download2, cflux2021_download2, cfluxrecord2021_download2, metaTurfID)
   ),
   # tar_target(
   #   name = cflux2021_out,
@@ -51,16 +51,16 @@ cflux_plan <- list(
   #                      name = "c-flux_2021")
   # ),
   tar_target(
-    name = cflux2020_clean,
-    command = clean_cflux2020(cflux2020_download, cfluxrecord2020_download, metaTurfID)
+    name = cflux2020_clean2,
+    command = clean_cflux2020(cflux2020_download2, cfluxrecord2020_download2, metaTurfID)
   ),
   tar_target(
-    name = join_cflux,
-    command = full_join(cflux2021_clean, cflux2020_clean)
+    name = join_cflux2,
+    command = full_join(cflux2021_clean2, cflux2020_clean2)
   ),
   tar_target(
-    name = cflux_out,
-    command = save_csv(join_cflux,
+    name = cflux_out2,
+    command = save_csv(join_cflux2,
                        name = "c-flux")
   )
   # tar_target(

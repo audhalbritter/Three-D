@@ -45,16 +45,16 @@ tar_source()
 #Combine target plans
 combined_plan <- c(
   meta_plan,
-  climate_plan,
-  biomass_plan,
-  productivity_plan,
-  community_plan,
-  reflectance_plan,
-  root_plan,
-  soil_plan,
-  decomposition_plan,
-  data_dic_plan,
-  analysis_plan,
-  figure_plan,
-  cflux_plan
+  # climate_plan,
+  # biomass_plan,
+  # productivity_plan,
+  # community_plan,
+  # reflectance_plan,
+  # root_plan,
+  # soil_plan,
+  # decomposition_plan,
+  # data_dic_plan,
+  # analysis_plan,
+  # figure_plan,
+  cflux_plan2
 )

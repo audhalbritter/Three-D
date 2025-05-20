@@ -80,7 +80,7 @@ slopes_exp_2020 <- flux_fitting(
     conc2020,
     conc,
     date_time,
-    fit_type = "exp"
+    fit_type = "exp_zhao18"
     # start_cut = 20,
     # end_cut = 60
     )
@@ -173,7 +173,7 @@ fluxes2020 <- flux_calc(
 # calculating GEP
 
 fluxes2020gep <- fluxes2020 |>
-  flux_gep(
+  flux_gpp(
     type,
     date_time,
     id_cols = c("turfID", "campaign", "replicate"),
