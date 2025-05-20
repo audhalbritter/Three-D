@@ -72,7 +72,7 @@ slopes_exp_2021 <- flux_fitting(
   conc,
   CO2,
   date_time,
-  fit_type = "exp",
+  fit_type = "exp_zhao18",
   end_cut = 30
 )
 
@@ -591,8 +591,9 @@ flux_corrected <- flux_corrected_PAR %>%
 
 # write_csv(flux_corrected, "data_cleaned/c-flux/Three-D_c-flux_2021.csv")
 
+
 flux_corrected %>% filter(type == "ER") %>% 
-  summarise(
+  reframe(
     rangeER = range(PAR_corrected_flux, na.rm = TRUE)
   )
 
@@ -602,8 +603,8 @@ flux_corrected %>% filter(type == "ER") %>%
 # View(flux_corrected_PAR)
 
 fluxes2021 <- flux_corrected_PAR |>
-  # select(!flux) |> # we need to remove the flux col because there is a flux col created by flux_gep
-  flux_gep(
+  # select(!flux) |> # we need to remove the flux col because there is a flux col created by flux_gpp
+  flux_gpp(
     type,
     date_time,
     PAR_corrected_flux,
