@@ -80,3 +80,25 @@ daily_climate |>
   group_by(variable, year) |> 
   summarise(mean = mean(value, na.rm = TRUE))
 
+
+
+roots_clean |> 
+  filter(warming == "A", Namount_kg_ha_y == 0, grazing == "C") |> 
+  group_by(period, variable, origSiteID) |> 
+  summarise(mean = mean(value, na.rm = TRUE),
+            se = sd(value, na.rm = TRUE)/sqrt(n()))
+
+library(broom)
+roots_clean |> 
+  mutate(origSiteID = factor(origSiteID, levels = c("Joasete", "Liahovden"))) |>
+  filter(warming == "A", Namount_kg_ha_y == 0, grazing == "C") |> 
+  group_by(period, variable) |> 
+  nest() |> 
+  mutate(fit = map(data, ~lm(value ~ origSiteID, data = .)),
+         res = map(fit, tidy),
+         anova = map(fit, car::Anova),
+         anova_tidy = map(anova, tidy)) |> 
+  unnest(anova_tidy) |> 
+  print(n = Inf)
+  
+

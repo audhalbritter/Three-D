@@ -51,7 +51,7 @@ climate_plan <- list(
                        path = "data",
                        remote_path = "RawData/Climate")
       
-      unzip(zipfile = "data/Fixed_by_tomst.zip", 
+      unzip(zipfile = "Fixed_by_tomst", 
             exdir = "data")
       },
     format = "file"
