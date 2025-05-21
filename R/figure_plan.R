@@ -134,7 +134,7 @@ figure_plan <- list(
         # )) +
         geom_hline(yintercept = 0, size = 0.3) +
         labs(
-          title = bquote(~CO[2]~ "fluxes in 2021"),
+          title = bquote(~CO[2]~ "fluxes in 2020"),
           # caption = bquote(~CO[2]~'flux standardized at PAR = 300 '*mu*mol/m^2/s*' for NEE and PAR = 0 '*mu*mol/m^2/s*' for ER'),
           color = "Warming",
           shape = "Site",

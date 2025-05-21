@@ -90,19 +90,42 @@ slopes_exp_2020_flag <- flux_quality(
   conc,
   error = 150, #there were some calibration issues, leading to the instrument being off in absolute values
   force_discard = c(
-    55, # slope going opposite direction as flux
+    69, # unclear, flux U shaped
+    80, # not zero, u shaped
+    83, # U shaped, unclear
     118 # influence from disturbance at the start
+  ),
+  force_lm = c(
+    124 # exponential goes opposite direction as flux, but lm fits
+  ),
+  force_zero = c(
+    200 # bump at the start gives it a negative slope, but really it is flat
   )
   )
+
+slopes_exp_2020_flag |>
+filter(
+  f_fluxid %in% c(55, 69, 80, 83, 118, 124, 200)
+) |>
+flux_plot(
+  conc,
+  date_time,
+  print_plot = "FALSE",
+  output = "pdfpages",
+  f_plotname = "plot_2020_check",
+  f_ylim_lower = 250
+)
 
 # str(slopes_exp_2020_flag)
 
 # we keep flux plot as comments because it takes quite long to run
 # flux_plot(
 #   slopes_exp_2020_flag,
+#   conc,
+#   date_time,
 #   print_plot = "FALSE",
-#   output = "pdf",
-#   f_plotname = "plot_2020",
+#   output = "pdfpages",
+#   f_plotname = "plot_2020_cuts",
 #   f_ylim_lower = 250
 # )
 
