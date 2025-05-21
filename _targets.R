@@ -28,7 +28,8 @@ tar_option_set(
     "glue", 
     "vegan", 
     "ggvegan", 
-    "patchwork"
+    "patchwork",
+    "scales"
     ))
 
 # tar_make_clustermq() configuration (okay to leave alone):
