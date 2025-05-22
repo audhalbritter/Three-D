@@ -84,23 +84,108 @@ slopes_exp_2021_flag <- flux_quality(
     198 # looks ok despite b above threshold
   ),
   force_discard = c(
+    19, # bump at start messing up the fit
     402, # slope is off
-    403, # slope is off
-    409, # slope is off
     562, # slope in opposite direction
-    570, # small bump at start setting the slope wrong
     985 # slope is off
+  ),
+  force_lm = c(
+    91, # bump messing up the exp fit, but lm fits well
+    407 # lm is ok
   )
+  # force_zero = c(
+  # )
 )
 
+slopes_exp_2021_flag |>
+filter(
+  f_fluxid %in% c(198, 19, 402, 562, 985, 91, 407, 403, 409, 570)
+) |>
+flux_plot(
+  CO2,
+  date_time,
+  print_plot = "FALSE",
+  output = "pdfpages",
+  f_plotname = "plot_2021_check",
+  f_ylim_lower = 300
+  )
+
 # flux_plot is time consuming so we keep it as comments to avoid running accidentally
+# slopes_exp_2021_flag |>
+# filter(
+#   f_fluxid %in% (1:250)
+# ) |>
 # flux_plot(
-#   slopes_exp_2021_flag,
 #   CO2,
 #   date_time,
 #   print_plot = "FALSE",
-#   output = "pdf",
-#   f_plotname = "plot_2021",
+#   output = "pdfpages",
+#   f_plotname = "plot_2021_1",
+#   f_ylim_lower = 300
+#   )
+
+# slopes_exp_2021_flag |>
+# filter(
+#   f_fluxid %in% (251:500)
+# ) |>
+# flux_plot(
+#   CO2,
+#   date_time,
+#   print_plot = "FALSE",
+#   output = "pdfpages",
+#   f_plotname = "plot_2021_2",
+#   f_ylim_lower = 300
+#   )
+
+# slopes_exp_2021_flag |>
+# filter(
+#   f_fluxid %in% (501:750)
+# ) |>
+# flux_plot(
+#   CO2,
+#   date_time,
+#   print_plot = "FALSE",
+#   output = "pdfpages",
+#   f_plotname = "plot_2021_3",
+#   f_ylim_lower = 300
+#   )
+
+# slopes_exp_2021_flag |>
+# filter(
+#   f_fluxid %in% (751:1000)
+# ) |>
+# flux_plot(
+#   CO2,
+#   date_time,
+#   print_plot = "FALSE",
+#   output = "pdfpages",
+#   f_plotname = "plot_2021_4",
+#   f_ylim_lower = 300
+#   )
+
+# slopes_exp_2021_flag |>
+# filter(
+#   f_fluxid %in% (1001:1250)
+# ) |>
+# flux_plot(
+#   CO2,
+#   date_time,
+#   print_plot = "FALSE",
+#   output = "pdfpages",
+#   f_plotname = "plot_2021_5",
+#   f_ylim_lower = 300
+#   )
+
+# slopes_exp_2021_flag |>
+# filter(
+#   f_fluxid %in% (1251:1500)
+# ) |>
+# flux_plot(
+#   CO2,
+#   date_time,
+#   print_plot = "FALSE",
+#   output = "pdfpages",
+#   f_plotname = "plot_2021_6",
 #   f_ylim_lower = 300
 #   )
 
@@ -602,7 +687,7 @@ flux_corrected %>% filter(type == "ER") %>%
 # str(flux_corrected_PAR)
 # View(flux_corrected_PAR)
 
-fluxes2021 <- flux_corrected_PAR |>
+fluxes2021_par_corr <- flux_corrected_PAR |>
   # select(!flux) |> # we need to remove the flux col because there is a flux col created by flux_gpp
   flux_gpp(
     type,
@@ -628,8 +713,38 @@ fluxes2021 <- flux_corrected_PAR |>
       "destBlockID",
       "Namount_kg_ha_y"
       )
-  ) 
-  
+  )
+
+fluxes2021_par_nocorr <- flux_corrected_PAR |>
+  # select(!flux) |> # we need to remove the flux col because there is a flux col created by flux_gpp
+  flux_gpp(
+    type,
+    date_time,
+    f_flux,
+    id_cols = c("turfID", "campaign"),
+    cols_keep = c(
+      "temp_soil",
+      "comments",
+      "f_quality_flag",
+      "plot_area",
+      "f_temp_air_ave",
+      "f_volume_setup",
+      "f_model",
+      "origSiteID",
+      "origBlockID",
+      "warming",
+      "grazing",
+      "Nlevel",
+      "origPlotID",
+      "destSiteID",
+      "destPlotID",
+      "destBlockID",
+      "Namount_kg_ha_y"
+      )
+  )
+
+fluxes2021 <- left_join(fluxes2021_par_corr, fluxes2021_par_nocorr)
+
 # str(fluxes2021)
 
 # let's just plot it to check

@@ -100,9 +100,148 @@ figure_plan <- list(
               text = element_text(size = 12))
       
     }
+  ),
+  tar_target(
+    name = cflux_figure2020,
+    command = {
+      join_cflux |>
+      filter(
+        type %in% c("ER", "NEE", "GPP")
+        & lubridate::year(date_time) == 2020
+      ) |>
+      mutate(
+        origSiteID = recode(origSiteID, "Liahovden" = "Alpine", "Joasete" = "Sub-alpine"),
+        origSiteID = factor(origSiteID, levels = c("Alpine", "Sub-alpine")),
+        grazing = factor(grazing, levels = c("C", "M", "I")),
+        grazing = recode(grazing, "C" = "Control", "M" = "Medium", "I" = "Intensive"),
+        warming = recode(warming, "A" = "Ambient", "W" = "Warming")
+        ) |>
+        ggplot(aes(x = date_time, y = f_flux, color = warming, shape = origSiteID, linetype = origSiteID)) +
+        theme_bw() +
+        geom_point() +
+        # geom_violin() +
+        facet_grid(type ~ ., scales = "free") +
+        geom_smooth(method = "lm",
+                    formula = y ~ poly(x, 3),
+                    se = TRUE, size = 0.5, fullrange = FALSE) +
+        scale_color_manual(values = c(
+          "Ambient" = "#1762ad",
+          "Warming" = "#c8064a"
+        )) +
+        # scale_shape_manual(values = c(
+        #   "Sub-alpine" = 1,
+        #   "Alpine" = 16
+        # )) +
+        geom_hline(yintercept = 0, size = 0.3) +
+        labs(
+          title = bquote(~CO[2]~ "fluxes in 2020"),
+          # caption = bquote(~CO[2]~'flux standardized at PAR = 300 '*mu*mol/m^2/s*' for NEE and PAR = 0 '*mu*mol/m^2/s*' for ER'),
+          color = "Warming",
+          shape = "Site",
+          linetype = "Site",
+          x = "Date",
+          y = bquote(~CO[2]~'flux [mmol/'*m^2*'/h]')
+        )
+        # facet_grid(type ~ origSiteID, scales = "free")
+      ggsave("cflux_figure2020.png", dpi = 300, width = 8, height = 6)
+    }
+  ),
+  tar_target(
+    name = cflux_figure2021,
+    command = {
+      join_cflux |>
+      filter(
+        type %in% c("ER", "NEE", "GPP")
+        & lubridate::year(date_time) == 2021
+      ) |>
+      mutate(
+        origSiteID = recode(origSiteID, "Liahovden" = "Alpine", "Joasete" = "Sub-alpine"),
+        origSiteID = factor(origSiteID, levels = c("Alpine", "Sub-alpine")),
+        grazing = factor(grazing, levels = c("C", "M", "I", "N")),
+        grazing = recode(grazing, "C" = "Control", "M" = "Medium", "I" = "Intensive", "N" = "Natural"),
+        warming = recode(warming, "A" = "Ambient", "W" = "Warming")
+        # Namount_kg_ha_y = factor(Namount_kg_ha_y)
+        ) |>
+        # ggplot(aes(x = date_time, y = PAR_corrected_flux, color = warming, shape = origSiteID, linetype = origSiteID)) +
+        ggplot(aes(x = Namount_kg_ha_y, y = PAR_corrected_flux, color = warming, shape = origSiteID, linetype = origSiteID)) +
+        theme_bw() +
+        geom_point() +
+        # geom_violin() +
+        facet_grid(type ~ grazing, scales = "free") +
+        geom_smooth(method = "lm",
+                    # formula = y ~ poly(x, 3),
+                    se = TRUE, linewidth = 0.5, fullrange = FALSE) +
+        scale_color_manual(values = c(
+          "Ambient" = "#1762ad",
+          "Warming" = "#c8064a"
+        )) +
+        # scale_shape_manual(values = c(
+        #   "Sub-alpine" = 1,
+        #   "Alpine" = 16
+        # )) +
+        geom_hline(yintercept = 0, linewidth = 0.3) +
+        scale_x_continuous(trans = pseudo_log_trans(base = 10), breaks = c(0, 1, 10, 100)) +
+        # scale_x_continuous(trans = "log10") +
+        labs(
+          title = bquote(~CO[2]~ "fluxes in 2021"),
+          caption = bquote(~CO[2]~'flux standardized at PAR = 300 '*mu*mol/m^2/s*' for NEE and PAR = 0 '*mu*mol/m^2/s*' for ER'),
+          color = "Warming",
+          shape = "Site",
+          linetype = "Site",
+          x = "N addition",
+          y = bquote(~CO[2]~'flux [mmol/'*m^2*'/h]')
+        )
+        # facet_grid(type ~ origSiteID, scales = "free")
+      ggsave("cflux_figure2021.png", dpi = 300, width = 8, height = 6)
+    }
+  ),
+  tar_target(
+    name = cflux_figure_all,
+    command = {
+      join_cflux |>
+      filter(
+        type %in% c("ER", "NEE", "GPP")
+      ) |>
+      mutate(
+        origSiteID = recode(origSiteID, "Liahovden" = "Alpine", "Joasete" = "Sub-alpine"),
+        origSiteID = factor(origSiteID, levels = c("Alpine", "Sub-alpine")),
+        grazing = factor(grazing, levels = c("C", "M", "I", "N")),
+        grazing = recode(grazing, "C" = "Control", "M" = "Medium", "I" = "Intensive", "N" = "Natural"),
+        warming = recode(warming, "A" = "Ambient", "W" = "Warming")
+        # Namount_kg_ha_y = factor(Namount_kg_ha_y)
+        ) |>
+        # ggplot(aes(x = date_time, y = PAR_corrected_flux, color = warming, shape = origSiteID, linetype = origSiteID)) +
+        ggplot(aes(x = Namount_kg_ha_y, y = f_flux, color = warming, shape = origSiteID, linetype = origSiteID)) +
+        theme_bw() +
+        geom_point() +
+        # geom_violin() +
+        facet_grid(type ~ grazing, scales = "free") +
+        geom_smooth(method = "lm",
+                    # formula = y ~ poly(x, 3),
+                    se = TRUE, linewidth = 0.5, fullrange = FALSE) +
+        scale_color_manual(values = c(
+          "Ambient" = "#1762ad",
+          "Warming" = "#c8064a"
+        )) +
+        # scale_shape_manual(values = c(
+        #   "Sub-alpine" = 1,
+        #   "Alpine" = 16
+        # )) +
+        geom_hline(yintercept = 0, linewidth = 0.3) +
+        scale_x_continuous(trans = scales::pseudo_log_trans(base = 10), breaks = c(0, 1, 10, 100)) +
+        labs(
+          title = bquote(~CO[2]~ "fluxes in 2020 and 2021"),
+          # caption = bquote(~CO[2]~'flux standardized at PAR = 300 '*mu*mol/m^2/s*' for NEE and PAR = 0 '*mu*mol/m^2/s*' for ER'),
+          color = "Warming",
+          shape = "Site",
+          linetype = "Site",
+          x = "N addition",
+          y = bquote(~CO[2]~'flux [mmol/'*m^2*'/h]')
+        )
+        # facet_grid(type ~ origSiteID, scales = "free")
+      ggsave("cflux_figure_all.png", dpi = 300, width = 8, height = 6)
+    }
   )
-  
-  
 )
 
 # roots_clean |> 
