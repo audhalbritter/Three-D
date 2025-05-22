@@ -50,6 +50,20 @@ cflux_plan <- list(
     command = clean_cflux2020(cflux2020_download, cfluxrecord2020_download, metaTurfID)
   ),
   tar_target(
+    name = cflux2020_flags,
+    command = cflux2020_clean |>
+      rowid_to_column("rowid") |>
+      flux_flag_count(rowid) |>
+      save_csv(name = "cflux2020_flags")
+  ),
+  tar_target(
+    name = cflux2021_flags,
+    command = cflux2021_clean |>
+      rowid_to_column("rowid") |>
+      flux_flag_count(rowid) |>
+      save_csv(name = "cflux2021_flags")
+  ),
+  tar_target(
     name = join_cflux,
     command = full_join(cflux2021_clean, cflux2020_clean)
   ),
