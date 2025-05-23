@@ -51,6 +51,9 @@ record <- read_csv(cfluxrecord2021_download, na = c(""), col_types = "cctDfc") %
     # start_window = start + startcrop, #cropping the start
     # end_window = end - endcrop #cropping the end of the measurement
   )  |>
+  rename(
+    flux_campaign = "campaign"
+  ) |>
   distinct(start, .keep_all = TRUE) # some replicates were also marked as LRC and that is not correct
 
 #matching the CO2 concentration data with the turfs using the field record
@@ -300,7 +303,7 @@ fluxes2021 <- flux_calc(
   cols_keep = c(
     "turfID",
     "type",
-    "campaign",
+    "flux_campaign",
     "comments",
     "f_quality_flag"
   ),
@@ -445,7 +448,7 @@ fluxes2021 <- left_join(fluxes2021, soiltemp_ER) %>%
 
 # old_fluxes2021 <- read_csv("data_cleaned/c-flux/Three-D_c-flux_2021_cleaned_old.csv") |>
 #   mutate(
-#     campaign = as_factor(campaign)
+#     flux_campaign = as_factor(flux_campaign)
 #   )
 
 # old_fluxes2021 <- old_fluxes2021 |>
@@ -460,10 +463,10 @@ fluxes2021 <- left_join(fluxes2021, soiltemp_ER) %>%
 # all_fluxes <- full_join(
 #   fluxes2021,
 #   old_fluxes2021,
-#   by = c( # we do not use datetime because the cut might be different
+#   by = c( # we do not use date_time because the cut might be different
 #     "turfID",
 #     "type",
-#     "campaign"
+#     "flux_campaign"
 #     )
 # )
 
@@ -498,7 +501,7 @@ lrc_flux <- flux %>%
 #plot each light response curves
 # ggplot(lrc_flux, aes(x = PAR, y = flux, color = turfID)) +
 #   geom_point(size = 0.1) +
-#   facet_wrap(vars(campaign)) +
+#   facet_wrap(vars(flux_campaign)) +
 #   # geom_smooth(method = "lm", se = FALSE)
 #   geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE)
 
@@ -510,7 +513,7 @@ lrc_flux <- flux %>%
 #   ))) %>% 
 # ggplot(aes(x = PAR, y = flux, color = warming)) +
 #   geom_point(size = 0.1) +
-#   facet_wrap(vars(campaign)) +
+#   facet_wrap(vars(flux_campaign)) +
 #   # geom_smooth(method = "lm", se = FALSE)
 #   geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE) +
 #   labs(
@@ -528,14 +531,14 @@ lrc_flux <- flux %>%
 
 # ggplot(lrc_flux, aes(x = PAR, y = flux, color = warming)) +
 #   geom_point(size = 0.1) +
-#   # facet_wrap(vars(campaign)) +
+#   # facet_wrap(vars(flux_campaign)) +
 #   # geom_smooth(method = "lm", se = FALSE)
 #   geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE)
 
 #extract the equation and correct all the NEE fluxes for PAR = 300 micromol/s/m2
 
 coefficients_lrc <- lrc_flux %>%
-  group_by(warming, campaign) %>% 
+  group_by(warming, flux_campaign) %>% 
   nest %>% 
   mutate(lm = map(data, ~ lm(f_flux ~ PAR + I(PAR^2), data = .x)),
          table = map(lm, tidy),
@@ -544,7 +547,7 @@ coefficients_lrc <- lrc_flux %>%
          
   ) %>% 
   unnest(table) %>% 
-  select(warming, `(Intercept)`, PAR, `I(PAR^2)`, campaign) %>% 
+  select(warming, `(Intercept)`, PAR, `I(PAR^2)`, flux_campaign) %>% 
   rename(
     origin = "(Intercept)",
     a = "I(PAR^2)",
@@ -558,7 +561,7 @@ PARfix <- 300 #PAR value at which we want the corrected flux to be for NEE
 PARnull <- 0 #PAR value for ER
 
 flux_corrected_PAR <- flux %>% 
-  left_join(coefficients_lrc, by = c("warming", "campaign")) %>% 
+  left_join(coefficients_lrc, by = c("warming", "flux_campaign")) %>% 
   mutate(
     PAR_corrected_flux = 
       case_when( #we correct only the NEE
@@ -590,7 +593,7 @@ flux_corrected_PAR <- flux %>%
 #                            )) +
 #   geom_point() +
 #   geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE) +
-#   facet_wrap(vars(campaign))
+#   facet_wrap(vars(flux_campaign))
 
 # filter(flux_corrected_PAR,
 #        type == "ER" |
@@ -600,13 +603,13 @@ flux_corrected_PAR <- flux %>%
 #              )) +
 #   geom_point() +
 #   geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE, fullrange = TRUE) +
-#   facet_grid(vars(warming), vars(campaign))
+#   facet_grid(vars(warming), vars(flux_campaign))
 
 coefficients_soiltemp <- filter(flux_corrected_PAR, 
                                 type == "ER" |
                                   type == "NEE"
                                 ) %>%
-  group_by(warming, campaign) %>% 
+  group_by(warming, flux_campaign) %>% 
   nest %>% 
   mutate(lm = map(data, ~ lm(PAR_corrected_flux ~ temp_soil + I(temp_soil^2), data = .x)),
          table = map(lm, tidy),
@@ -615,7 +618,7 @@ coefficients_soiltemp <- filter(flux_corrected_PAR,
          
   ) %>% 
   unnest(table) %>% 
-  select(warming, `(Intercept)`, temp_soil, `I(temp_soil^2)`, campaign) %>% 
+  select(warming, `(Intercept)`, temp_soil, `I(temp_soil^2)`, flux_campaign) %>% 
   rename(
     origin2 = "(Intercept)",
     c = "I(temp_soil^2)",
@@ -624,7 +627,7 @@ coefficients_soiltemp <- filter(flux_corrected_PAR,
 
 soiltempfix <- 15
 flux_corrected <- flux_corrected_PAR %>% 
-  left_join(coefficients_soiltemp, by = c("warming", "campaign")) %>% 
+  left_join(coefficients_soiltemp, by = c("warming", "flux_campaign")) %>% 
   mutate(
     corrected_flux =
       PAR_corrected_flux + c * (soiltempfix^2 - temp_soil^2) + d * (soiltempfix - temp_soil),
@@ -642,7 +645,7 @@ flux_corrected <- flux_corrected_PAR %>%
 # ggplot(aes(x = PARavg, y = delta_flux, color = warming)) +
 #   geom_point() +
 #   # geom_line() +
-#   facet_grid(vars(campaign), vars(type), scales = "free")
+#   facet_grid(vars(flux_campaign), vars(type), scales = "free")
 
 # flux_corrected %>% 
 #   # filter( #removing LRC now that we used them
@@ -653,7 +656,7 @@ flux_corrected <- flux_corrected_PAR %>%
 #   geom_point(aes(x = PARavg, y = flux, color = warming)) +
 #   geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE, aes(x = PARavg, y = corrected_flux, color = warming))
   # geom_line() +
-  # facet_grid(vars(campaign), vars(type), scales = "free")
+  # facet_grid(vars(flux_campaign), vars(type), scales = "free")
 # flux_corrected %>% 
 #   filter( #removing LRC now that we used them
 #         type == "NEE"
@@ -662,7 +665,7 @@ flux_corrected <- flux_corrected_PAR %>%
 #   ggplot(aes(x = flux, y = corrected_flux, color = warming)) +
 #   geom_point() +
 #   geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE) +
-#   facet_grid(vars(type), vars(campaign))
+#   facet_grid(vars(type), vars(flux_campaign))
 
 # flux_corrected_PAR %>% 
 #   filter( #removing LRC now that we used them
@@ -672,7 +675,7 @@ flux_corrected <- flux_corrected_PAR %>%
 #   ggplot(aes(x = flux, y = PAR_corrected_flux, color = warming)) +
 #   geom_point() +
 #   geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE) +
-#   facet_grid(vars(type), vars(campaign))
+#   facet_grid(vars(type), vars(flux_campaign))
 
 # write_csv(flux_corrected, "data_cleaned/c-flux/Three-D_c-flux_2021.csv")
 
@@ -693,7 +696,7 @@ fluxes2021_par_corr <- flux_corrected_PAR |>
     type,
     date_time,
     PAR_corrected_flux,
-    id_cols = c("turfID", "campaign"),
+    id_cols = c("turfID", "flux_campaign"),
     cols_keep = c(
       "temp_soil",
       "comments",
@@ -721,7 +724,7 @@ fluxes2021_par_nocorr <- flux_corrected_PAR |>
     type,
     date_time,
     f_flux,
-    id_cols = c("turfID", "campaign"),
+    id_cols = c("turfID", "flux_campaign"),
     cols_keep = c(
       "temp_soil",
       "comments",
@@ -754,7 +757,7 @@ fluxes2021 |>
 
 # fluxes2021 <- fluxes2021 |>
 #   rename(
-#     date_time = "datetime"
+#     date_time = "date_time"
 #   )
 
 fluxes2021

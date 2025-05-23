@@ -60,7 +60,10 @@ record2020 <- read_csv(cfluxrecord2020_download, na = c(""), col_types = "ccntDf
   mutate(
     start = ymd_hms(paste(date, starting_time)) #converting the date as posixct, pasting date and starting time together
   ) %>% 
-  rename(turfID = turf_ID) |>
+  rename(
+    turfID = "turf_ID",
+    flux_campaign = "campaign"
+    ) |>
   distinct(start, .keep_all = TRUE) # some replicates were also marked as LRC and that is not correct
 
 # matching
@@ -145,7 +148,7 @@ fluxes2020 <- flux_calc(
     "turfID",
     "type",
     "replicate",
-    "campaign",
+    "flux_campaign",
     "remarks",
     "f_flag_match",
     "f_quality_flag"
@@ -179,7 +182,7 @@ fluxes2020 <- flux_calc(
 #   by = c( # we do not use date_time because the cut might be different
 #     "turfID" = "turfID",
 #     "type",
-#     "campaign",
+#     "flux_campaign",
 #     "replicate"
 #   )
 # )
@@ -199,7 +202,7 @@ fluxes2020gep <- fluxes2020 |>
   flux_gpp(
     type,
     date_time,
-    id_cols = c("turfID", "campaign", "replicate"),
+    id_cols = c("turfID", "flux_campaign", "replicate"),
     cols_keep = c("remarks", "f_quality_flag", "f_temp_air_ave", "f_volume_setup", "f_model")
   )
 
