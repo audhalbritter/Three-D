@@ -203,7 +203,7 @@ fluxes2020gep <- fluxes2020 |>
     type,
     date_time,
     id_cols = c("turfID", "flux_campaign", "replicate"),
-    cols_keep = c("remarks", "f_quality_flag", "f_temp_air_ave", "f_volume_setup", "f_model")
+    cols_keep = c("remarks", "f_quality_flag", "f_temp_air_ave", "f_volume_setup", "f_model", "PAR")
   )
 
 # str(fluxes2020gep)

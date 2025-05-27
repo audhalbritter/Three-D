@@ -714,7 +714,8 @@ fluxes2021_par_corr <- flux_corrected_PAR |>
       "destSiteID",
       "destPlotID",
       "destBlockID",
-      "Namount_kg_ha_y"
+      "Namount_kg_ha_y",
+      "PAR"
       )
   )
 
@@ -742,7 +743,8 @@ fluxes2021_par_nocorr <- flux_corrected_PAR |>
       "destSiteID",
       "destPlotID",
       "destBlockID",
-      "Namount_kg_ha_y"
+      "Namount_kg_ha_y",
+      "PAR"
       )
   )
 
