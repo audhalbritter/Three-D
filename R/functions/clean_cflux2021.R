@@ -62,8 +62,6 @@ conc <- flux_match(
   record,
   date_time,
   start,
-  CO2,
-  startcrop = 0,
   measurement_length = 180
   )
 
@@ -282,6 +280,7 @@ slopes_2021 <- left_join(slopes_exp_2021_flag, soilR_chamber) |>
       type == "SoilR" ~ soil_chamber_vol,
       type != "SoilR" ~ 24.5
     ),
+    chamber_vol = chamber_vol + 0.075, # adding tube volume
     plot_area = case_when(
       type == "SoilR" ~ soil_chamber_area,
       type != "SoilR" ~ 0.0625
@@ -295,9 +294,9 @@ fluxes2021 <- flux_calc(
   f_slope_corr,
   date_time,
   temp_air,
-  chamber_vol,
+  setup_volume = chamber_vol,
   atm_pressure = 1,
-  plot_area,
+  plot_area = plot_area,
   conc_unit = "ppm",
   flux_unit = "mmol",
   cols_keep = c(
@@ -310,15 +309,14 @@ fluxes2021 <- flux_calc(
   cols_ave = c(
     "PAR",
     "temp_soil"
-  ),
-  tube_volume = 0.075
+  )
 )
 
 fluxes2021 <- fluxes2021 |>
   mutate(
-    PAR = case_when(
-      is.nan(PAR) == TRUE ~ NA_real_, #mean(PAR) returned NaN when PAR was all NAs but it is missing values
-      TRUE ~ as.numeric(PAR)
+    PAR_ave = case_when(
+      is.nan(PAR_ave) == TRUE ~ NA_real_, #mean(PAR_ave) returned NaN when PAR_ave was all NAs but it is missing values
+      TRUE ~ as.numeric(PAR_ave)
     )
   )
 
@@ -329,7 +327,7 @@ fluxes2021 <- fluxes2021 |>
 #replacing PAR Na by the average PAR of the 3h period in which the measurement is
 roll_period <- 3
 
-PAR_ER <- filter(fluxes2021, type == "ER") %>%
+PAR_ave_ER <- filter(fluxes2021, type == "ER") %>%
   slide_period_dfr(
     # .,
     .$date_time,
@@ -337,11 +335,11 @@ PAR_ER <- filter(fluxes2021, type == "ER") %>%
     .every = roll_period,
     ~data.frame(
       date_time = max(.x$date_time),
-      PAR_roll_ER = mean(.x$PAR, na.rm = TRUE)
+      PAR_ave_roll_ER = mean(.x$PAR_ave, na.rm = TRUE)
     )
   )
 
-PAR_NEE <- filter(fluxes2021, type == "NEE") %>%
+PAR_ave_NEE <- filter(fluxes2021, type == "NEE") %>%
   slide_period_dfr(
     # .,
     .$date_time,
@@ -349,19 +347,19 @@ PAR_NEE <- filter(fluxes2021, type == "NEE") %>%
     .every = roll_period,
     ~data.frame(
       date_time = max(.x$date_time),
-      PAR_roll_NEE = mean(.x$PAR, na.rm = TRUE)
+      PAR_ave_roll_NEE = mean(.x$PAR_ave, na.rm = TRUE)
     )
   )
 
 
 
-fluxes2021 <- left_join(fluxes2021, PAR_ER) %>% 
-  left_join(PAR_NEE) %>% 
-  fill(PAR_roll_NEE, .direction = "up") %>% 
-  fill(PAR_roll_ER, .direction = "up") %>% 
+fluxes2021 <- left_join(fluxes2021, PAR_ave_ER) %>% 
+  left_join(PAR_ave_NEE) %>% 
+  fill(PAR_ave_roll_NEE, .direction = "up") %>% 
+  fill(PAR_ave_roll_ER, .direction = "up") %>% 
   mutate(
     comments = case_when(
-      is.na(PAR) == TRUE
+      is.na(PAR_ave) == TRUE
       # & type == ("ER" | "NEE")
       ~ case_when(
         is.na(comments) ~ "PAR 3h period average",
@@ -370,19 +368,19 @@ fluxes2021 <- left_join(fluxes2021, PAR_ER) %>%
       TRUE ~ comments
     ),
     # comments = str_replace_all(comments, "NA / ", ""),
-    PAR = case_when(
-      is.na(PAR) == TRUE
+    PAR_ave = case_when(
+      is.na(PAR_ave) == TRUE
       & type == "ER"
-      ~ PAR_roll_ER,
-      is.na(PAR) == TRUE
+      ~ PAR_ave_roll_ER,
+      is.na(PAR_ave) == TRUE
       & type == "NEE"
-      ~ PAR_roll_NEE,
-      TRUE ~ PAR
+      ~ PAR_ave_roll_NEE,
+      TRUE ~ PAR_ave
     )
 
     
   ) %>% 
-  select(!c(PAR_roll_NEE, PAR_roll_ER))
+  select(!c(PAR_ave_roll_NEE, PAR_ave_roll_ER))
   
 
 #replace soil temp Na with average of measurements in the same 3h period
@@ -396,7 +394,7 @@ soiltemp_ER <- filter(fluxes2021, type == "ER") %>%
     .every = roll_period,
     ~data.frame(
       date_time = max(.x$date_time),
-      soiltemp_roll_ER = mean(.x$temp_soil, na.rm = TRUE)
+      soiltemp_roll_ER = mean(.x$temp_soil_ave, na.rm = TRUE)
     )
   )
 
@@ -408,7 +406,7 @@ soiltemp_NEE <- filter(fluxes2021, type == "NEE") %>%
     .every = roll_period,
     ~data.frame(
       date_time = max(.x$date_time),
-      soiltemp_roll_NEE = mean(.x$temp_soil, na.rm = TRUE)
+      soiltemp_roll_NEE = mean(.x$temp_soil_ave, na.rm = TRUE)
     )
   )
 
@@ -420,7 +418,7 @@ fluxes2021 <- left_join(fluxes2021, soiltemp_ER) %>%
   fill(soiltemp_roll_ER, .direction = "up") %>% 
   mutate(
     comments = case_when(
-      is.na(temp_soil) == TRUE
+      is.na(temp_soil_ave) == TRUE
       # & type != "SoilR"
       # & type == ("ER" | "NEE")
       ~ case_when(
@@ -430,14 +428,14 @@ fluxes2021 <- left_join(fluxes2021, soiltemp_ER) %>%
       TRUE ~ comments
     ),
     # comments = str_replace_all(comments, "NA / ", ""),
-    temp_soil = case_when(
-      is.na(temp_soil) == TRUE
+    temp_soil_ave = case_when(
+      is.na(temp_soil_ave) == TRUE
       & type == "ER"
       ~ soiltemp_roll_ER,
-      is.na(temp_soil) == TRUE
+      is.na(temp_soil_ave) == TRUE
       & type == "NEE"
       ~ soiltemp_roll_NEE,
-      TRUE ~ temp_soil
+      TRUE ~ temp_soil_ave
     )
 
     
@@ -540,18 +538,18 @@ lrc_flux <- flux %>%
 coefficients_lrc <- lrc_flux %>%
   group_by(warming, flux_campaign) %>% 
   nest %>% 
-  mutate(lm = map(data, ~ lm(f_flux ~ PAR + I(PAR^2), data = .x)),
+  mutate(lm = map(data, ~ lm(f_flux ~ PAR_ave + I(PAR_ave^2), data = .x)),
          table = map(lm, tidy),
          table = map(table, select, term, estimate),
          table = map(table, pivot_wider, names_from = term, values_from = estimate)
          
   ) %>% 
   unnest(table) %>% 
-  select(warming, `(Intercept)`, PAR, `I(PAR^2)`, flux_campaign) %>% 
+  select(warming, `(Intercept)`, PAR_ave, `I(PAR_ave^2)`, flux_campaign) %>% 
   rename(
     origin = "(Intercept)",
-    a = "I(PAR^2)",
-    b = "PAR"
+    a = "I(PAR_ave^2)",
+    b = "PAR_ave"
   )
 
 
@@ -565,8 +563,8 @@ flux_corrected_PAR <- flux %>%
   mutate(
     PAR_corrected_flux = 
       case_when( #we correct only the NEE
-        type == "NEE" ~ f_flux + a * (PARfix^2 - PAR^2) + b * (PARfix - PAR),
-        type == "ER" ~ f_flux + a * (PARnull^2 - PAR^2) + b * (PARnull - PAR),
+        type == "NEE" ~ f_flux + a * (PARfix^2 - PAR_ave^2) + b * (PARfix - PAR_ave),
+        type == "ER" ~ f_flux + a * (PARnull^2 - PAR_ave^2) + b * (PARnull - PAR_ave),
         type %in% c(
           "SoilR",
           "LRC1",
@@ -611,18 +609,18 @@ coefficients_soiltemp <- filter(flux_corrected_PAR,
                                 ) %>%
   group_by(warming, flux_campaign) %>% 
   nest %>% 
-  mutate(lm = map(data, ~ lm(PAR_corrected_flux ~ temp_soil + I(temp_soil^2), data = .x)),
+  mutate(lm = map(data, ~ lm(PAR_corrected_flux ~ temp_soil_ave + I(temp_soil_ave^2), data = .x)),
          table = map(lm, tidy),
          table = map(table, select, term, estimate),
          table = map(table, pivot_wider, names_from = term, values_from = estimate)
          
   ) %>% 
   unnest(table) %>% 
-  select(warming, `(Intercept)`, temp_soil, `I(temp_soil^2)`, flux_campaign) %>% 
+  select(warming, `(Intercept)`, temp_soil_ave, `I(temp_soil_ave^2)`, flux_campaign) %>% 
   rename(
     origin2 = "(Intercept)",
-    c = "I(temp_soil^2)",
-    d = "temp_soil"
+    c = "I(temp_soil_ave^2)",
+    d = "temp_soil_ave"
   )
 
 soiltempfix <- 15
@@ -630,7 +628,7 @@ flux_corrected <- flux_corrected_PAR %>%
   left_join(coefficients_soiltemp, by = c("warming", "flux_campaign")) %>% 
   mutate(
     corrected_flux =
-      PAR_corrected_flux + c * (soiltempfix^2 - temp_soil^2) + d * (soiltempfix - temp_soil),
+      PAR_corrected_flux + c * (soiltempfix^2 - temp_soil_ave^2) + d * (soiltempfix - temp_soil_ave),
       
     delta_flux = f_flux - corrected_flux
   ) %>% 
@@ -698,12 +696,12 @@ fluxes2021_par_corr <- flux_corrected_PAR |>
     PAR_corrected_flux,
     id_cols = c("turfID", "flux_campaign"),
     cols_keep = c(
-      "temp_soil",
+      "temp_soil_ave",
       "comments",
       "f_quality_flag",
       "plot_area",
       "f_temp_air_ave",
-      "f_volume_setup",
+      "chamber_vol",
       "f_model",
       "origSiteID",
       "origBlockID",
@@ -715,7 +713,7 @@ fluxes2021_par_corr <- flux_corrected_PAR |>
       "destPlotID",
       "destBlockID",
       "Namount_kg_ha_y",
-      "PAR"
+      "PAR_ave"
       )
   )
 
@@ -727,12 +725,11 @@ fluxes2021_par_nocorr <- flux_corrected_PAR |>
     f_flux,
     id_cols = c("turfID", "flux_campaign"),
     cols_keep = c(
-      "temp_soil",
+      "temp_soil_ave",
       "comments",
       "f_quality_flag",
       "plot_area",
       "f_temp_air_ave",
-      "f_volume_setup",
       "f_model",
       "origSiteID",
       "origBlockID",
@@ -744,7 +741,7 @@ fluxes2021_par_nocorr <- flux_corrected_PAR |>
       "destPlotID",
       "destBlockID",
       "Namount_kg_ha_y",
-      "PAR"
+      "PAR_ave"
       )
   )
 

@@ -73,10 +73,7 @@ conc2020 <- flux_match(
   record2020,
   date_time,
   start,
-  conc,
-  startcrop = 0,
   measurement_length = 120 # 2020 was 2 minutes
-  # startcrop = 20
   )
 
 slopes_exp_2020 <- flux_fitting(
@@ -106,18 +103,18 @@ slopes_exp_2020_flag <- flux_quality(
   )
   )
 
-slopes_exp_2020_flag |>
-filter(
-  f_fluxid %in% c(55, 69, 80, 83, 118, 124, 200)
-) |>
-flux_plot(
-  conc,
-  date_time,
-  print_plot = "FALSE",
-  output = "pdfpages",
-  f_plotname = "plot_2020_check",
-  f_ylim_lower = 250
-)
+# slopes_exp_2020_flag |>
+# filter(
+#   f_fluxid %in% c(55, 69, 80, 83, 118, 124, 200)
+# ) |>
+# flux_plot(
+#   conc,
+#   date_time,
+#   print_plot = "FALSE",
+#   output = "pdfpages",
+#   f_plotname = "plot_2020_check",
+#   f_ylim_lower = 250
+# )
 
 # str(slopes_exp_2020_flag)
 
@@ -139,7 +136,7 @@ fluxes2020 <- flux_calc(
   f_slope_corr,
   date_time,
   temp_air,
-  chamber_volume = 24.5,
+  setup_volume = 24.575,
   atm_pressure = 1,
   plot_area = 0.0625,
   conc_unit = "ppm",
@@ -150,13 +147,11 @@ fluxes2020 <- flux_calc(
     "replicate",
     "flux_campaign",
     "remarks",
-    "f_flag_match",
     "f_quality_flag"
   ),
   cols_ave = c(
     "PAR"
-  ),
-  tube_volume = 0.075
+  )
 )
 
 # str(fluxes2020)
@@ -196,29 +191,29 @@ fluxes2020 <- flux_calc(
 
 # count(fluxes2020, type)
 
-# calculating GEP
+# calculating GPP
 
-fluxes2020gep <- fluxes2020 |>
+fluxes2020gpp <- fluxes2020 |>
   flux_gpp(
     type,
     date_time,
     id_cols = c("turfID", "flux_campaign", "replicate"),
-    cols_keep = c("remarks", "f_quality_flag", "f_temp_air_ave", "f_volume_setup", "f_model", "PAR")
+    cols_keep = c("remarks", "f_quality_flag", "f_temp_air_ave", "f_model", "PAR_ave")
   )
 
-# str(fluxes2020gep)
+# str(fluxes2020gpp)
 
 # let's just plot it to check
-fluxes2020gep |>
+fluxes2020gpp |>
   ggplot(aes(x = type, y = flux)) +
   geom_violin()
 
-fluxes2020gep <- left_join(fluxes2020gep, metaTurfID, by = "turfID") |>
+fluxes2020gpp <- left_join(fluxes2020gpp, metaTurfID, by = "turfID") |>
   rename(
     # date_time = "date_time",
     comments = "remarks"
   )
 
-fluxes2020gep
+fluxes2020gpp
 
 }
