@@ -30,7 +30,9 @@ tar_option_set(
     "ggvegan", 
     "patchwork",
     "scales"
-    ))
+    ),
+    imports = "fluxible" # since fluxible is being updated often, we track changes here as well
+    )
 
 # tar_make_clustermq() configuration (okay to leave alone):
 options(clustermq.scheduler = "multicore")

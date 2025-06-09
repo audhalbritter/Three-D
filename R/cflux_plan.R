@@ -52,16 +52,33 @@ cflux_plan <- list(
   tar_target(
     name = cflux2020_flags,
     command = cflux2020_clean |>
+      filter(type != "GPP") |>
       rowid_to_column("rowid") |>
       flux_flag_count(rowid) |>
-      save_csv(name = "cflux2020_flags")
+      select(!ratio) |>
+      rename(
+        `Quality flag` = "f_quality_flag",
+        `2020 dataset` = "n"
+      )
+      # save_csv(name = "cflux2020_flags")
   ),
   tar_target(
     name = cflux2021_flags,
     command = cflux2021_clean |>
+      filter(type != "GPP") |>
       rowid_to_column("rowid") |>
       flux_flag_count(rowid) |>
-      save_csv(name = "cflux2021_flags")
+      select(!ratio) |>
+      rename(
+        `Quality flag` = "f_quality_flag",
+        `2021 dataset` = "n"
+      )
+      # save_csv(name = "cflux2021_flags")
+  ),
+  tar_target(
+    name = cflux_flags,
+    command = left_join(cflux2020_flags, cflux2021_flags) |>
+      save_csv(name = "cflux_flags")
   ),
   tar_target(
     name = join_cflux,
