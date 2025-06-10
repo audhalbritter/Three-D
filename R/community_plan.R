@@ -7,11 +7,11 @@ community_plan <- list(
     name = community_download,
     command = {
       get_file(node = "pk4bg",
-               file = "Three-D_raw_community_2019-2022.zip",
+               file = "7-9_Three-D_raw_community_2019-2022.zip",
                path = "data",
-               remote_path = "RawData/Vegetation")
+               remote_path = "RawData/7-9_Three-D_raw_community")
       
-      unzip("data/Three-D_raw_community_2019-2022.zip", 
+      unzip("data/7-9_Three-D_raw_community_2019-2022.zip", 
             exdir = "data/")
       
       },
@@ -40,6 +40,7 @@ community_plan <- list(
   tar_target(
     name = cover_out,
     command =  save_csv(cover_clean,
+                        nr = "7_",
                         name = "clean_cover_2019-2022")
   ),
 
@@ -53,6 +54,7 @@ community_plan <- list(
   tar_target(
     name =  subplot_precense_out,
     command =  save_csv(subplot_presence_clean,
+                        nr = "8_",
                         name = "clean_community_subplot_2019-2022")
   ),
 
@@ -127,6 +129,7 @@ community_plan <- list(
   tar_target(
     name =  comm_structure_out,
     command =  save_csv(comm_structure_clean,
+                        nr = "9_",
                         name = "community_structure_2019-2022")
   ),
 
@@ -135,9 +138,9 @@ community_plan <- list(
   tar_target(
     name = taxonomy_download,
     command = get_file(node = "pk4bg",
-               file = "Three-D_Taxonomy_2019.csv",
+               file = "7-9_Three-D_raw_Taxonomy_2019.csv",
                path = "data",
-               remote_path = "RawData/Vegetation"),
+               remote_path = "RawData/7-9_Three-D_raw_community"),
     format = "file"
   ),
 
@@ -170,6 +173,7 @@ community_plan <- list(
   tar_target(
     name =  taxonomy_out,
     command =  save_csv(taxonomy_clean,
+                        nr = "7_",
                         name = "clean_taxonomy")
   )
 )
