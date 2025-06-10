@@ -34,6 +34,7 @@ soil_plan <- list(
   tar_target(
     name = soil_out,
     command = save_csv(soil_character,
+                       nr = "10_",
                        name = "clean_soil_characteristics_2019-2020")
   ),
   
