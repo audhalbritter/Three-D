@@ -6,9 +6,8 @@ meta_plan <- list(
   tar_target(
     name = site_download,
     command = get_file(node = "pk4bg",
-                       file = "Three-D_meta_site.csv",
-                       path = "data",
-                       remote_path = "Site"),
+                       file = "1_Three-D_clean_meta_site.csv",
+                       path = "data"),
     format = "file"
   ),
   
@@ -22,9 +21,9 @@ meta_plan <- list(
   tar_target(
     name = plot_download,
     command = get_file(node = "pk4bg",
-                       file = "Three-D_PlotLevel_MetaData_2019.csv",
+                       file = "2_Three-D_raw_PlotLevel_MetaData_2019.csv",
                        path = "data",
-                       remote_path = "RawData/Soil"),
+                       remote_path = "RawData"),
     format = "file"
   ),
   
