@@ -6,9 +6,9 @@ productivity_plan <- list(
   tar_target(
     name = productivity_download,
     command = get_file(node = "pk4bg",
-                       file = "Three-D_raw_productivity_2022-09-27.xlsx",
+                       file = "4_Three-D_raw_productivity_2022-09-27.xlsx",
                        path = "data",
-                       remote_path = "RawData/Vegetation"),
+                       remote_path = "RawData"),
     format = "file"
   ),
   
@@ -29,6 +29,7 @@ productivity_plan <- list(
   tar_target(
     name = productivity_out,
     command =  save_csv(productivity_clean,
+                        nr = "4_",
                         name = "clean_productivity_2022")
   )
   
