@@ -7,7 +7,7 @@ meta_plan <- list(
     name = site_download,
     command = get_file(node = "pk4bg",
                        file = "1_Three-D_clean_meta_site.csv",
-                       path = "data"),
+                       path = "data_cleaned"),
     format = "file"
   ),
   
@@ -42,7 +42,8 @@ meta_plan <- list(
   # save clean plot data
   tar_target(
     name = plot_out,
-    command = save_csv(plot_clean, 
+    command = save_csv(plot_clean,
+                       nr = "2_",
                        name = "slope_aspect_soil_depth_2019")
   ),
   
