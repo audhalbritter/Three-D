@@ -6,7 +6,7 @@ root_plan <- list(
   tar_target(
     name = root_productivity21_download,
     command = get_file(node = "pk4bg",
-                       file = "ThreeD_rootingrowthcores_2021.xlsx",
+                       file = "6_ThreeD_rootingrowthcores_2021.xlsx",
                        path = "data",
                        remote_path = "RawData/Vegetation"),
     format = "file"
@@ -16,7 +16,7 @@ root_plan <- list(
   tar_target(
     name = root_productivity22_download,
     command = get_file(node = "pk4bg",
-                       file = "Three-D_raw_root_productivity_2022.xlsx",
+                       file = "6_Three-D_raw_root_productivity_2022.xlsx",
                        path = "data",
                        remote_path = "RawData/Vegetation"),
     format = "file"
@@ -25,7 +25,7 @@ root_plan <- list(
   tar_target(
     name = root_traits_download,
     command = get_file(node = "pk4bg",
-                       file = "Three-D_raw_root_traits_2022.txt",
+                       file = "6_Three-D_raw_root_traits_2022.txt",
                        path = "data",
                        remote_path = "RawData/Vegetation"),
     format = "file"
