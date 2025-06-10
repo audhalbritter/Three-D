@@ -60,7 +60,10 @@ record2020 <- read_csv(cfluxrecord2020_download, na = c(""), col_types = "ccntDf
   mutate(
     start = ymd_hms(paste(date, starting_time)) #converting the date as posixct, pasting date and starting time together
   ) %>% 
-  rename(turfID = turf_ID) |>
+  rename(
+    turfID = "turf_ID",
+    flux_campaign = "campaign"
+    ) |>
   distinct(start, .keep_all = TRUE) # some replicates were also marked as LRC and that is not correct
 
 # matching
@@ -70,17 +73,14 @@ conc2020 <- flux_match(
   record2020,
   date_time,
   start,
-  conc,
-  startcrop = 0,
   measurement_length = 120 # 2020 was 2 minutes
-  # startcrop = 20
   )
 
 slopes_exp_2020 <- flux_fitting(
     conc2020,
     conc,
     date_time,
-    fit_type = "exp"
+    fit_type = "exp_zhao18"
     # start_cut = 20,
     # end_cut = 60
     )
@@ -90,19 +90,42 @@ slopes_exp_2020_flag <- flux_quality(
   conc,
   error = 150, #there were some calibration issues, leading to the instrument being off in absolute values
   force_discard = c(
-    55, # slope going opposite direction as flux
+    69, # unclear, flux U shaped
+    80, # not zero, u shaped
+    83, # U shaped, unclear
     118 # influence from disturbance at the start
+  ),
+  force_lm = c(
+    124 # exponential goes opposite direction as flux, but lm fits
+  ),
+  force_zero = c(
+    200 # bump at the start gives it a negative slope, but really it is flat
   )
   )
+
+# slopes_exp_2020_flag |>
+# filter(
+#   f_fluxid %in% c(55, 69, 80, 83, 118, 124, 200)
+# ) |>
+# flux_plot(
+#   conc,
+#   date_time,
+#   print_plot = "FALSE",
+#   output = "pdfpages",
+#   f_plotname = "plot_2020_check",
+#   f_ylim_lower = 250
+# )
 
 # str(slopes_exp_2020_flag)
 
 # we keep flux plot as comments because it takes quite long to run
 # flux_plot(
 #   slopes_exp_2020_flag,
+#   conc,
+#   date_time,
 #   print_plot = "FALSE",
-#   output = "pdf",
-#   f_plotname = "plot_2020",
+#   output = "pdfpages",
+#   f_plotname = "plot_2020_cuts",
 #   f_ylim_lower = 250
 # )
 
@@ -113,7 +136,7 @@ fluxes2020 <- flux_calc(
   f_slope_corr,
   date_time,
   temp_air,
-  chamber_volume = 24.5,
+  setup_volume = 24.575,
   atm_pressure = 1,
   plot_area = 0.0625,
   conc_unit = "ppm",
@@ -122,15 +145,13 @@ fluxes2020 <- flux_calc(
     "turfID",
     "type",
     "replicate",
-    "campaign",
+    "flux_campaign",
     "remarks",
-    "f_flag_match",
     "f_quality_flag"
   ),
   cols_ave = c(
     "PAR"
-  ),
-  tube_volume = 0.075
+  )
 )
 
 # str(fluxes2020)
@@ -156,7 +177,7 @@ fluxes2020 <- flux_calc(
 #   by = c( # we do not use date_time because the cut might be different
 #     "turfID" = "turfID",
 #     "type",
-#     "campaign",
+#     "flux_campaign",
 #     "replicate"
 #   )
 # )
@@ -170,29 +191,29 @@ fluxes2020 <- flux_calc(
 
 # count(fluxes2020, type)
 
-# calculating GEP
+# calculating GPP
 
-fluxes2020gep <- fluxes2020 |>
-  flux_gep(
+fluxes2020gpp <- fluxes2020 |>
+  flux_gpp(
     type,
     date_time,
-    id_cols = c("turfID", "campaign", "replicate"),
-    cols_keep = c("remarks", "f_quality_flag", "f_temp_air_ave", "f_volume_setup", "f_model")
-  ) 
+    id_cols = c("turfID", "flux_campaign", "replicate"),
+    cols_keep = c("remarks", "f_quality_flag", "f_temp_air_ave", "PAR_ave")
+  )
 
-# str(fluxes2020gep)
+# str(fluxes2020gpp)
 
 # let's just plot it to check
-fluxes2020gep |>
+fluxes2020gpp |>
   ggplot(aes(x = type, y = flux)) +
   geom_violin()
 
-fluxes2020gep <- left_join(fluxes2020gep, metaTurfID, by = "turfID") |>
+fluxes2020gpp <- left_join(fluxes2020gpp, metaTurfID, by = "turfID") |>
   rename(
     # date_time = "date_time",
     comments = "remarks"
   )
 
-fluxes2020gep
+fluxes2020gpp
 
 }

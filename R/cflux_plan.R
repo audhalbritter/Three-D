@@ -45,10 +45,40 @@ cflux_plan <- list(
     name = cflux2021_clean,
     command = clean_cflux2021(soilRchambersize_download, cflux2021_download, cfluxrecord2021_download, metaTurfID)
   ),
- 
   tar_target(
     name = cflux2020_clean,
     command = clean_cflux2020(cflux2020_download, cfluxrecord2020_download, metaTurfID)
+  ),
+  tar_target(
+    name = cflux2020_flags,
+    command = cflux2020_clean |>
+      filter(type != "GPP") |>
+      rowid_to_column("rowid") |>
+      flux_flag_count(rowid) |>
+      select(!ratio) |>
+      rename(
+        `Quality flag` = "f_quality_flag",
+        `2020 dataset` = "n"
+      )
+      # save_csv(name = "cflux2020_flags")
+  ),
+  tar_target(
+    name = cflux2021_flags,
+    command = cflux2021_clean |>
+      filter(type != "GPP") |>
+      rowid_to_column("rowid") |>
+      flux_flag_count(rowid) |>
+      select(!ratio) |>
+      rename(
+        `Quality flag` = "f_quality_flag",
+        `2021 dataset` = "n"
+      )
+      # save_csv(name = "cflux2021_flags")
+  ),
+  tar_target(
+    name = cflux_flags,
+    command = left_join(cflux2020_flags, cflux2021_flags) |>
+      save_csv(name = "cflux_flags")
   ),
   tar_target(
     name = join_cflux,
@@ -57,7 +87,6 @@ cflux_plan <- list(
   tar_target(
     name = cflux_out,
     command = save_csv(join_cflux,
-                       name = "c-flux")
+                       name = "cflux_clean")
   )
-
 )

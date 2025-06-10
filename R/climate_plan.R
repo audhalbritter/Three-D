@@ -35,7 +35,7 @@ climate_plan <- list(
                path = "data",
                remote_path = "RawData/Climate")
       
-      unzip(zipfile = "Three-D_raw_microclimate_2019-2022", 
+      unzip(zipfile = "Three-D_raw_microclimate_2019-2022.zip", 
             exdir = "data")
       
     },
