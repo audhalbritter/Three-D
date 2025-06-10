@@ -29,7 +29,7 @@ clean_plot <- function(plot_raw, metaTurfID){
 # save data as csv
 save_csv <- function(file, name) {
   
-  filepath <- paste0("data_cleaned/", "Three-D_", name, ".csv")
+  filepath <- paste0("data_cleaned/", "Three-D_clean_", name, ".csv")
   output <- write_csv(x = file, file = filepath)
   filepath
 }
