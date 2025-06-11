@@ -228,10 +228,10 @@ slopes_exp_2021_flag <- slopes_exp_2021_flag |>
 plot_PAR <- function(slope_df, filter, filename, scale){
 plot <- filter(slope_df, type == ((filter))) %>%
   ggplot(aes(x = date_time)) +
-    geom_point(size = 0.2, aes(group = f_fluxID, y = PAR, color = f_cut)) +
+    geom_point(size = 0.2, aes(group = f_fluxid, y = PAR, color = f_cut)) +
     scale_x_datetime(date_breaks = "1 min", minor_breaks = "10 sec", date_labels = "%e/%m \n %H:%M") +
     do.call(facet_wrap_paginate,
-      args = c(facets = ~f_fluxID, ncol = 5, nrow = 3, scales = ((scale)))
+      args = c(facets = ~f_fluxid, ncol = 5, nrow = 3, scales = ((scale)))
     ) +
     scale_color_manual(values = c(
       "cut" = "#D55E00",
@@ -254,7 +254,7 @@ plot <- filter(slope_df, type == ((filter))) %>%
       print(plot +
         do.call(facet_wrap_paginate,
           args = c(
-            facets = ~f_fluxID,
+            facets = ~f_fluxid,
             page = i,
             ncol = 5, nrow = 3, scales = ((scale))
           )
@@ -470,7 +470,7 @@ fluxes2021 <- left_join(fluxes2021, soiltemp_ER) %>%
 
 # str(all_fluxes)
 
-# ggplot(all_fluxes, aes(old_flux, flux, label = f_fluxID)) +
+# ggplot(all_fluxes, aes(old_flux, flux, label = f_fluxid)) +
 # geom_point() +
 # geom_text() +
 # geom_abline(slope = 1)
