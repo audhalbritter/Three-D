@@ -35,7 +35,7 @@ soil_plan <- list(
     name = soil_out,
     command = save_csv(soil_character,
                        nr = "10_",
-                       name = "clean_soil_characteristics_2019-2020")
+                       name = "soil_characteristics_2019-2020")
   ),
   
   ## SOIL NUTRIENTS
@@ -150,6 +150,6 @@ soil_plan <- list(
     name = cn_out,
     command = save_csv(cn_clean,
                        nr = "11_",
-                       name = "clean_soil_nutrients_2019-2022")
+                       name = "soil_nutrients_2019-2022")
   )
 )

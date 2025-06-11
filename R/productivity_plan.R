@@ -30,7 +30,7 @@ productivity_plan <- list(
     name = productivity_out,
     command =  save_csv(productivity_clean,
                         nr = "4_",
-                        name = "clean_productivity_2022")
+                        name = "productivity_2022")
   )
   
 )
