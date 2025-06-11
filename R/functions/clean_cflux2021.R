@@ -229,7 +229,7 @@ plot_PAR <- function(slope_df, filter, filename, scale){
 plot <- filter(slope_df, type == ((filter))) %>%
   ggplot(aes(x = date_time)) +
     geom_point(size = 0.2, aes(group = f_fluxID, y = PAR, color = f_cut)) +
-    scale_x_date_time(date_breaks = "1 min", minor_breaks = "10 sec", date_labels = "%e/%m \n %H:%M") +
+    scale_x_datetime(date_breaks = "1 min", minor_breaks = "10 sec", date_labels = "%e/%m \n %H:%M") +
     do.call(facet_wrap_paginate,
       args = c(facets = ~f_fluxID, ncol = 5, nrow = 3, scales = ((scale)))
     ) +
