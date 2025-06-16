@@ -39,7 +39,7 @@ productivity_plan <- list(
   tar_target(
     name = productivity2_download,
     command = get_file(node = "pk4bg",
-                       file = "4_Three-D_raw_productivity_abiotic_2019.xlsx",
+                       file = "4_Three-D_raw_productivity_fg_sp_abiotic_2019.xlsx",
                        path = "data",
                        remote_path = "RawData"),
     format = "file"
@@ -47,7 +47,7 @@ productivity_plan <- list(
   
   # import
   tar_target(
-    name = productivity_fg_raw,
+    name = productivity_fg2_raw,
     # warmings because there are NAs in date_in
     command = read_excel(path = productivity2_download, sheet = "productivity")
   ),
@@ -75,7 +75,7 @@ productivity_plan <- list(
     name = productivity_fg_clean,
     command = {
 
-    prod <- productivity_fg_raw |> 
+    prod <- productivity_fg2_raw |> 
       janitor::clean_names() |> 
       # join pH data
       tidylog::left_join(ph_raw |> 
@@ -89,21 +89,21 @@ productivity_plan <- list(
             type = if_else(type == "P", "permanent", "temporary"),
             plot_id2 = str_remove(plot_id, "(\\d+|P)$")) |> 
       extract(plot_id2,
-        into = c("siteID", "replicate", "treatment"),
+        into = c("destSiteID", "plot_nr", "treatment"),
         regex = "^([A-Z])([0-9]+)(Cage|C)",
         remove = FALSE) |> 
 
       # remove 2 extra sites
-      filter(! siteID %in% c("H", "B")) |> 
-      mutate(siteID = case_when(siteID == "V" ~ "Vikesland",
-                                siteID == "J" ~ "Joasete",
-                                siteID == "L" ~ "Liahovden",
-                                TRUE ~ siteID),
+      filter(!destSiteID %in% c("H", "B")) |> 
+      mutate(destSiteID = case_when(destSiteID == "V" ~ "Vikesland",
+                                destSiteID == "J" ~ "Joasete",
+                                destSiteID == "L" ~ "Liahovden",
+                                TRUE ~ destSiteID),
              treatment = if_else(treatment == "C", "Control", treatment),
-             replicate = as.numeric(replicate)) |> 
+             plot_nr = as.numeric(plot_nr)) |> 
       pivot_longer(cols = c(graminoids:shrubs), names_to = "functional_group", values_to = "biomass_g") |> 
       tidylog::filter(!is.na(biomass_g)) |> 
-      select(date, campaign, siteID, plot_id, plot_id2, replicate, type, treatment:biomass_g, pH = p_h)
+      select(date, campaign, destSiteID, destPlotID = plot_id, plot_nr, type, treatment, functional_group, productivity = biomass_g, pH = p_h)
       
       # fix soil moisture data
       sm <- soilmoisture_raw |> 
@@ -120,16 +120,16 @@ productivity_plan <- list(
             plot_id2 = str_remove(plot_id, "(\\d+|P)$"),
           # fix wrong site
             site = if_else(site == "Joesete", "Joasete", site)) |> 
-        rename(siteID = site,
+        rename(destSiteID = site,
                 date_sm = date) |> 
-        pivot_longer(cols = c(m1:m4), names_to = "sm_replicate", values_to = "soilmoisture") |> 
-        mutate(sm_replicate = as.numeric(str_remove(sm_replicate, "m"))) |> 
-        tidylog::select(date_sm, campaign, siteID, plot_id, plot_id2, type, treatment, sm_replicate, soilmoisture, weather, recorder, comments)
+        pivot_longer(cols = c(m1:m4), names_to = "replicate", values_to = "soilmoisture") |> 
+        mutate(replicate = as.numeric(str_remove(replicate, "m"))) |> 
+        tidylog::select(date_sm, campaign, destSiteID, destPlotID = plot_id, type, treatment, replicate, soilmoisture, weather, recorder, comments)
       
       # join soilmoisture to productivity data
       prod |>  
         tidylog::left_join(sm, 
-          by = c("campaign", "siteID", "plot_id", "plot_id2", "type", "treatment"))
+          by = c("campaign", "destSiteID", "destPlotID", "type", "treatment"))
 
       
     }
@@ -142,7 +142,7 @@ productivity_plan <- list(
 
       prod_sp <- productivity_sp_raw |> 
         clean_names() |> 
-        filter(!site %in% c("Hogsete", "In between")) |>
+        filter(!site %in% c("Hogsete", "In Between")) |>
         mutate(date = dmy(date),
                 # distinguish permanent and movable plots, extract campaign nr 
                 type = str_extract(plot_id, "(\\d+|P)$"),
@@ -151,15 +151,15 @@ productivity_plan <- list(
                 type = if_else(type == "P", "permanent", "temporary"),
                 plot_id2 = str_remove(plot_id, "(\\d+|P)$")) |> 
         extract(plot_id2,
-            into = c("siteID", "replicate", "treatment"),
+            into = c("destSiteID", "plot_nr", "treatment"),
             regex = "^([A-Z])([0-9]+)(Cage|C)",
             remove = FALSE) |> 
         mutate(treatment = if_else(treatment == "C", "Control", treatment),
-             replicate = as.numeric(replicate)) |> 
+             plot_nr = as.numeric(plot_nr)) |> 
         pivot_longer(cols = c(agrostis_capillaris:pinguicula_vulgaris), 
                      names_to = "species", values_to = "biomass_g") |> 
         tidylog::filter(!is.na(biomass_g)) |> 
-        select(date, campaign, siteID = site, plot_id, type, treatment, replicate, species, biomass_g)
+        select(date, campaign, destSiteID = site, destPlotID = plot_id, type, treatment, plot_nr, species, productivity = biomass_g)
       
       prod_sp |> 
         mutate(species = case_when(species == "c_nigra" ~ "carex_nigra",
@@ -174,7 +174,10 @@ productivity_plan <- list(
                                     species == "vac_mytilus" ~ "vaccinium_mytilus",
                                     species == "vac_uliginosum" ~ "vaccinium_uliginosum",
                                     species == "vac_vitis_idea" ~ "vaccinium_vitis_idea",
-                                  TRUE ~ species))  
+                                  TRUE ~ species)) |> 
+        mutate(species = str_replace_all(species, "_", " ") %>%
+          str_to_sentence())
+        
 
     }
   ),
