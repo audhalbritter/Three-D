@@ -41,7 +41,7 @@ biomass_plan <- list(
     name = biomass_out,
     command = save_csv(biomass_clean,
                        nr = "3_",
-                       name = "clean_biomass_2020-2022")
+                       name = "biomass_2020-2022")
   )
   
 )

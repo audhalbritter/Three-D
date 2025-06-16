@@ -41,7 +41,7 @@ community_plan <- list(
     name = cover_out,
     command =  save_csv(cover_clean,
                         nr = "7_",
-                        name = "clean_cover_2019-2022")
+                        name = "cover_2019-2022")
   ),
 
   # clean subplot presence data
@@ -55,7 +55,7 @@ community_plan <- list(
     name =  subplot_precense_out,
     command =  save_csv(subplot_presence_clean,
                         nr = "8_",
-                        name = "clean_community_subplot_2019-2022")
+                        name = "community_subplot_2019-2022")
   ),
 
   # clean community structure data
@@ -174,6 +174,6 @@ community_plan <- list(
     name =  taxonomy_out,
     command =  save_csv(taxonomy_clean,
                         nr = "7_",
-                        name = "clean_taxonomy")
+                        name = "taxonomy")
   )
 )

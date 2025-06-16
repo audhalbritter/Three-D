@@ -54,6 +54,20 @@ data_dic_plan <- list(
                                    table_ID = "productivity")
   ),
 
+  tar_target(
+    name = productivity_fg_dic,
+    command = make_data_dictionary(data = productivity_fg_clean,
+                                   description_table = attribute_table,
+                                   table_ID = "productivity_fg")
+  ),
+
+  tar_target(
+    name = productivity_sp_dic,
+    command = make_data_dictionary(data = productivity_sp_clean,
+                                   description_table = attribute_table,
+                                   table_ID = "productivity_fg")
+  ),
+
   # reflectance data dic
   tar_target(
     name = ndvi_dic,
@@ -133,6 +147,8 @@ data_dic_plan <- list(
                               plot = plot_dic,
                               biomass = biomass_dic,
                               productivity = productivity_dic,
+                              productivity_fg = productivity_fg_dic,
+                              productivity_sp = productivity_sp_dic,
                               ndvi = ndvi_dic,
                               root = root_dic,
                               comm_cover = cover_dic,
@@ -141,8 +157,8 @@ data_dic_plan <- list(
                               soil_char = soil_char_dic,
                               nutrients = nutrient_dic,
                               decomposition = decompose_dic,
-                              cflux = cflux_dic,
-                              climate = climate_dic
+                              cflux = cflux_dic
+                              #climate = climate_dic
                               ),
                            path = "data_cleaned/Three-D_data_dictionary.xlsx"),
     format = "file"
