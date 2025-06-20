@@ -34,7 +34,7 @@ long-term climate and plant functional traits collected within the study
 region.
 
 <figure>
-<img src="Pics/Figure_1_Concept.jpg"
+<img src="Pics/Fig1_Experimental_Design.jpg"
 alt="Figure 1 Experimental setup, location, and plot design. (a) Experimental setup in a sub-alpine and alpine plant community along an elevational gradient with three sites. Inset shows map of Norway and location of experiment. The experiment includes a fully factorial design of warming by transplanting, nitrogen addition and clipping and grazing. The treatments are ambient (grey to brown), warming (pink to brown), nitrogen addition (colour gradient), ungrazed (C), intermediate (one scissor) and intensive (two scissors) clipping, and natural grazing outside the grazing exclosure (sheep). The arrows indicate the direction of transplant. (b) Map showing the location of the three sites: boreal, sub-alpine, and alpine sites. (c) Plot design with the outer area for destructive harvest and inner non-destructive area for long-term monitoring. The global change treatments (warming, nitrogen addition, clipping and grazing) were applied on the whole 50 x 50 cm plot." />
 <figcaption aria-hidden="true"><em>Figure 1 Experimental setup,
 location, and plot design. (a) Experimental setup in a sub-alpine and
