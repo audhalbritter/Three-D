@@ -157,8 +157,8 @@ data_dic_plan <- list(
                               soil_char = soil_char_dic,
                               nutrients = nutrient_dic,
                               decomposition = decompose_dic,
-                              cflux = cflux_dic
-                              #climate = climate_dic
+                              cflux = cflux_dic,
+                              climate = climate_dic
                               ),
                            path = "data_cleaned/Three-D_data_dictionary.xlsx"),
     format = "file"
