@@ -165,8 +165,8 @@ figure_plan <- list(
         warming = recode(warming, "A" = "Ambient", "W" = "Warming")
         # Namount_kg_ha_y = factor(Namount_kg_ha_y)
         ) |>
-        # ggplot(aes(x = date_time, y = PAR_corrected_flux, color = warming, shape = origSiteID, linetype = origSiteID)) +
-        ggplot(aes(x = Namount_kg_ha_y, y = PAR_corrected_flux, color = warming, shape = origSiteID, linetype = origSiteID)) +
+        # ggplot(aes(x = date_time, y = f_flux, color = warming, shape = origSiteID, linetype = origSiteID)) +
+        ggplot(aes(x = Namount_kg_ha_y, y = f_flux, color = warming, shape = origSiteID, linetype = origSiteID)) +
         theme_bw() +
         geom_point() +
         # geom_violin() +
@@ -208,6 +208,7 @@ figure_plan <- list(
       join_cflux |>
       filter(
         type %in% c("ER", "NEE", "GPP")
+        & par_correction == TRUE
       ) |>
       mutate(
         origSiteID = recode(origSiteID, "Liahovden" = "Alpine", "Joasete" = "Sub-alpine"),
@@ -217,7 +218,7 @@ figure_plan <- list(
         warming = recode(warming, "A" = "Ambient", "W" = "Warming")
         # Namount_kg_ha_y = factor(Namount_kg_ha_y)
         ) |>
-        # ggplot(aes(x = date_time, y = PAR_corrected_flux, color = warming, shape = origSiteID, linetype = origSiteID)) +
+        # ggplot(aes(x = date_time, y = f_flux, color = warming, shape = origSiteID, linetype = origSiteID)) +
         ggplot(aes(x = Namount_kg_ha_y, y = f_flux, color = warming, shape = origSiteID, linetype = origSiteID)) +
         theme_bw() +
         geom_point() +
