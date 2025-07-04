@@ -298,7 +298,7 @@ fluxes2021 <- flux_calc(
   atm_pressure = 1,
   plot_area = plot_area,
   conc_unit = "ppm",
-  flux_unit = "mmol",
+  flux_unit = "mmol/m2/h",
   cols_keep = c(
     "turfID",
     "type",
