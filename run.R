@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 library(targets)
-source("R copy/Load packages.R")
+source("libraries.R")
 
 targets::tar_make()
 # targets::tar_make_clustermq(workers = 2) # nolint
