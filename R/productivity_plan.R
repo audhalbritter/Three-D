@@ -6,9 +6,9 @@ productivity_plan <- list(
   tar_target(
     name = productivity_download,
     command = get_file(node = "pk4bg",
-                       file = "4_Three-D_raw_productivity_2022-09-27.xlsx",
+                       file = "iv_Three-D_raw_productivity_2022-09-27.xlsx",
                        path = "data",
-                       remote_path = "RawData"),
+                       remote_path = "iv_raw_aboveground_productivity_consumption"),
     format = "file"
   ),
   
@@ -29,8 +29,8 @@ productivity_plan <- list(
   tar_target(
     name = productivity_out,
     command =  save_csv(productivity_clean,
-                        nr = "4_",
-                        name = "productivity_2022")
+                        nr = "iv_",
+                        name = "aboveground_productivity_2022")
   ),
 
   # Productivity and environmental data from master thesis
@@ -39,9 +39,9 @@ productivity_plan <- list(
   tar_target(
     name = productivity2_download,
     command = get_file(node = "pk4bg",
-                       file = "4_Three-D_raw_productivity_fg_sp_abiotic_2019.xlsx",
+                       file = "iv_Three-D_raw_productivity_fg_sp_abiotic_2019.xlsx",
                        path = "data",
-                       remote_path = "RawData"),
+                       remote_path = "iv_raw_aboveground_productivity_consumption"),
     format = "file"
   ),
   
@@ -186,15 +186,15 @@ productivity_plan <- list(
   tar_target(
     name = productivity_fg_out,
     command =  save_csv(productivity_fg_clean,
-                        nr = "4_",
-                        name = "productivity_fg_2019")
+                        nr = "iv_",
+                        name = "aboveground_productivity_fg_2019")
   ),
 
   tar_target(
     name = productivity_sp_out,
     command =  save_csv(productivity_sp_clean,
-                        nr = "4_",
-                        name = "productivity_sp_2019")
+                        nr = "iv_",
+                        name = "aboveground_productivity_sp_2019")
   )
   
 )
