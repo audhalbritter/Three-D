@@ -6,9 +6,9 @@ decomposition_plan <- list(
   tar_target(
     name = decomp_download,
     command = get_file(node = "pk4bg",
-                       file = "12_ThreeD_raw_decomposition_2022-07-11.xlsx",
+                       file = "xii_ThreeD_raw_decomposition_2022-07-11.xlsx",
                        path = "data",
-                       remote_path = "RawData"),
+                       remote_path = "xii_raw_decomposition"),
     format = "file"
   ),
   
@@ -38,7 +38,7 @@ decomposition_plan <- list(
   tar_target(
     name = decomposition_out,
     command = save_csv(decomp_clean,
-                       nr = "12_",
+                       nr = "xii_",
                        name = "decomposition_2021-2022")
   )
   
