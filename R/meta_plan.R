@@ -54,6 +54,4 @@ meta_plan <- list(
       distinct()
   )
   
-  
-  
 )
