@@ -6,27 +6,27 @@ reflectance_plan <- list(
   tar_target(
     name = ndvi20_download,
     command = get_file(node = "pk4bg",
-                       file = "5_THREE-D_raw_NDVI_2020_aud.csv",
+                       file = "v_THREE-D_raw_NDVI_2020_aud.csv",
                        path = "data",
-                       remote_path = "RawData"),
+                       remote_path = "v_raw_reflectance"),
     format = "file"
   ),
   
   tar_target(
     name = ndvi20_2_download,
     command = get_file(node = "pk4bg",
-                       file = "5_THREE-D_raw_NDVI_2020_joseph.csv",
+                       file = "v_THREE-D_raw_NDVI_2020_joseph.csv",
                        path = "data",
-                       remote_path = "RawData"),
+                       remote_path = "v_raw_reflectance"),
     format = "file"
   ),
   
   tar_target(
     name = ndvi22_download,
     command = get_file(node = "pk4bg",
-                       file = "5_THREE-D_raw_NDVI_2022_joseph.csv",
+                       file = "v_THREE-D_raw_NDVI_2022_joseph.csv",
                        path = "data",
-                       remote_path = "RawData"),
+                       remote_path = "v_raw_reflectance"),
     format = "file"
   ),
   
@@ -56,7 +56,7 @@ reflectance_plan <- list(
   tar_target(
     name = ndvi_out,
     command = save_csv(ndvi_clean,
-                       nr = "5_",
+                       nr = "v_",
                        name = "reflectance_2020_2022")
   )
   

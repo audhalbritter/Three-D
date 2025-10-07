@@ -6,9 +6,9 @@ productivity_plan <- list(
   tar_target(
     name = productivity_download,
     command = get_file(node = "pk4bg",
-                       file = "4_Three-D_raw_productivity_2022-09-27.xlsx",
+                       file = "iv_Three-D_raw_productivity_2022-09-27.xlsx",
                        path = "data",
-                       remote_path = "RawData"),
+                       remote_path = "iv_raw_aboveground_productivity_consumption"),
     format = "file"
   ),
   
@@ -29,8 +29,8 @@ productivity_plan <- list(
   tar_target(
     name = productivity_out,
     command =  save_csv(productivity_clean,
-                        nr = "4_",
-                        name = "productivity_2022")
+                        nr = "iv_",
+                        name = "aboveground_productivity_2022")
   ),
 
   # Productivity and environmental data from master thesis
@@ -39,9 +39,9 @@ productivity_plan <- list(
   tar_target(
     name = productivity2_download,
     command = get_file(node = "pk4bg",
-                       file = "4_Three-D_raw_productivity_fg_sp_abiotic_2019.xlsx",
+                       file = "iv_Three-D_raw_productivity_fg_sp_abiotic_2019.xlsx",
                        path = "data",
-                       remote_path = "RawData"),
+                       remote_path = "iv_raw_aboveground_productivity_consumption"),
     format = "file"
   ),
   
@@ -103,7 +103,7 @@ productivity_plan <- list(
              plot_nr = as.numeric(plot_nr)) |> 
       pivot_longer(cols = c(graminoids:shrubs), names_to = "functional_group", values_to = "biomass_g") |> 
       tidylog::filter(!is.na(biomass_g)) |> 
-      select(date, campaign, destSiteID, destPlotID = plot_id, plot_nr, type, treatment, functional_group, productivity = biomass_g, pH = p_h)
+      select(date, campaign, destSiteID, destPlotID = plot_id, plot_nr, type, treatment, functional_group, productivity = biomass_g)
       
       # fix soil moisture data
       sm <- soilmoisture_raw |> 
@@ -126,10 +126,10 @@ productivity_plan <- list(
         mutate(replicate = as.numeric(str_remove(replicate, "m"))) |> 
         tidylog::select(date_sm, campaign, destSiteID, destPlotID = plot_id, type, treatment, replicate, soilmoisture, weather, recorder, comments)
       
-      # join soilmoisture to productivity data
-      prod |>  
-        tidylog::left_join(sm, 
-          by = c("campaign", "destSiteID", "destPlotID", "type", "treatment"))
+      # # join soilmoisture to productivity data
+      # prod |>  
+      #   tidylog::left_join(sm, 
+      #     by = c("campaign", "destSiteID", "destPlotID", "type", "treatment"))
 
       
     }
@@ -186,15 +186,15 @@ productivity_plan <- list(
   tar_target(
     name = productivity_fg_out,
     command =  save_csv(productivity_fg_clean,
-                        nr = "4_",
-                        name = "productivity_fg_2019")
+                        nr = "iv_",
+                        name = "aboveground_productivity_fg_2019")
   ),
 
   tar_target(
     name = productivity_sp_out,
     command =  save_csv(productivity_sp_clean,
-                        nr = "4_",
-                        name = "productivity_sp_2019")
+                        nr = "iv_",
+                        name = "aboveground_productivity_sp_2019")
   )
   
 )

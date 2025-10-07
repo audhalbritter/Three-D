@@ -6,27 +6,27 @@ biomass_plan <- list(
   tar_target(
     name = biomass20_download,
     command = get_file(node = "pk4bg",
-                       file = "3_Three-D_raw_Biomass_2020_March_2021.xlsx",
+                       file = "iii_Three-D_raw_Biomass_2020_March_2021.xlsx",
                        path = "data",
-                       remote_path = "RawData"),
+                       remote_path = "iii_raw_aboveground_biomass"),
     format = "file"
   ),
   
   tar_target(
     name = biomass21_download,
     command = get_file(node = "pk4bg",
-                       file = "3_Three-D_raw_Biomass_2021_12_09.xlsx",
+                       file = "iii_Three-D_raw_Biomass_2021_12_09.xlsx",
                        path = "data",
-                       remote_path = "RawData"),
+                       remote_path = "iii_raw_aboveground_biomass"),
     format = "file"
   ),
   
   tar_target(
     name = biomass22_download,
     command = get_file(node = "pk4bg",
-                       file = "3_Three-D_raw_Biomass_2022-09-27.csv",
+                       file = "iii_Three-D_raw_Biomass_2022-09-27.csv",
                        path = "data",
-                       remote_path = "RawData"),
+                       remote_path = "iii_raw_aboveground_biomass"),
     format = "file"
   ),
   
@@ -40,8 +40,8 @@ biomass_plan <- list(
   tar_target(
     name = biomass_out,
     command = save_csv(biomass_clean,
-                       nr = "3_",
-                       name = "biomass_2020-2022")
+                       nr = "iii_",
+                       name = "aboveground_biomass_2020-2022")
   )
   
 )
