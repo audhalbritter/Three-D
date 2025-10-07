@@ -116,6 +116,7 @@ cflux_plan <- list(
   tar_target(
     name = cflux_out,
     command = save_csv(join_cflux,
-                       name = "clean_cflux")
+                       nr = "xiii",
+                       name = "cflux")
   )
 )
