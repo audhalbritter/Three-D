@@ -7,9 +7,9 @@ climate_plan <- list(
   tar_target(
     name = metaTomst_download,
     command = get_file(node = "pk4bg",
-               file = "Three-D_ClimateLogger_Meta_2019.xlsx",
+               file = "xiv_Three-D_ClimateLogger_Meta_2019.xlsx",
                path = "data",
-               remote_path = "RawData/Climate"),
+               remote_path = "xiv_raw_microclimate"),
     format = "file"
   ),
   
@@ -31,11 +31,11 @@ climate_plan <- list(
     name = climate_download,
     command = {
       get_file(node = "pk4bg",
-               file = "Three-D_raw_microclimate_2019-2022.zip",
+               file = "xiv_Three-D_raw_microclimate_2019-2022.zip",
                path = "data",
-               remote_path = "RawData/Climate")
+               remote_path = "xiv_raw_microclimate")
       
-      unzip(zipfile = "Three-D_raw_microclimate_2019-2022.zip", 
+      unzip(zipfile = "xiv_Three-D_raw_microclimate_2019-2022.zip", 
             exdir = "data")
       
     },
@@ -47,9 +47,9 @@ climate_plan <- list(
     name = fixed_tomst_download,
     command = {
       get_file(node = "pk4bg",
-                       file = "Fixed_by_tomst.zip",
+                       file = "xiv_Fixed_by_tomst.zip",
                        path = "data",
-                       remote_path = "RawData/Climate")
+                       remote_path = "xiv_raw_microclimate")
       
       unzip(zipfile = "Fixed_by_tomst", 
             exdir = "data")
@@ -97,7 +97,8 @@ climate_plan <- list(
   tar_target(
     name = climate_out,
     command = save_csv(climate_clean,
-                       name = "clean_microclimate_2019-2022")
+                       nr = "xiv_",
+                       name = "microclimate_2019-2022")
   )
 
 )

@@ -6,9 +6,8 @@ meta_plan <- list(
   tar_target(
     name = site_download,
     command = get_file(node = "pk4bg",
-                       file = "Three-D_meta_site.csv",
-                       path = "data",
-                       remote_path = "Site"),
+                       file = "i_Three-D_clean_elevation_coordinates_2019.csv",
+                       path = "data_cleaned"),
     format = "file"
   ),
   
@@ -22,9 +21,9 @@ meta_plan <- list(
   tar_target(
     name = plot_download,
     command = get_file(node = "pk4bg",
-                       file = "Three-D_PlotLevel_MetaData_2019.csv",
+                       file = "ii_Three-D_raw_PlotLevel_MetaData_2019.csv",
                        path = "data",
-                       remote_path = "RawData/Soil"),
+                       remote_path = "ii_raw_slope_aspect_soil depth"),
     format = "file"
   ),
   
@@ -43,7 +42,8 @@ meta_plan <- list(
   # save clean plot data
   tar_target(
     name = plot_out,
-    command = save_csv(plot_clean, 
+    command = save_csv(plot_clean,
+                       nr = "ii_",
                        name = "slope_aspect_soil_depth_2019")
   ),
   
@@ -53,7 +53,5 @@ meta_plan <- list(
     command = create_threed_meta_data() |> 
       distinct()
   )
-  
-  
   
 )
