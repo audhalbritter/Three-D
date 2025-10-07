@@ -11,7 +11,7 @@ community_plan <- list(
                path = "data",
                remote_path = "vii-ix_raw_plant_community_composition")
       
-      unzip("data/7-9_Three-D_raw_community_2019-2022.zip", 
+      unzip("data/vii-ix_Three-D_raw_community_2019-2022.zip", 
             exdir = "data/")
       
       },

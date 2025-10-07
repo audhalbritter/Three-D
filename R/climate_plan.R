@@ -51,7 +51,7 @@ climate_plan <- list(
                        path = "data",
                        remote_path = "xiv_raw_microclimate")
       
-      unzip(zipfile = "Fixed_by_tomst", 
+      unzip(zipfile = "xiv_Fixed_by_tomst.zip", 
             exdir = "data")
       },
     format = "file"
