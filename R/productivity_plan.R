@@ -103,7 +103,7 @@ productivity_plan <- list(
              plot_nr = as.numeric(plot_nr)) |> 
       pivot_longer(cols = c(graminoids:shrubs), names_to = "functional_group", values_to = "biomass_g") |> 
       tidylog::filter(!is.na(biomass_g)) |> 
-      select(date, campaign, destSiteID, destPlotID = plot_id, plot_nr, type, treatment, functional_group, productivity = biomass_g, pH = p_h)
+      select(date, campaign, destSiteID, destPlotID = plot_id, plot_nr, type, treatment, functional_group, productivity = biomass_g)
       
       # fix soil moisture data
       sm <- soilmoisture_raw |> 
@@ -126,10 +126,10 @@ productivity_plan <- list(
         mutate(replicate = as.numeric(str_remove(replicate, "m"))) |> 
         tidylog::select(date_sm, campaign, destSiteID, destPlotID = plot_id, type, treatment, replicate, soilmoisture, weather, recorder, comments)
       
-      # join soilmoisture to productivity data
-      prod |>  
-        tidylog::left_join(sm, 
-          by = c("campaign", "destSiteID", "destPlotID", "type", "treatment"))
+      # # join soilmoisture to productivity data
+      # prod |>  
+      #   tidylog::left_join(sm, 
+      #     by = c("campaign", "destSiteID", "destPlotID", "type", "treatment"))
 
       
     }
