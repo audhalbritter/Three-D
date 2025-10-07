@@ -27,7 +27,7 @@ soil_plan <- list(
   tar_target(
     name = soil_character,
     command = soil_clean |> 
-      filter(!variable %in% c("soil_organic_matter", "carbon_content"))
+      filter(!variable %in% c("soil_organic_matter", "carbon_content", "pore_water_content"))
   ),
   
   # save data (remove som, will be added to soil nutrient data)
