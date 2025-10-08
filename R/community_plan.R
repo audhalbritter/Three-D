@@ -40,8 +40,8 @@ community_plan <- list(
   tar_target(
     name = cover_out,
     command =  save_csv(cover_clean,
-                        nr = "vi_",
-                        name = "cover_2019-2022")
+                        nr = "vii_",
+                        name = "community_cover_2019-2022")
   ),
 
   # clean subplot presence data
@@ -55,7 +55,7 @@ community_plan <- list(
     name =  subplot_precense_out,
     command =  save_csv(subplot_presence_clean,
                         nr = "viii_",
-                        name = "community_subplot_2019-2022")
+                        name = "community_presence_2019-2022")
   ),
 
   # clean community structure data
@@ -130,7 +130,7 @@ community_plan <- list(
     name =  comm_structure_out,
     command =  save_csv(comm_structure_clean,
                         nr = "ix_",
-                        name = "community_structure_2019-2022")
+                        name = "vegetation_structure_2019-2022")
   ),
 
   # taxonomy

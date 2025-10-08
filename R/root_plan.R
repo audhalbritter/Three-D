@@ -58,7 +58,7 @@ root_plan <- list(
     name = roots_out,
     command = save_csv(roots_clean,
                        nr = "vi_",
-                       name = "belowground_productivity_root_traits_2020_2022")
+                       name = "belowground_productivity_root_traits_2021-2022")
   )
   
   

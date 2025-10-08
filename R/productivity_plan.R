@@ -30,7 +30,7 @@ productivity_plan <- list(
     name = productivity_out,
     command =  save_csv(productivity_clean,
                         nr = "iv_",
-                        name = "aboveground_productivity_2022")
+                        name = "aboveground_productivity_consumption_2022")
   ),
 
   # Productivity and environmental data from master thesis
@@ -106,25 +106,25 @@ productivity_plan <- list(
       select(date, campaign, destSiteID, destPlotID = plot_id, plot_nr, type, treatment, functional_group, productivity = biomass_g)
       
       # fix soil moisture data
-      sm <- soilmoisture_raw |> 
-        janitor::clean_names() |> 
-        # remove 2 extra sites
-        filter(!site %in% c("Hogsete", "In between")) |>
-        mutate(date = dmy(date),
-              across(c(m1, m2, m3, m4), as.numeric),
-            # distinguish permanent and movable plots, extract campaign nr 
-            type = str_extract(plot_id, "(\\d+|P)$"),
-            type = if_else(is.na(type), "1", type),
-            campaign = as.numeric(if_else(type %in% c("1", "2", "3"), type, NA_character_)),
-            type = if_else(type == "P", "permanent", "temporary"),
-            plot_id2 = str_remove(plot_id, "(\\d+|P)$"),
-          # fix wrong site
-            site = if_else(site == "Joesete", "Joasete", site)) |> 
-        rename(destSiteID = site,
-                date_sm = date) |> 
-        pivot_longer(cols = c(m1:m4), names_to = "replicate", values_to = "soilmoisture") |> 
-        mutate(replicate = as.numeric(str_remove(replicate, "m"))) |> 
-        tidylog::select(date_sm, campaign, destSiteID, destPlotID = plot_id, type, treatment, replicate, soilmoisture, weather, recorder, comments)
+      # sm <- soilmoisture_raw |> 
+      #   janitor::clean_names() |> 
+      #   # remove 2 extra sites
+      #   filter(!site %in% c("Hogsete", "In between")) |>
+      #   mutate(date = dmy(date),
+      #         across(c(m1, m2, m3, m4), as.numeric),
+      #       # distinguish permanent and movable plots, extract campaign nr 
+      #       type = str_extract(plot_id, "(\\d+|P)$"),
+      #       type = if_else(is.na(type), "1", type),
+      #       campaign = as.numeric(if_else(type %in% c("1", "2", "3"), type, NA_character_)),
+      #       type = if_else(type == "P", "permanent", "temporary"),
+      #       plot_id2 = str_remove(plot_id, "(\\d+|P)$"),
+      #     # fix wrong site
+      #       site = if_else(site == "Joesete", "Joasete", site)) |> 
+      #   rename(destSiteID = site,
+      #           date_sm = date) |> 
+      #   pivot_longer(cols = c(m1:m4), names_to = "replicate", values_to = "soilmoisture") |> 
+      #   mutate(replicate = as.numeric(str_remove(replicate, "m"))) |> 
+      #   tidylog::select(date_sm, campaign, destSiteID, destPlotID = plot_id, type, treatment, replicate, soilmoisture, weather, recorder, comments)
       
       # # join soilmoisture to productivity data
       # prod |>  
