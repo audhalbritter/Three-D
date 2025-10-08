@@ -179,8 +179,7 @@ fluxes2020gpp <- fluxes2020 |>
 fluxes2020gpp <- left_join(fluxes2020gpp, metaTurfID, by = "turfID") |>
   rename(
     # date_time = "date_time",
-    comments = "remarks",
-    `co2_fluxes_2020-2021` = "f_flux"
+    comments = "remarks"
   ) |>
   mutate( # those were not added by flux_calc because there are constants. But they are cols in the 2021 dataset so we add them here to avoid confusing NAs
     plot_area = 0.0625,
