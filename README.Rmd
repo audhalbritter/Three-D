@@ -73,13 +73,17 @@ library(zen4R)
 Here is an example for how to download the biomass data:
 
 ```{r downloader-biomass, echo=TRUE, eval=FALSE}
+# give folder to download the data a name
+new_folder <- "new_data"
 
-# Create new_data folder if it doesn't exist
-dir.create("new_data", showWarnings = FALSE)
+# Check if it already exists. If not create new_data folder
+if (!dir.exists(new_folder)) {
+  dir.create(new_folder)
+}
 
 # Download all files from a Zenodo record
 download_zenodo(doi = "10.5281/zenodo.17258667", 
-                path = "new_data/",
+                path = new_folder,
                 files = "iii_Three-D_clean_aboveground_biomass_2020-2022.csv")
 
 ```
