@@ -117,7 +117,7 @@ figure_plan <- list(
         grazing = recode(grazing, "C" = "Control", "M" = "Medium", "I" = "Intensive"),
         warming = recode(warming, "A" = "Ambient", "W" = "Warming")
         ) |>
-        ggplot(aes(x = date_time, y = `co2_fluxes_2020-2021`, color = warming, shape = origSiteID, linetype = origSiteID)) +
+        ggplot(aes(x = date_time, y = f_flux, color = warming, shape = origSiteID, linetype = origSiteID)) +
         theme_bw() +
         geom_point() +
         facet_grid(type ~ ., scales = "free") +
@@ -158,7 +158,7 @@ figure_plan <- list(
         grazing = recode(grazing, "C" = "Control", "M" = "Medium", "I" = "Intensive", "N" = "Natural"),
         warming = recode(warming, "A" = "Ambient", "W" = "Warming")
         ) |>
-        ggplot(aes(x = Namount_kg_ha_y, y = `co2_fluxes_2020-2021`, color = warming, shape = origSiteID, linetype = origSiteID)) +
+        ggplot(aes(x = Namount_kg_ha_y, y = f_flux, color = warming, shape = origSiteID, linetype = origSiteID)) +
         theme_bw() +
         geom_point() +
         facet_grid(type ~ grazing, scales = "free") +
@@ -199,8 +199,8 @@ figure_plan <- list(
         warming = recode(warming, "A" = "Ambient", "W" = "Warming")
         # Namount_kg_ha_y = factor(Namount_kg_ha_y)
         ) |>
-        # ggplot(aes(x = date_time, y = `co2_fluxes_2020-2021`, color = warming, shape = origSiteID, linetype = origSiteID)) +
-        ggplot(aes(x = Namount_kg_ha_y, y = `co2_fluxes_2020-2021`, color = warming, shape = origSiteID, linetype = origSiteID)) +
+        # ggplot(aes(x = date_time, y = f_flux, color = warming, shape = origSiteID, linetype = origSiteID)) +
+        ggplot(aes(x = Namount_kg_ha_y, y = f_flux, color = warming, shape = origSiteID, linetype = origSiteID)) +
         theme_bw() +
         geom_point() +
         # geom_violin() +

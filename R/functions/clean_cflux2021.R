@@ -529,9 +529,6 @@ fluxes2021 <- flux_corrected_PAR |>
       "Namount_kg_ha_y",
       "PAR_ave"
       )
-  ) |>
-  rename(
-    `co2_fluxes_2020-2021` = "f_flux"
   )
 
 
