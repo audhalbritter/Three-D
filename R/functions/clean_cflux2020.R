@@ -3,11 +3,11 @@ clean_cflux2020 <- function(cflux2020_download, cfluxrecord2020_download, metaTu
 # Unzip files
 zipFile <- cflux2020_download
 if(file.exists(zipFile)){
-  outDir <- "data/C-Flux/summer_2020"
+  outDir <- "data/c-flux/summer_2020"
   unzip(zipFile, exdir = outDir)
 }
 
-location <- "data/C-Flux/summer_2020/rawData" #location of datafiles
+location <- "data/c-flux/summer_2020/rawData" #location of datafiles
 #import all squirrel files and select date/time and CO2_calc columns, merge them, name it fluxes
 fluxes <- dir_ls(location, regexp = "*CO2*") %>% 
   map_dfr(read_csv,  na = c("#N/A", "Over")) %>% 
@@ -37,7 +37,7 @@ PAR <- list.files(path = location, pattern = "*PAR*", full.names = TRUE) %>%
 temp_air <- dir_ls(location, regexp = "*temp*") %>%
   map_dfr(read_csv,  na = c("#N/A"), skip = 20, col_names = c("date_time", "unit", "temp_value", "temp_dec"), col_types = "ccnn") %>%
   mutate(temp_dec = replace_na(temp_dec,0),
-    temp_air = temp_value + temp_dec/1000, #because stupid iButtons use comma as delimiter AND as decimal point
+    temp_air = temp_value + temp_dec/1000, #because iButtons use comma as delimiter AND as decimal point
     date_time = dmy_hms(date_time)
     ) %>% 
   drop_na(temp_air) |>
@@ -81,8 +81,6 @@ slopes_exp_2020 <- flux_fitting(
     conc,
     date_time,
     fit_type = "exp_zhao18"
-    # start_cut = 20,
-    # end_cut = 60
     )
 
 slopes_exp_2020_flag <- flux_quality(
@@ -160,36 +158,6 @@ fluxes2020 <- flux_calc(
 
 
 
-# old_fluxes2020 <- read_csv("data_cleaned/c-flux/Three-D_c-flux_2020_version_2022-02-09.csv")
-
-# old_fluxes2020 <- old_fluxes2020 |>
-#   rename(
-#     old_flux = "flux",
-#     old_PAR = "PARavg",
-#     old_tempair = "temp_airavg"
-#   )
-
-# str(old_fluxes2020)
-
-# all_fluxes <- full_join(
-#   fluxes2020,
-#   old_fluxes2020,
-#   by = c( # we do not use date_time because the cut might be different
-#     "turfID" = "turfID",
-#     "type",
-#     "flux_campaign",
-#     "replicate"
-#   )
-# )
-
-# str(all_fluxes)
-
-# ggplot(all_fluxes, aes(old_flux, flux, label = f_fluxID)) +
-# geom_point() +
-# geom_text() +
-# geom_abline(slope = 1)
-
-# count(fluxes2020, type)
 
 # calculating GPP
 
@@ -204,14 +172,19 @@ fluxes2020gpp <- fluxes2020 |>
 # str(fluxes2020gpp)
 
 # let's just plot it to check
-fluxes2020gpp |>
-  ggplot(aes(x = type, y = flux)) +
-  geom_violin()
+# fluxes2020gpp |>
+#   ggplot(aes(x = type, y = flux)) +
+#   geom_violin()
 
 fluxes2020gpp <- left_join(fluxes2020gpp, metaTurfID, by = "turfID") |>
   rename(
     # date_time = "date_time",
-    comments = "remarks"
+    comments = "remarks",
+    `co2_fluxes_2020-2021` = "f_flux"
+  ) |>
+  mutate( # those were not added by flux_calc because there are constants. But they are cols in the 2021 dataset so we add them here to avoid confusing NAs
+    plot_area = 0.0625,
+    chamber_vol = 24.575
   )
 
 fluxes2020gpp
