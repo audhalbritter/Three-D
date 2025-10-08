@@ -108,6 +108,7 @@ figure_plan <- list(
       filter(
         type %in% c("ER", "NEE", "GPP")
         & lubridate::year(date_time) == 2020
+        & is.na(par_correction) # we show the non corrected fluxes
       ) |>
       mutate(
         origSiteID = recode(origSiteID, "Liahovden" = "Alpine", "Joasete" = "Sub-alpine"),
@@ -116,10 +117,9 @@ figure_plan <- list(
         grazing = recode(grazing, "C" = "Control", "M" = "Medium", "I" = "Intensive"),
         warming = recode(warming, "A" = "Ambient", "W" = "Warming")
         ) |>
-        ggplot(aes(x = date_time, y = f_flux, color = warming, shape = origSiteID, linetype = origSiteID)) +
+        ggplot(aes(x = date_time, y = `co2_fluxes_2020-2021`, color = warming, shape = origSiteID, linetype = origSiteID)) +
         theme_bw() +
         geom_point() +
-        # geom_violin() +
         facet_grid(type ~ ., scales = "free") +
         geom_smooth(method = "lm",
                     formula = y ~ poly(x, 3),
@@ -128,14 +128,9 @@ figure_plan <- list(
           "Ambient" = "#1762ad",
           "Warming" = "#c8064a"
         )) +
-        # scale_shape_manual(values = c(
-        #   "Sub-alpine" = 1,
-        #   "Alpine" = 16
-        # )) +
         geom_hline(yintercept = 0, linewidth = 0.3) +
         labs(
           title = bquote(~CO[2]~ "fluxes in 2020"),
-          # caption = bquote(~CO[2]~'flux standardized at PAR = 300 '*mu*mol/m^2/s*' for NEE and PAR = 0 '*mu*mol/m^2/s*' for ER'),
           color = "Warming",
           shape = "Site",
           linetype = "Site",
@@ -145,8 +140,6 @@ figure_plan <- list(
         theme(
       legend.position="none"
     )
-        # facet_grid(type ~ origSiteID, scales = "free")
-      # ggsave("cflux_figure2020.png", dpi = 300, width = 8, height = 6)
     }
   ),
   tar_target(
@@ -156,6 +149,7 @@ figure_plan <- list(
       filter(
         type %in% c("ER", "NEE", "GPP")
         & lubridate::year(date_time) == 2021
+        & is.na(par_correction) # we show the non corrected fluxes
       ) |>
       mutate(
         origSiteID = recode(origSiteID, "Liahovden" = "Alpine", "Joasete" = "Sub-alpine"),
@@ -163,32 +157,21 @@ figure_plan <- list(
         grazing = factor(grazing, levels = c("C", "M", "I", "N")),
         grazing = recode(grazing, "C" = "Control", "M" = "Medium", "I" = "Intensive", "N" = "Natural"),
         warming = recode(warming, "A" = "Ambient", "W" = "Warming")
-        # Namount_kg_ha_y = factor(Namount_kg_ha_y)
         ) |>
-        # ggplot(aes(x = date_time, y = f_flux, color = warming, shape = origSiteID, linetype = origSiteID)) +
-        ggplot(aes(x = Namount_kg_ha_y, y = f_flux, color = warming, shape = origSiteID, linetype = origSiteID)) +
+        ggplot(aes(x = Namount_kg_ha_y, y = `co2_fluxes_2020-2021`, color = warming, shape = origSiteID, linetype = origSiteID)) +
         theme_bw() +
         geom_point() +
-        # geom_violin() +
         facet_grid(type ~ grazing, scales = "free") +
         geom_smooth(method = "lm",
-                    # formula = y ~ poly(x, 3),
                     se = TRUE, linewidth = 0.5, fullrange = FALSE) +
         scale_color_manual(values = c(
           "Ambient" = "#1762ad",
           "Warming" = "#c8064a"
         )) +
-        # scale_shape_manual(values = c(
-        #   "Sub-alpine" = 1,
-        #   "Alpine" = 16
-        # )) +
         geom_hline(yintercept = 0, linewidth = 0.3) +
         scale_x_continuous(trans = pseudo_log_trans(base = 10), breaks = c(0, 1, 10, 100)) +
-        # scale_x_continuous(trans = "log10") +
         labs(
           title = bquote(~CO[2]~ "fluxes in 2021"),
-          # caption will need to go in the manuscript specifying that it is for 2021 fluxes
-          # caption = bquote(~CO[2]~'flux standardized at PAR = 300 '*mu*mol/m^2/s*' for NEE and PAR = 0 '*mu*mol/m^2/s*' for ER'),
           color = "Warming",
           shape = "Site",
           linetype = "Site",
@@ -198,8 +181,6 @@ figure_plan <- list(
         theme(
           legend.position = "bottom"
         )
-        # facet_grid(type ~ origSiteID, scales = "free")
-      # ggsave("cflux_figure2021.png", dpi = 300, width = 8, height = 6)
     }
   ),
   tar_target(
@@ -218,8 +199,8 @@ figure_plan <- list(
         warming = recode(warming, "A" = "Ambient", "W" = "Warming")
         # Namount_kg_ha_y = factor(Namount_kg_ha_y)
         ) |>
-        # ggplot(aes(x = date_time, y = f_flux, color = warming, shape = origSiteID, linetype = origSiteID)) +
-        ggplot(aes(x = Namount_kg_ha_y, y = f_flux, color = warming, shape = origSiteID, linetype = origSiteID)) +
+        # ggplot(aes(x = date_time, y = `co2_fluxes_2020-2021`, color = warming, shape = origSiteID, linetype = origSiteID)) +
+        ggplot(aes(x = Namount_kg_ha_y, y = `co2_fluxes_2020-2021`, color = warming, shape = origSiteID, linetype = origSiteID)) +
         theme_bw() +
         geom_point() +
         # geom_violin() +

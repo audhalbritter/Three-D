@@ -5,7 +5,7 @@ cflux_plan <- list(
     name = cflux2020_download,
     command = get_file(node = "pk4bg",
                        file = "xiii_Three-D_cflux_2020.zip",
-                       path = "data/C-Flux/summer_2020",
+                       path = "data/c-flux/summer_2020",
                        remote_path = "xiii_raw_co2_fluxes"),
     format = "file"
   ),
@@ -13,7 +13,7 @@ cflux_plan <- list(
     name = cfluxrecord2020_download,
     command = get_file(node = "pk4bg",
                        file = "xiii_Three-D_field-record_2020.csv",
-                       path = "data/C-Flux/summer_2020",
+                       path = "data/c-flux/summer_2020",
                        remote_path = "xiii_raw_co2_fluxes"),
     format = "file"
   ),
@@ -65,7 +65,7 @@ cflux_plan <- list(
   tar_target(
     name = cflux2021_flags_nogpp,
     command = cflux2021_clean |>
-      filter(type != "GPP") |>
+      filter(type != "GPP" & is.na(par_correction)) |>
       rowid_to_column("rowid") |>
       flux_flag_count(rowid) |>
       select(!ratio) |>
@@ -95,6 +95,7 @@ cflux_plan <- list(
   tar_target(
     name = cflux2021_flags_gpp,
     command = cflux2021_clean |>
+      filter(is.na(par_correction)) |>
       rowid_to_column("rowid") |>
       flux_flag_count(rowid) |>
       select(!ratio) |>
