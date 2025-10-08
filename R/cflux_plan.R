@@ -50,7 +50,7 @@ cflux_plan <- list(
     command = clean_cflux2020(cflux2020_download, cfluxrecord2020_download, metaTurfID)
   ),
   tar_target(
-    name = cflux2020_flags,
+    name = cflux2020_flags_nogpp,
     command = cflux2020_clean |>
       filter(type != "GPP") |>
       rowid_to_column("rowid") |>
@@ -63,7 +63,7 @@ cflux_plan <- list(
       # save_csv(name = "cflux2020_flags")
   ),
   tar_target(
-    name = cflux2021_flags,
+    name = cflux2021_flags_nogpp,
     command = cflux2021_clean |>
       filter(type != "GPP") |>
       rowid_to_column("rowid") |>
@@ -76,10 +76,38 @@ cflux_plan <- list(
       # save_csv(name = "cflux2021_flags")
   ),
   tar_target(
-    name = cflux_flags,
-    command = left_join(cflux2020_flags, cflux2021_flags) |>
-      save_csv(nr = "13_", 
-               name = "cflux_flags")
+    name = cflux_flags_nogpp,
+    command = left_join(cflux2020_flags_nogpp, cflux2021_flags_nogpp) |>
+      save_csv(name = "cflux_flags_nogpp")
+  ),
+  tar_target(
+    name = cflux2020_flags_gpp,
+    command = cflux2020_clean |>
+      rowid_to_column("rowid") |>
+      flux_flag_count(rowid) |>
+      select(!ratio) |>
+      rename(
+        `Quality flag` = "f_quality_flag",
+        `2020 dataset` = "n"
+      )
+      # save_csv(name = "cflux2020_flags")
+  ),
+  tar_target(
+    name = cflux2021_flags_gpp,
+    command = cflux2021_clean |>
+      rowid_to_column("rowid") |>
+      flux_flag_count(rowid) |>
+      select(!ratio) |>
+      rename(
+        `Quality flag` = "f_quality_flag",
+        `2021 dataset` = "n"
+      )
+      # save_csv(name = "cflux2021_flags")
+  ),
+  tar_target(
+    name = cflux_flags_gpp,
+    command = left_join(cflux2020_flags_gpp, cflux2021_flags_gpp) |>
+      save_csv(name = "cflux_flags_gpp")
   ),
   tar_target(
     name = join_cflux,
@@ -88,7 +116,7 @@ cflux_plan <- list(
   tar_target(
     name = cflux_out,
     command = save_csv(join_cflux,
-                       nr = "13_",
-                       name = "cflux_clean")
+                       nr = "xiii_",
+                       name = "cflux")
   )
 )

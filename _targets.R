@@ -29,7 +29,9 @@ tar_option_set(
     "vegan", 
     "ggvegan", 
     "patchwork",
-    "scales"
+    "scales",
+    "ggforce",
+    "progress"
     ),
     imports = "fluxible" # since fluxible is being updated often, we track changes here as well
     )
