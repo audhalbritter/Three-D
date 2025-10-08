@@ -92,7 +92,7 @@ associated readme file. The readme file or a tab in the dataset called
 readme explains each variable in the data files.
 
 The final data files are available on
-[Zenodo](https://doi.org/10.5281/zenodo.17258667). The file names follow
+[Zenodo](https://doi.org/10.5281/zenodo.17295138). The file names follow
 the same structure: nr_Three-D_clean_variable_year(s).csv, where nr
 refers to the dataset number in Table 1, the variable corresponds to the
 response variable in Table 1. The code to clean and manage the data
@@ -157,7 +157,7 @@ if (!dir.exists(new_folder)) {
 }
 
 # Download all files from a Zenodo record
-download_zenodo(doi = "10.5281/zenodo.17258667", 
+download_zenodo(doi = "10.5281/zenodo.17295138", 
                 path = new_folder,
                 files = "iii_Three-D_clean_aboveground_biomass_2020-2022.csv")
 ```
@@ -175,6 +175,7 @@ and has three observations.
 | elevation_m_asl | Elevation of site | numeric | 469 - 1290 | m a.s.l. | recorded |
 | latitude_N | Latitude of site | numeric | 60.86 - 60.88 | degree N | recorded |
 | longitude_E | Longitude of site | numeric | 7.168 - 7.195 | degree E | recorded |
+| bioclimatic_zone | Bioclimatic zones of the sites including alpine, sub-alpine and boreal. | categorical | alpine - sub-alpine | NA | defined |
 
 ### Dataset (ii) Slope, aspect, and soil depth
 
