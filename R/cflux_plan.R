@@ -118,6 +118,6 @@ cflux_plan <- list(
     name = cflux_out,
     command = save_csv(join_cflux,
                        nr = "xiii_",
-                       name = "cflux")
+                       name = "co2_fluxes_2020-2021")
   )
 )
