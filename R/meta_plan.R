@@ -6,8 +6,9 @@ meta_plan <- list(
   tar_target(
     name = site_download,
     command = get_file(node = "pk4bg",
-                       file = "i_Three-D_clean_elevation_coordinates_2019.csv",
-                       path = "data_cleaned"),
+                       file = "i_Three-D_raw_elevation_coordinates_2019.csv",
+                       path = "data",
+                       remote_path = "i_raw_elevation_coordinates"),
     format = "file"
   ),
   
@@ -15,6 +16,25 @@ meta_plan <- list(
   tar_target(
     name = site,
     command = read_csv(site_download)
+  ),
+
+    # add bioclimatic zones to site data
+  tar_target(
+    name = site_clean,
+    command = site |>
+      mutate(bioclimatic_zone = case_when(
+        site == "Liahovden" ~ "alpine",
+        site == "Joasete" ~ "sub-alpine",
+        site == "Vikesland" ~ "boreal"
+      ))
+  ),
+
+  # save clean plot data
+  tar_target(
+    name = site_out,
+    command = save_csv(plot_clean,
+                       nr = "i_",
+                       name = "elevation_coordinates_2019")
   ),
   
   # download plot data
