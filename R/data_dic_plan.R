@@ -17,7 +17,7 @@ data_dic_plan <- list(
   # site data dic
   tar_target(
     name = site_dic,
-    command = make_data_dictionary(data = site, 
+    command = make_data_dictionary(data = site_clean, 
                                    description_table = attribute_table, 
                                    table_ID = NA_character_)
   ),

@@ -32,7 +32,7 @@ meta_plan <- list(
   # save clean plot data
   tar_target(
     name = site_out,
-    command = save_csv(plot_clean,
+    command = save_csv(site_clean,
                        nr = "i_",
                        name = "elevation_coordinates_2019")
   ),
