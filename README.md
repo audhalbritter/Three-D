@@ -1,16 +1,10 @@
 
-This repository reports on data from the ThreeD Global Change Experiment
-replicated across an elevational gradient in an alpine and sub-alpine
-grassland community in Western Norway. The datasets include the
-treatment variables warming, nitrogen addition, grazing and clipping,
-and response variables related to vegetation, soil structure, carbon and
-nutrient stocks and ecosystem fluxes and microclimate collected from
-2019 (the pre-treatment year) to 2022, with variable number of years of
-data and temporal resolution between datasets (Table 1).
-
-This is the git repository is associated with the data paper: Halbritter
-et al. (submitted). The effect of warming, nitrogen addition and grazing
-on alpine biodiversity and ecosystem function in Norway. Data science.
+This is the data repository for the raw data for the paper Plant
+community, ecosystem and abiotic data from a global change experiment in
+mountain grasslands in Norway. Aud H. Halbritter, Joseph Gaudard, Helene
+Sandsten, Ieva Petrauskaite, Susanne Berthelsen, Gunnar Austrheim,
+Ingrid Dahle, Kari Klanderud, Linn Cecilie Krüger, Emma Little, Richard
+J. Telford, and Vigdis Vandvik
 
 # Summary
 
@@ -21,36 +15,36 @@ interactive effects of these drivers. Across three sites along an
 elevational gradient (469 - 1290 m a.s.l.) in south-western Norway, we
 exposed plant communities to warmer climate, nitrogen fertilization, and
 grazing, as well as simulated grazing by clipping, in a fully factorial
-design (Figure 1). After three years of treatment, we recorded data on
-vegetation, ecosystem functioning, and microclimate in 160 experimental
-and control plots. This database consists of records of the following
-datasets: aboveground standing biomass (3,417 records), aboveground
-plant productivity (2,071), reflectance (1,769), vascular plant
-community composition (8,954 records covering 95 taxa), below ground
-productivity and traits (796), soil characteristics (193), soil nutrient
-(1,132), ecosystem CO2 fluxes (2427), soil ecosystem CO2 respiration
-(64), and microclimate (30,751,264). The data can be combined with
-long-term climate and plant functional traits collected within the study
-region.
+design. After three years of treatment, we recorded data on vegetation,
+ecosystem functioning, and microclimate in 160 experimental and control
+plots. This database consists of records of the following datasets:
+aboveground standing biomass (3,417 records), aboveground plant
+productivity (2,071), reflectance (1,769), vascular plant community
+composition (8,954 records covering 95 taxa), belowground productivity
+and traits (796), soil characteristics (193), soil nutrient (1,132),
+ecosystem CO2 fluxes (2427), soil ecosystem CO2 respiration (64), and
+microclimate (30,751,264). The data can be combined with long-term
+climate and plant functional traits collected within the study region.
 
 <figure>
 <img src="Pics/Fig1_Experimental_Design.jpg"
-alt="Figure 1 Experimental setup, location, and plot design. (a) Experimental setup in a sub-alpine and alpine plant community along an elevational gradient with three sites. Inset shows map of Norway and location of experiment. The experiment includes a fully factorial design of warming by transplanting, nitrogen addition and clipping and grazing. The treatments are ambient (grey to brown), warming (pink to brown), nitrogen addition (colour gradient), ungrazed (C), intermediate (one scissor) and intensive (two scissors) clipping, and natural grazing outside the grazing exclosure (sheep). The arrows indicate the direction of transplant. (b) Map showing the location of the three sites: boreal, sub-alpine, and alpine sites. (c) Plot design with the outer area for destructive harvest and inner non-destructive area for long-term monitoring. The global change treatments (warming, nitrogen addition, clipping and grazing) were applied on the whole 50 x 50 cm plot." />
+alt="Figure 1 Experimental setup, location, and plot design. (a) Replicated experimental setup at the sub-alpine and alpine plant community along an elevational gradient with three sites. Inset shows map of Norway and location of experiment. The experiment includes a fully factorial design of warming by transplanting (2 levels), nitrogen addition (8 levels) and grazing and clipping (4 levels). The treatments are ambient (grey), warming (pink), nitrogen addition (colour gradient), ungrazed (C), intermediate (one scissor) and intensive (two scissors) clipping, and natural grazing outside the grazing exclosure (sheep). The arrows indicate the direction of transplant. (b) Map showing the location of the three sites: boreal, sub-alpine, and alpine sites. (c) Plot design with the outer area for destructive sampling and inner non-destructive area for long-term monitoring. The global change treatments (warming, nitrogen addition, clipping and grazing) were applied on the whole 50 x 50 cm plot." />
 <figcaption aria-hidden="true"><em>Figure 1 Experimental setup,
-location, and plot design. (a) Experimental setup in a sub-alpine and
-alpine plant community along an elevational gradient with three sites.
-Inset shows map of Norway and location of experiment. The experiment
-includes a fully factorial design of warming by transplanting, nitrogen
-addition and clipping and grazing. The treatments are ambient (grey to
-brown), warming (pink to brown), nitrogen addition (colour gradient),
-ungrazed (C), intermediate (one scissor) and intensive (two scissors)
-clipping, and natural grazing outside the grazing exclosure (sheep). The
-arrows indicate the direction of transplant. (b) Map showing the
-location of the three sites: boreal, sub-alpine, and alpine sites. (c)
-Plot design with the outer area for destructive harvest and inner
-non-destructive area for long-term monitoring. The global change
-treatments (warming, nitrogen addition, clipping and grazing) were
-applied on the whole 50 x 50 cm plot.</em></figcaption>
+location, and plot design. (a) Replicated experimental setup at the
+sub-alpine and alpine plant community along an elevational gradient with
+three sites. Inset shows map of Norway and location of experiment. The
+experiment includes a fully factorial design of warming by transplanting
+(2 levels), nitrogen addition (8 levels) and grazing and clipping (4
+levels). The treatments are ambient (grey), warming (pink), nitrogen
+addition (colour gradient), ungrazed (C), intermediate (one scissor) and
+intensive (two scissors) clipping, and natural grazing outside the
+grazing exclosure (sheep). The arrows indicate the direction of
+transplant. (b) Map showing the location of the three sites: boreal,
+sub-alpine, and alpine sites. (c) Plot design with the outer area for
+destructive sampling and inner non-destructive area for long-term
+monitoring. The global change treatments (warming, nitrogen addition,
+clipping and grazing) were applied on the whole 50 x 50 cm
+plot.</em></figcaption>
 </figure>
 
 More information about the project is on the [Three-D
@@ -70,60 +64,68 @@ community composition presence at the subplot level from all plots from
 vegetation height) from all plots between 2019 and 2022 (x), soil
 characteristics data from 2019 and 2020, (xi) soil nutrients at site or
 plot level from 2019 to 2022, (xii) decomposition data from 2021 and
-2022, (xiii) ecosystem CO2 fluxes from 2020 to 2021 and soil respiration
-from 2021, and (xiv) microclimate from 2019 through 2022 (Table 1).
+2022, (xiii) ecosystem CO<sub>2</sub> fluxes from 2020 to 2021 and soil
+respiration from 2021, and (xiv) microclimate from 2019 through 2022
+(Table 1).
 
 <figure>
 <img src="Pics/Table_1.png"
-alt="Table 1 Description and location of the datasets in the ThreeD global change experiment. This table shows the dataset number, response variable(s), number of observations, number of taxa, and temporal range of the data. The raw and final published data are available on OSF24, and the code for extracting and cleaning raw data is available on GitHub25. Note that for some datasets only clean data† or raw data‡ are available." />
+alt="Table 1 Description and location of the datasets in the ThreeD global change experiment. This table shows the dataset number, response variable(s), number of observations, number of taxa, number of plots, treatments, and temporal range of the data. The abbreviations in the treatments are W = warming, N = nitrogen addition, G = grazing, and C = clipping. The raw data are available on OSF, the final published data are available on Zenodo, and the code for extracting and cleaning raw data is available on GitHub." />
 <figcaption aria-hidden="true"><em>Table 1 Description and location of
 the datasets in the ThreeD global change experiment. This table shows
 the dataset number, response variable(s), number of observations, number
-of taxa, and temporal range of the data. The raw and final published
-data are available on OSF24, and the code for extracting and cleaning
-raw data is available on GitHub25. Note that for some datasets only
-clean data† or raw data‡ are available.</em></figcaption>
+of taxa, number of plots, treatments, and temporal range of the data.
+The abbreviations in the treatments are W = warming, N = nitrogen
+addition, G = grazing, and C = clipping. The raw data are available on
+OSF, the final published data are available on Zenodo, and the code for
+extracting and cleaning raw data is available on
+GitHub.</em></figcaption>
 </figure>
 
 ## Data organization and structure
 
 The raw data files are available on [OSF](https://osf.io/pk4bg/) and are
-stored in a folder called “RawData”. The filename starts with the number
-of the data file corresponding to Table 1. All raw data files are
-indicated with “raw” and have an associated readme file or a tab called
-readme explaining all variables in the data files. The final data files
-are available on [OSF](https://osf.io/pk4bg/). The file names all follow
-the same structure: nr_Three-D_clean_variable_year(s).csv, where nr
-refers to the dataset number in Table 1, the variable corresponds to the
+stored in folders using the dataset number and response variable used in
+Table 1. Each filename also starts with a dataset number corresponding
+to Table 1. All raw data files are indicated with “raw” and have an
+associated readme file. The readme file or a tab in the dataset called
+readme explains each variable in the data files.
+
+The final data files are available on
+[Zenodo](https://zenodo.org/uploads/17258667). The file names follow the
+same structure: nr_Three-D_clean_variable_year(s).csv, where nr refers
+to the dataset number in Table 1, the variable corresponds to the
 response variable in Table 1. The code to clean and manage the data
-files on OSF is available in this ThreeD GitHub repository with a
-versioned copy archived in Zenodo (REF). All datasets for the ThreeD
-Global Change Experiment are structured similarly, sharing some common
-variables including year, date, siteID, blockID, plotID, turfID, and
-treatments and specific variables that are unique to each dataset
-(Figure 2). The shared variables can be used to link different datasets,
-for example to combine them for specific analysis (bold letters in
-Figure 2). For example the climate data can be joined by date, siteID,
-blockID, plotID, turfID and treatments to the biomass to test the
-relationship between soil temperature and biomass.
+files on OSF is available in the ThreeD GitHub repository35 with a
+versioned copy archived in Zenodo (REF).
+
+All datasets are structured similarly, sharing some common variables
+including year, date, (orig/dest)siteID, -blockID, -plotID, turfID, and
+treatments and specific variables that are unique to each dataset (Fig.
+2). The shared variables can be used to link different datasets, for
+example to combine them for specific analysis (bold letters in Fig. 2).
+For example the climate data can be joined by date, siteID, blockID,
+plotID, turfID and treatments to the biomass to test the relationship
+between soil temperature and biomass.
 
 <figure>
 <img src="Pics/ThreeD_database2.png"
-alt="Figure 2 Data structure for the ThreeD global change experiment. The boxes represent the dataset i to xv (see Table 1) with the names of each dataset shown in the coloured area. The main variables of each dataset are shown below and for the full list of variables for each dataset see Tables 2–16. The variables in bold indicate keys that can be used to join the different datasets (Table 2). The line linking the variable species indicates one example for such a link. These keys can also be used to link to data from the Plant Functional Trait Course 6 (PFTC6) and the Vestland Climate Grid (VCG) in Vestland County in Norway and are explained in the box at the bottom. Three example datasets with their keys are shown. Abbreviations stand for: SOM = soil organic matter, veg. = vegetation, nee = net ecosystem exchange, gpp = gross primary production, and ER = ecosystem respiration." />
-<figcaption aria-hidden="true"><em>Figure 2 Data structure for the
-ThreeD global change experiment. The boxes represent the dataset i to xv
-(see Table 1) with the names of each dataset shown in the coloured area.
-The main variables of each dataset are shown below and for the full list
-of variables for each dataset see Tables 2–16. The variables in bold
-indicate keys that can be used to join the different datasets (Table 2).
-The line linking the variable species indicates one example for such a
-link. These keys can also be used to link to data from the Plant
-Functional Trait Course 6 (PFTC6) and the Vestland Climate Grid (VCG) in
-Vestland County in Norway and are explained in the box at the bottom.
-Three example datasets with their keys are shown. Abbreviations stand
-for: SOM = soil organic matter, veg. = vegetation, nee = net ecosystem
-exchange, gpp = gross primary production, and ER = ecosystem
-respiration.</em></figcaption>
+alt="Figure 2 The boxes represent the dataset i to xv (corresponding to Table 1) with the names of each dataset shown in the coloured area. Note that the dataset names are shortened and abbreviated in this figure because of limited space (ag = aboveground, bg = belowground, veg = vegetation). The main variables of each dataset are shown below and for the full list of variables for each dataset see Tables 2–16. The variables in bold indicate keys that can be used to join the different datasets (Table 2). The line linking the variable species indicates one example for such a link. These keys can also be used to link to data from the Plant Functional Trait Course 6 (PFTC6) and the Vestland Climate Grid (VCG) in Vestland County in Norway and are explained in the box at the bottom. Three example datasets with their keys are shown. Abbreviations stand for: SOM = soil organic matter, veg. = vegetation, nee = net ecosystem exchange, gpp = gross primary production, and ER = ecosystem respiration." />
+<figcaption aria-hidden="true"><em>Figure 2 The boxes represent the
+dataset i to xv (corresponding to Table 1) with the names of each
+dataset shown in the coloured area. Note that the dataset names are
+shortened and abbreviated in this figure because of limited space (ag =
+aboveground, bg = belowground, veg = vegetation). The main variables of
+each dataset are shown below and for the full list of variables for each
+dataset see Tables 2–16. The variables in bold indicate keys that can be
+used to join the different datasets (Table 2). The line linking the
+variable species indicates one example for such a link. These keys can
+also be used to link to data from the Plant Functional Trait Course 6
+(PFTC6) and the Vestland Climate Grid (VCG) in Vestland County in Norway
+and are explained in the box at the bottom. Three example datasets with
+their keys are shown. Abbreviations stand for: SOM = soil organic
+matter, veg. = vegetation, nee = net ecosystem exchange, gpp = gross
+primary production, and ER = ecosystem respiration.</em></figcaption>
 </figure>
 
 Datasets collected at plot level that include the warming treatment
@@ -135,20 +137,22 @@ have not been moved, the origin and destination is the same.
 
 ### Download clean data
 
-To download the clean data from OSF use the dataDownloader package. This
-is how to install and load the package.
+The clean data can be downloaded from Zenodo using the following code:
 
 ``` r
-devtools::install_github("Between-the-Fjords/dataDownloader")
-library("dataDownloader")
+
+install.packages("zen4R")
+library(zen4R)
 ```
 
 Here is an example for how to download the biomass data:
 
 ``` r
-get_file(node = "pk4bg",
-         file = "3_Three-D_clean_biomass_2020-2022.csv",
-         path = "data")
+
+# Download all files from a Zenodo record
+download_zenodo(doi = "10.5281/zenodo.17258667", 
+                path = "new_data/",
+                files = "iii_Three-D_clean_aboveground_biomass_2020-2022.csv")
 ```
 
 ## Data sets and data dictionary
@@ -301,21 +305,15 @@ statistically different.
 
 | Variable name | Description | Variable type | Variable range or levels | Units | How measured |
 |:---|:---|:---|:---|:---|:---|
-| date | Date of sampling | date | 2019-05-28 - 2019-09-20 | yyyy-mm-dd | recorded |
 | destSiteID | Unique site ID of destination site | categorical | Joasete - Vikesland | NA | defined |
 | destPlotID | Unique destination block ID as number 1 to 10 | categorical | J1C - V3CP | NA | defined |
-| plot_nr | Number of replicates. | numeric | 1 - 3 | NA | recorded |
 | type | Type of flux measurements (ER, NEE or GPP; numbers designate light response curves) | categorical | permanent - temporary | NA | defined |
-| functional_group | Plant functional group | categorical | bryophytes - shrubs | NA | literature |
-| productivity | Amount of biomass produced between each harvest. | numeric | 0 - 38 | NA | measured |
 | replicate | Replicate measurement of same turf | numeric | 1 - 4 | NA | defined |
 | soilmoisture | Volumetric soil moisture | numeric | 0 - 75.1 | percentage volume | measured |
 | recorder | Name of person that recorded the data | categorical | Daniel - Inge | NA | recorded |
 | campaign | Number of times measured during the growing season | numeric | 1 - 3 | NA | recorded |
 | type | Type of measurement including permanent (i.e. same location) and temporary (i.e. change location after each harvest) placement of the plots. | categorical | permanent - temporary | NA | recorded |
 | treatment | Treatment including cage (grazing exclusion) and control (allowing for grazing) | categorical | Cage - Control | NA | recorded |
-| functional_group | Functional group including forbs, graminoids, and shrubs | categorical | bryophytes - shrubs | NA | recorded |
-| pH | pH value of soil sample | categorical | 3.3 - 6.5 | NA | measured |
 | replicate | Replicate measurement | numeric | 1 - 4 | NA | recorded |
 
 **Species level data - 2019**
@@ -576,7 +574,7 @@ site (0.55 ± 0.04 %).
 | destBlockID | Unique numeric destination plot ID for geographic location of the turf | categorical | 1 - 9-10 | NA | defined |
 | layer | Layer at which soil sample was taken: top or bottom 5cm | categorical | Bottom - Top | NA | recorded |
 | variable | Soil character variable including bulk density, pore water content, percentage sand, silt and clay, and pH | categorical | bulk_density_g_cm - silt_percent | NA | defined |
-| value | Soil character value | numeric | 0.082 - 97.222 | gcm-3, % | measured |
+| value | Soil character value | numeric | 0.156 - 97.222 | gcm-3, % | measured |
 
 ### Dataset (xi): Soil nutrients
 
