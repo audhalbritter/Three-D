@@ -92,7 +92,7 @@ associated readme file. The readme file or a tab in the dataset called
 readme explains each variable in the data files.
 
 The final data files are available on
-[Zenodo](https://doi.org/10.5281/zenodo.17295138). The file names follow
+[Zenodo](https://doi.org/10.5281/zenodo.17301125). The file names follow
 the same structure: nr_Three-D_clean_variable_year(s).csv, where nr
 refers to the dataset number in Table 1, the variable corresponds to the
 response variable in Table 1. The code to clean and manage the data
@@ -157,7 +157,7 @@ if (!dir.exists(new_folder)) {
 }
 
 # Download all files from a Zenodo record
-download_zenodo(doi = "10.5281/zenodo.17295138", 
+download_zenodo(doi = "10.5281/zenodo.17301125", 
                 path = new_folder,
                 files = "iii_Three-D_clean_aboveground_biomass_2020-2022.csv")
 ```
@@ -714,6 +714,7 @@ correction).</em></figcaption>
 |:---|:---|:---|:---|:---|:---|
 | date_time | Date and time of sampling or observation | date_time | 2020-06-26 12:59:00 - 2021-09-10 12:55:00 | yyyy-mm-dd_hh:mm:ss | recorded |
 | type | Type of flux measurements (ER, NEE or GPP; numbers designate light response curves) | categorical | 1 - SoilR | NA | defined |
+| f_flux | CO2 flux (positive when emitting to atmosphere negative when vegetation uptake) | numeric | -276.386 - 166.409 | mmol/sqm/h | calculated |
 | f_temp_air_ave | Air temperature measured inside the flux chamber every 10 seconds and averaged | numeric | 8.251 - 38.913 | Kelvin | measured |
 | origSiteID | Unique site ID of origin site | NA | NA | NA | defined |
 | origBlockID | Unique origin block ID as number 1 to 10 | numeric | 1 - 10 | NA | defined |

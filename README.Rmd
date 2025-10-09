@@ -48,7 +48,7 @@ The data outputs consist of 14 datasets, (i) elevation and coordinates collected
 
 The raw data files are available on [OSF](https://osf.io/pk4bg/) and are stored in folders using the dataset number and response variable used in Table 1. Each filename also starts with a dataset number corresponding to Table 1. All raw data files are indicated with “raw” and have an associated readme file. The readme file or a tab in the dataset called readme explains each variable in the data files.
 
-The final data files are available on [Zenodo](https://doi.org/10.5281/zenodo.17295138). The file names follow the same structure: nr_Three-D_clean_variable_year(s).csv, where nr refers to the dataset number in Table 1, the variable corresponds to the response variable in Table 1. The code to clean and manage the data files on OSF is available in the ThreeD GitHub repository35 with a versioned copy archived in Zenodo (REF).
+The final data files are available on [Zenodo](https://doi.org/10.5281/zenodo.17301125). The file names follow the same structure: nr_Three-D_clean_variable_year(s).csv, where nr refers to the dataset number in Table 1, the variable corresponds to the response variable in Table 1. The code to clean and manage the data files on OSF is available in the ThreeD GitHub repository35 with a versioned copy archived in Zenodo (REF).
 
 All datasets are structured similarly, sharing some common variables including year, date, (orig/dest)siteID, -blockID, -plotID, turfID, and treatments and specific variables that are unique to each dataset (Fig. 2). The shared variables can be used to link different datasets, for example to combine them for specific analysis (bold letters in Fig. 2). For example the climate data can be joined by date, siteID, blockID, plotID, turfID and treatments to the biomass to test the relationship between soil temperature and biomass.
 
@@ -82,7 +82,7 @@ if (!dir.exists(new_folder)) {
 }
 
 # Download all files from a Zenodo record
-download_zenodo(doi = "10.5281/zenodo.17295138", 
+download_zenodo(doi = "10.5281/zenodo.17301125", 
                 path = new_folder,
                 files = "iii_Three-D_clean_aboveground_biomass_2020-2022.csv")
 
