@@ -162,6 +162,18 @@ download_zenodo(doi = "10.5281/zenodo.17301125",
                 files = "iii_Three-D_clean_aboveground_biomass_2020-2022.csv")
 ```
 
+For large files, like the microclimate data, you can set a timeout to
+avoid the download being interrupted. The function has a default timeout
+of 60 seconds.
+
+``` r
+
+download_zenodo(doi = "10.5281/zenodo.17301125",
+                path = "data_cleaned/",
+                files = "xiv_Three-D_clean_microclimate_2019-2022.csv",
+                timeout = 3600)
+```
+
 ## Data sets and data dictionary
 
 ### Dataset (i) Elevation and coordinates
